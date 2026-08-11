@@ -1,0 +1,64 @@
+# PENDIENTE DE RECONEXION: este workflow quedo en modo manual (workflow_dispatch)
+# tras la migracion a monorepo. Para reactivar el deploy automatico:
+#   1. Configurar los secrets VERCEL_TOKEN (y opcionalmente VERCEL_ORG_ID,
+#      VERCEL_PROJECT_ID) en Settings -> Secrets -> Actions.
+#   2. En el proyecto de Vercel: Root Directory = repgen-frontend, con
+#      "Include source files outside of the Root Directory" activado para que
+#      resuelva el workspace pnpm (lockfile raiz y @repgen/shared-types).
+#   3. Restaurar el trigger:
+#        push:
+#          branches: [ main ]
+#          tags: [ 'v*' ]
+name: Deploy Frontend to Vercel
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy Frontend (Vercel)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate required secrets
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN || '' }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "ERROR: Missing required secret VERCEL_TOKEN. Add it at Settings -> Secrets -> Actions.";
+            exit 1;
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Sin input "version": lee el campo packageManager del package.json raiz
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend (sanity check)
+        run: pnpm --filter generador-reportes-frontend build
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID || '' }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID || '' }}
+        run: |
+          set -e
+          TARGET_DIR=repgen-frontend
+          ARGS=("$TARGET_DIR" "--prod" "--token" "$VERCEL_TOKEN" "--confirm")
+          echo "Deploying $TARGET_DIR to Vercel (non-interactive)..."
+          npx vercel "${ARGS[@]}"

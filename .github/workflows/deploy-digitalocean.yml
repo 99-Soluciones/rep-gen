@@ -1,0 +1,175 @@
+# PENDIENTE DE RECONEXION: este workflow quedo en modo manual (workflow_dispatch)
+# tras la migracion a monorepo. Para reactivar el deploy automatico:
+#   1. Configurar los secrets en Settings -> Secrets -> Actions
+#      (DO_API_TOKEN y opcionalmente DOCR_REGISTRY_NAME, DO_REGISTRY_USERNAME,
+#       DO_REGISTRY_PASSWORD, DO_APP_ID).
+#   2. Restaurar el trigger:
+#        push:
+#          branches: [ main ]
+#          tags: [ 'v*' ]
+#   3. Revisar el spec de App Platform generado abajo (envs del backend:
+#      FM_SERVER, FM_USERNAME, FM_PASSWORD, JWT_SECRET, etc. NO estan en el
+#      spec; configurarlas en el panel de DO o anadirlas como secrets).
+name: Deploy to DigitalOcean
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push-backend:
+    name: Build & Push Backend Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate required secrets
+        env:
+          DO_API_TOKEN: ${{ secrets.DO_API_TOKEN || '' }}
+          DOCR_REGISTRY_NAME: ${{ secrets.DOCR_REGISTRY_NAME || '' }}
+          DO_REGISTRY_USERNAME: ${{ secrets.DO_REGISTRY_USERNAME || '' }}
+        run: |
+          missing=""
+          if [ -z "$DO_API_TOKEN" ]; then
+            missing="$missing DO_API_TOKEN"
+          fi
+          if [ -z "$DOCR_REGISTRY_NAME" ] && [ -z "$DO_REGISTRY_USERNAME" ]; then
+            echo "NOTE: No DOCR_REGISTRY_NAME or DO_REGISTRY_USERNAME provided — workflow will push to GHCR only."
+          fi
+          if [ -n "$DOCR_REGISTRY_NAME" ]; then
+            if ! echo "$DOCR_REGISTRY_NAME" | grep -Eq '^[a-z0-9][a-z0-9-]*[a-z0-9]$'; then
+              echo "ERROR: DOCR_REGISTRY_NAME must contain only lowercase letters, numbers or hyphens, and cannot start or end with a hyphen.";
+              exit 1;
+            fi
+            len=${#DOCR_REGISTRY_NAME}
+            if [ $len -lt 2 ] || [ $len -gt 63 ]; then
+              echo "ERROR: DOCR_REGISTRY_NAME length must be between 2 and 63 characters (got $len).";
+              exit 1;
+            fi
+          fi
+          if [ -n "$missing" ]; then
+            echo "ERROR: Missing required secrets:$missing"
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # La imagen compila el backend dentro del Dockerfile con el workspace pnpm;
+      # el contexto debe ser la RAIZ del monorepo.
+      - name: Build and push backend image to GHCR
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./repgen-backend/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/repgen-backend:latest
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/repgen-backend:${{ github.sha }}
+
+      - name: Install doctl and log in to DigitalOcean
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_API_TOKEN }}
+
+      - name: Login Docker to DigitalOcean Registry (if provided)
+        if: ${{ secrets.DOCR_REGISTRY_NAME != '' }}
+        run: |
+          doctl registry login
+
+      - name: Build and push backend image to DOCR
+        if: ${{ secrets.DOCR_REGISTRY_NAME != '' }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./repgen-backend/Dockerfile
+          push: true
+          tags: |
+            registry.digitalocean.com/${{ secrets.DOCR_REGISTRY_NAME }}/repgen-backend:latest
+            registry.digitalocean.com/${{ secrets.DOCR_REGISTRY_NAME }}/repgen-backend:${{ github.sha }}
+
+  deploy-do:
+    name: Deploy to DigitalOcean App Platform
+    needs: build-and-push-backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_API_TOKEN }}
+
+      # Sin run_command: la imagen ya define CMD ["node", "repgen-backend/dist/src/main.js"]
+      # (el spec anterior apuntaba a dist/main.js, ruta que nunca existio: nest build
+      # emite dist/src/main.js).
+      - name: Generate DO App spec (with registry credentials)
+        env:
+          REGISTRY: ${{ env.REGISTRY }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          DO_REGISTRY_USERNAME: ${{ secrets.DO_REGISTRY_USERNAME || '' }}
+          DO_REGISTRY_PASSWORD: ${{ secrets.DO_REGISTRY_PASSWORD || '' }}
+          DOCR_REGISTRY_NAME: ${{ secrets.DOCR_REGISTRY_NAME || '' }}
+        run: |
+          set -e
+          OWNER=${GITHUB_REPOSITORY%%/*}
+          if [ -n "$DOCR_REGISTRY_NAME" ]; then
+            REG_SERVER="registry.digitalocean.com"
+            REPO="${DOCR_REGISTRY_NAME}/repgen-backend"
+          else
+            REG_SERVER="${REGISTRY}"
+            REPO="${OWNER}/repgen-backend"
+          fi
+          cat > do-app-spec.yaml <<EOF
+          name: repgen-backend
+          region: nyc
+          spec:
+            name: repgen-backend
+            services:
+              - name: backend
+                image:
+                  registry: ${REG_SERVER}
+                  repository: ${REPO}
+                  tag: latest
+                instance_size_slug: basic-xxs
+                instance_count: 1
+                http_port: 3000
+                envs:
+                  - key: NODE_ENV
+                    value: production
+                  - key: PORT
+                    value: "3000"
+          EOF
+          if [ -n "$DO_REGISTRY_USERNAME" ] || [ -n "$DOCR_REGISTRY_NAME" ]; then
+            cat >> do-app-spec.yaml <<EOF
+            registries:
+              - server: ${REG_SERVER}
+                username: "${DO_REGISTRY_USERNAME}"
+                password: "${DO_REGISTRY_PASSWORD}"
+          EOF
+          fi
+          echo "Generated do-app-spec.yaml:" && sed -n '1,200p' do-app-spec.yaml
+
+      - name: Deploy (create or update)
+        env:
+          DO_APP_ID: ${{ secrets.DO_APP_ID }}
+        run: |
+          if [ -n "$DO_APP_ID" ]; then
+            echo "Updating existing DO App $DO_APP_ID"
+            doctl apps update $DO_APP_ID --spec do-app-spec.yaml
+          else
+            echo "Creating new DO App"
+            doctl apps create --spec do-app-spec.yaml
+          fi
