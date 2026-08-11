@@ -1,0 +1,21 @@
+packages:
+  - repgen-backend
+  - repgen-frontend
+  - packages/*
+
+# Fusion de los settings que vivian en los pnpm-workspace.yaml de cada app
+allowBuilds:
+  '@nestjs/core': true
+  '@nestjs/cli': true
+  unrs-resolver: true
+
+overrides:
+  js-yaml: ^5.2.1
+
+minimumReleaseAge: 10080
+# Versiones ya en uso por las apps que quedarian bloqueadas por la ventana de 7 dias
+minimumReleaseAgeExclude:
+  - '@types/node'
+  - eslint
+trustPolicy: no-downgrade
+trustPolicyIgnoreAfter: 525600

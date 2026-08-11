@@ -1,0 +1,16 @@
+# Contexto de build docker = raiz del monorepo.
+# Critico: sin este archivo los .env con secretos entrarian al contexto.
+**/node_modules
+**/dist
+**/coverage
+**/logs
+**/.env
+**/.env.*
+**/env-presets
+.git
+.venv
+.github
+.claude
+.vscode
+docs
+repgen-docs

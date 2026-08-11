@@ -1,0 +1,59 @@
+name: CI Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'repgen-backend/**'
+      - 'packages/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.github/workflows/ci-backend.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'repgen-backend/**'
+      - 'packages/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.github/workflows/ci-backend.yml'
+  workflow_dispatch:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Sin input "version": lee el campo packageManager del package.json raiz
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck shared types
+        run: pnpm --filter @repgen/shared-types typecheck
+
+      - name: Lint
+        run: pnpm --filter generador-reportes-backend lint
+
+      - name: Test
+        run: pnpm --filter generador-reportes-backend test
+
+      - name: Build
+        run: pnpm --filter generador-reportes-backend build
+
+      # El contexto es la RAIZ del monorepo (el Dockerfile resuelve el workspace)
+      - name: Docker build check
+        run: docker build -f repgen-backend/Dockerfile -t repgen-backend:ci .

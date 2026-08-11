@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: Arial, Helvetica, sans-serif;
+
+  /* Azul de marca ERP (#2B75E8) — sustituye el azul default en toda la app */
+  --color-blue-500: #4a8bec; /* focus rings, tags claros */
+  --color-blue-600: #2b75e8; /* principal: botones, iconos, links */
+  --color-blue-700: #1e5fc4; /* azul oscuro: textos/acentos */
+
+  /* Morado de marca ERP — solo para hover */
+  --color-marca-morado: #623bea;
+}
+
+html,
+body,
+#root {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.ag-theme-quartz {
+  --ag-font-family: Arial, Helvetica, sans-serif;
+  --ag-cell-horizontal-border: solid 1px #f3f4f6; 
+  --ag-borders: none;
+  --ag-header-column-separator-display: none;
+  --ag-header-column-resize-handle-display: none;
+  
+  --ag-header-background-color: #f9fafb; 
+  --ag-header-foreground-color: #4b5563; 
+  
+
+  --ag-row-hover-color: #eff6ff; 
+}
+
+
+

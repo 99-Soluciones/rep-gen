@@ -1,0 +1,103 @@
+{
+  "columns": {
+    "Fecha": {
+      "field": "fecha",
+      "dataType": "date"
+    },
+    "Id de Transacción": {
+      "field": "idTransaccionBanco",
+      "dataType": "text"
+    },
+    "Banco": {
+      "field": "nombre_banco",
+      "dataType": "text"
+    },
+    "Número de Cuenta": {
+      "field": "numero_cuenta",
+      "dataType": "text"
+    },
+    "Moneda": {
+      "field": "moneda",
+      "dataType": "text"
+    },
+    "Forma Pago": {
+      "field": "formaPago",
+      "dataType": "text"
+    },
+    "Concepto": {
+      "field": "concepto",
+      "dataType": "text"
+    },
+    "Nombre Cliente/Proveedor": {
+      "field": "nombre_comercial",
+      "dataType": "text"
+    },
+    "RFC": {
+      "field": "rfc",
+      "dataType": "text"
+    },
+    "Abono": {
+      "field": "abono",
+      "dataType": "currency"
+    },
+    "Cargo": {
+      "field": "cargo",
+      "dataType": "currency"
+    },
+    "Tipo de Cambio": {
+      "field": "tipoDeCambio",
+      "dataType": "number"
+    },
+    "Saldo Resultante": {
+      "field": "saldoBanco",
+      "dataType": "currency"
+    },
+    "Saldo por Complementar": {
+      "field": "saldoPorComplementar",
+      "dataType": "currency"
+    },
+    "Saldo por Identificar": {
+      "field": "saldoPorIdentificar",
+      "dataType": "currency"
+    },
+    "Estado Ingreso": {
+      "field": "estadoIngreso",
+      "dataType": "text"
+    },
+    "Estado Egreso": {
+      "field": "estadoEgreso",
+      "dataType": "text"
+    },
+    "Cuenta Contable": {
+      "field": "cuentaContable",
+      "dataType": "text"
+    },
+    "Texto al Complementar": {
+      "field": "textoComplementario",
+      "dataType": "text"
+    }
+  },
+  "reportTypes": {
+    "default": [
+      "Fecha",
+      "Id de Transacción",
+      "Banco",
+      "Número de Cuenta",
+      "Moneda",
+      "Forma Pago",
+      "Concepto",
+      "Nombre Cliente/Proveedor",
+      "RFC",
+      "Abono",
+      "Cargo",
+      "Tipo de Cambio",
+      "Saldo Resultante",
+      "Saldo por Complementar",
+      "Saldo por Identificar",
+      "Estado Ingreso",
+      "Estado Egreso",
+      "Cuenta Contable",
+      "Texto al Complementar"
+    ]
+  }
+}

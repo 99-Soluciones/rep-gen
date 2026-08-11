@@ -1,0 +1,55 @@
+name: CI Frontend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'repgen-frontend/**'
+      - 'packages/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.github/workflows/ci-frontend.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'repgen-frontend/**'
+      - 'packages/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.github/workflows/ci-frontend.yml'
+  workflow_dispatch:
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Sin input "version": lee el campo packageManager del package.json raiz
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck shared types
+        run: pnpm --filter @repgen/shared-types typecheck
+
+      - name: Lint
+        run: pnpm --filter generador-reportes-frontend lint
+
+      - name: Test (with coverage)
+        run: pnpm --filter generador-reportes-frontend test:coverage
+
+      - name: Build
+        run: pnpm --filter generador-reportes-frontend build
