@@ -1,0 +1,52 @@
+Summary,Description,Labels,Priority,Parent,Story point estimate
+[DOC-1.1] Propósito de RepGen y usuarios,"Subtarea DOC-1. Detalle: docs/jira/tasks/01-vision-general.md (SUB-1.1)",repgen-documentation documentation doc-subtask,Low,[DOC-1] Visión general y contexto,1
+[DOC-1.2] Diagrama arquitectura RepGen,"Subtarea DOC-1. Detalle: docs/jira/tasks/01-vision-general.md (SUB-1.2)",repgen-documentation documentation doc-subtask,Low,[DOC-1] Visión general y contexto,1
+[DOC-1.3] Estructura carpetas RepGen,"Subtarea DOC-1. Detalle: docs/jira/tasks/01-vision-general.md (SUB-1.3)",repgen-documentation documentation doc-subtask,Low,[DOC-1] Visión general y contexto,1
+[DOC-1.4] Glosario RepGen,"Subtarea DOC-1. Detalle: docs/jira/tasks/01-vision-general.md (SUB-1.4)",repgen-documentation documentation doc-subtask,Low,[DOC-1] Visión general y contexto,1
+[DOC-2.1] Capas NestJS backend,"Subtarea DOC-2. Detalle: docs/jira/tasks/02-arquitectura.md (SUB-2.1)",repgen-documentation documentation doc-subtask,Low,[DOC-2] Arquitectura y convenciones,1
+[DOC-2.2] Estructura frontend features,"Subtarea DOC-2. Detalle: docs/jira/tasks/02-arquitectura.md (SUB-2.2)",repgen-documentation documentation doc-subtask,Low,[DOC-2] Arquitectura y convenciones,1
+[DOC-2.3] Convenciones nombres RepGen,"Subtarea DOC-2. Detalle: docs/jira/tasks/02-arquitectura.md (SUB-2.3)",repgen-documentation documentation doc-subtask,Low,[DOC-2] Arquitectura y convenciones,1
+[DOC-2.4] Plan migración arquitectura,"Subtarea DOC-2. PROUESTA_ARQUITECTURA.md",repgen-documentation documentation doc-subtask,Low,[DOC-2] Arquitectura y convenciones,1
+[DOC-3.1] Bootstrap NestJS y AppModule,"Subtarea DOC-3. Detalle: docs/jira/tasks/03-backend-transversal.md",repgen-documentation documentation doc-subtask,Low,[DOC-3] Backend transversal,1
+[DOC-3.2] Variables entorno backend,"Subtarea DOC-3.",repgen-documentation documentation doc-subtask,Low,[DOC-3] Backend transversal,1
+[DOC-3.3] Logging backend RepGen,"Subtarea DOC-3. LOGGER_*.md en raíz del repo",repgen-documentation documentation doc-subtask,Low,[DOC-3] Backend transversal,1
+[DOC-3.4] Filtro excepciones HTTP,"Subtarea DOC-3.",repgen-documentation documentation doc-subtask,Low,[DOC-3] Backend transversal,1
+[DOC-3.5] Rate limiting API,"Subtarea DOC-3.",repgen-documentation documentation doc-subtask,Low,[DOC-3] Backend transversal,1
+[DOC-4.1] Flujo login FileMaker JWT,"Subtarea DOC-4. Detalle: docs/jira/tasks/04-auth-tenant.md",repgen-documentation documentation doc-subtask,Low,[DOC-4] Auth usuario y tenant,1
+[DOC-4.2] JWT guard y AuthenticatedRequest,"Subtarea DOC-4.",repgen-documentation documentation doc-subtask,Low,[DOC-4] Auth usuario y tenant,1
+[DOC-4.3] Permisos bancos por usuario,"Subtarea DOC-4.",repgen-documentation documentation doc-subtask,Low,[DOC-4] Auth usuario y tenant,1
+[DOC-4.4] Column labels por tenant,"Subtarea DOC-4. Guía completa: repgen-backend/docs/tenant/COLUMN_LABELS.md",repgen-documentation documentation doc-subtask,Low,[DOC-4] Auth usuario y tenant,2
+[DOC-5.1] FileMakerService overview,"Subtarea DOC-5. Detalle: docs/jira/tasks/05-filemaker.md",repgen-documentation documentation doc-subtask,Low,[DOC-5] Integración FileMaker,1
+[DOC-5.2] Relations FileMaker layouts,"Subtarea DOC-5.",repgen-documentation documentation doc-subtask,Low,[DOC-5] Integración FileMaker,1
+[DOC-5.3] RawRecord y FilterModel,"Subtarea DOC-5. EXPLICACION_FLUJO_REPORTES.md",repgen-documentation documentation doc-subtask,Low,[DOC-5] Integración FileMaker,1
+[DOC-5.4] Script generate-field-map,"Subtarea DOC-5. FIELD_MAP_GUIDE.md",repgen-documentation documentation doc-subtask,Low,[DOC-5] Integración FileMaker,1
+[DOC-6.1] Flujo general reportes E2E,"Subtarea DOC-6. docs/reports/workflow/EXPLICACION_FLUJO_REPORTES.md",repgen-documentation documentation doc-subtask,Low,[DOC-6] Dominio reportes,2
+[DOC-6.2] Endpoints REST reportes,"Subtarea DOC-6.",repgen-documentation documentation doc-subtask,Low,[DOC-6] Dominio reportes,1
+[DOC-6.3] BaseReportService cache y query,"Subtarea DOC-6.",repgen-documentation documentation doc-subtask,Low,[DOC-6] Dominio reportes,1
+[DOC-6.4] Documentación reporte Bancos,"Subtarea DOC-6.",repgen-documentation documentation doc-subtask,Low,[DOC-6] Dominio reportes,2
+[DOC-6.5] Documentación reporte Ventas,"Subtarea DOC-6. ADRs en docs/reports/ADR/VENTAS/",repgen-documentation documentation doc-subtask,Low,[DOC-6] Dominio reportes,2
+[DOC-6.6] Documentación reporte Sales Item,"Subtarea DOC-6.",repgen-documentation documentation doc-subtask,Low,[DOC-6] Dominio reportes,1
+[DOC-6.7] Patrón Field Map,"Subtarea DOC-6. FIELD_MAP_GUIDE.md",repgen-documentation documentation doc-subtask,Low,[DOC-6] Dominio reportes,1
+[DOC-6.8] DTOs búsqueda reportes,"Subtarea DOC-6.",repgen-documentation documentation doc-subtask,Low,[DOC-6] Dominio reportes,1
+[DOC-6.9] Guía nuevo reporte,"Subtarea DOC-6. docs/jira/guides/COMO-AGREGAR-REPORTE.md",repgen-documentation documentation doc-subtask,Low,[DOC-6] Dominio reportes,2
+[DOC-7.1] App shell y layout,"Subtarea DOC-7. docs/jira/tasks/07-frontend.md",repgen-documentation documentation doc-subtask,Low,[DOC-7] Frontend,1
+[DOC-7.2] Pantalla autenticación,"Subtarea DOC-7.",repgen-documentation documentation doc-subtask,Low,[DOC-7] Frontend,1
+[DOC-7.3] UI Reporte Bancos,"Subtarea DOC-7.",repgen-documentation documentation doc-subtask,Low,[DOC-7] Frontend,1
+[DOC-7.4] UI Reporte Ventas,"Subtarea DOC-7.",repgen-documentation documentation doc-subtask,Low,[DOC-7] Frontend,1
+[DOC-7.5] Componentes shared reportes,"Subtarea DOC-7.",repgen-documentation documentation doc-subtask,Low,[DOC-7] Frontend,1
+[DOC-7.6] ColumnLabelsProvider frontend,"Subtarea DOC-7. Guía: repgen-frontend/docs/COLUMN_LABELS_PROVIDER.md",repgen-documentation documentation doc-subtask,Low,[DOC-7] Frontend,2
+[DOC-7.7] Cliente HTTP reportes FE,"Subtarea DOC-7.",repgen-documentation documentation doc-subtask,Low,[DOC-7] Frontend,1
+[DOC-7.8] Tests Vitest frontend,"Subtarea DOC-7.",repgen-documentation documentation doc-subtask,Low,[DOC-7] Frontend,1
+[DOC-8.1] Workflow CI GitHub Actions,"Subtarea DOC-8. .github/workflows/ci.yml",repgen-documentation documentation doc-subtask,Low,[DOC-8] Despliegue y CI/CD,1
+[DOC-8.2] Deploy Vercel frontend,"Subtarea DOC-8. DEPLOYMENT.md",repgen-documentation documentation doc-subtask,Low,[DOC-8] Despliegue y CI/CD,1
+[DOC-8.3] Deploy DigitalOcean backend,"Subtarea DOC-8.",repgen-documentation documentation doc-subtask,Low,[DOC-8] Despliegue y CI/CD,1
+[DOC-8.4] Matriz variables entorno,"Subtarea DOC-8.",repgen-documentation documentation doc-subtask,Low,[DOC-8] Despliegue y CI/CD,1
+[DOC-8.5] Runbook deploy rollback,"Subtarea DOC-8.",repgen-documentation documentation doc-subtask,Low,[DOC-8] Despliegue y CI/CD,1
+[DOC-9.1] Logs aplicación RepGen,"Subtarea DOC-9.",repgen-documentation documentation doc-subtask,Low,[DOC-9] Operación y soporte,1
+[DOC-9.2] Troubleshooting RepGen,"Subtarea DOC-9.",repgen-documentation documentation doc-subtask,Low,[DOC-9] Operación y soporte,1
+[DOC-9.3] Performance y throttling,"Subtarea DOC-9.",repgen-documentation documentation doc-subtask,Low,[DOC-9] Operación y soporte,1
+[DOC-9.4] RACI operación RepGen,"Subtarea DOC-9.",repgen-documentation documentation doc-subtask,Low,[DOC-9] Operación y soporte,1
+[DOC-10.1] Prerrequisitos desarrollo RepGen,"Subtarea DOC-10.",repgen-documentation documentation doc-subtask,Low,[DOC-10] Onboarding desarrollador,1
+[DOC-10.2] Setup local RepGen,"Subtarea DOC-10.",repgen-documentation documentation doc-subtask,Low,[DOC-10] Onboarding desarrollador,1
+[DOC-10.3] Comandos CLI RepGen,"Subtarea DOC-10.",repgen-documentation documentation doc-subtask,Low,[DOC-10] Onboarding desarrollador,1
+[DOC-10.4] Ejercicio primer cambio,"Subtarea DOC-10.",repgen-documentation documentation doc-subtask,Low,[DOC-10] Onboarding desarrollador,1
