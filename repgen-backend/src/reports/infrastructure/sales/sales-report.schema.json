@@ -1,0 +1,123 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "fieldData": {
+            "type": "object",
+            "properties": {
+                "__id_venta": {
+                    "type": "number"
+                },
+                "_id_bodega": {
+                    "type": ["number", "string"]
+                },
+                "_idu_cdfi_formaPago": {
+                    "type": "string"
+                },
+                "_idu_cdfi_metoPago": {
+                    "type": "string"
+                },
+                "_idu_cdfi_usoCDFI": {
+                    "type": "string"
+                },
+                "_idu_tc_moneda_v0_16_0": {
+                    "type": "string"
+                },
+                "area_fechaVenta": {
+                    "type": "string"
+                },
+                "cfdi_FacturaFechaTimbrar": {
+                    "type": "string"
+                },
+                "cfdi_FacturaFolio": {
+                    "type": ["string", "number"]
+                },
+                "cfdi_Observaciones_v0_18_4": {
+                    "type": "string"
+                },
+                "cfdi_UUID": {
+                    "type": "string"
+                },
+                "cfdi_facturaSerieFolio_v0_18_1": {
+                    "type": "string"
+                },
+                "cfdi_CANCEL_fecha_v0_23_1r": {
+                    "type": "string"
+                },
+                "entrega_dest_Address1": {
+                    "type": "string"
+                },
+                "entrega_dest_Ciudad": {
+                    "type": "string"
+                },
+                "entrega_dest_Colonia": {
+                    "type": "string"
+                },
+                "entrega_dest_Delegacion": {
+                    "type": "string"
+                },
+                "entrega_dest_EDO": {
+                    "type": "string"
+                },
+                "monto_GranTotal": {
+                    "type": "number"
+                },
+                "monto_Importe_sinDiscount_sinIEPS": {
+                    "type": "number"
+                },
+                "monto_contraIEPS": {
+                    "type": "number"
+                },
+                "monto_contraIVA": {
+                    "type": "number"
+                },
+                "monto_favorIVAretenido_v0_18_1": {
+                    "type": "number"
+                },
+                "monto_favorISRretenido_v0_18_1": {
+                    "type": "number"
+                },
+                "saldo_Pagado_enANTICIPOS_v0_22_1r": {
+                    "type": ["number", "string"]
+                },
+                "saldo_Pagado_enPAGOS": {
+                    "type": "number"
+                },
+                "saldo_Pendiente_GranTotal": {
+                    "type": ["number", "string"]
+                },
+                "tasa_Descuento_v0  _18_1": {
+                    "type": "number"
+                },
+                "tc_tipoCambioValor_v0_25_3": {
+                    "type": "number"
+                },
+                "venta_|BODEGA_|_x_bodegaID::bodega_nombre": {
+                    "type": "string"
+                }
+            }
+        },
+        "portalData": {
+            "type": "object",
+            "properties": {
+                "Cliente": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "Devo": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                }
+            },
+            "additionalProperties": true
+        }
+    },
+    "required": ["fieldData", "portalData"],
+    "additionalProperties": true
+}
