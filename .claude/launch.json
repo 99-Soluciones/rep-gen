@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "repgen-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "repgen-frontend", "--", "--port", "5273", "--strictPort"],
+      "port": 5273,
+      "autoPort": false
+    },
+    {
+      "name": "repgen-backend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start:dev", "--prefix", "repgen-backend"],
+      "port": 3000,
+      "autoPort": false
+    },
+    {
+      "name": "repgen-frontend-mock",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "cd /d repgen-frontend && set DEV_API_PROXY_TARGET=http://localhost:3901&& npm run dev -- --port 5199 --strictPort"
+      ],
+      "port": 5199,
+      "autoPort": false
+    }
+  ]
+}
