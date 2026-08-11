@@ -30,7 +30,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         output: {
           manualChunks(id) {
             if (id.includes("node_modules")) {
@@ -41,10 +41,6 @@ export default defineConfig(({ mode }) => {
                 .toString();
             }
           },
-        },
-      },
-      rolldownOptions: {
-        output: {
           codeSplitting: {
             groups: [
               {
