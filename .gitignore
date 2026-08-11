@@ -1,0 +1,20 @@
+# Dependencias y artefactos (a cualquier nivel)
+node_modules/
+dist/
+coverage/
+logs/
+*.log
+*.tsbuildinfo
+
+# Secretos y configuración local — NUNCA commitear
+.env
+.env.*
+!.env.example
+env-presets/
+
+# Entornos ajenos al monorepo
+.venv/
+
+# SO / editor
+.DS_Store
+Thumbs.db

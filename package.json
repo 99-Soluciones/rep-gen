@@ -1,0 +1,21 @@
+{
+  "name": "repgen",
+  "version": "0.0.1",
+  "private": true,
+  "packageManager": "pnpm@11.15.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev:backend": "pnpm --filter generador-reportes-backend start:dev",
+    "dev:frontend": "pnpm --filter generador-reportes-frontend dev",
+    "build": "pnpm -r build",
+    "build:backend": "pnpm --filter generador-reportes-backend build",
+    "build:frontend": "pnpm --filter generador-reportes-frontend build",
+    "test": "pnpm -r test",
+    "test:backend": "pnpm --filter generador-reportes-backend test",
+    "test:frontend": "pnpm --filter generador-reportes-frontend test",
+    "lint": "pnpm -r lint",
+    "typecheck:shared": "pnpm --filter @repgen/shared-types typecheck"
+  }
+}
