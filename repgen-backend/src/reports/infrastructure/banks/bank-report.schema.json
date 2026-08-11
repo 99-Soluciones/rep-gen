@@ -1,0 +1,112 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "fieldData": {
+            "type": "object",
+            "properties": {
+                "_id_banco": {
+                    "type": "number"
+                },
+                "_fecha": {
+                    "type": "string"
+                },
+                "_idu_formaPago_v0_22_1": {
+                    "type": "string"
+                },
+                "mConciliacionTexto_parteDelCOMPLEMENTO_v0_22_1": {
+                    "type": ["string", "number"]
+                },
+                "mConceptoDeBancoTexto_v0_20_0": {
+                    "type": "string"
+                },
+                "monto_ORIG_abono_v0_22_1": {
+                    "type": ["number", "string"]
+                },
+                "monto_ORIG_cargo_v0_22_1": {
+                    "type": ["number", "string"]
+                },
+                "saldo_ORIG_porComplementar_v0_22_1": {
+                    "type": "number"
+                },
+                "saldo_ORIG_porID_v0_22_1": {
+                    "type": "number"
+                },
+                "tc_tipoCambioValor_v0_26_1": {
+                    "type": "number"
+                },
+                "__id_bancoITM": {
+                    "type": ["number", "string"]
+                },
+                "monto_ORIG_bancoRunningSaldo": {
+                    "type": ["number", "string"]
+                }
+
+            },
+            "required": [
+                "__id_bancoITM",
+                "_fecha",
+                "_idu_formaPago_v0_22_1",
+                "mConceptoDeBancoTexto_v0_20_0"
+            ],
+            "additionalProperties": true
+        },
+        "portalData": {
+            "type": "object",
+            "properties": {
+                "Banco": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "clienteEgreso": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "clienteIngreso": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "contEgreso": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "contIngreso": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "proveedorEgreso": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "proveedorIngreso": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                }
+            },
+            "additionalProperties": true
+        }
+    },
+    "required": ["fieldData", "portalData"],
+    "additionalProperties": true
+}
