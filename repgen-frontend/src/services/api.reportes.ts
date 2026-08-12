@@ -89,7 +89,6 @@ export const obtenerReporte = async <TReporteData>({
 
     if (!respuesta.ok) {
       const respuestaError = await respuesta.json();
-      console.log(respuestaError);
       toast.error(
         `Error en la solicitud: ${respuestaError.statusCode} - ${respuestaError.message}`,
       );
