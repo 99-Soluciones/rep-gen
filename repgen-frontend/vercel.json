@@ -2,7 +2,7 @@
     "rewrites": [
         {
             "source": "/api/:path*",
-            "destination": "https://repgenvbeta-le254.ondigitalocean.app/api/:path*"
+            "destination": "https://rep-gen-hkvrw.ondigitalocean.app/api/:path*"
         },
         {
             "source": "/(.*)",
