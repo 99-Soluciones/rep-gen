@@ -17,7 +17,6 @@ describe("FiltroFechas", () => {
     setFechaDesde: vi.fn(),
     fechaHasta: "2026-01-31",
     setFechaHasta: vi.fn(),
-    setPaginaActual: vi.fn(),
   };
 
   beforeEach(() => {
@@ -63,6 +62,5 @@ describe("FiltroFechas", () => {
     expect(toastMock.success).toHaveBeenCalledWith("Fechas aplicadas");
     expect(props.setFechaDesde).toHaveBeenCalledWith("2026-01-05");
     expect(props.setFechaHasta).toHaveBeenCalledWith("2026-01-20");
-    expect(props.setPaginaActual).toHaveBeenCalledWith(1);
   });
 });

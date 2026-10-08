@@ -59,6 +59,25 @@ describe('AuthService', () => {
     });
   });
 
+  it('should ignore the master key in production', async () => {
+    const productionConfig = {
+      get: (key: string) =>
+        ({ MASTER_KEY: 'master-key-test', NODE_ENV: 'production' })[key],
+    } as unknown as ConfigService;
+    const productionService = new AuthService(
+      mockJwtService as unknown as JwtService,
+      mockFileMakerService as unknown as FileMakerService,
+      mockLogger as unknown as LoggerService,
+      productionConfig,
+    );
+    mockJwtService.signAsync.mockResolvedValue('signed-token');
+
+    await expect(
+      productionService.validateTokenFileMaker('master-key-test', 'testdb'),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
+    expect(mockJwtService.signAsync).not.toHaveBeenCalled();
+  });
+
   it('should throw UnauthorizedException if token is the master key and validate filemaker token fails', async () => {
     const masterToken = 'invalid-master-key';
     const dbName = 'testdb';

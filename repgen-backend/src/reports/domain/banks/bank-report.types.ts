@@ -1,9 +1,5 @@
-import { FilterModel } from '../reports.types';
-
 /**
- * Primeras dos interfaces para la salida del reporte de bancos, con campos opcionales para facilitar la limpieza y transformación de datos.
  * La interfaz ReportBankRecord representa el formato final de cada registro en el reporte, con campos opcionales que se llenarán según la disponibilidad de datos.
- * La interfaz FilterBankModel define la estructura de los filtros que se pueden aplicar al reporte, utilizando la estructura genérica de FilterModel para cada campo relevante.
  */
 export interface ReportBankRecord {
   idTransaccionBanco: number;
@@ -25,26 +21,6 @@ export interface ReportBankRecord {
   estadoEgreso?: string;
   nombre_comercial?: string;
   rfc?: string;
-}
-export interface FilterBankModel {
-  idTransaccionBanco?: FilterModel;
-  fecha?: FilterModel;
-  nombre_banco?: FilterModel;
-  numero_cuenta?: FilterModel;
-  cuentaContable?: FilterModel;
-  moneda?: FilterModel;
-  formaPago?: FilterModel;
-  concepto?: FilterModel;
-  abono?: FilterModel;
-  cargo?: FilterModel;
-  saldoPorComplementar?: FilterModel;
-  tipoDeCambio?: FilterModel;
-  saldoPorIdentificar?: FilterModel;
-  textoComplementario?: FilterModel;
-  estadoIngreso?: FilterModel;
-  estadoEgreso?: FilterModel;
-  nombre_comercial?: FilterModel;
-  rfc?: FilterModel;
 }
 /**
  * Interfaces para el mapeo de registros raw de bancos

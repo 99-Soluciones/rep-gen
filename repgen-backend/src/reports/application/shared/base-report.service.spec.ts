@@ -4,37 +4,53 @@ import {
   type ReportLogger,
 } from './base-report.service';
 import type { Cache } from '@nestjs/cache-manager';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import type {
   FileMakerCondition,
   FindRecordsResult,
 } from '../../../filemaker/ifilemaker';
 import { FileMakerService } from '../../../filemaker/filemaker.service';
 
-class TestReportService extends BaseReportService<
-  Record<string, unknown>,
-  unknown,
-  unknown
-> {}
+class TestReportService extends BaseReportService<unknown, unknown> {}
 
-describe('BaseReportService.makeFilterString permissions+filters', () => {
-  const makeService = (
-    overrides?: Partial<
-      ReportConfig<Record<string, unknown>, unknown, unknown>
-    >,
-  ) => {
-    const findRecords = jest.fn<
-      Promise<FindRecordsResult>,
-      [string, string, FileMakerCondition[], number?, number?]
-    >();
+const OCTOBER = { startDate: '2026-10-01', endDate: '2026-10-31' };
+const FM_OCTOBER = '10/01/2026...10/31/2026';
+
+const findResult = (data: FindRecordsResult['response']['data'] = []) => ({
+  response: {
+    data,
+    dataInfo: {
+      database: 'db',
+      layout: 'layout',
+      table: 't',
+      totalRecordCount: data.length,
+      foundCount: data.length,
+      returnedCount: data.length,
+    },
+  },
+});
+
+describe('BaseReportService', () => {
+  const makeService = (overrides?: Partial<ReportConfig<unknown, unknown>>) => {
+    const findRecords = jest
+      .fn<
+        Promise<FindRecordsResult>,
+        [string, string, FileMakerCondition[], number?, number?]
+      >()
+      .mockResolvedValue(findResult());
     const fileMakerService = { findRecords } as unknown as FileMakerService;
 
-    const cacheGet = jest
-      .fn<Promise<unknown>, [string]>()
-      .mockResolvedValue(undefined);
-    const cacheSet = jest
-      .fn<Promise<void>, [string, unknown]>()
-      .mockResolvedValue(undefined);
-    const cacheManager = { get: cacheGet, set: cacheSet } as unknown as Cache;
+    const store = new Map<string, unknown>();
+    const cacheManager = {
+      get: (key: string) => Promise.resolve(store.get(key)),
+      set: (key: string, value: unknown) => {
+        store.set(key, value);
+        return Promise.resolve();
+      },
+    } as unknown as Cache;
 
     const logger: ReportLogger = {
       log: jest.fn(),
@@ -43,24 +59,12 @@ describe('BaseReportService.makeFilterString permissions+filters', () => {
       error: jest.fn(),
     };
 
-    const permissionFiltersFunction = jest
-      .fn<Promise<FileMakerCondition[]>, [unknown, string, number, string]>()
-      .mockResolvedValue([
-        { bankName: '==BANCO_A' },
-        { bankName: '==BANCO_B' },
-      ]);
-
-    const config: ReportConfig<Record<string, unknown>, unknown, unknown> = {
+    const config: ReportConfig<unknown, unknown> = {
       layoutName: 'layout',
       cachePrefix: 'prefix_',
       dateField: ['date'],
       permissionFieldName: ['bankName'],
-      fieldMapping: {
-        nombre_banco: 'bankName',
-      },
-      globalSearchFields: [],
-      cleanDataFunction: () => [],
-      permissionFiltersFunction,
+      cleanDataFunction: (rawData) => rawData,
       ...overrides,
     };
 
@@ -72,124 +76,57 @@ describe('BaseReportService.makeFilterString permissions+filters', () => {
       logger,
     );
 
-    return {
-      service,
-      findRecords,
-      cacheGet,
-      cacheSet,
-      logger,
-      config,
-    };
+    return { service, findRecords };
   };
 
-  it('intersects user bank filter with permission bank conditions (no overwrite)', async () => {
-    const { service, findRecords } = makeService();
-
-    findRecords.mockResolvedValue({
-      response: {
-        data: [],
-        dataInfo: {
-          database: 'db',
-          layout: 'layout',
-          table: 't',
-          totalRecordCount: 0,
-          foundCount: 0,
-          returnedCount: 0,
-        },
-      },
-    });
-
-    await service.fetchFromFileMakerWithFilters(
-      1,
-      50,
-      '',
-      {
-        nombre_banco: {
-          filterType: 'text',
-          type: 'equals',
-          filter: 'BANCO_A',
-        },
-      },
-      { startDate: '', endDate: '' },
-      'db',
-      123,
-    );
-
-    expect(findRecords).toHaveBeenCalledTimes(1);
-    const querySent = findRecords.mock.calls[0]?.[2];
-
-    expect(querySent).toEqual([{ bankName: '==BANCO_A' }]);
-  });
-
-  it('returns empty response and does not call FileMaker when no permission condition matches user filter', async () => {
-    const { service, findRecords } = makeService();
-
-    const res = await service.fetchFromFileMakerWithFilters(
-      1,
-      50,
-      '',
-      {
-        nombre_banco: {
-          filterType: 'text',
-          type: 'equals',
-          filter: 'BANCO_C',
-        },
-      },
-      { startDate: '', endDate: '' },
-      'db',
-      123,
-    );
-
-    expect(findRecords).not.toHaveBeenCalled();
-    expect(res.data).toEqual([]);
-    expect(res.meta.totalRecords).toBe(0);
-  });
-
-  it('keeps a condition if any mapped field already matches (no duplicates)', async () => {
+  it('expands every permission condition across every date field', async () => {
     const { service, findRecords } = makeService({
-      fieldMapping: {
-        nombre_comercial: ['fieldA', 'fieldB'],
-      },
-      permissionFiltersFunction: jest
-        .fn<Promise<FileMakerCondition[]>, [unknown, string, number, string]>()
-        .mockResolvedValue([
-          { fieldA: '==FOO', fieldB: '==FOO' },
-          { fieldA: '==BAR', fieldB: '==BAR' },
-        ]),
+      dateField: ['dateA', 'dateB'],
+      permissionFiltersFunction: () =>
+        Promise.resolve([{ bankName: '==BANCO_A' }, { bankName: '==BANCO_B' }]),
     });
 
-    findRecords.mockResolvedValue({
-      response: {
-        data: [],
-        dataInfo: {
-          database: 'db',
-          layout: 'layout',
-          table: 't',
-          totalRecordCount: 0,
-          foundCount: 0,
-          returnedCount: 0,
-        },
+    await service.fetchReport(OCTOBER, 'db', 123);
+
+    expect(findRecords.mock.calls[0][2]).toEqual([
+      { bankName: '==BANCO_A', dateA: FM_OCTOBER },
+      { bankName: '==BANCO_A', dateB: FM_OCTOBER },
+      { bankName: '==BANCO_B', dateA: FM_OCTOBER },
+      { bankName: '==BANCO_B', dateB: FM_OCTOBER },
+    ]);
+  });
+
+  it('queries only by date when the report has no permission filter', async () => {
+    const { service, findRecords } = makeService();
+
+    await service.fetchReport(OCTOBER, 'db', 123);
+
+    expect(findRecords.mock.calls[0][2]).toEqual([{ date: FM_OCTOBER }]);
+  });
+
+  it('does not share cached results between users of the same tenant', async () => {
+    const { service, findRecords } = makeService();
+
+    await service.fetchReport(OCTOBER, 'db', 1);
+    await service.fetchReport(OCTOBER, 'db', 2);
+    await service.fetchReport(OCTOBER, 'db', 1);
+
+    // user 2 must hit FileMaker with its own permissions; user 1's repeat is cached
+    expect(findRecords).toHaveBeenCalledTimes(2);
+  });
+
+  it('responds 500 instead of 400 when a FileMaker record does not match the schema', async () => {
+    const { service, findRecords } = makeService({
+      cleanDataFunction: () => {
+        throw new BadRequestException('record invalido');
       },
     });
-
-    await service.fetchFromFileMakerWithFilters(
-      1,
-      50,
-      '',
-      {
-        nombre_comercial: {
-          filterType: 'text',
-          type: 'equals',
-          filter: 'FOO',
-        },
-      },
-      { startDate: '', endDate: '' },
-      'db',
-      123,
+    findRecords.mockResolvedValue(
+      findResult([{ fieldData: {}, recordId: 'r1' }]),
     );
 
-    const querySent = findRecords.mock.calls[0]?.[2];
-
-    expect(querySent).toEqual([{ fieldA: '==FOO', fieldB: '==FOO' }]);
+    await expect(service.fetchReport(OCTOBER, 'db', 1)).rejects.toBeInstanceOf(
+      InternalServerErrorException,
+    );
   });
 });

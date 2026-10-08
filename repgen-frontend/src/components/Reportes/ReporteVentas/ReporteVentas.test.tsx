@@ -124,11 +124,7 @@ import ReporteVentas from './ReporteVentas';
 describe('ReporteVentas', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    obtenerReporteMock.mockResolvedValue({
-      datos: [],
-      totalPaginas: 1,
-      paginaActual: 1,
-    });
+    obtenerReporteMock.mockResolvedValue([]);
   });
 
   it('renderiza filtros y tabla y consulta el endpoint de ventas', async () => {
@@ -145,9 +141,10 @@ describe('ReporteVentas', () => {
     expect(obtenerReporteMock).toHaveBeenCalledWith(
       expect.objectContaining({
         endpoint: 'ventas/buscar',
-        pagina: 1,
-        limite: 999999,
-        busquedaGlobal: '',
+        rangoFechas: {
+          fechaInicio: expect.any(String),
+          fechaFin: expect.any(String),
+        },
       }),
     );
     expect(filtrosMock).toHaveBeenCalledWith(

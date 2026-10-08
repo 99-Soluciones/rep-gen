@@ -24,16 +24,10 @@ const ReporteBancos = () => {
   const {
     datos,
     estaCargando,
-    textoBusqueda,
-    setTextoBusqueda,
-    setBusquedaActiva,
     fechaDesde,
     setFechaDesde,
     fechaHasta,
     setFechaHasta,
-    modeloFiltros,
-    setModeloFiltros,
-    setPaginaActual,
   } = useReporteBase<IBancoData>({
     endpoint: "bancos/buscar",
     onError: onErrorReporte,
@@ -98,13 +92,6 @@ const ReporteBancos = () => {
     <div className="flex flex-col">
       <EncabezadoReporte
         titulo="Reporte de Bancos"
-        referenciaGrid={referenciaGrid}
-        textoBusqueda={textoBusqueda}
-        setTextoBusqueda={setTextoBusqueda}
-        setBusquedaActiva={setBusquedaActiva}
-        modeloFiltros={modeloFiltros}
-        setModeloFiltros={setModeloFiltros}
-        setPaginaActual={setPaginaActual}
       />
 
       <div className="flex flex-col xl:flex-row gap-2">
@@ -129,7 +116,6 @@ const ReporteBancos = () => {
                 setFechaDesde={setFechaDesde}
                 fechaHasta={fechaHasta}
                 setFechaHasta={setFechaHasta}
-                setPaginaActual={setPaginaActual}
               />
             }
             accionesToolbar={

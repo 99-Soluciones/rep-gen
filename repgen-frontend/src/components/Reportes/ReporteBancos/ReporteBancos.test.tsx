@@ -97,11 +97,7 @@ import ReporteBancos from "./ReporteBancos";
 describe("ReporteBancos", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    obtenerReporteMock.mockResolvedValue({
-      datos: [],
-      totalPaginas: 1,
-      paginaActual: 1,
-    });
+    obtenerReporteMock.mockResolvedValue([]);
   });
 
   it("renderiza filtros y tabla y consulta el endpoint de bancos", async () => {
@@ -117,9 +113,10 @@ describe("ReporteBancos", () => {
     expect(obtenerReporteMock).toHaveBeenCalledWith(
       expect.objectContaining({
         endpoint: "bancos/buscar",
-        pagina: 1,
-        limite: 999999,
-        busquedaGlobal: "",
+        rangoFechas: {
+          fechaInicio: expect.any(String),
+          fechaFin: expect.any(String),
+        },
       }),
     );
     expect(filtrosMock).toHaveBeenCalledWith(

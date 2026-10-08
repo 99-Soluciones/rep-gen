@@ -22,6 +22,7 @@ docs/
 | Backlog Jira (Epic + tareas) | [jira/README.md](jira/README.md) |
 | Importar issues en Jira | [jira/jira-import-fase2-subtareas.csv](jira/jira-import-fase2-subtareas.csv) |
 | Arquitectura objetivo | [architecture/PROUESTA_ARQUITECTURA.md](architecture/PROUESTA_ARQUITECTURA.md) |
+| Evaluación OData + revisión de arquitectura y hoja de ruta (2026-10) | [architecture/EVALUACION_ODATA_Y_ARQUITECTURA.md](architecture/EVALUACION_ODATA_Y_ARQUITECTURA.md) |
 | Añadir un reporte nuevo | [jira/guides/COMO-AGREGAR-REPORTE.md](jira/guides/COMO-AGREGAR-REPORTE.md) |
 | Column labels (DOC-4.4 / 7.6) | [references/LINKS.md](references/LINKS.md) |
 | Deploy / CI | [deployment/DEPLOYMENT.md](deployment/DEPLOYMENT.md) |

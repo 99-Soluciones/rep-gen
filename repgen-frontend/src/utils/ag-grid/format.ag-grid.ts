@@ -1,3 +1,5 @@
+import { parsearFecha } from "./filters.ag-grid";
+
 /**
  * Funcion para convertir un valor a número, manejando tanto números como cadenas que representen números.
  * Si el valor es un número finito, se devuelve tal cual. Si es una cadena, se normaliza eliminando caracteres no numéricos (excepto punto y guion) 
@@ -83,10 +85,8 @@ export const formatearFecha = (valor: unknown): string => {
 		return "";
 	}
 
-	const fecha = valor instanceof Date ? valor : new Date(String(valor));
-	if (Number.isNaN(fecha.getTime())) {
-		return String(valor);
-	}
-
-	return fecha.toLocaleDateString("es-MX");
+	// parsearFecha lee "YYYY-MM-DD" como fecha local; new Date("YYYY-MM-DD") es
+	// medianoche UTC y en México se mostraría el día anterior.
+	const fecha = parsearFecha(valor);
+	return fecha ? fecha.toLocaleDateString("es-MX") : String(valor);
 };

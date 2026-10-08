@@ -20,7 +20,7 @@ import { LoggerModule } from '../common/logger';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         global: true,
-        secret: configService.get<string>('JWT_SECRET', 'default_secret'),
+        secret: configService.getOrThrow<string>('JWT_SECRET'),
         signOptions: {
           expiresIn: parseInt(
             configService.get<string>('JWT_EXPIRES_IN', '3600'),

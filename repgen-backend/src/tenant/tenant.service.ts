@@ -68,14 +68,16 @@ export class TenantService {
 
     let reportConfigs = false;
     try {
-      const result = await this.fileMakerService.getAllRecords(
+      // Solo importa si el layout existe: basta con un registro. Si no existe,
+      // FileMaker responde un error y getAllRecords lanza.
+      await this.fileMakerService.getAllRecords(
         tenantId,
         REPORT_CONFIG_LAYOUT,
+        1,
       );
-      // FM returns undefined data when the layout is missing (HTTP 400 response)
-      reportConfigs = result.response.data !== undefined;
+      reportConfigs = true;
     } catch {
-      // Network or auth failure — treat feature as unavailable
+      // Layout inexistente, red o autenticación: la feature queda deshabilitada
     }
 
     const features: TenantFeaturesResponse = { reportConfigs };
@@ -92,6 +94,7 @@ export class TenantService {
     const columnLabels = await this.fileMakerService.getAllRecords(
       tenantId,
       'columnas_prefs',
+      1,
     );
 
     if (!columnLabels.response.data?.length) {

@@ -63,7 +63,7 @@ export const filtroContiene = (valorFiltro: string, valorCelda: string): boolean
  * Convierte un valor de fecha a un objeto Date válido.
  * Prioriza el formato ISO (YYYY-MM-DD) para evitar desfases por zona horaria.
  */
-const parsearFecha = (valor: unknown): Date | null => {
+export const parsearFecha = (valor: unknown): Date | null => {
     if (valor == null || valor === "") {
         return null;
     }

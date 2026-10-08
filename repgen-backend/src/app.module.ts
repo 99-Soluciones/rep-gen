@@ -18,7 +18,7 @@ import { ReportConfigsModule } from './report-configs/report-configs.module';
     ThrottlerModule.forRoot({
       throttlers: [
         {
-          ttl: 60,
+          ttl: 60000, // ms (throttler v6)
           limit: 100,
         },
       ],

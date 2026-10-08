@@ -1,4 +1,3 @@
-export * from './reports.types';
 export * from './banks';
 export * from './sales';
 export * from './salesitem';

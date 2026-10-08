@@ -1,11 +1,7 @@
-import type { FilterModel } from '../reports.types';
-
 /**
  * Interfaces para la salida del reporte de ventas
  * ReportSalesRecord representa el formato final de cada registro en el reporte, con campos opcionales que se llenarán según la disponibilidad de datos.
- * FilterSalesModel define la estructura de los filtros que se pueden aplicar al reporte, utilizando la estructura genérica de FilterModel para cada campo relevante.
  * ReportSalesItemRecord extiende ReportSalesRecord con campos adicionales específicos para el reporte de ventas por artículo.
- * FilterSalesItemModel extiende FilterSalesModel con campos adicionales para filtrar por criterios específicos de artículos en el reporte de ventas por artículo.
  */
 export interface ReportSalesRecord {
   cliente: string;
@@ -57,56 +53,6 @@ export interface ReportSalesRecord {
   ivaRetenidoMxn: number;
   isrRetenidoMxn: number;
   pagoGranTotalMxn: number;
-}
-
-export interface FilterSalesModel {
-  cliente?: FilterModel;
-  clienteRazonSocial?: FilterModel;
-  clienteRfc?: FilterModel;
-  clienteCuentaContable?: FilterModel;
-  clienteCalle?: FilterModel;
-  clienteColonia?: FilterModel;
-  clienteDelegacion?: FilterModel;
-  clienteCiudad?: FilterModel;
-  clienteEstado?: FilterModel;
-  clienteId?: FilterModel;
-  clienteRepDeVenta?: FilterModel;
-  clienteRepDeCobranza?: FilterModel;
-  clasificacion1?: FilterModel;
-  clasificacion2?: FilterModel;
-  clasificacion3?: FilterModel;
-  clasificacion4?: FilterModel;
-
-  ventaId?: FilterModel;
-  devoId?: FilterModel;
-  facturaUuid?: FilterModel;
-  facturaSerie?: FilterModel;
-  facturaFolio?: FilterModel;
-  facturaFecha?: FilterModel;
-  facturaGranTotalMxn?: FilterModel;
-  facturaGranTotalOriginal?: FilterModel; // calculado por el importe gran total mxn / tipo de cambio, si la moneda es diferente a MXN, si la moneda es MXN es igual a facturaGranTotalMxn
-  facturaFechaDeCaptura?: FilterModel;
-  facturaTipoDeCambio?: FilterModel;
-  facturaMoneda?: FilterModel;
-  facturaUsoCfdi?: FilterModel;
-  facturaMetodoPago?: FilterModel;
-  facturaFormaDePago?: FilterModel;
-  facturaEstatus?: FilterModel;
-  facturaSaldoActual?: FilterModel;
-  facturaTasaPagada?: FilterModel;
-  facturaRepDeVenta?: FilterModel;
-  facturaRepDeCobranza?: FilterModel;
-  observacionesEnCfdi?: FilterModel;
-  bodegaId?: FilterModel;
-  bodegaNombre?: FilterModel;
-  importeSinDescuentoMxn?: FilterModel;
-  descuentoMontoMxn?: FilterModel;
-  importeConDescuentoMxn?: FilterModel;
-  ivaMxn?: FilterModel;
-  iepsMxn?: FilterModel;
-  ivaRetenidoMxn?: FilterModel;
-  isrRetenidoMxn?: FilterModel;
-  pagoGranTotalMxn?: FilterModel;
 }
 
 /**

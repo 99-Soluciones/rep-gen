@@ -15,8 +15,11 @@ import { obtenerReporte } from '../../services/api.reportes';
 
 describe('vi.mock smoke test', () => {
   it('async factory + await importOriginal() should apply mock', () => {
-    mockFn.mockResolvedValue({ datos: [], totalPaginas: 1, paginaActual: 1 });
-    obtenerReporte({ endpoint: 'test', pagina: 1, limite: 50 });
+    mockFn.mockResolvedValue([]);
+    obtenerReporte({
+      endpoint: 'test',
+      rangoFechas: { fechaInicio: '2026-01-01', fechaFin: '2026-01-31' },
+    });
     expect(mockFn).toHaveBeenCalled();
   });
 });

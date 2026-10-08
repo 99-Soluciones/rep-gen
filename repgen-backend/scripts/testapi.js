@@ -13,14 +13,6 @@ const instance = autocannon(
       authorization: 'TEST TOKEN',
     },
     body: JSON.stringify({
-      globalSearch: '',
-      filterModel: {
-        // "cliente": {
-        //    "filterType": "text",
-        //      "type": "contains",
-        //      "filter": "Celtics Jardines"
-        //  }
-      },
       dateRange: {
         startDate: '2026-02-01',
         endDate: '2026-03-01',

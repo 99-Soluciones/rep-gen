@@ -41,7 +41,7 @@
 |-----------------|----------------|--------|
 | 401 en reportes | JWT expirado o ausente | Re-login |
 | 429 | Throttle excedido | Esperar / revisar límites |
-| 400 validation | filterModel inválido | Revisar DTO y payload FE |
+| 400 validation | `dateRange` ausente o fuera de formato `YYYY-MM-DD` (o frontend desactualizado enviando campos viejos) | Revisar payload FE / desplegar back y front juntos |
 | FM 401/403 | Credenciales FM o layout | Verificar env y relations |
 | Tabla vacía | Rango fechas / permisos banco | Ajustar filtros |
 | Columnas sin label | Tenant labels API | Ver SUB-4.4 |
@@ -70,7 +70,7 @@
 
 ## Criterios de aceptación
 
-- [ ] Recomendaciones `limit` para reportes grandes
+- [ ] Recomendaciones de rango de fechas para reportes grandes
 - [ ] Herramienta load test si usan `autocannon` en monorepo
 
 ---

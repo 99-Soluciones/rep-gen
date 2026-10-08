@@ -14,6 +14,7 @@ import type { ValidateTokenResult } from './iauth';
 import { Public } from './decorators/public.decorator';
 import { Throttle } from '@nestjs/throttler/dist/throttler.decorator';
 import { JWT_COOKIE_NAME } from './auth.constants';
+import { LoginTokenDto } from './dto/login-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -46,30 +47,17 @@ export class AuthController {
   /**
    * Endpoint para validar un token de FileMaker. Este endpoint es público y no requiere autenticación JWT,
    * lo que permite a los clientes validar sus tokens directamente con el servicio de autenticación.
-   * @param token Token generado desde FileMaker que se desea validar.
-   * @returns Información del usuario si el token es válido (el JWT viaja en una cookie httpOnly), o un mensaje de error si el token no es proporcionado.
+   * @param body Token generado desde FileMaker y tenant (BD). El ValidationPipe global responde 400 si faltan o el tenant no es válido.
+   * @returns Información del usuario si el token es válido (el JWT viaja en una cookie httpOnly).
    */
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @HttpCode(HttpStatus.OK)
   @Post('login-token')
   @Public()
   async loginWithTokenFileMaker(
-    @Body('token') token: string,
-    @Body('tenant') tenant: string,
+    @Body() { token, tenant }: LoginTokenDto,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<{ user: ValidateTokenResult['user'] } | { message: string }> {
-    if (!token) {
-      return {
-        message: 'Token es requerido',
-      };
-    }
-
-    if (!tenant) {
-      return {
-        message: 'Tenant es requerido',
-      };
-    }
-
+  ): Promise<{ user: ValidateTokenResult['user'] }> {
     const result: ValidateTokenResult =
       await this.authService.validateTokenFileMaker(token, tenant);
     this.setAuthCookie(response, result.accessToken);

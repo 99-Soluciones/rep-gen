@@ -54,19 +54,17 @@ Genera (entre otros):
 
 - [ ] Registrar use case en `reports.module.ts`
 - [ ] Inyectar en `reports.controller.ts`
-- [ ] Crear DTO en `presentation/dto/search-<nombre>-report.dto.ts`
+- [ ] Reutilizar `SearchReportDto` (`presentation/dto/search-report.dto.ts`): el body solo lleva `dateRange`
 - [ ] Añadir endpoint, por ejemplo:
 
 ```typescript
 @Post('<ruta>/buscar')
 @HttpCode(200)
 async getXReports(
-  @Query('page') page: string = '1',
-  @Query('limit') limit: string = '50',
-  @Body() body: SearchXReportDto,
+  @Body() { dateRange }: SearchReportDto,
   @Request() req: AuthenticatedRequest,
-): Promise<PaginatedResponse<ReportXRecord>> {
-  // delegar al use case con req.tenant, req.id
+): Promise<ReportResponse<ReportXRecord>> {
+  return this.reportServiceX.fetchReport(dateRange, req.tenant, req.id);
 }
 ```
 
@@ -86,7 +84,7 @@ async getXReports(
 
 - [ ] Crear `features/reports/<nombre>/ui/Reporte<Nombre>.tsx`
 - [ ] Config AG Grid: `config/<nombre>.columnas.ts` + `*.schema.json`
-- [ ] Usar `useReporteBase` para fetch paginado
+- [ ] Usar `useReporteBase` (trae todo el rango de fechas; AG Grid filtra en el cliente)
 - [ ] Añadir ruta / entrada en `Sidebar`
 - [ ] Método en `api.reportes.ts` o `shared/api/reports-api.ts`
 - [ ] Tests Vitest básicos (render + mock API)
@@ -100,7 +98,7 @@ async getXReports(
 ### 9. Verificación final
 
 - [ ] `pnpm build` backend y frontend
-- [ ] Prueba manual: login → filtros → paginación → export (si aplica)
+- [ ] Prueba manual: login → rango de fechas → filtros de columna → export (si aplica)
 - [ ] Revisar logs sin errores FM
 
 ---

@@ -37,8 +37,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const m = res.message;
         message = Array.isArray(m) ? m.join(', ') : String(m);
       }
-    } else if (exception instanceof Error) {
-      message = exception.message;
     }
 
     // Log full exception server-side for diagnostics

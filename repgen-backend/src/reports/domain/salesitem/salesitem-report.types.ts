@@ -1,8 +1,4 @@
-import type { FilterModel } from '../reports.types';
-import {
-  FilterSalesModel,
-  ReportSalesRecord,
-} from '../sales/sales-report.types';
+import { ReportSalesRecord } from '../sales/sales-report.types';
 
 /**
  * ReportSalesItemRecord extiende ReportSalesRecord con campos adicionales específicos para el reporte de ventas por artículo.
@@ -38,41 +34,6 @@ export interface ReportSalesItemRecord extends ReportSalesRecord {
   articuloIEPSMxn?: number;
   articuloIVARetenidoMxn?: number;
   articuloISRretenidoMxn?: number;
-}
-/**
- * FilterSalesItemModel extiende FilterSalesModel con campos adicionales para filtrar por criterios específicos de artículos en el reporte de ventas por artículo.
- */
-export interface FilterSalesItemModel extends FilterSalesModel {
-  tipoDeConcepto?: FilterModel;
-  metodoDeAdquisicion?: FilterModel;
-  costoDirectoUnitarioMxn?: FilterModel;
-  costoDirectoSubTotalMxn?: FilterModel;
-  gananciaBrutaMxn?: FilterModel;
-  costoTasa?: FilterModel;
-  margenTasa?: FilterModel;
-  articuloSku?: FilterModel;
-  articuloMarca?: FilterModel;
-  articuloNombre?: FilterModel;
-  articuloNombreCompleto?: FilterModel;
-  articuloCuentaContable?: FilterModel;
-  categoriadeProducto1?: FilterModel;
-  categoriadeProducto2?: FilterModel;
-  categoriadeProducto3?: FilterModel;
-  categoriadeProducto4?: FilterModel;
-  claveDeProductoOServicio?: FilterModel;
-  cantidad?: FilterModel;
-  unidadDeVenta?: FilterModel;
-  unidadDeContenido?: FilterModel;
-  contenidoUnitario?: FilterModel;
-  contenidoSubTotal?: FilterModel;
-  precioUnitario?: FilterModel;
-  articuloImporteSinDescuentoMxn?: FilterModel;
-  articuloDescuentoMontoMxn?: FilterModel;
-  articuloImporteConDescuentoMxn?: FilterModel;
-  articuloIVAMxn?: FilterModel;
-  articuloIEPSMxn?: FilterModel;
-  articuloIVARetenidoMxn?: FilterModel;
-  articuloISRretenidoMxn?: FilterModel;
 }
 
 /**
@@ -182,6 +143,7 @@ export interface SalesItemMappedRecord {
     nombreDisplay?: string;
     sku?: string;
     cuentaContable?: string;
+    cuentaContableLegacy?: string;
     tipo?: number;
     clasificacion1?: string;
     clasificacion2?: string;

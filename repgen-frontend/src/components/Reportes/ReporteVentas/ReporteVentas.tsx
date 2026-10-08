@@ -56,16 +56,10 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
   const {
     datos,
     estaCargando,
-    textoBusqueda,
-    setTextoBusqueda,
-    setBusquedaActiva,
     fechaDesde,
     setFechaDesde,
     fechaHasta,
     setFechaHasta,
-    modeloFiltros,
-    setModeloFiltros,
-    setPaginaActual,
   } = useReporteBase<IVentaData>({
     endpoint: reportConfig.endpoint,
     onError: onErrorReporte,
@@ -113,9 +107,8 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
 
   const esPrimerCambioTipoRef = useRef(true);
 
-  // La paginación/búsqueda/filtros se reinician dentro de useReporteBase al
-  // cambiar el endpoint (facturas <-> conceptos); aquí solo queda la llamada
-  // imperativa a la API de ag-grid en un efecto real.
+  // Al cambiar de tipo (facturas <-> conceptos) se limpian los filtros de
+  // columna de ag-grid; es una llamada imperativa, así que vive en un efecto.
   useEffect(() => {
     if (esPrimerCambioTipoRef.current) {
       esPrimerCambioTipoRef.current = false;
@@ -136,13 +129,6 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
       <EncabezadoReporte
         titulo="Reporte de Ventas"
         encabezadoExtra={<TabsVentas reportType={currentType} />}
-        referenciaGrid={referenciaGrid}
-        textoBusqueda={textoBusqueda}
-        setTextoBusqueda={setTextoBusqueda}
-        setBusquedaActiva={setBusquedaActiva}
-        modeloFiltros={modeloFiltros}
-        setModeloFiltros={setModeloFiltros}
-        setPaginaActual={setPaginaActual}
       />
 
       <div className="flex flex-col xl:flex-row gap-2">
@@ -167,7 +153,6 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
                 setFechaDesde={setFechaDesde}
                 fechaHasta={fechaHasta}
                 setFechaHasta={setFechaHasta}
-                setPaginaActual={setPaginaActual}
               />
             }
             accionesToolbar={

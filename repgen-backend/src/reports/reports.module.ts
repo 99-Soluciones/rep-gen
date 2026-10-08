@@ -12,7 +12,7 @@ import { LoggerModule } from '../common/logger/logger.module';
 @Module({
   imports: [
     CacheModule.register({
-      ttl: 60000, // Tiempo de vida en segundos
+      ttl: 60000, // Tiempo de vida en milisegundos
       max: 100, // Número máximo de elementos en caché
     }),
     UserModule,

@@ -8,7 +8,6 @@ interface FiltroFechasProps {
   setFechaDesde: (val: string) => void;
   fechaHasta: string;
   setFechaHasta: (val: string) => void;
-  setPaginaActual: (val: number) => void;
 }
 
 /**
@@ -22,7 +21,6 @@ const FiltroFechas = ({
   setFechaDesde,
   fechaHasta,
   setFechaHasta,
-  setPaginaActual,
 }: FiltroFechasProps) => {
   const [borradorFechas, setBorradorFechas] = useState({
     fechaDesde,
@@ -43,7 +41,6 @@ const FiltroFechas = ({
     toast.success("Fechas aplicadas");
     setFechaDesde(borradorFechas.fechaDesde);
     setFechaHasta(borradorFechas.fechaHasta);
-    setPaginaActual(1);
   };
 
   const fechasSinCambios =

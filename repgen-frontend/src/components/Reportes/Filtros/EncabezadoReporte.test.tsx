@@ -1,33 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { vi } from "vitest";
-import React from "react";
 import EncabezadoReporte from "./EncabezadoReporte";
 import { NavbarSlotContext } from "../../../layout/navbarSlotContext";
-import type { AgGridReact } from "ag-grid-react";
 
 describe("EncabezadoReporte", () => {
-  const referenciaGrid = {
-    current: {
-      api: {
-        setFilterModel: vi.fn(),
-      },
-    },
-  } as unknown as React.RefObject<AgGridReact>;
-
-  const props = {
-    titulo: "Reporte de Ventas",
-    referenciaGrid,
-    textoBusqueda: "",
-    setTextoBusqueda: vi.fn(),
-    setBusquedaActiva: vi.fn(),
-    modeloFiltros: {},
-    setModeloFiltros: vi.fn(),
-    setPaginaActual: vi.fn(),
-  };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  const props = { titulo: "Reporte de Ventas" };
 
   it("renderiza el título", () => {
     render(<EncabezadoReporte {...props} />);

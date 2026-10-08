@@ -8,8 +8,8 @@ interface TablaDinamicaControlesProps {
   accionesToolbarFin?: ReactNode;
 }
 
-// El endpoint siempre trae todos los registros (límite 999999 por default en
-// useReporteBase), así que el contador refleja lo cargado en el grid.
+// El endpoint siempre trae todos los registros del rango de fechas, así que el
+// contador refleja lo cargado en el grid.
 const TablaDinamicaControles = ({
   totalDatos,
   filasVisibles,

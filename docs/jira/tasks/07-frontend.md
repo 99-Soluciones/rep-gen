@@ -64,7 +64,7 @@ Estructura de navegación y pantallas principales.
 
 ## Hook compartido
 
-`shared/hooks/useReporteBase.ts` — paginación, fetch, filtros
+`shared/hooks/useReporteBase.ts` — fetch del rango de fechas (filtros y paginación los hace AG Grid en cliente)
 
 ## Criterios de aceptación
 
@@ -247,9 +247,9 @@ Columnas sin `labelSlot` en schema → no usan el provider.
 
 ## Patrón llamada
 
-- Header `Authorization: Bearer <jwt>`
-- Body: `{ globalSearch, filterModel, dateRange }`
-- Query: `page`, `limit`
+- Cookie httpOnly `jwt_reportes` (`credentials: "include"`)
+- Body: `{ dateRange: { startDate, endDate } }`
+- Respuesta: `{ data }`
 
 ## Criterios de aceptación
 
