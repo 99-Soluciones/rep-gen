@@ -86,7 +86,7 @@ async getXReports(
 - [ ] Config AG Grid: `config/<nombre>.columnas.ts` + `*.schema.json`
 - [ ] Usar `useReporteBase` (trae todo el rango de fechas; AG Grid filtra en el cliente)
 - [ ] Añadir ruta / entrada en `Sidebar`
-- [ ] Método en `api.reportes.ts` o `shared/api/reports-api.ts`
+- [ ] Método en `api.reportes.ts` o `features/reports/shared/api/reportes.api.ts`
 - [ ] Tests Vitest básicos (render + mock API)
 
 ### 8. Documentación

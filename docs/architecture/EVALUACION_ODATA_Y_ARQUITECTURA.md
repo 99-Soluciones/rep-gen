@@ -159,14 +159,14 @@ Un script `repgen-backend/scripts/spike-odata-bancos.mjs`, al estilo de `scripts
 
 ### 2.3 Frontend: hallazgos y qué cambiaría
 
-**F1. Estado y props muertos** (mayor valor, menor riesgo)
+**F1. Estado y props muertos** (mayor valor, menor riesgo) — *Hecho (Fase 1)*
 - `useReporteBase` expone 15 valores, pero en producción solo se usan `datos`, `estaCargando` y las fechas. `textoBusqueda`, `busquedaActiva`, `modeloFiltros`, `paginaActual`, `limite` y `totalPaginas` nunca cambian.
 - `EncabezadoReporte` recibe 9 props y en producción solo usa `titulo` y `encabezadoExtra`. El buscador vive en una rama con `mostrarBarraBusqueda = false`.
 - `DrawerFiltros` solo lo importa su propio test.
 
 *Cambio:* reducir el hook a `{datos, estaCargando, fechaDesde, fechaHasta, setFechas}`, quitar el *prop drilling* y borrar el código muerto. El request deja de enviar `globalSearch`, `filterModel`, `page` y `limit`.
 
-**F2. Migración de estructura a medias**
+**F2. Migración de estructura a medias** — *Hecho (Fase 2)*
 - `features/**`, `shared/ui/**`, `shared/api/reports-api.ts`, `shared/utils/date-formatted.ts` y `app/layout/Layout.tsx` son **solo re-exports** de `components/`, `config/`, `interfaces/`, `services/`, `utils/` y `layout/`. Conviven dos árboles: unos imports usan el shim y otros la ruta real.
 - Los barrels `features/reports/index.ts` y `features/auth/index.ts` hacen `export *` de módulos con `export default`, así que **no re-exportan nada**.
 
@@ -181,32 +181,33 @@ src/
       banks/      ReporteBancos.tsx, columnas.ts, bancos.schema.json
       sales/      ReporteVentas.tsx, TabsVentas.tsx, KpiPanelVentas.tsx, useTotalesVentas.ts, columnas.ts, ventas.schema.json
       shared/     TablaDinamica/, FiltroFechas, AccionesTabla, ModalColumnas, ConfiguracionesColumnas/, PanelKpiLateral, CardsKpi,
-                  useReporte.ts, useReporteGrid.ts, useReportConfigs.ts, column-labels/, api/, ag-grid/(construir-columnas, filtros, format)
+                  useReporteBase.ts, useReporteGrid.ts, useReportConfigs.ts, useTenantFeatures.ts, column-labels/,
+                  api/(reportes, report-configs, column-labels), ag-grid/(construir-columnas, parametros-filtro, predicados-filtro, formato, exportar)
   shared/         api/http.ts, utils/fechas.ts, ui/ComingSoon
 ```
 
-**F3. Pantallas duplicadas**
+**F3. Pantallas duplicadas** — *Hecho (Fase 2)*
 - `ReporteBancos` y `ReporteVentas` repiten unas 60 líneas: `useReportConfigs`, `gridReadyRef`, `defaultAppliedRef` con el efecto de la config predeterminada, `filasVisibles`, `columnasVisibles` y el armado de la toolbar.
 
 *Cambio:* un hook `useReporteGrid(reportId)` que devuelva `{referenciaGrid, columnasVisibles, setColumnasVisibles, filasVisibles, onGridListo, configs, refreshConfigs, actualizarFilasVisibles}`. Los KPIs siguen en cada pantalla.
 
-**F4. AG Grid completo**
+**F4. AG Grid completo** — *Hecho (Fase 2)*
 - `ModuleRegistry.registerModules([AllCommunityModule])` se llama en 2 archivos y el chunk `ag-grid-community` pesa **1,012 KB** minificado.
 
 *Cambio:* registrar una sola vez, en `TablaDinamica`, solo los módulos que se usan: `ClientSideRowModelModule`, `TextFilterModule`, `NumberFilterModule`, `DateFilterModule`, `CustomFilterModule` y `CsvExportModule`. Después, medir el chunk con `vite build`.
 
-**F5. Sin cliente HTTP común**
+**F5. Sin cliente HTTP común** — *Hecho (Fase 2)*
 - `API_URL` está definido en 4 archivos, y `fetch` + `credentials` + el parseo de errores se repiten.
 - El 401 solo se maneja en reportes; en configs, etiquetas y features no.
 
 *Cambio:* un `shared/api/http.ts` (unas 30 líneas) con `apiFetch<T>()` que resuelva URL base, cookies, JSON y el 401 como sesión expirada.
 
-**F6. Tipos que divergen**
+**F6. Tipos que divergen** — *Hecho (Fase 2)*
 - `IVentaData`/`IBancoData` duplican `ReportSalesRecord`/`ReportBankRecord` del backend y ya difieren: `ventaId` y `clienteId` son `string` en el front y `number` en el back.
 
 *Cambio:* mover los tipos de fila a `@repgen/shared-types`.
 
-**F7. Auth y router mezclados**
+**F7. Auth y router mezclados** — *Hecho (Fase 2)*
 - `Autenticacion.tsx` valida la sesión, monta el provider y define todas las rutas.
 - El estado `autenticado` nunca se lee.
 - `Navbar` hace `JSON.parse(localStorage…)` en cada render sin try/catch, así que truena si el valor está corrupto.
@@ -215,14 +216,15 @@ src/
 *Cambio:* separar en `AuthGate` (solo la sesión), `router.tsx` y `session.ts` (lectura segura del usuario).
 
 **F8. Menores**
-- `formatearFecha` no maneja ISO correctamente (prerequisito de OData, ver 1.3).
+- ~~`formatearFecha` no maneja ISO correctamente~~ (corregido en la Fase 1).
 - La altura `calc(110vh - 230px)` provoca scroll de página.
 - `filtroIgual` distingue mayúsculas y acentos, mientras que `filtroContiene` normaliza.
 - El botón dice "Excel" pero exporta CSV.
 - `PanelKpiLateral` escribe en `localStorage` en cada `mousemove`.
 - `vite.config.ts` define a la vez `manualChunks` y `codeSplitting.groups`; hay que dejar uno.
 - `FloatingFilterConLimpiar` usa la API imperativa (`forwardRef`/`useImperativeHandle`); conviene pasar a componentes reactivos de AG Grid.
-- `fetchTenantFeatures` vive en `column-labels.api.ts`.
+- ~~`fetchTenantFeatures` vive en `column-labels.api.ts`~~ (movido a `useTenantFeatures.ts` en la Fase 2).
+- Al cambiar entre facturas y conceptos, la grilla limpia el filtro pero el input del filtro flotante sigue mostrando el texto anterior. Ya pasaba antes de la Fase 2 y probablemente se resuelve con el punto anterior.
 
 ### 2.4 Lo que no se haría (YAGNI)
 
@@ -240,7 +242,7 @@ src/
 |---|---|---|---|
 | **0** | Correcciones críticas B1–B9 y este documento | 1–2 días | **Hecho (2026-10-08)** |
 | 1 | Limpieza: B10–B12 y F1 (borrar filtros y paginación muertos en back y front); `formatearFecha` (F8) | 3–4 días | **Hecho (2026-10-08)** |
-| 2 | Frontend: F2 estructura, F3 `useReporteGrid`, F4 módulos AG Grid, F5 `apiFetch`, F6 tipos compartidos, F7 AuthGate | 4–6 días | Pendiente |
+| 2 | Frontend: F2 estructura, F3 `useReporteGrid`, F4 módulos AG Grid, F5 `apiFetch`, F6 tipos compartidos, F7 AuthGate | 4–6 días | **Hecho (2026-10-08)** |
 | 3 | Prerequisitos en FileMaker, spike OData y decisión | 2–3 días | Pendiente |
 | 4 | Migración a OData por reporte (si el spike pasa) | 2–3 semanas | Pendiente |
 
@@ -290,6 +292,27 @@ Pendiente con negocio: B13 (`_id_banco: 0`).
 **Frontend**
 - **F1:** `useReporteBase` expone solo `{datos, estaCargando, fechaDesde/Hasta}`. `EncabezadoReporte` recibe solo `titulo` y `encabezadoExtra`. Se borraron el buscador oculto y `DrawerFiltros`.
 - **F8:** `formatearFecha` interpreta `YYYY-MM-DD` como fecha local. Los tests de Vitest corren en `America/Mexico_City` para que ese desfase también se detecte en CI (que corre en UTC).
+
+### Detalle de la Fase 2 aplicada
+
+- **F2 (estructura):** se movieron unos 55 archivos al árbol de arriba, con los imports y los `vi.mock` recalculados. Se borraron los shims, los barrels que no exportaban nada y `dynamic-column-slots.ts`, que nadie usaba. Ya no existen `components/`, `config/`, `interfaces/`, `services/`, `utils/` ni `layout/`.
+- **F3:** `useReporteGrid(reportId)` concentra la referencia al grid, las columnas visibles, el contador de filas y las vistas guardadas. La vista predeterminada se aplica una vez por reporte en cuanto el grid y las vistas están listos, en cualquier orden. Antes, si las vistas llegaban primero, no se aplicaba. Las pantallas pasaron de 211 a 168 líneas (Bancos) y de 207 a 141 (Ventas).
+- **F4:**
+  - `TablaDinamica` registra solo `ClientSideRowModel(Api)`, `RowApi`, `ColumnApi`, `ColumnAutoSize`, los filtros de texto, número y fecha, `CellStyle` y `CsvExport`. `ValidationModule` se registra solo en desarrollo.
+  - El chunk de AG Grid pasó de **1,012 KB a 773 KB** (gzip: de 281 a 217 KB).
+  - `TablaDinamica.modulos.test.tsx` monta AG Grid real con las columnas de los tres reportes y falla si falta un módulo.
+  - La validación sacó dos avisos que ya existían: el tipo `dateColumn`, que no existe en AG Grid, y la propiedad `claseColumna` en el `colDef`, que pasó a `colDef.context`.
+- **F5:** `shared/api/http.ts` (`apiFetch` + `ApiError`) es el único punto de `fetch`. Un 401 se trata igual en todas las llamadas (aviso y recarga), salvo en login y `/auth/me`.
+- **F6:** `ReportBankRecord`, `ReportSalesRecord` y `ReportSalesItemRecord` viven en `@repgen/shared-types`; el backend los re-exporta. Se corrigió `ventaId`/`clienteId`/`bodegaId`, que el front tenía como `string`.
+- **F7:**
+  - `AuthGate` solo valida la sesión;
+  - `app/router.tsx` define las rutas;
+  - `app/App.tsx` compone todo;
+  - `features/auth/session.ts` lee `localStorage` sin romperse si el valor está corrupto.
+- **Tests:** el mock de fechas de `ReporteBancos.test.tsx` apuntaba a una ruta inexistente y nunca se aplicaba; quedó corregido.
+- **Verificación en navegador:** se usó un backend falso con login, vistas, etiquetas y los tres reportes.
+  - Funcionaron el contrato `{ dateRange }`, la vista predeterminada, los KPIs, las etiquetas por tenant y el cambio entre facturas y conceptos, sin errores de consola.
+  - No se pudo verificar que el contador y los KPIs se actualicen tras filtrar, porque el panel del navegador estaba oculto y no dispara `requestAnimationFrame`.
 
 ---
 

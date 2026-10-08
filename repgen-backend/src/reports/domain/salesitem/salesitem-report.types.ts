@@ -1,40 +1,5 @@
-import { ReportSalesRecord } from '../sales/sales-report.types';
-
-/**
- * ReportSalesItemRecord extiende ReportSalesRecord con campos adicionales específicos para el reporte de ventas por artículo.
- */
-export interface ReportSalesItemRecord extends ReportSalesRecord {
-  tipoDeConcepto?: string;
-  metodoDeAdquisicion?: string;
-  costoDirectoUnitarioMxn?: number;
-  costoDirectoSubTotalMxn?: number;
-  gananciaBrutaMxn?: number;
-  costoTasa?: number;
-  margenTasa?: number;
-  articuloSku?: string;
-  articuloMarca?: string;
-  articuloNombre?: string;
-  articuloNombreCompleto?: string;
-  articuloCuentaContable?: string;
-  categoriadeProducto1?: string;
-  categoriadeProducto2?: string;
-  categoriadeProducto3?: string;
-  categoriadeProducto4?: string;
-  claveDeProductoOServicio?: string;
-  cantidad?: number;
-  unidadDeVenta?: string;
-  unidadDeContenido?: string;
-  contenidoUnitario?: number;
-  contenidoSubTotal?: number;
-  precioUnitario?: number;
-  articuloImporteSinDescuentoMxn?: number;
-  articuloDescuentoMontoMxn?: number;
-  articuloImporteConDescuentoMxn?: number;
-  articuloIVAMxn?: number;
-  articuloIEPSMxn?: number;
-  articuloIVARetenidoMxn?: number;
-  articuloISRretenidoMxn?: number;
-}
+// Contrato de la API, compartido con el frontend.
+export type { ReportSalesItemRecord } from '@repgen/shared-types';
 
 /**
  * Interaz para el mapeo de registros raw de ventas por artículo a un formato con keys limpias, utilizando las definiciones en salesItemFieldMap.json.

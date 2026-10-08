@@ -32,7 +32,7 @@ cliente.clasificacion1 … cliente.clasificacion4
 articulo.categoria1    … articulo.categoria4
 ```
 
-Definición tipada en frontend: `shared/config/dynamic-column-slots.ts`.
+Slots válidos: los `labelSlot` de `features/reports/sales/ventas.schema.json` (`cliente.clasificacion1..4`, `articulo.categoria1..4`), resueltos por `resolverSlot` en `column-labels.context.ts`.
 
 ---
 
@@ -69,7 +69,7 @@ sequenceDiagram
 
 1. Usuario entra desde FileMaker con `?token=…&tenant=miBase`.
 2. `POST /auth/login-token` genera JWT con `tenant: dbName`.
-3. `Autenticacion.tsx` monta `<ColumnLabelsProvider tenant={tenantActivo}>`.
+3. `app/App.tsx` monta `<ColumnLabelsProvider tenant={tenant}>` dentro de `AuthGate`, ya con sesión.
 4. El provider llama `GET /tenant/column-labels` con el JWT.
 5. `ReporteVentas` usa `useColumnLabels().getLabel` al construir columnas.
 6. `ColumnBuilder` usa `labelSlot` + `labelResolver` → `headerName` final.
@@ -192,22 +192,26 @@ Tests: `column-labels.mapper.spec.ts`.
 | Archivo | Rol |
 |---------|-----|
 | `features/reports/shared/api/column-labels.api.ts` | `fetchColumnLabels()` |
-| `features/reports/shared/context/ColumnLabelsProvider.tsx` | Estado, fetch, cache local |
-| `features/reports/shared/context/column-labels.context.ts` | Context, `resolverSlot`, sessionStorage |
-| `features/reports/shared/context/useColumnLabels.ts` | Hook `getLabel`, `labels`, `isLoading` |
-| `features/auth/ui/Autenticacion.tsx` | Monta provider con `tenantActivo` |
-| `config/ag-grid/Reportes/construir-columnas.ag-grid.ts` | `resolverNombreEncabezado` |
-| `config/ag-grid/Reportes/ventas/ventas.schema.json` | `labelSlot` por columna |
-| `config/ag-grid/Reportes/ventas/ventas.columnas.ts` | `construirColumnasVentas(schema, getLabel)` |
+| `features/reports/shared/column-labels/ColumnLabelsProvider.tsx` | Estado, fetch, cache local |
+| `features/reports/shared/column-labels/column-labels.context.ts` | Context, `resolverSlot`, sessionStorage |
+| `features/reports/shared/column-labels/useColumnLabels.ts` | Hook `getLabel`, `labels`, `isLoading` |
+| `app/App.tsx` | Monta el provider con el tenant de la sesión (tras `AuthGate`) |
+| `features/reports/shared/ag-grid/construir-columnas.ts` | `resolverNombreEncabezado` |
+| `features/reports/sales/ventas.schema.json` | `labelSlot` por columna |
+| `features/reports/sales/columnas.ts` | `construirColumnasVentas(schema, getLabel)` |
 
 ### Montaje del provider
 
 Solo cuando la autenticación fue exitosa:
 
 ```tsx
-<ColumnLabelsProvider tenant={tenantActivo}>
-  <BrowserRouter>… reportes …</BrowserRouter>
-</ColumnLabelsProvider>
+<AuthGate>
+  {({ tenant, reporteInicio }) => (
+    <ColumnLabelsProvider tenant={tenant}>
+      <AppRouter reporteInicio={reporteInicio} />
+    </ColumnLabelsProvider>
+  )}
+</AuthGate>
 ```
 
 `tenantActivo` sale de `datos.user.tenant` tras login o de `localStorage.usuario`.

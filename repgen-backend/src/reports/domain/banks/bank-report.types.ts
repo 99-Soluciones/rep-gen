@@ -1,27 +1,5 @@
-/**
- * La interfaz ReportBankRecord representa el formato final de cada registro en el reporte, con campos opcionales que se llenarán según la disponibilidad de datos.
- */
-export interface ReportBankRecord {
-  idTransaccionBanco: number;
-  fecha: string;
-  formaPago: string;
-  concepto: string;
-  abono?: number;
-  cargo?: number;
-  saldoPorComplementar: number;
-  tipoDeCambio?: number;
-  saldoPorIdentificar?: number;
-  saldoBanco?: number;
-  textoComplementario?: string;
-  nombre_banco?: string;
-  numero_cuenta?: string;
-  moneda?: string;
-  cuentaContable?: string;
-  estadoIngreso?: string;
-  estadoEgreso?: string;
-  nombre_comercial?: string;
-  rfc?: string;
-}
+// Contrato de la API, compartido con el frontend.
+export type { ReportBankRecord } from '@repgen/shared-types';
 /**
  * Interfaces para el mapeo de registros raw de bancos
  * a un formato con keys limpias, utilizando las definiciones en bankFieldMap.json.

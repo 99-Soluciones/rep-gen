@@ -16,7 +16,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
       include: [
-        'src/components/Reportes/**/*.{ts,tsx}',
+        'src/features/**/*.{ts,tsx}',
         'src/shared/ui/ComingSoon/**/*.{ts,tsx}',
       ],
       exclude: ['src/setupTests.ts', '**/*.test.ts', '**/*.test.tsx'],

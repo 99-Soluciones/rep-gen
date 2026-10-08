@@ -1,5 +1,7 @@
 # Cambios en Reportes desde el PR #14 (post-merge a `main`)
 
+> **Nota (2026-10-08):** registro histórico. Las rutas citadas (`src/components/Reportes/...`) cambiaron con la reorganización por features (Fase 2); ver [EVALUACION_ODATA_Y_ARQUITECTURA.md](../../docs/architecture/EVALUACION_ODATA_Y_ARQUITECTURA.md).
+
 Resumen de todo lo que cambió en `repgen-frontend` desde que el PR #14
 (`6cabfea`) se mezcló a `main`. `main` no se ha movido desde entonces; todo lo
 de aquí vive en `feature/deploy-vercel` (20 commits) más los cambios locales

@@ -127,7 +127,7 @@ No contiene reglas de negocio del reporte (cancelaciones, devoluciones → mappe
 ## Frontend relacionado
 
 - `features/reports/banks/ui/ReporteBancos.tsx`
-- `config/ag-grid/Reportes/bancos/`
+- `features/reports/banks/`
 
 ## Criterios de aceptación
 

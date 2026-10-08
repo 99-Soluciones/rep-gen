@@ -88,10 +88,9 @@ RepGen/
 │   └── env-presets/    # Plantillas .env
 ├── repgen-frontend/    # React + Vite
 │   └── src/
-│       ├── app/
-│       ├── features/   # auth, reports
-│       ├── shared/
-│       └── components/ # legacy en migración
+│       ├── app/        # App, router, layout
+│       ├── features/   # auth, reports (banks, sales, shared)
+│       └── shared/     # api/http, utils, ui genérica
 ├── docs/jira/          # Este backlog
 ├── .github/workflows/  # CI y deploy
 └── PROUESTA_ARQUITECTURA.md

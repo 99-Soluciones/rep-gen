@@ -20,8 +20,8 @@ El usuario no debe ver textos genéricos («Clasificación 1», «Categoría 2»
 
 ```mermaid
 flowchart TB
-  AUTH[Autenticacion.tsx]
-  AUTH -->|tenantActivo| PROV[ColumnLabelsProvider]
+  AUTH[AuthGate en App.tsx]
+  AUTH -->|sesion.tenant| PROV[ColumnLabelsProvider]
   PROV --> ROUTER[BrowserRouter]
   ROUTER --> LAYOUT[Layout]
   LAYOUT --> VENTAS[ReporteVentas]
@@ -33,14 +33,16 @@ flowchart TB
 
 El provider envuelve **toda la app autenticada**, no solo ventas. Así cualquier ruta futura puede usar el mismo contexto sin volver a fetchear.
 
-Montaje (`Autenticacion.tsx`):
+Montaje (`src/app/App.tsx`):
 
 ```tsx
-<ColumnLabelsProvider tenant={tenantActivo}>
-  <BrowserRouter>
-    <Layout>…</Layout>
-  </BrowserRouter>
-</ColumnLabelsProvider>
+<AuthGate>
+  {({ tenant, reporteInicio }) => (
+    <ColumnLabelsProvider tenant={tenant}>
+      <AppRouter reporteInicio={reporteInicio} />
+    </ColumnLabelsProvider>
+  )}
+</AuthGate>
 ```
 
 ---
@@ -50,20 +52,17 @@ Montaje (`Autenticacion.tsx`):
 ```
 src/features/reports/shared/
 ├── api/
-│   └── column-labels.api.ts      # fetch HTTP + tipo ColumnLabelsResponse
-└── context/
-    ├── column-labels.context.ts  # Context, storage, resolverSlot, labelsVacias
-    ├── ColumnLabelsProvider.tsx  # Provider + efectos
-    └── useColumnLabels.ts        # Hook de consumo
+│   └── column-labels.api.ts      # GET vía apiFetch + tipo ColumnLabelsResponse
+├── column-labels/
+│   ├── column-labels.context.ts  # Context, storage, resolverSlot, labelsVacias
+│   ├── ColumnLabelsProvider.tsx  # Provider + efectos
+│   └── useColumnLabels.ts        # Hook de consumo
+└── ag-grid/
+    └── construir-columnas.ts     # LabelResolver → headerName
 
-src/shared/config/
-└── dynamic-column-slots.ts       # Tipos de slots (documentación TS)
-
-src/config/ag-grid/Reportes/
-├── construir-columnas.ag-grid.ts # LabelResolver → headerName
-└── ventas/
-    ├── ventas.schema.json        # labelSlot por columna
-    └── ventas.columnas.ts        # construirColumnasVentas(schema, getLabel)
+src/features/reports/sales/
+├── ventas.schema.json            # labelSlot por columna
+└── columnas.ts                   # construirColumnasVentas(schema, getLabel)
 ```
 
 ---
@@ -277,8 +276,8 @@ export const useColumnLabels = () => {
 ## 11. Cómo usar en un componente nuevo
 
 ```typescript
-import { useColumnLabels } from "@/features/reports/shared/context/useColumnLabels";
-import { construirColumnasVentas } from "@/config/ag-grid/Reportes/ventas/ventas.columnas";
+import { useColumnLabels } from "@/features/reports/shared/column-labels/useColumnLabels";
+import { construirColumnasVentas } from "@/features/reports/sales/columnas";
 
 function MiReporte() {
   const { getLabel, isLoading, refreshLabels } = useColumnLabels();
@@ -303,7 +302,7 @@ Para otro reporte:
 `ReporteVentas.test.tsx` mockea el hook (no monta el provider real):
 
 ```typescript
-vi.mock('../../../features/reports/shared/context/useColumnLabels', () => ({
+vi.mock('../shared/column-labels/useColumnLabels', () => ({
   useColumnLabels: () => ({
     labels: { cliente: { … }, articulo: { … } },
     isLoading: false,
@@ -325,7 +324,7 @@ Para probar el provider en aislamiento haría falta:
 
 | Síntoma | Causa probable | Acción |
 |---------|----------------|--------|
-| Error al usar hook | Componente fuera del provider | Mover bajo `Autenticacion` post-login |
+| Error al usar hook | Componente fuera del provider | Montarlo dentro de `AuthGate` (ver `app/App.tsx`) |
 | Siempre defaultHeader | Sin `labelSlot` en schema | Revisar `ventas.schema.json` |
 | Labels de otro cliente | Storage antiguo | Cerrar pestaña o limpiar `sessionStorage` `repgen:column-labels:*` |
 | Encabezados no actualizan | `useMemo` sin `getLabel` en deps | Incluir `getLabel` como en `ReporteVentas` |
@@ -371,4 +370,4 @@ localStorage.getItem("jwt_reportes") ? "JWT ok" : "sin JWT"
 
 - Backend / E2E: `repgen-backend/docs/tenant/COLUMN_LABELS.md`
 - Jira: `docs/jira/tasks/07-frontend.md` (SUB-7.6)
-- Slots en schema: `src/config/ag-grid/Reportes/ventas/ventas.schema.json`
+- Slots en schema: `src/features/reports/sales/ventas.schema.json`

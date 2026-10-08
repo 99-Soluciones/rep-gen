@@ -40,10 +40,10 @@ Rutas relativas dentro del monorepo — funcionan en GitHub, en el editor y en c
 
 | Tema | Enlace |
 |------|--------|
-| Autenticación + provider | [Autenticacion.tsx](../../repgen-frontend/src/features/auth/ui/Autenticacion.tsx) |
+| Autenticación + provider | [AuthGate.tsx](../../repgen-frontend/src/features/auth/AuthGate.tsx), [App.tsx](../../repgen-frontend/src/app/App.tsx) |
 | Column labels API | [column-labels.api.ts](../../repgen-frontend/src/features/reports/shared/api/column-labels.api.ts) |
-| Schema ventas (labelSlot) | [ventas.schema.json](../../repgen-frontend/src/config/ag-grid/Reportes/ventas/ventas.schema.json) |
-| Reporte ventas | [ReporteVentas.tsx](../../repgen-frontend/src/components/Reportes/ReporteVentas/ReporteVentas.tsx) |
+| Schema ventas (labelSlot) | [ventas.schema.json](../../repgen-frontend/src/features/reports/sales/ventas.schema.json) |
+| Reporte ventas | [ReporteVentas.tsx](../../repgen-frontend/src/features/reports/sales/ReporteVentas.tsx) |
 
 ---
 

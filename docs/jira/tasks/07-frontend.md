@@ -16,9 +16,9 @@ Estructura de navegación y pantallas principales.
 
 ## Estado actual
 
-- Entry: `src/main.tsx` → `src/app/App.tsx` (muestra `Autenticacion` si no hay sesión)
-- Layout: `src/app/layout/` y legacy `src/layout/`
-- Componentes: `Layout.tsx`, `Navbar.tsx`, `Sidebar.tsx`
+- Entry: `src/main.tsx` → `src/app/App.tsx`: `AuthGate` valida la sesión y, con sesión, monta `ColumnLabelsProvider` + `app/router.tsx`
+- Layout: `src/app/layout/` (`Layout.tsx`, `Navbar.tsx`, `Sidebar.tsx`, `navbarSlotContext.ts`)
+- Sesión en el navegador: `src/features/auth/session.ts` (usuario no sensible; el JWT va en cookie httpOnly)
 
 ## Criterios de aceptación
 
@@ -33,7 +33,7 @@ Estructura de navegación y pantallas principales.
 
 ## Archivo
 
-`src/features/auth/ui/Autenticacion.tsx`
+`src/features/auth/AuthGate.tsx`
 
 ## Flujo
 
@@ -57,14 +57,14 @@ Estructura de navegación y pantallas principales.
 
 | Tipo | Ruta |
 |------|------|
-| Feature (objetivo) | `features/reports/banks/ui/ReporteBancos.tsx` |
-| Legacy | `components/Reportes/ReporteBancos.tsx` |
-| Columnas AG Grid | `config/ag-grid/Reportes/bancos/bancos.columas.ts` |
-| Schema | `config/ag-grid/Reportes/bancos/bancos.schema.json` |
+| Pantalla | `features/reports/banks/ReporteBancos.tsx` |
+| Columnas AG Grid | `features/reports/banks/columnas.ts` |
+| Schema | `features/reports/banks/bancos.schema.json` |
 
 ## Hook compartido
 
-`shared/hooks/useReporteBase.ts` — fetch del rango de fechas (filtros y paginación los hace AG Grid en cliente)
+- `features/reports/shared/useReporteBase.ts` — fetch del rango de fechas (filtros y paginación los hace AG Grid en cliente)
+- `features/reports/shared/useReporteGrid.ts` — referencia al grid, columnas visibles, contador de filas y vistas guardadas (aplica la predeterminada)
 
 ## Criterios de aceptación
 
@@ -80,8 +80,8 @@ Estructura de navegación y pantallas principales.
 ## Archivos
 
 - `features/reports/sales/ui/ReporteVentas.tsx`
-- `components/Reportes/ReporteVentas/` (tabs, tests)
-- `config/ag-grid/Reportes/ventas/ventas.columnas.ts`
+- `features/reports/sales/` (tabs, tests)
+- `features/reports/sales/columnas.ts`
 - `ventas.schema.json`
 
 ## Particularidades
@@ -103,16 +103,19 @@ Estructura de navegación y pantallas principales.
 
 | Componente | Ubicación |
 |------------|-----------|
-| TablaDinamica | `shared/ui/TablaDinamica/` |
-| Filtros / Drawer | `components/Reportes/Filtros/` (migrar a shared) |
-| PanelKpiLateral | `shared/ui/PanelKpiLateral/` |
+| TablaDinamica | `features/reports/shared/TablaDinamica/` |
+| FiltroFechas, EncabezadoReporte, AccionesTabla, BotonExportar | `features/reports/shared/` |
+| ConfiguracionesColumnas (vistas guardadas) | `features/reports/shared/ConfiguracionesColumnas/` |
+| PanelKpiLateral, CardsKpi | `features/reports/shared/` |
 | ModalColumnas | selector columnas visibles |
 
 ## AG Grid utils
 
-- `utils/ag-grid/export.ag-grid.ts`
-- `utils/ag-grid/filters.ag-grid.ts`
-- `config/ag-grid/Reportes/construir-columnas.ag-grid.ts`
+- `features/reports/shared/ag-grid/construir-columnas.ts` — `ColDef` a partir del schema JSON
+- `features/reports/shared/ag-grid/parametros-filtro.ts` — opciones de filtro por tipo de dato
+- `features/reports/shared/ag-grid/predicados-filtro.ts` — predicados (contiene, igual, fechas…)
+- `features/reports/shared/ag-grid/formato.ts`, `exportar.ts`
+- Módulos de AG Grid: se registran una sola vez en `TablaDinamica.tsx` (solo los usados); `TablaDinamica.modulos.test.tsx` falla si falta uno
 
 ## Criterios de aceptación
 
@@ -143,15 +146,15 @@ Centralizar en React la carga y el uso de **encabezados de columna personalizado
 
 ```mermaid
 flowchart TB
-  LOGIN[Autenticacion - login OK] --> PROV[ColumnLabelsProvider tenant=tenantActivo]
+  LOGIN[AuthGate - sesión OK] --> PROV[ColumnLabelsProvider tenant=sesion.tenant]
   PROV --> ROUTER[BrowserRouter + Layout]
   ROUTER --> VENTAS[ReporteVentas]
   VENTAS --> HOOK[useColumnLabels.getLabel]
   HOOK --> AG[construirColumnasVentas + ventas.schema labelSlot]
 ```
 
-- Montado en `features/auth/ui/Autenticacion.tsx` **solo después** de autenticación exitosa.
-- `tenantActivo` = `user.tenant` del login o `localStorage.usuario`.
+- Montado en `app/App.tsx`, dentro de `AuthGate`, **solo después** de autenticación exitosa.
+- `tenant` = `user.tenant` del login o el usuario guardado (`features/auth/session.ts`).
 
 ---
 
@@ -159,13 +162,12 @@ flowchart TB
 
 | Archivo | Rol |
 |---------|-----|
-| `shared/api/column-labels.api.ts` | `GET /tenant/column-labels` + JWT desde `localStorage.jwt_reportes` |
-| `shared/context/column-labels.context.ts` | Context, `resolverSlot`, cache `sessionStorage` |
-| `shared/context/ColumnLabelsProvider.tsx` | Fetch al montar, estado, `refreshLabels` |
-| `shared/context/useColumnLabels.ts` | Hook para componentes hijos |
-| `shared/config/dynamic-column-slots.ts` | Tipos de slots válidos |
-| `config/ag-grid/Reportes/construir-columnas.ag-grid.ts` | `LabelResolver` → `headerName` |
-| `config/ag-grid/Reportes/ventas/ventas.schema.json` | `labelSlot` + `defaultHeader` |
+| `features/reports/shared/api/column-labels.api.ts` | `GET /tenant/column-labels` vía `apiFetch` (cookie httpOnly) |
+| `features/reports/shared/column-labels/column-labels.context.ts` | Context, `resolverSlot`, cache `sessionStorage` |
+| `features/reports/shared/column-labels/ColumnLabelsProvider.tsx` | Fetch al montar, estado, `refreshLabels` |
+| `features/reports/shared/column-labels/useColumnLabels.ts` | Hook para componentes hijos |
+| `features/reports/shared/ag-grid/construir-columnas.ts` | `LabelResolver` → `headerName` |
+| `features/reports/sales/ventas.schema.json` | `labelSlot` + `defaultHeader` |
 
 ---
 
@@ -214,7 +216,7 @@ Columnas sin `labelSlot` en schema → no usan el provider.
 
 ## Tests
 
-`components/Reportes/ReporteVentas/ReporteVentas.test.tsx` — mock de `useColumnLabels` con `getLabel` fijo (no prueba el provider real).
+`features/reports/sales/ReporteVentas.test.tsx` — mock de `useColumnLabels` con `getLabel` fijo (no prueba el provider real).
 
 ---
 
@@ -242,8 +244,9 @@ Columnas sin `labelSlot` en schema → no usan el provider.
 
 ## Archivos
 
-- `src/services/api.reportes.ts` (legacy centralizado)
-- `src/shared/api/reports-api.ts` (objetivo)
+- `src/shared/api/http.ts` — `apiFetch`: URL base, cookie, JSON, `ApiError`; un 401 avisa y recarga (sesión expirada)
+- `src/features/reports/shared/api/reportes.api.ts` — `obtenerReporte` (dedupe de solicitudes simultáneas)
+- Tipos de fila: `ReportBankRecord`, `ReportSalesRecord`, `ReportSalesItemRecord` en `@repgen/shared-types`
 
 ## Patrón llamada
 

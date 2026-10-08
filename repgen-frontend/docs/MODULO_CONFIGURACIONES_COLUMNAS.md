@@ -52,15 +52,16 @@ flowchart TB
 
 ### Frontend
 ```
-src/
-├── components/Reportes/Filtros/
-│   ├── Filtros.tsx                    # Barra; thread de props reportId/configs/onConfigsChange
+src/features/reports/shared/
+├── AccionesTabla.tsx                  # Thread de props reportId/configs/onConfigsChange
+├── ConfiguracionesColumnas/
 │   ├── ConfiguracionesColumnas.tsx    # ★ Selector + menú ⋮ + popover "Guardar como..."
-│   └── ModalColumnas.tsx              # Solo mostrar/ocultar columnas
-├── features/reports/shared/api/
-│   └── report-configs.api.ts          # fetch/create/update/delete (HTTP + JWT)
-└── shared/hooks/
-    └── useReportConfigs.ts            # { configs, defaultConfig, refresh, cargando }
+│   ├── MenuAccionesConfig.tsx, PopoverGuardarConfig.tsx, ConfiguracionesColumnas.reducer.ts
+├── ModalColumnas.tsx                  # Solo mostrar/ocultar columnas
+├── api/
+│   └── report-configs.api.ts          # fetch/create/update/delete (apiFetch, cookie httpOnly)
+├── useReportConfigs.ts                # { configs, defaultConfig, refresh, cargando }
+└── useReporteGrid.ts                  # Aplica la vista predeterminada una vez por reporte
 ```
 
 ### Backend
@@ -211,7 +212,7 @@ Todos protegidos por el `JwtAuthGuard` global → `req.tenant` (dbName) y `req.i
 1. **Tipos y modelo:** `report-config.types.ts` + `report-config-field-map.ts` (qué se guarda).
 2. **Backend de afuera hacia adentro:** `report-configs.controller.ts` → un use case (`create`) → `filemaker.service.ts` (`createRecord`/`getRecord`).
 3. **Frontend de datos:** `report-configs.api.ts` → `useReportConfigs.ts`.
-4. **Frontend de UI:** `ConfiguracionesColumnas.tsx` (toda la interacción) y cómo `Filtros.tsx` lo monta.
+4. **Frontend de UI:** `ConfiguracionesColumnas.tsx` (toda la interacción) y cómo `AccionesTabla.tsx` lo monta.
 5. **Auto-aplicar default:** el `useEffect` con `gridReadyRef`/`defaultAppliedRef` en `ReporteBancos.tsx`.
 
 ---
@@ -220,5 +221,5 @@ Todos protegidos por el `JwtAuthGuard` global → `req.tenant` (dbName) y `req.i
 
 - **Estado del grid como fuente de verdad:** al vivir en la barra (fuera del modal) no hay "borrador"; se serializa directamente con `api.getColumnState()`.
 - **Inicialización del selector sin `useEffect`:** el selector arranca en la config default mediante *ajuste de estado durante el render* (el lint `react-hooks/set-state-in-effect` prohíbe `setState` en efectos).
-- **Cierre de popovers:** overlay invisible `fixed inset-0` (mismo patrón que `DrawerFiltros.tsx`); no hay librería de popovers.
+- **Cierre de popovers:** overlay invisible `fixed inset-0` ; no hay librería de popovers.
 - **Feedback:** `react-hot-toast` (el `<Toaster>` ya está montado en `Layout.tsx`).
