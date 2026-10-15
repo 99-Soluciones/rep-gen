@@ -21,10 +21,17 @@ type TablaMockProps = {
       ) => void;
     };
   }>;
-  onGridListo: (event: { api: { getColumns: () => Array<{ id: string }> } }) => void;
+  onGridListo: (event: { api: { getColumns: () => Array<{ id: string }> } & typeof eventosGrid }) => void;
   onActualizacionModulo?: () => void;
   estaCargando: boolean;
 };
+
+// Lo que useReporteGrid usa del grid al quedar listo (suscripción + foto de la vista).
+const eventosGrid = vi.hoisted(() => ({
+  addEventListener: () => {},
+  getColumnState: () => [],
+  getFilterModel: () => ({}),
+}));
 
 const tablaMock = vi.hoisted(() => vi.fn((props: TablaMockProps) => {
   // Mantenemos siempre las últimas props en una ref para evitar agregarlas
@@ -45,7 +52,7 @@ const tablaMock = vi.hoisted(() => vi.fn((props: TablaMockProps) => {
         },
       },
     };
-    currentProps.onGridListo({ api: { getColumns: () => [{ id: 'col-1' }] } });
+    currentProps.onGridListo({ api: { getColumns: () => [{ id: 'col-1' }], ...eventosGrid } });
     currentProps.onActualizacionModulo?.();
     // Solo se ejecuta una vez al montar el mock.
   }, []);
@@ -149,8 +156,8 @@ describe('ReporteVentas', () => {
     const ultimaLlamada = tablaMock.mock.calls.at(-1)?.[0] as {
       accionesToolbarFin?: { props?: { nombreArchivo?: string } };
     };
-    expect(ultimaLlamada.accionesToolbarFin?.props?.nombreArchivo).toBe(
-      'reporte_ventas_facturas',
+    expect(ultimaLlamada.accionesToolbarFin?.props?.nombreArchivo).toMatch(
+      /^reporte_ventas_facturas_\d{4}-\d{2}-\d{2}_a_\d{4}-\d{2}-\d{2}$/,
     );
 
     // El filtro de columna de ag-grid se aplica localmente y no debe
@@ -162,10 +169,9 @@ describe('ReporteVentas', () => {
       expect(
         screen.getByText((_, node) =>
           Boolean(
-            node?.tagName === 'P' &&
-              node.textContent &&
-              /200\.00/.test(node.textContent) &&
-              node.parentElement?.textContent?.includes('Total Facturado'),
+            node?.tagName === 'DD' &&
+              /200\.00/.test(node.textContent ?? '') &&
+              node.previousElementSibling?.textContent === 'Facturado',
           ),
         ),
       ).toBeInTheDocument(),
@@ -175,10 +181,10 @@ describe('ReporteVentas', () => {
     // Filtros). Hay dos botones de colapso (desktop sobre la línea divisoria
     // y móvil en el header); ambos disparan el mismo onToggle.
     fireEvent.click(
-      screen.getAllByRole('button', { name: 'Ocultar dashboard' })[0],
+      screen.getAllByRole('button', { name: 'Ocultar resumen' })[0],
     );
     expect(
-      screen.getAllByRole('button', { name: 'Mostrar dashboard' }).length,
+      screen.getAllByRole('button', { name: 'Mostrar resumen' }).length,
     ).toBeGreaterThan(0);
   });
 
@@ -199,8 +205,8 @@ describe('ReporteVentas', () => {
     const ultimaLlamada = tablaMock.mock.calls.at(-1)?.[0] as {
       accionesToolbarFin?: { props?: { nombreArchivo?: string } };
     };
-    expect(ultimaLlamada.accionesToolbarFin?.props?.nombreArchivo).toBe(
-      'reporte_ventas_conceptos',
+    expect(ultimaLlamada.accionesToolbarFin?.props?.nombreArchivo).toMatch(
+      /^reporte_ventas_conceptos_\d{4}-\d{2}-\d{2}_a_\d{4}-\d{2}-\d{2}$/,
     );
   });
 });

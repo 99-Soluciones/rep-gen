@@ -6,10 +6,18 @@ import type { ReportBankRecord } from "@repgen/shared-types";
 import { columnasBancos } from "./columnas";
 import { useReporteBase } from "../shared/useReporteBase";
 import { useReporteGrid } from "../shared/useReporteGrid";
-import CardsKpi from "../shared/CardsKpi";
+import { LineaEstado, NotaRegistros, SeccionEstado } from "../shared/EstadoKpi";
 import AccionesTabla from "../shared/AccionesTabla";
 import BotonExportar from "../shared/BotonExportar";
 import FiltroFechas from "../shared/FiltroFechas";
+
+// Solo MXN, igual que los KPIs: sumar monedas distintas daría una cifra falsa.
+// Los saldos no se suman (son acumulados por renglón).
+const totalesBancos = {
+  campos: ["abono", "cargo"],
+  incluirFila: (fila: ReportBankRecord) => fila.moneda === "MXN",
+  etiqueta: "Total MXN",
+};
 
 const onErrorReporte = (error: unknown) => {
   console.error("Error al obtener los datos:", error);
@@ -19,10 +27,14 @@ const ReporteBancos = () => {
   const {
     datos,
     estaCargando,
+    error,
+    reintentar,
     fechaDesde,
     setFechaDesde,
     fechaHasta,
     setFechaHasta,
+    aplicarRango,
+    versionRango,
   } = useReporteBase<ReportBankRecord>({
     endpoint: "bancos/buscar",
     onError: onErrorReporte,
@@ -38,20 +50,28 @@ const ReporteBancos = () => {
     onGridListo,
     configs,
     refreshConfigs,
-  } = useReporteGrid("bancos");
+    vistaActual,
+    vistaBase,
+    fijarBase,
+    onCambioVista,
+  } = useReporteGrid("bancos", aplicarRango);
 
   //KPIs
-  const [totales, setTotales] = useState({ abonos: 0, cargos: 0, balance: 0 });
+  const [totales, setTotales] = useState({ abonos: 0, cargos: 0, balance: 0, otraMoneda: 0 });
 
   const recalcularTotales = () => {
     if (!referenciaGrid.current || !referenciaGrid.current.api) return;
 
     let tAbonos = 0;
     let tCargos = 0;
+    let otraMoneda = 0;
 
     referenciaGrid.current.api.forEachNodeAfterFilterAndSort((node) => {
       const data = node.data as ReportBankRecord;
-      if (data.moneda !== "MXN") return; // Solo considerar registros en MXN
+      if (data.moneda !== "MXN") {
+        otraMoneda += 1; // Solo se suman registros en MXN; los demás se avisan.
+        return;
+      }
       tAbonos += data.abono || 0;
       tCargos += data.cargo || 0;
     });
@@ -59,23 +79,28 @@ const ReporteBancos = () => {
       abonos: tAbonos,
       cargos: tCargos,
       balance: tAbonos - tCargos,
+      otraMoneda,
     });
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col xl:h-full">
       <EncabezadoReporte
         titulo="Reporte de Bancos"
       />
 
-      <div className="flex flex-col xl:flex-row gap-2">
-        <div className="flex-1 min-w-0">
+      <div className="flex flex-col xl:flex-row xl:flex-1 xl:min-h-0 gap-2">
+        <div className="flex-1 min-w-0 flex flex-col">
           <TablaDinamica<ReportBankRecord>
             referenciaGrid={referenciaGrid}
             datos={datos}
             definicionesColumnas={columnasBancos}
             estaCargando={estaCargando}
+            error={error}
+            onReintentar={reintentar}
+            totales={totalesBancos}
             onGridListo={onGridListo}
+            onCambioVista={onCambioVista}
             onActualizacionModulo={() => {
               recalcularTotales();
               actualizarFilasVisibles();
@@ -83,6 +108,8 @@ const ReporteBancos = () => {
             filasVisibles={filasVisibles}
             accionesToolbarInicio={
               <FiltroFechas
+                // Una vista con periodo cambia las fechas: el borrador se reinicia.
+                key={versionRango}
                 fechaDesde={fechaDesde}
                 setFechaDesde={setFechaDesde}
                 fechaHasta={fechaHasta}
@@ -97,67 +124,56 @@ const ReporteBancos = () => {
                 reportId="bancos"
                 configs={configs}
                 onConfigsChange={refreshConfigs}
+                rango={{ desde: fechaDesde, hasta: fechaHasta }}
+                onAplicarRango={aplicarRango}
+                vistaActual={vistaActual}
+                vistaBase={vistaBase}
+                onVistaAplicada={(id) => fijarBase(id)}
               />
             }
             accionesToolbarFin={
               <BotonExportar
                 referenciaGrid={referenciaGrid}
-                nombreArchivo="reporte_bancos"
+                nombreArchivo={`reporte_bancos_${fechaDesde}_a_${fechaHasta}`}
+                motivoDeshabilitado={
+                  estaCargando
+                    ? "Espera a que terminen de cargar los registros"
+                    : error
+                      ? "No hay registros cargados que exportar"
+                      : filasVisibles === 0
+                        ? "No hay registros que exportar con estas fechas y filtros"
+                        : null
+                }
               />
             }
           />
         </div>
 
         <PanelKpiLateral
-          titulo="Dashboard de metricas"
-          aviso="Solo se consideran las transacciones en MXN"
+          titulo="Resumen"
+          aviso={
+            totales.otraMoneda > 0
+              ? `Solo MXN · ${totales.otraMoneda.toLocaleString("es-MX")} ${
+                  totales.otraMoneda === 1 ? "movimiento" : "movimientos"
+                } en otra moneda sin sumar`
+              : "Solo transacciones en MXN"
+          }
           abierto={mostrarResumen}
           onToggle={() => setMostrarResumen(!mostrarResumen)}
           storageKey="kpi-panel-bancos"
           lado="derecha"
+          estado={error ? "error" : estaCargando ? "cargando" : null}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">
-            <CardsKpi
-              titulo="Total Abonos"
-              valor={{ cantidad: totales.abonos, tipo: "moneda" }}
-              color={{ positivo: "green", negativo: "red" }}
-              icono={
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                />
-              }
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-x-8 gap-y-5">
+            <NotaRegistros
+              registros={filasVisibles}
+              filtrado={filasVisibles !== datos.length}
             />
-
-            <CardsKpi
-              titulo="Total Cargos"
-              valor={{ cantidad: totales.cargos, tipo: "moneda" }}
-              color={{ positivo: "red", negativo: "red" }}
-              icono={
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
-                />
-              }
-            />
-
-            <CardsKpi
-              titulo="Flujo Neto"
-              valor={{ cantidad: totales.balance, tipo: "moneda" }}
-              color={{ positivo: "blue", negativo: "orange" }}
-              icono={
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              }
-            />
+            <SeccionEstado titulo="Movimientos">
+              <LineaEstado etiqueta="Abonos" valor={totales.abonos} />
+              <LineaEstado etiqueta="Cargos" valor={-totales.cargos} />
+              <LineaEstado etiqueta="Flujo neto" valor={totales.balance} total />
+            </SeccionEstado>
           </div>
         </PanelKpiLateral>
       </div>

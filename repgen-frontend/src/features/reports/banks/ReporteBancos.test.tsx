@@ -21,10 +21,17 @@ type TablaMockProps = {
     };
   }>;
   onGridListo: (event: {
-    api: { getColumns: () => Array<{ id: string }> };
+    api: { getColumns: () => Array<{ id: string }> } & typeof eventosGrid;
   }) => void;
   onActualizacionModulo?: () => void;
 };
+
+// Lo que useReporteGrid usa del grid al quedar listo (suscripción + foto de la vista).
+const eventosGrid = vi.hoisted(() => ({
+  addEventListener: () => {},
+  getColumnState: () => [],
+  getFilterModel: () => ({}),
+}));
 
 const tablaMock = vi.hoisted(() =>
   vi.fn((props: TablaMockProps) => {
@@ -49,7 +56,7 @@ const tablaMock = vi.hoisted(() =>
         },
       };
       currentProps.onGridListo({
-        api: { getColumns: () => [{ id: "col-1" }] },
+        api: { getColumns: () => [{ id: "col-1" }], ...eventosGrid },
       });
       currentProps.onActualizacionModulo?.();
     }, []);
@@ -126,8 +133,9 @@ describe("ReporteBancos", () => {
     const ultimaLlamada = tablaMock.mock.calls[tablaMock.mock.calls.length - 1]?.[0] as {
       accionesToolbarFin?: { props?: { nombreArchivo?: string } };
     };
-    expect(ultimaLlamada.accionesToolbarFin?.props?.nombreArchivo).toBe(
-      "reporte_bancos",
+    // El archivo se nombra con el rango aplicado, no con la fecha de descarga.
+    expect(ultimaLlamada.accionesToolbarFin?.props?.nombreArchivo).toMatch(
+      /^reporte_bancos_\d{4}-\d{2}-\d{2}_a_\d{4}-\d{2}-\d{2}$/,
     );
 
     // El filtro de columna de ag-grid se aplica localmente y no debe
@@ -139,10 +147,10 @@ describe("ReporteBancos", () => {
     // Filtros). Hay dos botones de colapso (desktop sobre la línea divisoria
     // y móvil en el header); ambos disparan el mismo onToggle.
     fireEvent.click(
-      screen.getAllByRole("button", { name: "Ocultar dashboard" })[0],
+      screen.getAllByRole("button", { name: "Ocultar resumen" })[0],
     );
     expect(
-      screen.getAllByRole("button", { name: "Mostrar dashboard" }).length,
+      screen.getAllByRole("button", { name: "Mostrar resumen" }).length,
     ).toBeGreaterThan(0);
   });
 });

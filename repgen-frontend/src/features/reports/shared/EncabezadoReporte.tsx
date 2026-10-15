@@ -20,9 +20,9 @@ const EncabezadoReporte = ({ titulo, encabezadoExtra }: EncabezadoReporteProps) 
 
   const encabezado = (
     <div className="flex flex-wrap items-center gap-3 min-w-0">
-      <h2 className="text-lg font-bold text-gray-800 truncate sm:text-xl">
+      <h1 className="text-lg font-bold text-gray-800 truncate sm:text-xl">
         {titulo}
-      </h2>
+      </h1>
       {encabezadoExtra ? (
         <div className="shrink-0">{encabezadoExtra}</div>
       ) : null}

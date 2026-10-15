@@ -37,5 +37,11 @@ export const construirColumnasVentas = (
   reportType: VentasReportType,
   labelResolver?: LabelResolver,
 ): ColDef<ReportSalesItemRecord>[] => {
-  return constructorColumnas.construirColumnas(reportType, labelResolver);
+  return constructorColumnas.construirColumnas(reportType, labelResolver).map((columna) =>
+    // El folio es lo que se lee y se teclea al conciliar: queda fijo a la
+    // izquierda al desplazarse entre ~40-70 columnas. initialPinned (no pinned)
+    // para que "— Ninguna —" (resetColumnState) vuelva aquí y no pise lo que
+    // el usuario fije o suelte después.
+    columna.field === "facturaFolio" ? { ...columna, initialPinned: "left" } : columna,
+  );
 };
