@@ -22,7 +22,7 @@ const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
       className={`
         absolute top-0 left-0 h-full z-100
         w-64 bg-white border-r border-gray-200 flex flex-col shadow-2xl 
-        transition-transform duration-300 ease-in-out
+        transition-transform duration-300 ease-in-out motion-reduce:transition-none
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
       `}
     >
@@ -39,6 +39,7 @@ const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
           }
         >
           <svg
+            aria-hidden="true"
             className="w-5 h-5 mr-3 shrink-0"
             fill="none"
             stroke="currentColor"
@@ -62,6 +63,7 @@ const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
           }
         >
           <svg
+            aria-hidden="true"
             className="w-5 h-5 mr-3 shrink-0"
             fill="none"
             stroke="currentColor"
@@ -85,6 +87,7 @@ const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
           }
         >
           <svg
+            aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -112,6 +115,7 @@ const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
           }
         >
           <svg
+            aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

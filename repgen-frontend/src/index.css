@@ -3,13 +3,33 @@
 @theme {
   --font-sans: Arial, Helvetica, sans-serif;
 
-  /* Azul de marca ERP (#2B75E8) — sustituye el azul default en toda la app */
-  --color-blue-500: #4a8bec; /* focus rings, tags claros */
-  --color-blue-600: #2b75e8; /* principal: botones, iconos, links */
-  --color-blue-700: #1e5fc4; /* azul oscuro: textos/acentos */
+  /*
+   * Marca del tenant. Toda la escala azul sale de --marca (mezclas en oklab con
+   * blanco o negro), así un tenant cambia una sola variable en :root y lo
+   * siguen botones, tabs, hovers, chips, la selección y la grilla. Los
+   * porcentajes dan la escala del azul ERP. --marca es #2670e3 y no el
+   * #2b75e8 original: con texto blanco este llega a 4.36:1 y el mínimo AA es
+   * 4.5:1; #2670e3 da 4.66:1 y a la vista es el mismo azul.
+   * El rojo (negativos, errores) y el verde (exportar) son semánticos: no
+   * siguen a la marca. Ver "Marca del tenant" en DESIGN.md.
+   */
+  --color-blue-50: color-mix(in oklab, var(--marca) 7%, white); /* velos: activo, hover de fila */
+  --color-blue-100: color-mix(in oklab, var(--marca) 16%, white); /* selección de texto */
+  --color-blue-200: color-mix(in oklab, var(--marca) 29%, white); /* borde del chip filtrado */
+  --color-blue-300: color-mix(in oklab, var(--marca) 46%, white); /* borde en hover */
+  --color-blue-500: color-mix(in oklab, var(--marca) 86%, white); /* anillos de foco */
+  --color-blue-600: var(--marca); /* principal: botones, iconos, links */
+  --color-blue-700: color-mix(in oklab, var(--marca) 87%, black); /* textos y acentos */
+  --color-blue-800: color-mix(in oklab, var(--marca) 75%, black); /* cifras del chip */
 
-  /* Morado de marca ERP — solo para hover */
-  --color-marca-morado: #623bea;
+  /* Solo para el hover de la acción primaria (La Regla del Morado en Tránsito). */
+  --color-marca-morado: var(--marca-hover);
+}
+
+:root {
+  --marca: #2670e3;
+  --marca-hover: #623bea;
+  accent-color: var(--color-blue-600);
 }
 
 html,
@@ -18,11 +38,26 @@ body,
   font-family: Arial, Helvetica, sans-serif;
 }
 
-:root {
-  accent-color: var(--color-blue-600);
-}
-
 ::selection {
   background-color: var(--color-blue-100);
   color: var(--color-gray-900);
+}
+
+/* La Regla de la Tinta Roja, también en la grilla: el negativo resta. */
+.ag-cell.cifra-negativa {
+  color: var(--color-red-600);
+}
+
+/* Sobre el velo azul del hover el rojo 600 queda justo debajo de 4.5:1. */
+.ag-row-hover .ag-cell.cifra-negativa {
+  color: var(--color-red-700);
+}
+
+/* El rótulo de la fila de totales no es un dato de su columna: va como Label. */
+.ag-cell.rotulo-total {
+  color: var(--color-gray-600);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }

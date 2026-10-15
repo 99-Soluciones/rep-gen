@@ -97,6 +97,7 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
               aria-label="Cerrar"
             >
               <svg
+                aria-hidden="true"
                 className="w-6 h-6"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -115,6 +116,7 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
           <div className="relative w-full sm:max-w-md shrink-0">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <svg
+                aria-hidden="true"
                 className="h-4 w-4 text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -146,6 +148,7 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
             aria-label="Cerrar"
           >
             <svg
+              aria-hidden="true"
               className="w-6 h-6"
               fill="none"
               viewBox="0 0 24 24"
@@ -207,7 +210,7 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
             <div className="flex flex-col gap-8">
               {Object.entries(clasesAgrupadas).map(([clase, columnas]) => (
                 <div key={clase} className="flex flex-col gap-4">
-                  <h3 className="text-sm font-bold text-gray-700 uppercase tracking-widest border-b border-gray-200 pb-2">
+                  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200 pb-2">
                     {clase}
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-3">
@@ -239,6 +242,7 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
                               />
                               <span className="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
                                 <svg
+                                  aria-hidden="true"
                                   xmlns="http://www.w3.org/2000/svg"
                                   className="h-3 w-3"
                                   viewBox="0 0 20 20"

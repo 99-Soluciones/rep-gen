@@ -60,7 +60,10 @@ const Layout = ({ children } : LayoutProps) => {
       <div className="flex-1 flex relative overflow-hidden">
         <Sidebar isOpen={isSidebarOpen} onNavegar={() => setIsSidebarOpen(false)} />
 
-        <main className="flex-1 w-full h-full overflow-x-hidden overflow-y-auto bg-gray-50">
+        {/* Contenedor de tamaño: los reportes miden su primera pantalla con
+            100cqh (el alto real del área, aunque el navbar ocupe dos filas). */}
+        {/* Con el menú abierto el reporte queda inerte: ni Tab ni lector de pantalla entran. */}
+        <main inert={isSidebarOpen} className="flex-1 w-full h-full overflow-x-hidden overflow-y-auto bg-gray-50 [container-type:size]">
           <NavbarSlotContext.Provider value={navbarSlot}>
             {children}
           </NavbarSlotContext.Provider>
@@ -69,7 +72,8 @@ const Layout = ({ children } : LayoutProps) => {
         {isSidebarOpen && (
           <button
             type="button"
-            className="absolute inset-0 z-10 cursor-default"
+            // La Regla del Velo: lo que flota sobre la tabla lleva velo detrás.
+            className="absolute inset-0 z-10 cursor-default bg-gray-900/60 backdrop-blur-sm"
             tabIndex={-1}
             onClick={toggleSidebar}
             title="Cerrar menú"

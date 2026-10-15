@@ -50,6 +50,7 @@ const TabsVentas = ({ reportType }: TabsVentasProps) => {
           >
             {reportType === "facturas" ? "Facturas" : "Conceptos"}
             <svg
+              aria-hidden="true"
               className="h-4 w-4 text-gray-400"
               fill="none"
               viewBox="0 0 24 24"

@@ -95,7 +95,7 @@ const AuthGate = ({ children }: { children: (sesion: Sesion) => ReactNode }) => 
           <button
             type="button"
             onClick={() => (window.location.href = `https://99soluciones.com`)}
-            className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-marca-morado focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-100"
+            className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-marca-morado focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
           >
             Regresar a la aplicación
           </button>
@@ -108,7 +108,7 @@ const AuthGate = ({ children }: { children: (sesion: Sesion) => ReactNode }) => 
     return (
       <div className="flex h-screen w-full items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
+          <div className="h-12 w-12 animate-spin motion-reduce:animate-none rounded-full border-4 border-blue-600 border-t-transparent"></div>
           <p className="text-gray-600 font-medium">Validando credenciales...</p>
         </div>
       </div>
