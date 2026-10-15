@@ -4,7 +4,7 @@ import {
   useState,
   type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
-  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 
@@ -22,6 +22,8 @@ interface PanelKpiLateralProps {
   maxWidth?: number;
   /** Lado donde se ancla el panel respecto a la tabla. */
   lado?: "izquierda" | "derecha";
+  /** Sin cifras confiables: "error" las reemplaza, "cargando" las atenúa. */
+  estado?: "cargando" | "error" | null;
 }
 
 const ICONO_METRICAS = (
@@ -41,7 +43,7 @@ const ICONO_METRICAS = (
 );
 
 const PanelKpiLateral = ({
-  titulo = "Dashboard",
+  titulo = "Resumen",
   aviso,
   abierto,
   onToggle,
@@ -51,7 +53,22 @@ const PanelKpiLateral = ({
   minWidth = 260,
   maxWidth = 520,
   lado = "derecha",
+  estado = null,
 }: PanelKpiLateralProps) => {
+  // Un $0.00 tras un error se leería como una cifra real.
+  const contenido =
+    estado === "error" ? (
+      <p className="text-sm text-gray-500">
+        Sin cifras: el reporte no se pudo cargar. Reinténtalo desde la tabla.
+      </p>
+    ) : (
+      <div
+        aria-busy={estado === "cargando"}
+        className={estado === "cargando" ? "opacity-50 transition-opacity" : "transition-opacity"}
+      >
+        {children}
+      </div>
+    );
   const getInitialWidth = () => {
     if (!storageKey || typeof window === "undefined" || !window.localStorage) {
       return defaultWidth;
@@ -71,15 +88,17 @@ const PanelKpiLateral = ({
   const startXRef = useRef(0);
   const startWidthRef = useRef(panelWidth);
 
+  // Durante el arrastre el ancho cambia en cada mousemove: se guarda al soltar.
   useEffect(() => {
+    if (resizing) return;
     if (!storageKey || typeof window === "undefined" || !window.localStorage) return;
     window.localStorage.setItem(storageKey, String(panelWidth));
-  }, [panelWidth, storageKey]);
+  }, [panelWidth, storageKey, resizing]);
 
   useEffect(() => {
     if (!resizing) return;
 
-    const handleMove = (event: MouseEvent) => {
+    const handleMove = (event: PointerEvent) => {
       // Panel a la izquierda: arrastrar hacia la derecha lo ensancha.
       // Panel a la derecha: arrastrar hacia la izquierda lo ensancha.
       const delta =
@@ -97,16 +116,20 @@ const PanelKpiLateral = ({
       setResizing(false);
     };
 
-    window.addEventListener("mousemove", handleMove);
-    window.addEventListener("mouseup", handleUp);
+    // Puntero (mouse, touch o lápiz). pointercancel cierra el arrastre si el
+    // sistema lo interrumpe, para no dejarlo pegado.
+    window.addEventListener("pointermove", handleMove);
+    window.addEventListener("pointerup", handleUp);
+    window.addEventListener("pointercancel", handleUp);
 
     return () => {
-      window.removeEventListener("mousemove", handleMove);
-      window.removeEventListener("mouseup", handleUp);
+      window.removeEventListener("pointermove", handleMove);
+      window.removeEventListener("pointerup", handleUp);
+      window.removeEventListener("pointercancel", handleUp);
     };
   }, [resizing, minWidth, maxWidth, lado]);
 
-  const handleResizeStart = (event: ReactMouseEvent<HTMLDivElement>) => {
+  const handleResizeStart = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return;
     event.preventDefault();
     startXRef.current = event.clientX;
@@ -114,17 +137,20 @@ const PanelKpiLateral = ({
     setResizing(true);
   };
 
+  // Igual que el arrastre: la flecha hacia el centro de la pantalla ensancha.
   const handleResizeKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "ArrowRight") {
+    const ensanchar = lado === "izquierda" ? "ArrowRight" : "ArrowLeft";
+    const angostar = lado === "izquierda" ? "ArrowLeft" : "ArrowRight";
+    if (event.key === ensanchar) {
       event.preventDefault();
       setPanelWidth((prev) => Math.min(maxWidth, prev + RESIZE_STEP));
-    } else if (event.key === "ArrowLeft") {
+    } else if (event.key === angostar) {
       event.preventDefault();
       setPanelWidth((prev) => Math.max(minWidth, prev - RESIZE_STEP));
     }
   };
 
-  const toggleLabel = abierto ? "Ocultar dashboard" : "Mostrar dashboard";
+  const toggleLabel = abierto ? "Ocultar resumen" : "Mostrar resumen";
 
   // Chevron según el lado del panel: al colapsar apunta hacia el borde donde
   // se repliega; al expandir, hacia donde crecerá el panel.
@@ -141,7 +167,7 @@ const PanelKpiLateral = ({
 
   return (
     <aside
-      className={`relative w-full transition-all duration-300 xl:overflow-visible xl:sticky xl:top-4 xl:self-start ${
+      className={`relative w-full transition-[width] duration-300 motion-reduce:transition-none xl:overflow-visible xl:sticky xl:top-4 xl:self-start ${
         abierto ? "xl:w-(--kpi-panel-width)" : "xl:w-9"
       }`}
       style={{ "--kpi-panel-width": `${panelWidth}px` } as CSSProperties}
@@ -156,10 +182,10 @@ const PanelKpiLateral = ({
             aria-valuemin={minWidth}
             aria-valuemax={maxWidth}
             tabIndex={0}
-            className={`absolute top-0 hidden h-full w-2 cursor-col-resize xl:block z-30 ${handlePosClass} ${
+            className={`absolute top-0 hidden h-full w-2 cursor-col-resize touch-none xl:block z-30 focus:outline-none focus-visible:bg-blue-100 focus-visible:ring-2 focus-visible:ring-blue-500 ${handlePosClass} ${
               resizing ? "bg-blue-100" : "bg-transparent"
             }`}
-            onMouseDown={handleResizeStart}
+            onPointerDown={handleResizeStart}
             onKeyDown={handleResizeKeyDown}
           >
             <div className="mx-auto h-full w-0.5 bg-gray-200" />
@@ -173,7 +199,7 @@ const PanelKpiLateral = ({
             aria-expanded={abierto}
             aria-label={toggleLabel}
             title={toggleLabel}
-            className={`absolute top-1/2 -translate-y-1/2 z-40 hidden xl:inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors ${handlePosClass}`}
+            className={`absolute top-1/2 -translate-y-1/2 z-40 hidden xl:inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 ${handlePosClass}`}
           >
             <svg
               className="w-4 h-4"
@@ -190,8 +216,8 @@ const PanelKpiLateral = ({
             </svg>
           </button>
 
-          <div className="mt-3 xl:mt-0 transition-all duration-300">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 flex flex-col gap-3 xl:max-h-[calc(100vh-5rem)] xl:overflow-hidden">
+          <div className="mt-3 xl:mt-0">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 flex flex-col gap-3 xl:max-h-[calc(100dvh-5rem)] xl:overflow-hidden">
               {/* Botón de colapso a la izquierda del título; solo móvil, en
                   desktop el toggle vive centrado sobre la línea divisoria */}
               <div className="flex items-start gap-2 shrink-0">
@@ -201,7 +227,7 @@ const PanelKpiLateral = ({
                   aria-expanded={abierto}
                   aria-label={toggleLabel}
                   title={toggleLabel}
-                  className="inline-flex xl:hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-blue-700 shadow-sm hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                  className="inline-flex xl:hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-blue-700 shadow-sm hover:bg-blue-50 hover:border-blue-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 >
                   <svg
                     className="w-4 h-4"
@@ -218,9 +244,9 @@ const PanelKpiLateral = ({
                   </svg>
                 </button>
                 <div className="flex flex-col gap-1">
-                  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     {titulo}
-                  </h3>
+                  </h2>
                   {aviso && (
                     <span className="inline-flex items-center gap-1 self-start px-2 py-0.5 bg-gray-100 border border-gray-300 rounded-full">
                       <svg
@@ -244,7 +270,7 @@ const PanelKpiLateral = ({
                 </div>
               </div>
               <div className="xl:overflow-y-auto xl:overflow-x-hidden xl:flex-1 xl:pr-0.5">
-                {children}
+                {contenido}
               </div>
             </div>
           </div>
@@ -253,15 +279,15 @@ const PanelKpiLateral = ({
         <>
           {/* Desktop: línea divisoria vertical con el botón de expandir
               circular centrado, mismo diseño que el toggle del panel abierto */}
-          <div className="relative hidden xl:flex h-[calc(100vh-5rem)] w-full items-center justify-center">
+          <div className="relative hidden xl:flex h-[calc(100dvh-5rem)] w-full items-center justify-center">
             <div className="absolute inset-y-0 left-1/2 w-0.5 -translate-x-1/2 bg-gray-200" />
             <button
               type="button"
               onClick={onToggle}
               aria-expanded={abierto}
               aria-label={toggleLabel}
-              title="Mostrar métricas"
-              className="relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors"
+              title="Mostrar resumen"
+              className="relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
             >
               <svg
                 className="w-4 h-4"
@@ -285,10 +311,10 @@ const PanelKpiLateral = ({
             onClick={onToggle}
             aria-expanded={abierto}
             aria-label={toggleLabel}
-            className="flex xl:hidden w-full items-center justify-center gap-2 py-2 px-3 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-sm hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors"
+            className="flex xl:hidden w-full items-center justify-center gap-2 py-2 px-3 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-sm hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
             {ICONO_METRICAS}
-            <span>Mostrar métricas</span>
+            <span>Mostrar resumen</span>
           </button>
         </>
       )}
