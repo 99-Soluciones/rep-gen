@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { AlertCircle } from "lucide-react";
+import { KeyRound } from "lucide-react";
 import { ApiError, apiFetch } from "../../shared/api/http";
 import { guardarUsuario, leerUsuario, type UsuarioSesion } from "./session";
+import AvisoSesionExpirada from "./AvisoSesionExpirada";
 
 export interface Sesion {
   tenant: string | null;
@@ -47,7 +48,9 @@ const AuthGate = ({ children }: { children: (sesion: Sesion) => ReactNode }) => 
           setSesion({ tenant: user.tenant ?? tenant, reporteInicio });
         } catch (error) {
           setErrorAutenticacion(
-            error instanceof ApiError ? "Token inválido o expirado" : (error as Error).message,
+            error instanceof ApiError
+              ? "El enlace de acceso ya no es válido. Vuelve a abrir el reporte desde FileMaker."
+              : "No se pudo conectar con el servidor. Revisa tu conexión y vuelve a abrir el reporte desde FileMaker.",
           );
         }
         return;
@@ -79,20 +82,20 @@ const AuthGate = ({ children }: { children: (sesion: Sesion) => ReactNode }) => 
   if (errorAutenticacion) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-gray-50 p-4">
-        <div className="max-w-md w-full rounded-2xl border border-red-100 bg-white p-8 text-center shadow-xl">
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-50">
-            <AlertCircle className="h-10 w-10 text-red-500" />
+        <div className="max-w-md w-full rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-blue-50">
+            <KeyRound className="h-7 w-7 text-blue-600" aria-hidden="true" />
           </div>
-          <h2 className="mb-3 text-2xl font-bold text-gray-800">
-            Acceso Denegado
-          </h2>
+          <h1 className="mb-3 text-xl font-bold text-gray-800">
+            Sesión no disponible
+          </h1>
           <p className="mb-8 text-gray-600 leading-relaxed">
             {errorAutenticacion}
           </p>
           <button
             type="button"
             onClick={() => (window.location.href = `https://99soluciones.com`)}
-            className="w-full rounded-lg bg-red-600 px-4 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-100"
+            className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-marca-morado focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-100"
           >
             Regresar a la aplicación
           </button>
@@ -112,7 +115,12 @@ const AuthGate = ({ children }: { children: (sesion: Sesion) => ReactNode }) => 
     );
   }
 
-  return children(sesion);
+  return (
+    <>
+      {children(sesion)}
+      <AvisoSesionExpirada />
+    </>
+  );
 };
 
 export default AuthGate;

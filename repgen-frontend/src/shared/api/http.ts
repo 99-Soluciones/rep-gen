@@ -1,6 +1,7 @@
-import toast from "react-hot-toast";
-
 const API_URL = import.meta.env.VITE_API_URL || "/api/v1";
+
+/** Evento de window que se emite cuando la cookie de sesión expiró (401). */
+export const EVENTO_SESION_EXPIRADA = "repgen:sesion-expirada";
 
 /** Error HTTP de la API, con el `message` que devuelve el backend. */
 export class ApiError extends Error {
@@ -14,8 +15,9 @@ export class ApiError extends Error {
 
 interface OpcionesApiFetch {
   /**
-   * Un 401 significa que la cookie de sesión expiró: se avisa y se recarga
-   * para volver a la pantalla de acceso. Las llamadas de autenticación lo
+   * Un 401 significa que la cookie de sesión expiró: se emite
+   * EVENTO_SESION_EXPIRADA (lo atiende AvisoSesionExpirada) sin recargar, para
+   * no perder los datos ni los filtros que ya están en pantalla. Las llamadas de autenticación lo
    * desactivan porque para ellas un 401 es una respuesta esperada.
    */
   manejarSesionExpirada?: boolean;
@@ -39,8 +41,7 @@ export const apiFetch = async <T>(
   });
 
   if (respuesta.status === 401 && manejarSesionExpirada) {
-    toast.error("Sesión expirada. Por favor, inicia sesión nuevamente.");
-    window.location.reload();
+    window.dispatchEvent(new Event(EVENTO_SESION_EXPIRADA));
   }
 
   if (!respuesta.ok) {

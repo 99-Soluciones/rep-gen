@@ -1,5 +1,4 @@
-import toast from "react-hot-toast";
-import { ApiError, apiFetch } from "../../../../shared/api/http";
+import { apiFetch } from "../../../../shared/api/http";
 
 const solicitudesPendientes = new Map<string, Promise<unknown[]>>();
 
@@ -14,7 +13,8 @@ interface SolicitudReporte {
 /**
  * Trae todos los registros del rango de fechas. El filtrado, orden y
  * paginación se hacen en el cliente (AG Grid), así que solo viaja el rango.
- * Solicitudes idénticas simultáneas comparten la misma promesa.
+ * Solicitudes idénticas simultáneas comparten la misma promesa. Los errores se
+ * propagan: el mensaje para el usuario lo arma useReporteBase.
  */
 export const obtenerReporte = async <TReporteData>({
   endpoint,
@@ -41,18 +41,7 @@ export const obtenerReporte = async <TReporteData>({
     `/reports/${endpoint}`,
     { method: "POST", body: cuerpoSolicitud },
   )
-    .then((resultado) => resultado.data ?? [])
-    .catch((error: unknown) => {
-      // El 401 ya lo avisa apiFetch (sesión expirada).
-      if (!(error instanceof ApiError && error.status === 401)) {
-        const detalle =
-          error instanceof ApiError
-            ? `${error.status} - ${error.message}`
-            : (error as Error).message;
-        toast.error(`Error en la solicitud: ${detalle}`);
-      }
-      throw error;
-    });
+    .then((resultado) => resultado.data ?? []);
 
   solicitudesPendientes.set(claveSolicitud, promesaSolicitud);
 

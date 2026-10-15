@@ -1,15 +1,16 @@
 import { vi } from "vitest";
 
-const toastMock = vi.hoisted(() => ({ error: vi.fn() }));
-vi.mock("react-hot-toast", () => ({ default: toastMock }));
-
-import { ApiError, apiFetch } from "./http";
+import { ApiError, apiFetch, EVENTO_SESION_EXPIRADA } from "./http";
 
 const respuesta = (status: number, cuerpo?: unknown) =>
   new Response(cuerpo === undefined ? null : JSON.stringify(cuerpo), { status });
 
 describe("apiFetch", () => {
   const fetchMock = vi.fn<typeof fetch>();
+  const sesionExpirada = vi.fn();
+
+  beforeAll(() => window.addEventListener(EVENTO_SESION_EXPIRADA, sesionExpirada));
+  afterAll(() => window.removeEventListener(EVENTO_SESION_EXPIRADA, sesionExpirada));
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -48,18 +49,14 @@ describe("apiFetch", () => {
     const error = await apiFetch("/auth/login-token").catch((e: unknown) => e);
     expect(error).toBeInstanceOf(ApiError);
     expect(error).toMatchObject({ status: 400, message: "Tenant inválido" });
-    expect(toastMock.error).not.toHaveBeenCalled();
+    expect(sesionExpirada).not.toHaveBeenCalled();
   });
 
-  it("avisa de sesión expirada en un 401", async () => {
-    // jsdom no implementa location.reload y lo reporta por consola.
-    vi.spyOn(console, "error").mockImplementation(() => {});
+  it("emite el evento de sesión expirada en un 401, sin recargar", async () => {
     fetchMock.mockResolvedValue(respuesta(401, { message: "Token inválido" }));
 
     await expect(apiFetch("/tenant/features")).rejects.toMatchObject({ status: 401 });
-    expect(toastMock.error).toHaveBeenCalledWith(
-      "Sesión expirada. Por favor, inicia sesión nuevamente.",
-    );
+    expect(sesionExpirada).toHaveBeenCalledTimes(1);
   });
 
   it("no trata el 401 como sesión expirada cuando se desactiva (llamadas de auth)", async () => {
@@ -68,6 +65,6 @@ describe("apiFetch", () => {
     await expect(
       apiFetch("/auth/me", {}, { manejarSesionExpirada: false }),
     ).rejects.toMatchObject({ status: 401 });
-    expect(toastMock.error).not.toHaveBeenCalled();
+    expect(sesionExpirada).not.toHaveBeenCalled();
   });
 });
