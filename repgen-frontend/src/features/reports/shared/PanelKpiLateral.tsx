@@ -8,6 +8,8 @@ import {
   type ReactNode,
 } from "react";
 
+import type { EstadoCifras } from "./estadoCifras";
+
 const RESIZE_STEP = 20;
 
 interface PanelKpiLateralProps {
@@ -22,12 +24,19 @@ interface PanelKpiLateralProps {
   maxWidth?: number;
   /** Lado donde se ancla el panel respecto a la tabla. */
   lado?: "izquierda" | "derecha";
-  /** Sin cifras confiables: "error" las reemplaza, "cargando" las atenúa. */
-  estado?: "cargando" | "error" | null;
+  /**
+   * Sin cifras confiables: "error" las reemplaza, "cargando" las atenúa y
+   * "primeraCarga" (todavía no hay ninguna) las reemplaza por un aviso.
+   */
+  estado?: EstadoCifras;
 }
+
+/** Destino de "Ver resumen" (ResultadoCompacto): recibe el foco y la página baja hasta él. */
+export const ID_RESUMEN = "resumen-reporte";
 
 const ICONO_METRICAS = (
   <svg
+    aria-hidden="true"
     className="w-5 h-5 shrink-0"
     fill="none"
     viewBox="0 0 24 24"
@@ -55,11 +64,15 @@ const PanelKpiLateral = ({
   lado = "derecha",
   estado = null,
 }: PanelKpiLateralProps) => {
-  // Un $0.00 tras un error se leería como una cifra real.
+  // Un $0.00 tras un error, o antes de la primera carga, se leería como una cifra real.
   const contenido =
     estado === "error" ? (
       <p className="text-sm text-gray-500">
         Sin cifras: el reporte no se pudo cargar. Reinténtalo desde la tabla.
+      </p>
+    ) : estado === "primeraCarga" ? (
+      <p aria-busy="true" className="text-sm text-gray-500">
+        Calculando las cifras…
       </p>
     ) : (
       <div
@@ -167,7 +180,10 @@ const PanelKpiLateral = ({
 
   return (
     <aside
-      className={`relative w-full transition-[width] duration-300 motion-reduce:transition-none xl:overflow-visible xl:sticky xl:top-4 xl:self-start ${
+      id={ID_RESUMEN}
+      tabIndex={-1}
+      aria-label={titulo}
+      className={`relative w-full focus:outline-none transition-[width] duration-300 motion-reduce:transition-none xl:overflow-visible xl:sticky xl:top-4 xl:self-start ${
         abierto ? "xl:w-(--kpi-panel-width)" : "xl:w-9"
       }`}
       style={{ "--kpi-panel-width": `${panelWidth}px` } as CSSProperties}
@@ -202,6 +218,7 @@ const PanelKpiLateral = ({
             className={`absolute top-1/2 -translate-y-1/2 z-40 hidden xl:inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 ${handlePosClass}`}
           >
             <svg
+              aria-hidden="true"
               className="w-4 h-4"
               fill="none"
               viewBox="0 0 24 24"
@@ -217,7 +234,7 @@ const PanelKpiLateral = ({
           </button>
 
           <div className="mt-3 xl:mt-0">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 flex flex-col gap-3 xl:max-h-[calc(100dvh-5rem)] xl:overflow-hidden">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 flex flex-col gap-3 xl:max-h-[calc(100cqh-1rem)] xl:overflow-hidden">
               {/* Botón de colapso a la izquierda del título; solo móvil, en
                   desktop el toggle vive centrado sobre la línea divisoria */}
               <div className="flex items-start gap-2 shrink-0">
@@ -230,6 +247,7 @@ const PanelKpiLateral = ({
                   className="inline-flex xl:hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-blue-700 shadow-sm hover:bg-blue-50 hover:border-blue-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 >
                   <svg
+                    aria-hidden="true"
                     className="w-4 h-4"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -250,6 +268,7 @@ const PanelKpiLateral = ({
                   {aviso && (
                     <span className="inline-flex items-center gap-1 self-start px-2 py-0.5 bg-gray-100 border border-gray-300 rounded-full">
                       <svg
+                        aria-hidden="true"
                         className="w-3 h-3 text-gray-400"
                         fill="none"
                         stroke="currentColor"
@@ -262,7 +281,7 @@ const PanelKpiLateral = ({
                         <line x1="12" y1="16" x2="12" y2="12" />
                         <line x1="12" y1="8" x2="12.01" y2="8" />
                       </svg>
-                      <span className="text-xs font-medium text-gray-500">
+                      <span className="text-xs font-medium text-gray-600">
                         {aviso}
                       </span>
                     </span>
@@ -279,7 +298,7 @@ const PanelKpiLateral = ({
         <>
           {/* Desktop: línea divisoria vertical con el botón de expandir
               circular centrado, mismo diseño que el toggle del panel abierto */}
-          <div className="relative hidden xl:flex h-[calc(100dvh-5rem)] w-full items-center justify-center">
+          <div className="relative hidden xl:flex h-[calc(100cqh-1rem)] w-full items-center justify-center">
             <div className="absolute inset-y-0 left-1/2 w-0.5 -translate-x-1/2 bg-gray-200" />
             <button
               type="button"
@@ -290,6 +309,7 @@ const PanelKpiLateral = ({
               className="relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
             >
               <svg
+                aria-hidden="true"
                 className="w-4 h-4"
                 fill="none"
                 viewBox="0 0 24 24"

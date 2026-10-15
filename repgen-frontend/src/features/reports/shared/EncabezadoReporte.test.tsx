@@ -1,9 +1,10 @@
 import { render, screen } from "@testing-library/react";
+import { vi } from "vitest";
 import EncabezadoReporte from "./EncabezadoReporte";
 import { NavbarSlotContext } from "../../../app/layout/navbarSlotContext";
 
 describe("EncabezadoReporte", () => {
-  const props = { titulo: "Reporte de Ventas" };
+  const props = { titulo: "Reporte de Ventas", tituloPagina: "Ventas · Facturas" };
 
   it("renderiza el título", () => {
     render(<EncabezadoReporte {...props} />);
@@ -38,5 +39,11 @@ describe("EncabezadoReporte", () => {
     );
 
     expect(screen.getByTestId("encabezado-extra")).toBeInTheDocument();
+  });
+
+  it("nombra la pestaña del navegador con el reporte", async () => {
+    render(<EncabezadoReporte {...props} />);
+    // React 19 sube <title> al <head>.
+    await vi.waitFor(() => expect(document.title).toBe("Ventas · Facturas · RepGen"));
   });
 });

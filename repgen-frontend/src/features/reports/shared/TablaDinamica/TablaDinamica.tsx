@@ -17,9 +17,10 @@ import {
   ValidationModule,
   themeQuartz,
 } from "ag-grid-community";
-import type { ColDef, GridReadyEvent } from "ag-grid-community";
+import type { ColDef, GridReadyEvent, IOverlayParams } from "ag-grid-community";
 import TablaDinamicaControles from "./TablaDinamicaControles";
 import { calcularFilaTotales, type TotalesTabla } from "./totales";
+import { describirFiltros, type FiltroDescrito } from "./describirFiltros";
 import { LOCALE_ES } from "../ag-grid/locale-es";
 import type { ErrorCarga } from "../useReporteBase";
 import { avisarConDeshacer } from "../avisarConDeshacer";
@@ -50,7 +51,7 @@ const temaGrid = themeQuartz.withParams({
   fontSize: 14,
   foregroundColor: "#111827",
   // Token de marca (index.css): si un tenant cambia su azul, la grilla lo sigue.
-  accentColor: "var(--color-blue-600, #2b75e8)",
+  accentColor: "var(--color-blue-600, #2670e3)",
   borderColor: "#e5e7eb",
   wrapperBorder: false,
   headerBackgroundColor: "#f9fafb",
@@ -65,6 +66,39 @@ const temaGrid = themeQuartz.withParams({
   pinnedRowFontWeight: 700,
   pinnedRowBorder: { color: "#d1d5db" },
 });
+
+/**
+ * Sin filas que mostrar. Si hay registros pero los filtros los excluyen todos,
+ * la salida está aquí mismo: "Limpiar filtros" (con su aviso para deshacer).
+ */
+const SinFilas = ({
+  overlayType,
+  onLimpiarFiltros,
+}: IOverlayParams & { onLimpiarFiltros: () => void }) => {
+  const hayRegistros = overlayType === "noMatchingRows";
+  return (
+    <div className="flex flex-col items-center gap-3 px-4 text-center text-sm text-gray-600">
+      <p>
+        {hayRegistros
+          ? "Ningún registro coincide con los filtros."
+          : "No hay registros en este rango de fechas."}
+      </p>
+      {hayRegistros && (
+        <button
+          type="button"
+          onClick={onLimpiarFiltros}
+          // El overlay de AG Grid no recibe clics; el botón sí.
+          className="pointer-events-auto rounded-lg border border-gray-300 bg-white px-3 py-1.5 font-medium text-gray-700 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+        >
+          Limpiar filtros
+        </button>
+      )}
+    </div>
+  );
+};
+
+const elegirOverlay = ({ overlayType }: IOverlayParams) =>
+  overlayType === "noRows" || overlayType === "noMatchingRows" ? { component: SinFilas } : undefined;
 
 // Función pura de módulo (no un closure del componente) para que React
 // Compiler no necesite estabilizarla: recibe los refs como parámetros en vez
@@ -130,18 +164,29 @@ const TablaDinamica = <T,>({
   const resizeRafRef = useRef<number | null>(null);
   const modelUpdateRafRef = useRef<number | null>(null);
   const filaTotalesRef = useRef<string | null>(null);
-  const [filtrosActivos, setFiltrosActivos] = useState(0);
+  const [filtros, setFiltros] = useState<FiltroDescrito[]>([]);
   // Filtros que quitó "Limpiar": el chip ofrece restaurarlos hasta que se filtre
   // de nuevo (el aviso con Deshacer se va solo y por teclado cuesta alcanzarlo).
   const [filtrosQuitados, setFiltrosQuitados] = useState<Record<string, unknown> | null>(null);
 
-  // Cuántas columnas tienen filtro (algunas pueden quedar fuera de pantalla).
-  const contarFiltros = () => {
+  // Qué columnas tienen filtro (algunas pueden estar fuera de pantalla u ocultas).
+  const leerFiltros = () => {
+    const api = referenciaGrid.current?.api;
+    if (!api || api.isDestroyed()) return;
+    const actuales = describirFiltros(api);
+    // modelUpdated es frecuente: sin cambios, se conserva el estado y no re-renderiza.
+    setFiltros((previos) =>
+      JSON.stringify(previos) === JSON.stringify(actuales) ? previos : actuales,
+    );
+    if (actuales.length > 0) setFiltrosQuitados(null);
+  };
+
+  const quitarFiltro = (colId: string) => {
     const api = referenciaGrid.current?.api;
     if (!api) return;
-    const cuantos = Object.keys(api.getFilterModel()).length;
-    setFiltrosActivos(cuantos);
-    if (cuantos > 0) setFiltrosQuitados(null);
+    const modelo = { ...api.getFilterModel() };
+    delete modelo[colId];
+    api.setFilterModel(modelo);
   };
 
   const restaurarFiltros = () => {
@@ -198,7 +243,7 @@ const TablaDinamica = <T,>({
   const handleModelUpdated = () => {
     if (typeof window === "undefined") {
       actualizarTotales();
-      contarFiltros();
+      leerFiltros();
       onActualizacionModulo?.();
       return;
     }
@@ -207,7 +252,7 @@ const TablaDinamica = <T,>({
     modelUpdateRafRef.current = window.requestAnimationFrame(() => {
       modelUpdateRafRef.current = null;
       actualizarTotales();
-      contarFiltros();
+      leerFiltros();
       onActualizacionModulo?.();
     });
   };
@@ -250,22 +295,25 @@ const TablaDinamica = <T,>({
   return (
     <div className="flex flex-col w-full flex-1 min-h-0">
       <div className="w-full p-2 relative flex-1 flex flex-col min-h-0">
-        {/* Bajo xl el panel de KPIs va debajo: la tabla ocupa una pantalla
-            (navbar 4rem + padding 1rem) y la página hace scroll hasta los KPIs.
-            En xl llena la altura disponible junto al panel lateral. */}
-        <div className="w-full h-[calc(100dvh-5rem)] min-h-100 xl:h-auto xl:flex-1 shadow-lg rounded-lg overflow-hidden bg-white border border-gray-100 flex flex-col">
+        {/* Llena el alto que le da el reporte: bajo xl, la primera pantalla
+            (y la página hace scroll hasta el resumen); en xl, junto al panel. */}
+        <div className="w-full flex-1 min-h-0 shadow-lg rounded-lg overflow-hidden bg-white border border-gray-100 flex flex-col">
           <TablaDinamicaControles
             totalDatos={datos.length}
             filasVisibles={filasVisibles}
-            filtrosActivos={filtrosActivos}
+            filtros={filtros}
+            onQuitarFiltro={quitarFiltro}
             onLimpiarFiltros={limpiarFiltros}
             onRestaurarFiltros={filtrosQuitados ? restaurarFiltros : undefined}
+            sinRegistros={Boolean(error) && !estaCargando}
             accionesToolbarInicio={accionesToolbarInicio}
             accionesToolbar={accionesToolbar}
             accionesToolbarFin={accionesToolbarFin}
           />
 
-          <div className="relative flex-1 min-h-0" ref={gridContainerRef}>
+          {/* min-h-72: encabezado, filtros, totales y ~5 filas aunque la pantalla
+              sea baja; si no caben, la barra se va con el scroll de la página. */}
+          <div className="relative flex-1 min-h-72" ref={gridContainerRef}>
             {/* Solo sobre el cuerpo: fechas y acciones siguen usables mientras carga. */}
             {estaCargando && (
               <div
@@ -273,7 +321,7 @@ const TablaDinamica = <T,>({
                 className="absolute inset-0 bg-white/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center"
               >
                 <svg
-                  className="animate-spin h-10 w-10 text-blue-600 mb-2"
+                  className="animate-spin motion-reduce:animate-none h-10 w-10 text-blue-600 mb-2"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -338,25 +386,31 @@ const TablaDinamica = <T,>({
             )}
             <AgGridReact<T>
               ref={referenciaGrid}
+              // Llena el cuerpo por posición, no con height: 100%: bajo xl el
+              // alto del cuerpo sale de un mínimo (min-h-72) y un porcentaje
+              // no resolvería, el grid quedaría de 0px.
+              containerStyle={{ position: "absolute", inset: 0 }}
               rowData={datos}
               columnDefs={definicionesColumnas}
               theme={temaGrid}
               rowHeight={36}
               headerHeight={40}
               onGridReady={handleGridReady}
-              overlayNoRowsTemplate={`<span class="ag-overlay-no-rows-center">${
-                estaCargando
-                  ? "Cargando registros..."
-                  : datos?.length
-                    ? "Ningún registro coincide con los filtros."
-                    : "No hay registros en este rango de fechas."
-              }</span>`}
+              // "Sin datos" y "los filtros excluyen todo" con el aviso propio;
+              // mientras carga o con error, el velo de arriba ya lo dice.
+              overlayComponentSelector={elegirOverlay}
+              overlayComponentParams={{ onLimpiarFiltros: limpiarFiltros }}
+              suppressOverlays={estaCargando || error ? ["noRows", "noMatchingRows"] : undefined}
               defaultColDef={defaultColDef}
               onModelUpdated={handleModelUpdated}
               onFilterChanged={onCambioVista}
               onSortChanged={onCambioVista}
               onColumnMoved={onCambioVista}
-              onColumnVisible={onCambioVista}
+              onColumnVisible={() => {
+                // Ocultar una columna filtrada no quita su filtro: el chip lo avisa.
+                leerFiltros();
+                onCambioVista?.();
+              }}
               onColumnPinned={onCambioVista}
               onDisplayedColumnsChanged={onCambioVista}
               localeText={LOCALE_ES}

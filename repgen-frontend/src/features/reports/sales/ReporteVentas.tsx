@@ -1,24 +1,28 @@
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { construirColumnasVentas } from "./columnas";
 import { useColumnLabels } from "../shared/column-labels/useColumnLabels";
 import EncabezadoReporte from "../shared/EncabezadoReporte";
 import TablaDinamica from "../shared/TablaDinamica/TablaDinamica";
 import PanelKpiLateral from "../shared/PanelKpiLateral";
+import { estadoCifras } from "../shared/estadoCifras";
 import type { ReportSalesItemRecord } from "@repgen/shared-types";
 import TabsVentas from "./TabsVentas";
 import { useReporteBase } from "../shared/useReporteBase";
 import { useReporteGrid } from "../shared/useReporteGrid";
+import { usePreferenciaLocal } from "../shared/usePreferenciaLocal";
 import { toolbarReporte } from "../shared/toolbarReporte";
 import { useTotalesVentas } from "./useTotalesVentas";
 import KpiPanelVentas from "./KpiPanelVentas";
+import { ResultadoCompacto } from "../shared/EstadoKpi";
 
 export type VentasRouteType = "facturas" | "conceptos";
 
 const normalizeReportType = (value: string | undefined): VentasRouteType =>
   value === "conceptos" ? "conceptos" : "facturas";
 
-// Solo importes en MXN y del nivel del renglón: en Conceptos los montos de la
+// Solo importes en MXN y del nivel del renglón. El rótulo dice "Suma de
+// columnas", no "Total": la cifra que manda es la Facturación neta del resumen,
+// que se calcula distinto (KpiPanelVentas): en Conceptos los montos de la
 // factura se repiten por artículo y sumarlos los duplicaría.
 const camposTotales: Record<VentasRouteType, string[]> = {
   facturas: [
@@ -75,7 +79,7 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
   });
   const { datos, estaCargando, error, reintentar, aplicarRango } = base;
 
-  const [mostrarResumen, setMostrarResumen] = useState(true);
+  const [mostrarResumen, setMostrarResumen] = usePreferenciaLocal("kpi-panel-ventas-abierto", true);
 
   const reportId =
     currentType === "facturas" ? "ventas_facturas" : "ventas_conceptos";
@@ -92,11 +96,24 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
     <div className="flex flex-col w-full xl:h-full">
       <EncabezadoReporte
         titulo="Reporte de Ventas"
+        tituloPagina={`Ventas · ${currentType === "facturas" ? "Facturas" : "Conceptos"}`}
         encabezadoExtra={<TabsVentas reportType={currentType} />}
       />
 
       <div className="flex flex-col xl:flex-row xl:flex-1 xl:min-h-0 gap-2">
-        <div className="flex-1 min-w-0 flex flex-col">
+        {/* Bajo xl, resultado + tabla ocupan la primera pantalla (100cqh, el
+            alto de <main>) y el resumen queda debajo; en xl, alto completo.
+            Es un mínimo: en pantallas bajas (zoom 200%, teléfono horizontal)
+            la tabla conserva sus filas y la página hace scroll. flex-none bajo
+            xl: con flex-1 la base 0% ignoraría el alto. */}
+        <div className="flex-none min-w-0 flex flex-col min-h-[100cqh] xl:flex-1 xl:min-h-0">
+          <ResultadoCompacto
+            etiqueta="Facturación neta"
+            filtrado={filasVisibles !== datos.length}
+            valor={totales.facturacionNeta}
+            estado={estadoCifras(error, estaCargando, base.cargadoEn)}
+            onAbrirResumen={() => setMostrarResumen(true)}
+          />
           <TablaDinamica<ReportSalesItemRecord>
             referenciaGrid={referenciaGrid}
             datos={datos}
@@ -104,7 +121,7 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
             estaCargando={estaCargando}
             error={error}
             onReintentar={reintentar}
-            totales={{ campos: camposTotales[currentType] }}
+            totales={{ campos: camposTotales[currentType], etiqueta: "Suma de columnas MXN" }}
             onGridListo={onGridListo}
             onCambioVista={onCambioVista}
             onActualizacionModulo={() => {
@@ -126,13 +143,15 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
           abierto={mostrarResumen}
           onToggle={() => setMostrarResumen(!mostrarResumen)}
           storageKey="kpi-panel-ventas"
-          estado={error ? "error" : estaCargando ? "cargando" : null}
+          estado={estadoCifras(error, estaCargando, base.cargadoEn)}
         >
           <KpiPanelVentas
             totales={totales}
             currentType={currentType}
             registros={filasVisibles}
-            filtrado={filasVisibles !== datos.length}
+            total={datos.length}
+            desde={base.fechaDesde}
+            hasta={base.fechaHasta}
           />
         </PanelKpiLateral>
       </div>

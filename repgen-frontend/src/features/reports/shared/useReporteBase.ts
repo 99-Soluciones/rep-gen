@@ -21,7 +21,10 @@ interface UseReporteBaseState<T> {
   datos: T[];
   estaCargando: boolean;
   error: ErrorCarga | null;
+  /** Vuelve a consultar el mismo rango (también sirve para traer datos más nuevos). */
   reintentar: () => void;
+  /** Cuándo terminó la última carga correcta: los datos en pantalla son de esa hora. */
+  cargadoEn: Date | null;
   fechaDesde: string;
   setFechaDesde: Dispatch<SetStateAction<string>>;
   fechaHasta: string;
@@ -29,9 +32,8 @@ interface UseReporteBaseState<T> {
   /** Fija el rango desde fuera del filtro de fechas (p. ej. el periodo de una vista). */
   aplicarRango: (desde: string, hasta: string) => void;
   /**
-   * Cambia solo con aplicarRango: usarlo como `key` de FiltroFechas para que su
-   * borrador tome las fechas nuevas. El 401 no lo toca, así el borrador del
-   * usuario sigue visible como "Sin aplicar".
+   * Cambia solo con aplicarRango (p. ej. el periodo de una vista): usarlo como
+   * `key` de FiltroFechas para que cierre su panel y no quede un borrador viejo.
    */
   versionRango: number;
 }
@@ -71,8 +73,8 @@ export const describirErrorCarga = (error: unknown): ErrorCarga => {
  *
  * Excepción: sesión expirada (401). Los registros en pantalla siguen siendo
  * válidos (AvisoSesionExpirada promete que se pueden filtrar y exportar), así
- * que se conservan y se restaura el rango que los cargó; FiltroFechas muestra
- * entonces "Sin aplicar · la tabla muestra …" con el rango correcto.
+ * que se conservan y se restaura el rango que los cargó; el botón de
+ * FiltroFechas vuelve a decir ese rango, el que de verdad está en la tabla.
  */
 export const useReporteBase = <T,>({
   endpoint,
@@ -85,6 +87,7 @@ export const useReporteBase = <T,>({
   const [fechaDesde, setFechaDesde] = useState(obtenerPrimerDiaDelMes);
   const [fechaHasta, setFechaHasta] = useState(obtenerFechaHoyFormateada);
   const [versionRango, setVersionRango] = useState(0);
+  const [cargadoEn, setCargadoEn] = useState<Date | null>(null);
 
   const onErrorRef = useRef(onError);
   // Qué se cargó por última vez con éxito (los registros en pantalla).
@@ -114,6 +117,7 @@ export const useReporteBase = <T,>({
 
         if (!cancelado) {
           setDatos(resultado);
+          setCargadoEn(new Date());
           cargadoRef.current = { endpoint, desde: fechaDesde, hasta: fechaHasta };
         }
       } catch (errorCarga) {
@@ -154,6 +158,7 @@ export const useReporteBase = <T,>({
     estaCargando,
     error,
     reintentar: () => setIntento((n) => n + 1),
+    cargadoEn,
     fechaDesde,
     setFechaDesde,
     fechaHasta,

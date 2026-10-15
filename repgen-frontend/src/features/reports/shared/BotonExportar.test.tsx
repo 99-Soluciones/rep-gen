@@ -10,6 +10,9 @@ const exportarDatosMock = vi.hoisted(() =>
   vi.fn((_referenciaGrid: unknown, _nombreArchivo: string) => exportHandler),
 );
 
+const toastMock = vi.hoisted(() => vi.fn());
+vi.mock("react-hot-toast", () => ({ default: toastMock }));
+
 vi.mock("./ag-grid/exportar", () => ({
   exportarDatos: (referenciaGrid: unknown, nombreArchivo: string) => {
     exportarDatosMock(referenciaGrid, nombreArchivo);
@@ -73,5 +76,29 @@ describe("BotonExportar", () => {
     fireEvent.click(screen.getByRole("button", { name: /Exportar/i }));
 
     expect(exportHandler).toHaveBeenCalledTimes(1);
+  });
+
+  it("el clic sin poder exportar dice por qué, en vez de no hacer nada", () => {
+    render(
+      <BotonExportar
+        referenciaGrid={referenciaGrid}
+        nombreArchivo="reporte"
+        motivoDeshabilitado="No hay registros que exportar con estas fechas y filtros"
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Exportar/ }));
+    expect(toastMock).toHaveBeenCalledWith(
+      "No hay registros que exportar con estas fechas y filtros",
+      { id: "exportar-deshabilitado" },
+    );
+    expect(exportHandler).not.toHaveBeenCalled();
+  });
+
+  it("su nombre accesible es solo «Exportar CSV»; lo que descarga va como descripción", () => {
+    render(<BotonExportar referenciaGrid={referenciaGrid} nombreArchivo="reporte" />);
+    const boton = screen.getByRole("button", { name: "Exportar CSV" });
+    expect(boton).toHaveAccessibleDescription(
+      "Descarga las filas filtradas con las columnas visibles, sin la fila de totales. Se abre en Excel.",
+    );
   });
 });

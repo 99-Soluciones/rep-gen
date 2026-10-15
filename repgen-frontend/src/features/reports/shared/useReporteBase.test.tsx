@@ -170,4 +170,15 @@ describe("useReporteBase", () => {
       expect(result.current.datos).toEqual([]);
     });
   });
+
+  it("anota cuándo se cargó y «reintentar» vuelve a leer el mismo rango", async () => {
+    const { result } = renderHook(() => useReporteBase({ endpoint: "bancos/buscar" }));
+    await waitFor(() => expect(result.current.cargadoEn).toBeInstanceOf(Date));
+    const primera = result.current.cargadoEn!;
+
+    act(() => result.current.reintentar());
+    await waitFor(() => expect(obtenerReporteMock).toHaveBeenCalledTimes(2));
+    expect(obtenerReporteMock).toHaveBeenLastCalledWith(obtenerReporteMock.mock.calls[0][0]);
+    await waitFor(() => expect(result.current.cargadoEn).not.toBe(primera));
+  });
 });

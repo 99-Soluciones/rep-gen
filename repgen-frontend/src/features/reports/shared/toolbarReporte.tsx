@@ -1,4 +1,5 @@
 import AccionesTabla from "./AccionesTabla";
+import ActualizarDatos from "./ActualizarDatos";
 import BotonExportar from "./BotonExportar";
 import FiltroFechas from "./FiltroFechas";
 import type { useReporteBase } from "./useReporteBase";
@@ -15,6 +16,8 @@ interface ToolbarReporteProps {
     | "setFechaHasta"
     | "aplicarRango"
     | "versionRango"
+    | "cargadoEn"
+    | "reintentar"
   >;
   grid: ReturnType<typeof useReporteGrid>;
   reportId: string;
@@ -34,14 +37,24 @@ export const toolbarReporte = ({
   nombreArchivo,
 }: ToolbarReporteProps) => ({
   accionesToolbarInicio: (
-    <FiltroFechas
-      // Una vista con periodo cambia las fechas: el borrador se reinicia.
-      key={base.versionRango}
-      fechaDesde={base.fechaDesde}
-      setFechaDesde={base.setFechaDesde}
-      fechaHasta={base.fechaHasta}
-      setFechaHasta={base.setFechaHasta}
-    />
+    <>
+      <FiltroFechas
+        // Una vista con periodo cambia las fechas: el borrador se reinicia.
+        key={base.versionRango}
+        fechaDesde={base.fechaDesde}
+        setFechaDesde={base.setFechaDesde}
+        fechaHasta={base.fechaHasta}
+        setFechaHasta={base.setFechaHasta}
+      />
+      {/* Con error no hay datos que fechar: la tabla ofrece Reintentar. */}
+      {!base.error && (
+        <ActualizarDatos
+          cargadoEn={base.cargadoEn}
+          estaCargando={base.estaCargando}
+          onActualizar={base.reintentar}
+        />
+      )}
+    </>
   ),
   accionesToolbar: (
     <AccionesTabla
@@ -56,6 +69,8 @@ export const toolbarReporte = ({
       vistaActual={grid.vistaActual}
       vistaBase={grid.vistaBase}
       onVistaAplicada={(id) => grid.fijarBase(id)}
+      vistaElegida={grid.vistaElegida}
+      onElegirVista={grid.elegirVista}
     />
   ),
   accionesToolbarFin: (

@@ -6,18 +6,20 @@ interface KpiPanelVentasProps {
   totales: TotalesVentas;
   currentType: VentasRouteType;
   registros: number;
-  filtrado: boolean;
+  total: number;
+  desde: string;
+  hasta: string;
 }
 
 // Cancelaciones y devoluciones llegan en negativo: el neto es la suma visible
 // de los tres renglones de arriba.
-const KpiPanelVentas = ({ totales, currentType, registros, filtrado }: KpiPanelVentasProps) => (
+const KpiPanelVentas = ({ totales, currentType, registros, total, desde, hasta }: KpiPanelVentasProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-x-8 gap-y-5">
-    <NotaRegistros registros={registros} filtrado={filtrado} />
+    <NotaRegistros registros={registros} total={total} desde={desde} hasta={hasta} />
 
     <SeccionEstado
       titulo="Importes"
-      nota="Solo cuenta importes positivos y los negativos de facturas canceladas o con devolución; por eso puede diferir del total al pie de la tabla."
+      nota="Puede no coincidir con la suma de columnas al pie de la tabla: aquí solo restan los importes negativos de facturas canceladas o con devolución."
     >
       <LineaEstado etiqueta="Facturado" valor={totales.totalVentas} />
       <LineaEstado etiqueta="Cancelaciones" valor={totales.totalCancelaciones} />

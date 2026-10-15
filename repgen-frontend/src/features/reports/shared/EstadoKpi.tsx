@@ -1,4 +1,7 @@
 import type { ReactNode } from "react";
+import { formatearFecha } from "../../../shared/utils/fechas";
+import { ID_RESUMEN } from "./PanelKpiLateral";
+import type { EstadoCifras } from "./estadoCifras";
 
 const moneda = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" });
 const entero = new Intl.NumberFormat("es-MX");
@@ -60,17 +63,88 @@ export const LineaEstado = ({
   </div>
 );
 
-/** Deja claro sobre qué filas se calcularon las cifras. */
+/**
+ * Deja claro sobre qué se calcularon las cifras: el rango cargado y cuántas
+ * filas quedaron tras los filtros de la tabla. Quien solo mira el resumen no
+ * ve la barra de la tabla.
+ */
 export const NotaRegistros = ({
   registros,
-  filtrado,
+  total,
+  desde,
+  hasta,
 }: {
+  /** Filas que quedan tras los filtros de la tabla. */
   registros: number;
-  filtrado: boolean;
+  /** Filas cargadas en el rango. */
+  total: number;
+  desde: string;
+  hasta: string;
 }) => (
-  <p className="col-span-full text-xs text-gray-500">
-    Calculado sobre {entero.format(registros)}{" "}
-    {registros === 1 ? "registro" : "registros"}
-    {filtrado ? (registros === 1 ? " filtrado" : " filtrados") : ""}
-  </p>
+  <div className="col-span-full flex flex-col gap-0.5 text-xs">
+    <p className="font-medium text-gray-700 tabular-nums">
+      {formatearFecha(desde)} – {formatearFecha(hasta)}
+    </p>
+    <p className="text-gray-500">
+      {registros === total
+        ? `Calculado sobre ${entero.format(total)} ${total === 1 ? "registro" : "registros"}`
+        : `Calculado sobre ${entero.format(registros)} de ${entero.format(total)} registros (con los filtros de la tabla)`}
+    </p>
+  </div>
 );
+
+/**
+ * Bajo xl el resumen queda debajo de la tabla, fuera de la primera pantalla:
+ * la cifra resultado se adelanta en una línea, para quien entra a ver "cómo
+ * vamos" sin bajar. "Ver resumen" abre el panel y lleva el foco hasta él.
+ */
+export const ResultadoCompacto = ({
+  etiqueta,
+  valor,
+  estado = null,
+  filtrado = false,
+  onAbrirResumen,
+}: {
+  etiqueta: string;
+  valor: number;
+  estado?: EstadoCifras;
+  /** La cifra sale solo de las filas que dejan los filtros de la tabla. */
+  filtrado?: boolean;
+  onAbrirResumen: () => void;
+}) => {
+  const sinCifra = estado === "primeraCarga";
+  // Con un error no hay cifra que adelantar: la tabla ya lo explica.
+  if (estado === "error") return null;
+  return (
+    <div
+      aria-busy={estado === "cargando" || sinCifra}
+      className={`mx-2 mt-2 flex items-center justify-between gap-3 rounded-lg border border-gray-100 bg-white px-3 py-2 shadow-sm xl:hidden ${
+        estado === "cargando" ? "opacity-50" : ""
+      }`}
+    >
+      <p className="flex min-w-0 flex-wrap items-baseline gap-x-2 text-sm">
+        <span className="text-gray-600">{etiqueta}</span>
+        <span
+          className={`font-bold tabular-nums whitespace-nowrap ${
+            !sinCifra && valor < 0 ? "text-red-600" : "text-gray-900"
+          }`}
+        >
+          {/* Antes de la primera carga no hay cifra: un $0.00 diría "no hubo movimientos". */}
+          {sinCifra ? "—" : moneda.format(valor || 0)}
+        </span>
+        {filtrado && !sinCifra && <span className="text-xs text-gray-500">· filtrado</span>}
+      </p>
+      <button
+        type="button"
+        onClick={() => {
+          onAbrirResumen();
+          // Tras abrirse el panel: el foco lo trae a la vista (y al lector de pantalla).
+          setTimeout(() => document.getElementById(ID_RESUMEN)?.focus(), 0);
+        }}
+        className="shrink-0 rounded text-sm font-medium text-blue-700 underline-offset-2 hover:underline pointer-coarse:min-h-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      >
+        Ver resumen
+      </button>
+    </div>
+  );
+};

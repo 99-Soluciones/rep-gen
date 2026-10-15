@@ -89,7 +89,8 @@ vi.mock("./columnas", () => ({
   columnasBancos: [{ field: "abono" as string }],
 }));
 
-vi.mock("../../../shared/utils/fechas", () => ({
+vi.mock("../../../shared/utils/fechas", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../../shared/utils/fechas")>()),
   obtenerFechaHoyFormateada: () => "2026-05-08",
   obtenerPrimerDiaDelMes: () => "2026-05-01",
 }));

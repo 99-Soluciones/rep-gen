@@ -5,6 +5,8 @@ import { useNavbarSlot } from "../../../app/layout/navbarSlotContext";
 
 interface EncabezadoReporteProps {
   titulo: string;
+  /** Título de la pestaña del navegador, sin "· RepGen" (p. ej. "Ventas · Facturas"). */
+  tituloPagina: string;
   encabezadoExtra?: ReactNode;
 }
 
@@ -13,7 +15,7 @@ interface EncabezadoReporteProps {
  * en el slot central del Navbar vía portal; el rango de fechas vive aparte en
  * FiltroFechas, dentro de la barra de controles de la tabla.
  */
-const EncabezadoReporte = ({ titulo, encabezadoExtra }: EncabezadoReporteProps) => {
+const EncabezadoReporte = ({ titulo, tituloPagina, encabezadoExtra }: EncabezadoReporteProps) => {
   // Layout provee el elemento del slot por contexto. Es null si el Layout no
   // está montado (tests).
   const slotNavbar = useNavbarSlot();
@@ -29,13 +31,27 @@ const EncabezadoReporte = ({ titulo, encabezadoExtra }: EncabezadoReporteProps) 
     </div>
   );
 
+  // Cada reporte nombra la pestaña del navegador: el lector de pantalla anuncia
+  // el cambio y el historial no queda lleno de "RepGen".
+  const tituloDocumento = <title>{`${tituloPagina} · RepGen`}</title>;
+
   if (slotNavbar) {
-    return createPortal(encabezado, slotNavbar);
+    return (
+      <>
+        {tituloDocumento}
+        {createPortal(encabezado, slotNavbar)}
+      </>
+    );
   }
 
   // Fallback inline: mismo encabezado sobre el contenido cuando el slot del
   // Navbar no existe (por ejemplo en tests que montan el reporte solo).
-  return <div className="flex flex-col p-4 pt-4 pb-2 gap-4">{encabezado}</div>;
+  return (
+    <>
+      {tituloDocumento}
+      <div className="flex flex-col p-4 pt-4 pb-2 gap-4">{encabezado}</div>
+    </>
+  );
 };
 
 export default EncabezadoReporte;
