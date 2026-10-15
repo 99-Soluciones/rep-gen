@@ -2,16 +2,23 @@ import { NavLink } from "react-router-dom";
 
 interface SidebarProps {
   isOpen: boolean;
+  /** Al elegir un reporte el menú se cierra y deja ver la tabla. */
+  onNavegar?: () => void;
 }
 
-const Sidebar = ({ isOpen } : SidebarProps) => {
+const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
   const baseClass =
-    "flex items-center px-4 py-2.5 rounded-lg font-medium transition-colors mb-1";
+    "flex items-center px-4 py-2.5 rounded-lg font-medium transition-colors mb-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500";
   const activeClass = "bg-blue-50 text-blue-700";
   const inactiveClass = "text-gray-600 hover:bg-gray-50 hover:text-blue-600";
 
   return (
     <aside
+      id="menu-reportes"
+      aria-label="Menú de reportes"
+      // Cerrado solo se desplaza fuera de pantalla: inert lo saca del orden de
+      // tabulación y del árbol de accesibilidad.
+      inert={!isOpen}
       className={`
         absolute top-0 left-0 h-full z-100
         w-64 bg-white border-r border-gray-200 flex flex-col shadow-2xl 
@@ -20,11 +27,12 @@ const Sidebar = ({ isOpen } : SidebarProps) => {
       `}
     >
       <nav className="flex-1 px-4 py-4 overflow-y-auto mt-2">
-        <p className="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-          Reportes Financieros
+        <p className="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+          Reportes financieros
         </p>
 
         <NavLink
+          onClick={onNavegar}
           to="/bancos"
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`
@@ -47,6 +55,7 @@ const Sidebar = ({ isOpen } : SidebarProps) => {
         </NavLink>
 
         <NavLink
+          onClick={onNavegar}
           to="/ventas"
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`
@@ -69,6 +78,7 @@ const Sidebar = ({ isOpen } : SidebarProps) => {
         </NavLink>
 
         <NavLink
+          onClick={onNavegar}
           to="/cuentas_por_cobrar"
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`
@@ -88,10 +98,14 @@ const Sidebar = ({ isOpen } : SidebarProps) => {
               d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
             />
           </svg>
-          <span>Cuentas por Cobrar</span>
+          <span>Cuentas por cobrar</span>
+          <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
+            Próximamente
+          </span>
         </NavLink>
 
         <NavLink
+          onClick={onNavegar}
           to="/inventarios"
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`
@@ -113,6 +127,9 @@ const Sidebar = ({ isOpen } : SidebarProps) => {
           </svg>
 
           <span>Inventarios</span>
+          <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
+            Próximamente
+          </span>
         </NavLink>
       </nav>
     </aside>

@@ -21,6 +21,15 @@ const AppRouter = ({ reporteInicio }: { reporteInicio: string | null }) => {
           <Route path="/ventas/:reportType" element={<ReporteVentas />} />
           <Route path="/cuentas_por_cobrar" element={<ComingSoon />} />
           <Route path="/inventarios" element={<ComingSoon />} />
+          <Route
+            path="*"
+            element={
+              <ComingSoon
+                titulo="Esta página no existe"
+                mensaje="Revisa el enlace o elige un reporte desde el menú."
+              />
+            }
+          />
         </Routes>
       </Layout>
     </BrowserRouter>
