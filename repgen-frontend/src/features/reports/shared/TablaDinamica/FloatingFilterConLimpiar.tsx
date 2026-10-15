@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import type { CustomFloatingFilterProps } from "ag-grid-react";
 import type { IFilter, IFloatingFilterParent } from "ag-grid-community";
+import { interpretarMonto, montoATexto } from "../ag-grid/filtro-monto";
 
 export interface FloatingFilterConLimpiarParams {
   inputType?: "text" | "number" | "date";
   defaultFilterType?: string;
+  /** Montos: un número entero ignora los centavos (ag-grid/filtro-monto.ts). */
+  sinCentavos?: boolean;
 }
 
 type ModeloFiltro = Record<string, unknown>;
@@ -19,9 +23,14 @@ type FloatingFilterProps = CustomFloatingFilterProps<
 > &
   FloatingFilterConLimpiarParams;
 
+// Igual que el debounce de los filtros de texto (parametros-filtro.ts): no se
+// filtra ni se marca un error a media tecla (">" antes de ">5000").
+const ESPERA_MONTO_MS = 450;
+
 const obtenerValorDesdeModelo = (
   parentModel: Record<string, unknown> | null | undefined,
   inputType: FloatingFilterConLimpiarParams["inputType"],
+  sinCentavos: boolean,
 ): string => {
   if (!parentModel) {
     return "";
@@ -31,6 +40,8 @@ const obtenerValorDesdeModelo = (
     // El modelo de fecha de AG Grid es "YYYY-MM-DD HH:mm:ss"; el input solo acepta la fecha.
     return typeof parentModel.dateFrom === "string" ? parentModel.dateFrom.slice(0, 10) : "";
   }
+
+  if (inputType === "number") return montoATexto(parentModel, sinCentavos);
 
   return parentModel.filter != null ? String(parentModel.filter) : "";
 };
@@ -47,7 +58,7 @@ const tieneFiltroActivo = (
   }
 
   if (parentModel.type === "inRange") {
-    return Boolean(parentModel.dateFrom || parentModel.dateTo);
+    return Boolean(parentModel.dateFrom || parentModel.dateTo || parentModel.filter != null);
   }
 
   if (parentModel.filter != null && parentModel.filter !== "") {
@@ -57,40 +68,130 @@ const tieneFiltroActivo = (
   return Boolean(parentModel.dateFrom);
 };
 
-/** Un rango o un filtro con varias condiciones no cabe en un solo input. */
-const esModeloComplejo = (parentModel: ModeloFiltro | null | undefined): boolean =>
-  parentModel?.type === "inRange" ||
+/**
+ * Lo que no cabe en un solo input: un filtro con varias condiciones, o un
+ * rango de fechas. Un rango de montos sí cabe ("1000-5000").
+ */
+const esModeloComplejo = (
+  parentModel: ModeloFiltro | null | undefined,
+  inputType: FloatingFilterConLimpiarParams["inputType"],
+): boolean =>
+  (parentModel?.type === "inRange" && inputType !== "number") ||
   parentModel?.operator != null ||
   (Array.isArray(parentModel?.conditions) && parentModel.conditions.length > 1);
+
+const AYUDA_MONTO = "Monto, >5000, <0 o 1000-5000";
+const AYUDA_MONTO_INVALIDO = "No es un monto. Escribe un monto, >5000 o 1000-5000.";
+const AYUDA_SOLO_LECTURA = "Filtro con varias condiciones: edítalo desde el menú de la columna.";
+
+/**
+ * Pista visible bajo el input mientras tiene el foco. El encabezado de AG Grid
+ * recorta lo que se sale de la celda, así que va en un portal con posición
+ * fija y sigue al input si la tabla o la página hacen scroll. Para lectores de
+ * pantalla el mismo texto ya está en aria-describedby: esta es solo visual.
+ */
+const posicionBajo = (el: HTMLElement | null) => {
+  const rect = el?.getBoundingClientRect();
+  if (!rect) return null;
+  // Sin salirse por la derecha de la ventana (columnas al final de la tabla).
+  return { top: rect.bottom + 4, left: Math.max(8, Math.min(rect.left, window.innerWidth - 248)) };
+};
+
+const PistaFiltro = ({
+  ancla,
+  inicial,
+  texto,
+  error,
+}: {
+  ancla: RefObject<HTMLInputElement | null>;
+  /** Medida al recibir el foco (en el evento, no durante el render). */
+  inicial: { top: number; left: number } | null;
+  texto: string;
+  error: boolean;
+}) => {
+  const [posicion, setPosicion] = useState(inicial);
+
+  useEffect(() => {
+    const seguir = () => setPosicion(posicionBajo(ancla.current));
+    window.addEventListener("scroll", seguir, true);
+    window.addEventListener("resize", seguir);
+    return () => {
+      window.removeEventListener("scroll", seguir, true);
+      window.removeEventListener("resize", seguir);
+    };
+  });
+
+  if (!posicion) return null;
+  return createPortal(
+    <div
+      aria-hidden="true"
+      style={{ position: "fixed", top: posicion.top, left: posicion.left }}
+      className={`pointer-events-none z-50 max-w-60 rounded-md border bg-white px-2 py-1 text-xs shadow-lg ${
+        error ? "border-red-200 text-red-600" : "border-gray-200 text-gray-600"
+      }`}
+    >
+      {texto}
+    </div>,
+    document.body,
+  );
+};
+
+/** Lo escrito, en la forma en que el modelo lo devolvería ("$5,000" → "5000"). */
+const normalizar = (
+  texto: string,
+  inputType: FloatingFilterConLimpiarParams["inputType"],
+  sinCentavos: boolean,
+): string => {
+  if (inputType !== "number") return texto.trim();
+  const condicion = interpretarMonto(texto, sinCentavos);
+  return condicion && condicion !== "invalido" ? montoATexto(condicion, sinCentavos) : texto;
+};
 
 /**
  * Filtro flotante con botón para limpiar. AG Grid (componentes reactivos) le
  * pasa el modelo del filtro padre en `model`: el input se sincroniza con él,
  * así que también refleja cambios hechos por API (p. ej. setFilterModel(null)).
- * Lo que escribe el usuario pasa por el filtro padre para respetar su debounce.
+ * Texto y fechas pasan por el filtro padre para respetar su debounce; los
+ * montos se interpretan aquí (">5000", "1000-5000"…) y fijan el modelo entero.
  */
 const FloatingFilterConLimpiar = (props: FloatingFilterProps) => {
   const inputType = props.inputType ?? "text";
+  const sinCentavos = props.sinCentavos ?? false;
   const defaultFilterType =
     props.defaultFilterType ?? (inputType === "text" ? "contains" : "equals");
 
-  const [valor, setValor] = useState(() => obtenerValorDesdeModelo(props.model, inputType));
+  const [valor, setValor] = useState(() =>
+    obtenerValorDesdeModelo(props.model, inputType, sinCentavos),
+  );
   const [modeloAnterior, setModeloAnterior] = useState(props.model);
+  // Monto que no es una condición: se marca (tras la espera) y no filtra.
+  const [invalido, setInvalido] = useState(false);
+  const [enfocado, setEnfocado] = useState<{ top: number; left: number } | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const esperaRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (esperaRef.current) clearTimeout(esperaRef.current);
+  }, []);
 
   // Ajuste de estado durante el render cuando cambia el modelo. Si el modelo
-  // corresponde a lo que ya está escrito (p. ej. "abc " recortado a "abc"),
-  // no se pisa el input mientras el usuario teclea.
+  // corresponde a lo que ya está escrito (p. ej. "abc " recortado a "abc", o
+  // "$5,000" leído como 5000), no se pisa el input mientras el usuario teclea.
   if (props.model !== modeloAnterior) {
     setModeloAnterior(props.model);
-    const valorModelo = obtenerValorDesdeModelo(props.model, inputType);
-    const escrito =
-      inputType === "number" && valor !== "" ? String(Number(valor)) : valor.trim();
-    if (escrito !== valorModelo) setValor(valorModelo);
+    const valorModelo = obtenerValorDesdeModelo(props.model, inputType, sinCentavos);
+    // Un monto inválido quita el filtro: el texto se queda para corregirlo.
+    const quitadoPorInvalido = invalido && valorModelo === "";
+    if (normalizar(valor, inputType, sinCentavos) !== valorModelo && !quitadoPorInvalido) {
+      setValor(valorModelo);
+      setInvalido(false);
+    }
   }
 
-  const soloLectura = esModeloComplejo(props.model);
+  const soloLectura = esModeloComplejo(props.model, inputType);
   const nombreColumna = props.column.getColDef().headerName ?? props.column.getColId();
   const filtroActivo = valor !== "" || tieneFiltroActivo(props.model);
+  const idAyuda = `ayuda-filtro-${props.column.getColId()}`;
 
   const filterPlaceholder = (props.filterParams as { filterPlaceholder?: unknown })
     .filterPlaceholder;
@@ -103,7 +204,29 @@ const FloatingFilterConLimpiar = (props: FloatingFilterProps) => {
         ? props.filterPlaceholder
         : undefined;
 
+  const aplicarMonto = (texto: string) => {
+    const condicion = interpretarMonto(texto, sinCentavos);
+    setInvalido(condicion === "invalido");
+    // Lo que no se entiende no filtra: dejar el filtro anterior sería mostrar
+    // filas que no corresponden a lo que dice el input.
+    const modelo =
+      condicion && condicion !== "invalido" ? { filterType: "number", ...condicion } : null;
+    props.parentFilterInstance((parent) => {
+      void Promise.resolve(parent.setModel(modelo)).then(() => props.api.onFilterChanged());
+    });
+  };
+
   const notificarCambio = (nuevoValor: string) => {
+    if (inputType === "number") {
+      if (esperaRef.current) clearTimeout(esperaRef.current);
+      if (!nuevoValor) {
+        aplicarMonto("");
+        return;
+      }
+      esperaRef.current = setTimeout(() => aplicarMonto(nuevoValor), ESPERA_MONTO_MS);
+      return;
+    }
+
     props.parentFilterInstance((parent) => {
       if (!nuevoValor) {
         parent.onFloatingFilterChanged(null, null);
@@ -128,6 +251,7 @@ const FloatingFilterConLimpiar = (props: FloatingFilterProps) => {
 
   const onLimpiar = () => {
     setValor("");
+    setInvalido(false);
     notificarCambio("");
   };
 
@@ -135,15 +259,43 @@ const FloatingFilterConLimpiar = (props: FloatingFilterProps) => {
     <div className="ag-floating-filter-input w-full">
       <div className="relative flex w-full items-center">
         <input
-          className="ag-input-field-input ag-text-field-input w-full pr-7"
-          type={inputType}
+          ref={inputRef}
+          onFocus={(evento) => setEnfocado(posicionBajo(evento.currentTarget))}
+          onBlur={() => setEnfocado(null)}
+          className={`ag-input-field-input ag-text-field-input w-full pr-7 ${invalido ? "border-red-600!" : ""}`}
+          // Montos como texto: ">", "<" y el guion del rango no caben en type="number".
+          type={inputType === "number" ? "text" : inputType}
+          inputMode={inputType === "number" ? "decimal" : undefined}
           value={valor}
           onChange={onChange}
           readOnly={soloLectura}
           placeholder={placeholder}
           aria-label={`Filtrar ${nombreColumna}`}
-          title={soloLectura ? "Filtro con varias condiciones: edítalo desde el filtro de la columna" : undefined}
+          aria-invalid={invalido || undefined}
+          aria-describedby={
+            [inputType === "number" ? idAyuda : "", soloLectura ? `${idAyuda}-solo-lectura` : ""]
+              .filter(Boolean)
+              .join(" ") || undefined
+          }
         />
+        {enfocado && (soloLectura || inputType === "number") && (
+          <PistaFiltro
+            ancla={inputRef}
+            inicial={enfocado}
+            texto={soloLectura ? AYUDA_SOLO_LECTURA : invalido ? AYUDA_MONTO_INVALIDO : AYUDA_MONTO}
+            error={invalido && !soloLectura}
+          />
+        )}
+        {inputType === "number" && (
+          <span id={idAyuda} className="sr-only">
+            {invalido ? AYUDA_MONTO_INVALIDO : `${AYUDA_MONTO}.`}
+          </span>
+        )}
+        {soloLectura && (
+          <span id={`${idAyuda}-solo-lectura`} className="sr-only">
+            {AYUDA_SOLO_LECTURA}
+          </span>
+        )}
         {filtroActivo && (
           <button
             type="button"

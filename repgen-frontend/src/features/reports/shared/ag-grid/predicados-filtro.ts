@@ -24,6 +24,37 @@ export const filtroMenorQue = ([valorFiltro]: unknown[], valorCelda: unknown): b
     return valorCelda != null && Number(valorCelda) < Number(valorFiltro);
 };
 
+// En centavos enteros: 0.1 + 0.2 no deja de ser 0.30.
+const centavos = (valor: unknown): number => Math.round(Number(valor) * 100);
+
+/**
+ * "Igual a" de montos: un valor entero ignora los centavos (5000 coincide con
+ * 5,000.00 a 5,000.99, y -1200 con -1,200.00 a -1,200.99); con decimales es exacto.
+ */
+export const filtroIgualSinCentavos = ([valorFiltro]: unknown[], valorCelda: unknown): boolean => {
+    if (valorCelda == null || valorCelda === "" || valorFiltro == null) return false;
+    const filtro = Number(valorFiltro);
+    return Number.isInteger(filtro)
+        ? Math.trunc(centavos(valorCelda) / 100) === filtro
+        : centavos(valorCelda) === centavos(filtro);
+};
+
+/** Mayor o igual; las celdas vacías no cumplen. */
+export const filtroMayorOIgual = ([valorFiltro]: unknown[], valorCelda: unknown): boolean =>
+    valorCelda != null && valorCelda !== "" && centavos(valorCelda) >= centavos(valorFiltro);
+
+/** Menor o igual; las celdas vacías no cumplen. */
+export const filtroMenorOIgual = ([valorFiltro]: unknown[], valorCelda: unknown): boolean =>
+    valorCelda != null && valorCelda !== "" && centavos(valorCelda) <= centavos(valorFiltro);
+
+/** Entre dos montos, ambos incluidos y en cualquier orden. */
+export const filtroEntre = ([desde, hasta]: unknown[], valorCelda: unknown): boolean => {
+    if (valorCelda == null || valorCelda === "" || desde == null || hasta == null) return false;
+    const celda = centavos(valorCelda);
+    const [min, max] = [centavos(desde), centavos(hasta)].sort((a, b) => a - b);
+    return celda >= min && celda <= max;
+};
+
 /**
  * Filtro para celdas vacías. Retorna true si el valor de la celda es null, undefined o una cadena vacía.
  * @param  filterValue[] - El valor del filtro, que no se utiliza en este caso ya que el filtro se basa únicamente en el valor de la celda.

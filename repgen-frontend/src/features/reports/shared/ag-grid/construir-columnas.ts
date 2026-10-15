@@ -1,7 +1,8 @@
-import type { ColDef } from "ag-grid-community";
+import type { CellClassParams, CellClassRules, ColDef } from "ag-grid-community";
 
 import FloatingFilterConLimpiar from "../TablaDinamica/FloatingFilterConLimpiar";
 import {
+  esNegativo,
   formatearMoneda,
   formatearFecha,
   formatearNumero,
@@ -16,6 +17,7 @@ import {
   textFilterParams,
   type AgGridDataType,
 } from "./parametros-filtro";
+import { IGUAL_SIN_CENTAVOS } from "./filtro-monto";
 
 type DefaultRowData = Record<string, string | number | null>;
 
@@ -47,6 +49,16 @@ interface BaseColumnDef<TRowData> extends Partial<ColDef<TRowData>> {
   field: ColDef<TRowData>["field"];
   context: ColumnContext;
 }
+
+// Clases de index.css. El rótulo ("Total MXN") cae en la primera columna
+// visible, sea del tipo que sea; la tinta roja, solo en columnas de cifras.
+const esRotuloTotal = ({ node, value }: CellClassParams) =>
+  node.rowPinned === "bottom" && typeof value === "string" && value !== "";
+const reglasCelda: CellClassRules = { "rotulo-total": esRotuloTotal };
+const reglasCeldaCifra: CellClassRules = {
+  ...reglasCelda,
+  "cifra-negativa": ({ value }) => esNegativo(value),
+};
 
 const obtenerDefinicionColumnaPredeterminada = <TRowData>(): Partial<ColDef<TRowData>> => ({
   sortable: true,
@@ -149,6 +161,7 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
     headerName,
     field: campoTipado,
     context: { claseColumna: metadatoResuelto.columnClass || "General" },
+    cellClassRules: reglasCelda,
     filterParams: textFilterParams(placeholderFiltro),
     floatingFilterComponent: FloatingFilterConLimpiar,
     floatingFilterComponentParams: floatingFilterParams({
@@ -163,10 +176,12 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
         ...columnaBase,
         filter: "agNumberColumnFilter",
         type: "numericColumn",
+        cellClassRules: reglasCeldaCifra,
         filterParams: numberFilterParams(placeholderFiltro),
         floatingFilterComponentParams: floatingFilterParams({
           inputType: "number",
-          defaultFilterType: "equals",
+          defaultFilterType: IGUAL_SIN_CENTAVOS,
+          sinCentavos: true,
         }),
         valueFormatter: ({ value }) => formatearNumero(value),
       };
@@ -176,10 +191,12 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
         ...columnaBase,
         filter: "agNumberColumnFilter",
         type: "numericColumn",
+        cellClassRules: reglasCeldaCifra,
         filterParams: numberFilterParams(placeholderFiltro),
         floatingFilterComponentParams: floatingFilterParams({
           inputType: "number",
-          defaultFilterType: "equals",
+          defaultFilterType: IGUAL_SIN_CENTAVOS,
+          sinCentavos: true,
         }),
         // exportar.ts agrega la columna de moneda al CSV si está oculta.
         context: { ...columnaBase.context, campoMoneda: metadatoResuelto.currencyField },
@@ -198,10 +215,13 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
         ...columnaBase,
         filter: "agNumberColumnFilter",
         type: "numericColumn",
-        filterParams: numberFilterParams(placeholderFiltro),
+        cellClassRules: reglasCeldaCifra,
+        // Un 16% no tiene centavos: "Igual a" es exacto.
+        filterParams: numberFilterParams(placeholderFiltro, { sinCentavos: false }),
         floatingFilterComponentParams: floatingFilterParams({
           inputType: "number",
           defaultFilterType: "equals",
+          sinCentavos: false,
         }),
         valueFormatter: ({ value }) => formatearPorcentaje(value),
       };

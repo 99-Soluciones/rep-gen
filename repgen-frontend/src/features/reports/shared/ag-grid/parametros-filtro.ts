@@ -13,11 +13,16 @@ import {
   filtroFechaIgual,
   filtroFechaMayorQue,
   filtroFechaMenorQue,
+  filtroEntre,
   filtroIgual,
-  filtroTextoIgual,
+  filtroIgualSinCentavos,
+  filtroMayorOIgual,
   filtroMayorQue,
+  filtroMenorOIgual,
   filtroMenorQue,
+  filtroTextoIgual,
 } from "./predicados-filtro";
+import { IGUAL_SIN_CENTAVOS } from "./filtro-monto";
 
 export type AgGridDataType =
   | "text"
@@ -37,10 +42,11 @@ type FloatingFilterInputType = "text" | "number" | "date";
 export const floatingFilterParams = (config: {
   inputType: FloatingFilterInputType;
   defaultFilterType: string;
+  /** Montos: un número entero en el filtro ignora los centavos (ag-grid/filtro-monto.ts). */
+  sinCentavos?: boolean;
 }) => ({
   filterPlaceholder: true as const,
-  inputType: config.inputType,
-  defaultFilterType: config.defaultFilterType,
+  ...config,
 });
 
 export const textFilterParams = (
@@ -74,15 +80,31 @@ export const textFilterParams = (
   };
 };
 
+/**
+ * Filtro de números. Con `sinCentavos` (montos y cantidades) "Igual a" ignora
+ * los centavos de un valor entero y el exacto queda aparte, "Igual a (exacto)":
+ * así las vistas guardadas con el "Igual a" de antes conservan su significado.
+ * Los porcentajes usan el exacto como "Igual a". Hasta dos condiciones (Y/O).
+ */
 export const numberFilterParams = (
   filterPlaceholder: string,
+  { sinCentavos = true }: { sinCentavos?: boolean } = {},
 ): INumberFilterParams => {
   return {
     filterPlaceholder: filterPlaceholder,
     filterOptions: [
+      ...(sinCentavos
+        ? [
+            {
+              displayKey: IGUAL_SIN_CENTAVOS,
+              displayName: "Igual a",
+              predicate: filtroIgualSinCentavos,
+            },
+          ]
+        : []),
       {
         displayKey: "equals",
-        displayName: "Igual a",
+        displayName: sinCentavos ? "Igual a (exacto)" : "Igual a",
         predicate: filtroIgual,
       },
       {
@@ -91,9 +113,25 @@ export const numberFilterParams = (
         predicate: filtroMayorQue,
       },
       {
+        displayKey: "greaterThanOrEqual",
+        displayName: "Mayor o igual que",
+        predicate: filtroMayorOIgual,
+      },
+      {
         displayKey: "lessThan",
         displayName: "Menor que",
         predicate: filtroMenorQue,
+      },
+      {
+        displayKey: "lessThanOrEqual",
+        displayName: "Menor o igual que",
+        predicate: filtroMenorOIgual,
+      },
+      {
+        displayKey: "inRange",
+        displayName: "Entre",
+        predicate: filtroEntre,
+        numberOfInputs: 2,
       },
       {
         displayKey: "blank",
@@ -102,8 +140,8 @@ export const numberFilterParams = (
         numberOfInputs: 0,
       },
     ] as IFilterOptionDef[],
-    maxNumConditions: 1,
-    defaultOption: "equals",
+    maxNumConditions: 2,
+    defaultOption: sinCentavos ? IGUAL_SIN_CENTAVOS : "equals",
     debounceMs: 450,
     buttons: botonesFiltroPopup,
   };
@@ -121,12 +159,12 @@ export const dateFilterParams = (filterPlaceholder: string): IDateFilterParams =
       },
       {
         displayKey: "greaterThan",
-        displayName: "Mayor que",
+        displayName: "Después de",
         predicate: filtroFechaMayorQue,
       },
       {
         displayKey: "lessThan",
-        displayName: "Menor que",
+        displayName: "Antes de",
         predicate: filtroFechaMenorQue,
       },
       {

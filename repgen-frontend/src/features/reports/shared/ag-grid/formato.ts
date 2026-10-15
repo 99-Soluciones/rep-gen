@@ -24,6 +24,12 @@ const convertirANumero = (valor: unknown): number | null => {
 	return null;
 };
 
+/** La cifra resta (se pinta en rojo, como en el resumen). Un -0 no cuenta. */
+export const esNegativo = (valor: unknown): boolean => {
+	const numero = convertirANumero(valor);
+	return numero !== null && numero < 0;
+};
+
 /** Un texto que no es número (p. ej. la etiqueta de la fila de totales) se muestra tal cual. */
 const textoTalCual = (valor: unknown): string => (typeof valor === "string" ? valor : "");
 
