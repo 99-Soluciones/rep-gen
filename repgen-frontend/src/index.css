@@ -18,19 +18,11 @@ body,
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.ag-theme-quartz {
-  --ag-font-family: Arial, Helvetica, sans-serif;
-  --ag-cell-horizontal-border: solid 1px #f3f4f6; 
-  --ag-borders: none;
-  --ag-header-column-separator-display: none;
-  --ag-header-column-resize-handle-display: none;
-  
-  --ag-header-background-color: #f9fafb; 
-  --ag-header-foreground-color: #4b5563; 
-  
-
-  --ag-row-hover-color: #eff6ff; 
+:root {
+  accent-color: var(--color-blue-600);
 }
 
-
-
+::selection {
+  background-color: var(--color-blue-100);
+  color: var(--color-gray-900);
+}

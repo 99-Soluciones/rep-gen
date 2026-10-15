@@ -3,6 +3,11 @@ import type { ReactNode } from "react";
 interface TablaDinamicaControlesProps {
   totalDatos: number;
   filasVisibles: number;
+  /** Columnas con filtro activo (pueden estar fuera de pantalla). */
+  filtrosActivos?: number;
+  onLimpiarFiltros?: () => void;
+  /** Presente tras "Limpiar" mientras se puedan recuperar los filtros quitados. */
+  onRestaurarFiltros?: () => void;
   accionesToolbarInicio?: ReactNode;
   accionesToolbar?: ReactNode;
   accionesToolbarFin?: ReactNode;
@@ -13,14 +18,18 @@ interface TablaDinamicaControlesProps {
 const TablaDinamicaControles = ({
   totalDatos,
   filasVisibles,
+  filtrosActivos = 0,
+  onLimpiarFiltros,
+  onRestaurarFiltros,
   accionesToolbarInicio,
   accionesToolbar,
   accionesToolbarFin,
 }: TablaDinamicaControlesProps) => {
-  const hayFiltroActivo = filasVisibles !== totalDatos;
+  // Un filtro puede estar activo aunque todavía coincidan todas las filas.
+  const hayFiltroActivo = filtrosActivos > 0 || filasVisibles !== totalDatos;
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-2 mr-2 py-2 border-b border-gray-100 bg-white">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-3 py-2 border-b border-gray-100 bg-white">
       <div className="flex flex-wrap items-center gap-3 min-w-0">
         {accionesToolbarInicio}
         <div
@@ -45,15 +54,39 @@ const TablaDinamicaControles = ({
               />
             </svg>
           )}
-          <span>
+          <span aria-live="polite">
             <span className={`font-semibold ${hayFiltroActivo ? "text-blue-800" : "text-gray-900"}`}>
               {filasVisibles.toLocaleString("es-MX")}
             </span>
             {hayFiltroActivo && (
               <span className="text-gray-500"> de {totalDatos.toLocaleString("es-MX")}</span>
+            )}{" "}
+            {filasVisibles === 1 ? "registro" : "registros"}
+            {filtrosActivos > 0 && (
+              <span className="text-gray-500">
+                {" · "}
+                {filtrosActivos} {filtrosActivos === 1 ? "filtro" : "filtros"}
+              </span>
             )}
-          </span>{" "}
-          {filasVisibles === 1 ? "registro" : "registros"}
+          </span>
+          {filtrosActivos > 0 && onLimpiarFiltros && (
+            <button
+              type="button"
+              onClick={onLimpiarFiltros}
+              className="ml-1 rounded font-medium text-blue-700 underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            >
+              Limpiar
+            </button>
+          )}
+          {filtrosActivos === 0 && onRestaurarFiltros && (
+            <button
+              type="button"
+              onClick={onRestaurarFiltros}
+              className="ml-1 rounded font-medium text-blue-700 underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            >
+              Restaurar filtros
+            </button>
+          )}
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2 pl-2">

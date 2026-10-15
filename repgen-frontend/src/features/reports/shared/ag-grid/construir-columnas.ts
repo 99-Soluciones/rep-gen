@@ -27,6 +27,8 @@ export interface ReportColumnMeta {
   columnClass?: string;
   defaultHeader?: string;
   labelSlot?: string;
+  /** Solo moneda: campo del renglón con su código de moneda (p. ej. "moneda"). */
+  currencyField?: string;
 }
 
 interface ReportSchema<TReportType extends string> {
@@ -179,7 +181,16 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
           inputType: "number",
           defaultFilterType: "equals",
         }),
-        valueFormatter: ({ value }) => formatearMoneda(value),
+        // exportar.ts agrega la columna de moneda al CSV si está oculta.
+        context: { ...columnaBase.context, campoMoneda: metadatoResuelto.currencyField },
+        // La fila de totales no trae el campo de moneda: se formatea en MXN.
+        valueFormatter: ({ value, data }) =>
+          formatearMoneda(
+            value,
+            metadatoResuelto.currencyField
+              ? (data as Record<string, unknown> | undefined)?.[metadatoResuelto.currencyField]
+              : undefined,
+          ),
       };
 
     case "percent":

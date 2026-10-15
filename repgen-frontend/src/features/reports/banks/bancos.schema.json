@@ -38,11 +38,13 @@
     },
     "Abono": {
       "field": "abono",
-      "dataType": "currency"
+      "dataType": "currency",
+      "currencyField": "moneda"
     },
     "Cargo": {
       "field": "cargo",
-      "dataType": "currency"
+      "dataType": "currency",
+      "currencyField": "moneda"
     },
     "Tipo de Cambio": {
       "field": "tipoDeCambio",
@@ -50,15 +52,18 @@
     },
     "Saldo Resultante": {
       "field": "saldoBanco",
-      "dataType": "currency"
+      "dataType": "currency",
+      "currencyField": "moneda"
     },
     "Saldo por Complementar": {
       "field": "saldoPorComplementar",
-      "dataType": "currency"
+      "dataType": "currency",
+      "currencyField": "moneda"
     },
     "Saldo por Identificar": {
       "field": "saldoPorIdentificar",
-      "dataType": "currency"
+      "dataType": "currency",
+      "currencyField": "moneda"
     },
     "Estado Ingreso": {
       "field": "estadoIngreso",

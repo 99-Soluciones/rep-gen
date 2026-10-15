@@ -43,6 +43,25 @@ describe("BotonExportar", () => {
     );
   });
 
+  it("sin poder exportar sigue enfocable, dice por qué y no exporta", () => {
+    render(
+      <BotonExportar
+        referenciaGrid={referenciaGrid}
+        nombreArchivo="reporte_ventas"
+        motivoDeshabilitado="Espera a que terminen de cargar los registros"
+      />,
+    );
+    const boton = screen.getByRole("button", { name: /Exportar/i });
+    expect(boton).toHaveAttribute("aria-disabled", "true");
+    expect(boton).not.toBeDisabled();
+    expect(boton).toHaveAccessibleDescription("Espera a que terminen de cargar los registros");
+
+    boton.focus();
+    expect(boton).toHaveFocus();
+    fireEvent.click(boton);
+    expect(exportHandler).not.toHaveBeenCalled();
+  });
+
   it("invoca el handler de exportación al hacer click", () => {
     render(
       <BotonExportar

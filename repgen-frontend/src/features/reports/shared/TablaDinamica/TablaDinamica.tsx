@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import {
   CellStyleModule,
@@ -8,8 +8,10 @@ import {
   ColumnAutoSizeModule,
   CsvExportModule,
   DateFilterModule,
+  LocaleModule,
   ModuleRegistry,
   NumberFilterModule,
+  PinnedRowModule,
   RowApiModule,
   TextFilterModule,
   ValidationModule,
@@ -17,6 +19,10 @@ import {
 } from "ag-grid-community";
 import type { ColDef, GridReadyEvent } from "ag-grid-community";
 import TablaDinamicaControles from "./TablaDinamicaControles";
+import { calcularFilaTotales, type TotalesTabla } from "./totales";
+import { LOCALE_ES } from "../ag-grid/locale-es";
+import type { ErrorCarga } from "../useReporteBase";
+import { avisarConDeshacer } from "../avisarConDeshacer";
 
 // Solo los módulos que usan los reportes (AllCommunityModule pesa ~1 MB).
 // Si se usa una API o propiedad nueva de AG Grid, ValidationModule (solo en
@@ -32,8 +38,33 @@ ModuleRegistry.registerModules([
   DateFilterModule,
   CellStyleModule, // tipo numericColumn (alineación a la derecha)
   CsvExportModule,
+  PinnedRowModule, // fila de totales
+  LocaleModule, // localeText en español (ag-grid/locale-es.ts)
   ...(import.meta.env.DEV ? [ValidationModule] : []),
 ]);
+
+// Tema del sistema ("El Libro Mayor Claro", DESIGN.md). Con la Theming API la
+// grilla no lleva la clase .ag-theme-quartz: el estilo va en los parámetros.
+const temaGrid = themeQuartz.withParams({
+  fontFamily: "Arial, Helvetica, sans-serif",
+  fontSize: 14,
+  foregroundColor: "#111827",
+  // Token de marca (index.css): si un tenant cambia su azul, la grilla lo sigue.
+  accentColor: "var(--color-blue-600, #2b75e8)",
+  borderColor: "#e5e7eb",
+  wrapperBorder: false,
+  headerBackgroundColor: "#f9fafb",
+  headerTextColor: "#4b5563",
+  headerFontWeight: 600,
+  headerColumnBorder: false,
+  headerColumnResizeHandleColor: "#d1d5db",
+  rowBorder: { color: "#f3f4f6" },
+  columnBorder: false,
+  rowHoverColor: "var(--color-blue-50, #eff6ff)",
+  pinnedRowBackgroundColor: "#f9fafb",
+  pinnedRowFontWeight: 700,
+  pinnedRowBorder: { color: "#d1d5db" },
+});
 
 // Función pura de módulo (no un closure del componente) para que React
 // Compiler no necesite estabilizarla: recibe los refs como parámetros en vez
@@ -61,6 +92,16 @@ interface TablaDinamicaProps<T> {
   datos: T[];
   definicionesColumnas: ColDef<T>[];
   estaCargando: boolean;
+  /** Falla de la última carga; se muestra sobre el grid (la toolbar sigue usable). */
+  error?: ErrorCarga | null;
+  onReintentar?: () => void;
+  /** Fila fija al pie con la suma de las filas filtradas. */
+  totales?: TotalesTabla<T>;
+  /**
+   * Cambió algo que guarda una vista (columnas, orden, filtros). Va por props de
+   * AgGridReact: los listeners con api.addEventListener no reciben estos eventos.
+   */
+  onCambioVista?: () => void;
   onGridListo: (event: GridReadyEvent<T>) => void;
   onActualizacionModulo?: () => void;
   accionesToolbarInicio?: React.ReactNode;
@@ -74,6 +115,10 @@ const TablaDinamica = <T,>({
   datos,
   definicionesColumnas,
   estaCargando,
+  error,
+  onReintentar,
+  totales,
+  onCambioVista,
   onGridListo,
   onActualizacionModulo,
   accionesToolbarInicio,
@@ -84,6 +129,47 @@ const TablaDinamica = <T,>({
   const gridContainerRef = useRef<HTMLDivElement | null>(null);
   const resizeRafRef = useRef<number | null>(null);
   const modelUpdateRafRef = useRef<number | null>(null);
+  const filaTotalesRef = useRef<string | null>(null);
+  const [filtrosActivos, setFiltrosActivos] = useState(0);
+  // Filtros que quitó "Limpiar": el chip ofrece restaurarlos hasta que se filtre
+  // de nuevo (el aviso con Deshacer se va solo y por teclado cuesta alcanzarlo).
+  const [filtrosQuitados, setFiltrosQuitados] = useState<Record<string, unknown> | null>(null);
+
+  // Cuántas columnas tienen filtro (algunas pueden quedar fuera de pantalla).
+  const contarFiltros = () => {
+    const api = referenciaGrid.current?.api;
+    if (!api) return;
+    const cuantos = Object.keys(api.getFilterModel()).length;
+    setFiltrosActivos(cuantos);
+    if (cuantos > 0) setFiltrosQuitados(null);
+  };
+
+  const restaurarFiltros = () => {
+    const api = referenciaGrid.current?.api;
+    if (!api || api.isDestroyed() || !filtrosQuitados) return;
+    // Solo columnas que siguen existiendo (p. ej. tras cambiar de pestaña).
+    api.setFilterModel(
+      Object.fromEntries(Object.entries(filtrosQuitados).filter(([id]) => api.getColumn(id))),
+    );
+    setFiltrosQuitados(null);
+  };
+
+  // Un clic quita varios filtros armados a mano: el aviso permite recuperarlos.
+  const limpiarFiltros = () => {
+    const api = referenciaGrid.current?.api;
+    if (!api) return;
+    const previos = api.getFilterModel();
+    api.setFilterModel(null);
+    const cuantos = Object.keys(previos).length;
+    if (cuantos === 0) return;
+    setFiltrosQuitados(previos);
+    avisarConDeshacer(
+      cuantos === 1 ? "Se quitó 1 filtro." : `Se quitaron ${cuantos} filtros.`,
+      () => {
+        if (!api.isDestroyed()) api.setFilterModel(previos);
+      },
+    );
+  };
 
   const defaultColDef: ColDef<T> = {
     width: 200,
@@ -98,17 +184,31 @@ const TablaDinamica = <T,>({
     scheduleGridFit(referenciaGrid, gridContainerRef, resizeRafRef);
   };
 
+  const actualizarTotales = () => {
+    const api = referenciaGrid.current?.api;
+    if (!api || !totales) return;
+    const filas = datos.length > 0 ? [calcularFilaTotales(api, totales)] : [];
+    // Solo si cambió: setGridOption re-renderiza y modelUpdated es frecuente.
+    const serializada = JSON.stringify(filas);
+    if (serializada === filaTotalesRef.current) return;
+    filaTotalesRef.current = serializada;
+    api.setGridOption("pinnedBottomRowData", filas);
+  };
+
   const handleModelUpdated = () => {
-    if (!onActualizacionModulo) return;
     if (typeof window === "undefined") {
-      onActualizacionModulo();
+      actualizarTotales();
+      contarFiltros();
+      onActualizacionModulo?.();
       return;
     }
 
     if (modelUpdateRafRef.current !== null) return;
     modelUpdateRafRef.current = window.requestAnimationFrame(() => {
       modelUpdateRafRef.current = null;
-      onActualizacionModulo();
+      actualizarTotales();
+      contarFiltros();
+      onActualizacionModulo?.();
     });
   };
 
@@ -149,63 +249,121 @@ const TablaDinamica = <T,>({
 
   return (
     <div className="flex flex-col w-full flex-1 min-h-0">
-      <div className="w-full px-2 relative flex-1 flex flex-col min-h-0">
-        {estaCargando && (
-          <div className="absolute inset-4 bg-white/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-lg">
-            <svg
-              className="animate-spin h-10 w-10 text-blue-600 mb-2"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            <span className="text-sm font-semibold text-gray-700">
-              Actualizando datos...
-            </span>
-          </div>
-        )}
-
-        <div
-          style={{
-            height: "calc(110vh - 230px)",
-            minHeight: "400px",
-            width: "100%",
-          }}
-          className="w-full shadow-lg rounded-lg overflow-hidden mb-2 bg-white border border-gray-100 flex flex-col"
-        >
+      <div className="w-full p-2 relative flex-1 flex flex-col min-h-0">
+        {/* Bajo xl el panel de KPIs va debajo: la tabla ocupa una pantalla
+            (navbar 4rem + padding 1rem) y la página hace scroll hasta los KPIs.
+            En xl llena la altura disponible junto al panel lateral. */}
+        <div className="w-full h-[calc(100dvh-5rem)] min-h-100 xl:h-auto xl:flex-1 shadow-lg rounded-lg overflow-hidden bg-white border border-gray-100 flex flex-col">
           <TablaDinamicaControles
             totalDatos={datos.length}
             filasVisibles={filasVisibles}
+            filtrosActivos={filtrosActivos}
+            onLimpiarFiltros={limpiarFiltros}
+            onRestaurarFiltros={filtrosQuitados ? restaurarFiltros : undefined}
             accionesToolbarInicio={accionesToolbarInicio}
             accionesToolbar={accionesToolbar}
             accionesToolbarFin={accionesToolbarFin}
           />
 
-          <div className="flex-1 min-h-0" ref={gridContainerRef}>
+          <div className="relative flex-1 min-h-0" ref={gridContainerRef}>
+            {/* Solo sobre el cuerpo: fechas y acciones siguen usables mientras carga. */}
+            {estaCargando && (
+              <div
+                role="status"
+                className="absolute inset-0 bg-white/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center"
+              >
+                <svg
+                  className="animate-spin h-10 w-10 text-blue-600 mb-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                <span className="text-sm font-semibold text-gray-700">
+                  Cargando registros...
+                </span>
+              </div>
+            )}
+            {error && !estaCargando && (
+              <div
+                role="alert"
+                className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-white px-6 text-center"
+              >
+                <div className="rounded-full bg-red-50 p-3">
+                  <svg
+                    className="h-6 w-6 text-red-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+                    />
+                  </svg>
+                </div>
+                <div className="max-w-md">
+                  <p className="text-sm font-semibold text-gray-800">
+                    No se pudieron cargar los registros
+                  </p>
+                  <p className="mt-1 text-sm text-gray-600">{error.mensaje}</p>
+                </div>
+                {error.reintentable && onReintentar && (
+                  <button
+                    type="button"
+                    onClick={onReintentar}
+                    className="px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-marca-morado transition-colors text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+                  >
+                    Reintentar
+                  </button>
+                )}
+              </div>
+            )}
             <AgGridReact<T>
               ref={referenciaGrid}
               rowData={datos}
               columnDefs={definicionesColumnas}
-              theme={themeQuartz}
-              rowHeight={49}
-              headerHeight={56}
+              theme={temaGrid}
+              rowHeight={36}
+              headerHeight={40}
               onGridReady={handleGridReady}
-              overlayNoRowsTemplate={`<span class="ag-overlay-no-rows-center">${datos?.length === 0 && !estaCargando ? "No se encontraron registros" : "Cargando registros..."}</span>`}
+              overlayNoRowsTemplate={`<span class="ag-overlay-no-rows-center">${
+                estaCargando
+                  ? "Cargando registros..."
+                  : datos?.length
+                    ? "Ningún registro coincide con los filtros."
+                    : "No hay registros en este rango de fechas."
+              }</span>`}
               defaultColDef={defaultColDef}
               onModelUpdated={handleModelUpdated}
+              onFilterChanged={onCambioVista}
+              onSortChanged={onCambioVista}
+              onColumnMoved={onCambioVista}
+              onColumnVisible={onCambioVista}
+              onColumnPinned={onCambioVista}
+              onDisplayedColumnsChanged={onCambioVista}
+              localeText={LOCALE_ES}
+              // Se puede seleccionar y copiar el valor de una celda. Sin ensureDomOrder:
+              // con ~40 columnas mantener el orden del DOM cuesta y solo hace falta
+              // para seleccionar a través de varias celdas.
+              enableCellTextSelection
             />
           </div>
         </div>
