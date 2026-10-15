@@ -215,16 +215,15 @@ src/
 
 *Cambio:* separar en `AuthGate` (solo la sesión), `router.tsx` y `session.ts` (lectura segura del usuario).
 
-**F8. Menores**
+**F8. Menores** — *Hecho (2026-10-08), ver detalle abajo*
 - ~~`formatearFecha` no maneja ISO correctamente~~ (corregido en la Fase 1).
-- La altura `calc(110vh - 230px)` provoca scroll de página.
-- `filtroIgual` distingue mayúsculas y acentos, mientras que `filtroContiene` normaliza.
-- El botón dice "Excel" pero exporta CSV.
-- `PanelKpiLateral` escribe en `localStorage` en cada `mousemove`.
-- `vite.config.ts` define a la vez `manualChunks` y `codeSplitting.groups`; hay que dejar uno.
-- `FloatingFilterConLimpiar` usa la API imperativa (`forwardRef`/`useImperativeHandle`); conviene pasar a componentes reactivos de AG Grid.
+- ~~La altura `calc(110vh - 230px)` provoca scroll de página~~: **hallazgo incorrecto.** Medido en el navegador: no hay scroll en 1366×768, 1440×900, 1920×1080 ni 2560×1440. Solo aparece en monitores verticales de más de unos 1,600 px de alto (42 px a 1440×2000) y, por diseño, debajo de `xl`, donde los KPIs van bajo la grilla. Se deja igual.
+- ~~`filtroIgual` distingue mayúsculas y acentos~~: corregido. Además había un bug: "Igual a" en columnas de texto con valores numéricos (p. ej. Venta ID) no encontraba nada.
+- ~~El botón dice "Excel" pero exporta CSV~~: **no es defecto.** AG Grid escribe el BOM UTF-8, así que el CSV abre en Excel con acentos correctos. El texto del botón queda como decisión de producto.
+- ~~`PanelKpiLateral` escribe en `localStorage` en cada `mousemove`~~: corregido.
+- ~~`vite.config.ts` define `manualChunks` y `codeSplitting.groups`~~: corregido.
+- ~~`FloatingFilterConLimpiar` usa la API imperativa~~: corregido. Por esto el input no se limpiaba al cambiar entre facturas y conceptos.
 - ~~`fetchTenantFeatures` vive en `column-labels.api.ts`~~ (movido a `useTenantFeatures.ts` en la Fase 2).
-- Al cambiar entre facturas y conceptos, la grilla limpia el filtro pero el input del filtro flotante sigue mostrando el texto anterior. Ya pasaba antes de la Fase 2 y probablemente se resuelve con el punto anterior.
 
 ### 2.4 Lo que no se haría (YAGNI)
 
@@ -313,6 +312,17 @@ Pendiente con negocio: B13 (`_id_banco: 0`).
 - **Verificación en navegador:** se usó un backend falso con login, vistas, etiquetas y los tres reportes.
   - Funcionaron el contrato `{ dateRange }`, la vista predeterminada, los KPIs, las etiquetas por tenant y el cambio entre facturas y conceptos, sin errores de consola.
   - No se pudo verificar que el contador y los KPIs se actualicen tras filtrar, porque el panel del navegador estaba oculto y no dispara `requestAnimationFrame`.
+
+### Detalle de F8 aplicado
+
+- **Filtro flotante:** AG Grid 36 trabaja con componentes reactivos y ya no llamaba a `onParentModelChanged`. Por eso el input no reflejaba los cambios por API: no se limpiaba con `setFilterModel(null)` al cambiar de pestaña, ni mostraba un filtro aplicado por API. `FloatingFilterConLimpiar` ahora se sincroniza con el prop `model` sin pisar lo que el usuario teclea. La escritura sigue pasando por el filtro padre para conservar el debounce de 450 ms. Se eliminaron `forwardRef` y `useImperativeHandle`.
+- **Predicados:**
+  - `filtroContiene`, `filtroMayorQue` y `filtroMenorQue` declaraban recibir un valor suelto, pero AG Grid les pasa un array y funcionaban por coerción de JS. Ahora desestructuran el array.
+  - "Mayor que" y "Menor que" ya no incluyen celdas vacías (antes `null < 500` daba `true`).
+  - El "Igual a" de texto (`filtroTextoIgual`) ignora mayúsculas y acentos y acepta celdas numéricas. El "Igual a" numérico sigue siendo exacto.
+- **`PanelKpiLateral`:** el ancho se guarda al soltar el arrastre y no en cada `mousemove`.
+- **`vite.config.ts`:** Rolldown avisaba *"manualChunks option is ignored because the codeSplitting option is specified"*. Se borraron `manualChunks` y los grupos que nunca generaban chunk. El build resultante es idéntico: mismos chunks y hashes.
+- **Pruebas:** `TablaDinamica/filtros.test.tsx` usa AG Grid real. Contra el código anterior fallan 3 de sus 4 casos.
 
 ---
 
