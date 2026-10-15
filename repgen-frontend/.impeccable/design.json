@@ -1,0 +1,394 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T00:00:00Z",
+  "title": "Design System: RepGen",
+  "extensions": {
+    "colorMeta": {
+      "azul-erp": {
+        "role": "primary",
+        "displayName": "Azul ERP",
+        "canonical": "#2b75e8",
+        "tonalRamp": [
+          "#172554",
+          "#1e3a8a",
+          "#1e5fc4",
+          "#2b75e8",
+          "#4a8bec",
+          "#93c5fd",
+          "#dbeafe",
+          "#eff6ff"
+        ]
+      },
+      "azul-erp-claro": {
+        "role": "primary",
+        "displayName": "Azul ERP Claro",
+        "canonical": "#4a8bec"
+      },
+      "azul-erp-profundo": {
+        "role": "primary",
+        "displayName": "Azul ERP Profundo",
+        "canonical": "#1e5fc4"
+      },
+      "azul-velo": {
+        "role": "primary",
+        "displayName": "Velo Azul",
+        "canonical": "oklch(97% 0.014 254.604)"
+      },
+      "morado-erp": {
+        "role": "secondary",
+        "displayName": "Morado ERP",
+        "canonical": "#623bea",
+        "tonalRamp": [
+          "#1f1150",
+          "#2f1a7a",
+          "#4227b0",
+          "#623bea",
+          "#8467f0",
+          "#a895f5",
+          "#cdc2fa",
+          "#efebfe"
+        ]
+      },
+      "verde-exportar": {
+        "role": "tertiary",
+        "displayName": "Verde Exportar",
+        "canonical": "oklch(59.6% 0.145 163.225)",
+        "tonalRamp": [
+          "#022c22",
+          "#064e3b",
+          "#047857",
+          "#059669",
+          "#10b981",
+          "#6ee7b7",
+          "#d1fae5",
+          "#ecfdf5"
+        ]
+      },
+      "verde-exportar-profundo": {
+        "role": "tertiary",
+        "displayName": "Verde Exportar Profundo",
+        "canonical": "oklch(50.8% 0.118 165.612)"
+      },
+      "rojo-alerta": {
+        "role": "tertiary",
+        "displayName": "Rojo Alerta",
+        "canonical": "oklch(57.7% 0.245 27.325)",
+        "tonalRamp": [
+          "#450a0a",
+          "#7f1d1d",
+          "#b91c1c",
+          "#dc2626",
+          "#ef4444",
+          "#fca5a5",
+          "#fee2e2",
+          "#fef2f2"
+        ]
+      },
+      "rojo-velo": {
+        "role": "tertiary",
+        "displayName": "Velo Rojo",
+        "canonical": "oklch(97.1% 0.013 17.38)"
+      },
+      "lienzo-gris": {
+        "role": "neutral",
+        "displayName": "Lienzo Gris",
+        "canonical": "oklch(98.5% 0.002 247.839)",
+        "tonalRamp": [
+          "#111827",
+          "#1f2937",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#e5e7eb",
+          "#f9fafb"
+        ]
+      },
+      "superficie-blanca": {
+        "role": "neutral",
+        "displayName": "Superficie Blanca",
+        "canonical": "#ffffff"
+      },
+      "linea-tenue": {
+        "role": "neutral",
+        "displayName": "Línea Tenue",
+        "canonical": "oklch(96.7% 0.003 264.542)"
+      },
+      "linea-suave": {
+        "role": "neutral",
+        "displayName": "Línea Suave",
+        "canonical": "oklch(92.8% 0.006 264.531)"
+      },
+      "borde-control": {
+        "role": "neutral",
+        "displayName": "Borde de Control",
+        "canonical": "oklch(87.2% 0.01 258.338)"
+      },
+      "tinta-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta Apagada",
+        "canonical": "oklch(70.7% 0.022 261.325)"
+      },
+      "tinta-secundaria": {
+        "role": "neutral",
+        "displayName": "Tinta Secundaria",
+        "canonical": "oklch(55.1% 0.027 264.364)"
+      },
+      "tinta-media": {
+        "role": "neutral",
+        "displayName": "Tinta Media",
+        "canonical": "oklch(44.6% 0.03 256.802)"
+      },
+      "tinta-cuerpo": {
+        "role": "neutral",
+        "displayName": "Tinta Cuerpo",
+        "canonical": "oklch(37.3% 0.034 259.733)"
+      },
+      "tinta-titulo": {
+        "role": "neutral",
+        "displayName": "Tinta Título",
+        "canonical": "oklch(27.8% 0.033 256.848)"
+      },
+      "tinta-base": {
+        "role": "neutral",
+        "displayName": "Tinta Base",
+        "canonical": "oklch(21% 0.034 264.665)"
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Títulos de reporte (desktop) y de modal."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Títulos de reporte en móvil y la cifra resultado del resumen."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Tamaño de trabajo: controles, sidebar, tabs, celdas."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Título y secciones del panel de resumen, encabezado del sidebar; en mayúsculas."
+      }
+    },
+    "shadows": [
+      {
+        "name": "cortesia",
+        "value": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        "purpose": "Tarjetas, botones, navbar."
+      },
+      {
+        "name": "hoja-de-trabajo",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "Contenedor de la grilla y menús desplegables."
+      },
+      {
+        "name": "capa-superior",
+        "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+        "purpose": "Modales y drawer del sidebar, sobre velo gris al 60%."
+      }
+    ],
+    "motion": [
+      {
+        "name": "color-standard",
+        "value": "150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "transition-colors en botones, links, ítems. Único movimiento de los controles."
+      },
+      {
+        "name": "panel-slide",
+        "value": "300ms ease-in-out",
+        "purpose": "Drawer del sidebar y panel de resumen."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal (Aplicar, Guardar). Hover morado ERP.",
+      "html": "<button class=\"ds-btn-primary\">Aplicar</button>",
+      "css": ".ds-btn-primary { background: #2b75e8; color: #fff; font: 500 14px/20px Arial, Helvetica, sans-serif; padding: 6px 12px; border: none; border-radius: 8px; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background: #623bea; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 4px #dbeafe; } .ds-btn-primary:disabled { opacity: .5; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acciones de tabla (Columnas), cancelar.",
+      "html": "<button class=\"ds-btn-secondary\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M9 3v18M15 3v18\"/></svg>Columnas</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: #374151; font: 500 14px/20px Arial, Helvetica, sans-serif; padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 8px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1); cursor: pointer; transition: all 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-secondary svg { width: 16px; height: 16px; color: #6b7280; } .ds-btn-secondary:hover { background: #eff6ff; border-color: #93c5fd; color: #1e5fc4; } .ds-btn-secondary:hover svg { color: #2b75e8; } .ds-btn-secondary:focus-visible { outline: 2px solid #4a8bec; outline-offset: 2px; }"
+    },
+    {
+      "name": "Export Button",
+      "kind": "button",
+      "refersTo": "button-export",
+      "description": "Único botón verde: Exportar a Excel (CSV).",
+      "html": "<button class=\"ds-btn-export\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><path d=\"M7 10l5 5 5-5\"/><path d=\"M12 15V3\"/></svg>Exportar a Excel</button>",
+      "css": ".ds-btn-export { display: inline-flex; align-items: center; gap: 8px; background: #059669; color: #fff; font: 500 14px/20px Arial, Helvetica, sans-serif; padding: 6px 12px; border: none; border-radius: 8px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / .1); cursor: pointer; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-export svg { width: 16px; height: 16px; color: #d1fae5; } .ds-btn-export:hover { background: #047857; } .ds-btn-export:focus-visible { outline: 2px solid #047857; outline-offset: 2px; }"
+    },
+    {
+      "name": "Date Input",
+      "kind": "input",
+      "refersTo": "input-date",
+      "description": "Filtro de fechas Desde/Hasta.",
+      "html": "<label class=\"ds-date\"><span>Desde:</span><input type=\"date\" value=\"2026-10-01\"></label>",
+      "css": ".ds-date { display: inline-flex; align-items: center; gap: 6px; font-family: Arial, Helvetica, sans-serif; } .ds-date span { font-size: 12px; font-weight: 500; color: #6b7280; } .ds-date input { font: 14px Arial, Helvetica, sans-serif; color: #111827; padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; } .ds-date input:focus { outline: none; border-color: #4a8bec; box-shadow: 0 0 0 1px #4a8bec; }"
+    },
+    {
+      "name": "Sidebar Nav",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Drawer de reportes; ítem activo en velo azul.",
+      "html": "<nav class=\"ds-nav\"><p class=\"ds-nav-head\">Reportes Financieros</p><a class=\"ds-nav-item is-active\" href=\"#\">Bancos</a><a class=\"ds-nav-item\" href=\"#\">Ventas</a></nav>",
+      "css": ".ds-nav { width: 224px; padding: 16px; background: #fff; font-family: Arial, Helvetica, sans-serif; } .ds-nav-head { margin: 0 0 12px; padding: 0 8px; font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: #6b7280; } .ds-nav-item { display: flex; padding: 10px 16px; margin-bottom: 4px; border-radius: 8px; font-size: 14px; font-weight: 500; color: #4b5563; text-decoration: none; transition: background-color 150ms, color 150ms; } .ds-nav-item:hover { background: #f9fafb; color: #2b75e8; } .ds-nav-item.is-active { background: #eff6ff; color: #1e5fc4; } .ds-nav-item:focus-visible { outline: 2px solid #4a8bec; outline-offset: 2px; }"
+    },
+    {
+      "name": "Segmented Tabs",
+      "kind": "nav",
+      "refersTo": "tab-segment-active",
+      "description": "Tabs de Ventas (Facturas / Conceptos).",
+      "html": "<div class=\"ds-tabs\"><a class=\"ds-tab is-active\" href=\"#\">Facturas</a><a class=\"ds-tab\" href=\"#\">Conceptos</a></div>",
+      "css": ".ds-tabs { display: inline-flex; padding: 4px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / .1); font-family: Arial, Helvetica, sans-serif; } .ds-tab { padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; color: #4b5563; text-decoration: none; transition: color 150ms, background-color 150ms; } .ds-tab:hover { color: #2b75e8; } .ds-tab.is-active { background: #2b75e8; color: #fff; box-shadow: 0 1px 3px 0 rgb(0 0 0 / .1); } .ds-tab:focus-visible { outline: 2px solid #4a8bec; outline-offset: 2px; }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "description": "Aviso en el panel de resumen (p. ej. moneda de los importes).",
+      "html": "<span class=\"ds-chip\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M22 3H2l8 9.46V19l4 2v-8.54L22 3z\"/></svg>Importes en MXN</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 9999px; font: 500 12px Arial, Helvetica, sans-serif; color: #6b7280; } .ds-chip svg { width: 12px; height: 12px; color: #9ca3af; }"
+    },
+    {
+      "name": "Resumen (estado de cuenta)",
+      "kind": "custom",
+      "refersTo": "statement-total",
+      "description": "Panel de resumen: renglones etiqueta/cifra, total con regla, rojo solo en negativos.",
+      "html": "<section class=\"ds-estado\"><p class=\"ds-estado-nota\">Calculado sobre 1,234 registros filtrados</p><h3>Importes</h3><dl><div><dt>Facturado</dt><dd>$1,284,530.00</dd></div><div><dt>Cancelaciones</dt><dd class=\"neg\">-$12,000.00</dd></div><div><dt>Devoluciones</dt><dd class=\"neg\">-$5,400.00</dd></div><div class=\"total\"><dt>Facturación neta</dt><dd>$1,267,130.00</dd></div></dl></section>",
+      "css": ".ds-estado { width: 300px; padding: 16px; background: #fff; border: 1px solid #f3f4f6; border-radius: 8px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / .1); font-family: Arial, Helvetica, sans-serif; } .ds-estado-nota { margin: 0 0 16px; font-size: 12px; color: #6b7280; } .ds-estado h3 { margin: 0 0 4px; font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: #6b7280; } .ds-estado dl { margin: 0; } .ds-estado dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 4px 0; } .ds-estado dt { font-size: 14px; color: #4b5563; } .ds-estado dd { margin: 0; font-size: 14px; font-weight: 500; color: #111827; font-variant-numeric: tabular-nums; white-space: nowrap; } .ds-estado dd.neg { color: #dc2626; } .ds-estado .total { margin-top: 4px; padding-top: 8px; border-top: 1px solid #d1d5db; } .ds-estado .total dt { font-weight: 600; color: #1f2937; } .ds-estado .total dd { font-size: 18px; font-weight: 700; }"
+    },
+    {
+      "name": "Tabla con fila de totales",
+      "kind": "custom",
+      "refersTo": "grid-row",
+      "description": "Encabezado 40px sobre lienzo, filas 36px, hover velo azul, totales fijos al pie.",
+      "html": "<div class=\"ds-grid\"><div class=\"h\"><span>Concepto</span><span>Abono</span><span>Cargo</span></div><div class=\"r\"><span>Depósito cliente</span><span>$12,500.00</span><span>$0.00</span></div><div class=\"r\"><span>Pago proveedor</span><span>$0.00</span><span>$4,320.00</span></div><div class=\"t\"><span>Total MXN</span><span>$12,500.00</span><span>$4,320.00</span></div></div>",
+      "css": ".ds-grid { width: 440px; background: #fff; border: 1px solid #f3f4f6; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1); font: 14px Arial, Helvetica, sans-serif; color: #111827; } .ds-grid > div { display: grid; grid-template-columns: 1.4fr 1fr 1fr; align-items: center; padding: 0 12px; } .ds-grid span:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; } .ds-grid .h { height: 40px; background: #f9fafb; color: #4b5563; font-weight: 600; } .ds-grid .r { height: 36px; border-top: 1px solid #f3f4f6; transition: background-color 150ms; } .ds-grid .r:hover { background: #eff6ff; } .ds-grid .t { height: 36px; background: #f9fafb; border-top: 1px solid #d1d5db; font-weight: 700; }"
+    },
+    {
+      "name": "Estado vacío",
+      "kind": "card",
+      "description": "Reporte no disponible o sin acceso: hoja blanca, ícono en velo, salida concreta.",
+      "html": "<div class=\"ds-vacio\"><span class=\"ds-vacio-icono\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2\"/></svg></span><h1>Este reporte aún no está disponible</h1><p>Mientras tanto, puedes consultar Bancos y Ventas desde el menú.</p><a href=\"#\">Ir a Bancos</a></div>",
+      "css": ".ds-vacio { width: 360px; padding: 32px; text-align: center; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / .1); font-family: Arial, Helvetica, sans-serif; } .ds-vacio-icono { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; margin-bottom: 16px; border-radius: 9999px; background: #eff6ff; color: #2b75e8; } .ds-vacio-icono svg { width: 24px; height: 24px; } .ds-vacio h1 { margin: 0; font-size: 20px; font-weight: 700; color: #1f2937; } .ds-vacio p { margin: 8px 0 0; font-size: 14px; line-height: 1.6; color: #4b5563; } .ds-vacio a { display: inline-flex; margin-top: 24px; padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; color: #374151; font-size: 14px; font-weight: 500; text-decoration: none; box-shadow: 0 1px 3px 0 rgb(0 0 0 / .1); transition: all 150ms; } .ds-vacio a:hover { background: #eff6ff; border-color: #93c5fd; color: #1e5fc4; } .ds-vacio a:focus-visible { outline: none; box-shadow: 0 0 0 2px #4a8bec; }"
+    },
+    {
+      "name": "Contador de registros",
+      "kind": "chip",
+      "description": "Junto al filtro de fechas: total, o \"N de M · K filtros\" con Limpiar.",
+      "html": "<div class=\"ds-contador\"><span aria-live=\"polite\"><b>12</b><span class=\"m\"> de 340</span> registros<span class=\"m\"> · 3 filtros</span></span><button type=\"button\">Limpiar</button></div>",
+      "css": ".ds-contador { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid #bfdbfe; border-radius: 8px; background: #eff6ff; color: #1e5fc4; font: 14px Arial, Helvetica, sans-serif; white-space: nowrap; } .ds-contador b { font-weight: 600; color: #1e40af; } .ds-contador .m { color: #6b7280; } .ds-contador button { margin-left: 4px; padding: 0; border: none; background: none; color: #1e5fc4; font: 500 14px Arial, Helvetica, sans-serif; text-underline-offset: 2px; cursor: pointer; border-radius: 4px; } .ds-contador button:hover { text-decoration: underline; } .ds-contador button:focus-visible { outline: none; box-shadow: 0 0 0 2px #4a8bec; }"
+    },
+    {
+      "name": "Vistas guardadas",
+      "kind": "custom",
+      "description": "Grupo segmentado Vista / Actualizar vista / ⋮, con cambios sin guardar: el punto azul va en el botón que guarda, no en el nombre.",
+      "html": "<div class=\"ds-vistas\"><label><span>Vista:</span><select><option>★ Conciliación BBVA</option></select></label><button type=\"button\" class=\"act\" aria-label=\"Actualizar vista (cambios sin guardar)\">Actualizar vista<span class=\"dot\" aria-hidden=\"true\"></span></button><button type=\"button\" aria-label=\"Acciones de la vista\" class=\"kebab\">⋮</button></div>",
+      "css": ".ds-vistas { display: inline-flex; align-items: stretch; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; box-shadow: 0 1px 3px 0 rgb(0 0 0 / .1); font: 14px Arial, Helvetica, sans-serif; overflow: hidden; } .ds-vistas > * + * { border-left: 1px solid #e5e7eb; } .ds-vistas label { display: flex; align-items: center; gap: 6px; padding: 0 8px 0 12px; } .ds-vistas label span { color: #6b7280; } .ds-vistas select { border: none; background: transparent; font: 500 14px Arial, Helvetica, sans-serif; color: #374151; padding: 8px 0; max-width: 240px; } .ds-vistas label:focus-within { box-shadow: inset 0 0 0 2px #4a8bec; } .ds-vistas button { border: none; background: #fff; color: #374151; font: 500 14px Arial, Helvetica, sans-serif; padding: 0 12px; cursor: pointer; transition: background-color 150ms, color 150ms; } .ds-vistas button:hover { background: #eff6ff; color: #1e5fc4; } .ds-vistas button:focus-visible { outline: none; box-shadow: inset 0 0 0 2px #4a8bec; } .ds-vistas .kebab { padding: 0 8px; color: #4b5563; } .ds-vistas .act { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #1e5fc4; } .ds-vistas .dot { width: 8px; height: 8px; border-radius: 9999px; background: #2b75e8; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Libro Mayor Claro",
+    "overview": "RepGen se lee como un libro mayor bien llevado: hojas blancas sobre una mesa gris, columnas ordenadas y la cifra siempre a la vista. La tabla AG Grid es la superficie principal, y todo lo demás (encabezado, filtro de fechas, acciones, KPIs laterales) se acomoda a su alrededor en controles compactos de 14px. La densidad es de herramienta de trabajo diario, no de dashboard decorativo: filas de 36px, una fila de totales al pie y un resumen lateral que se lee como estado de cuenta, no como tarjetas.\n\nEl color es funcional. El azul ERP marca dónde se actúa o se navega. El verde aparece únicamente en la exportación; el rojo, en los errores, en cerrar sesión y en las cifras negativas, como en la tinta roja de un libro contable. Los grises de Tailwind dan la estructura. Las superficies son planas, con bordes de un pixel y sombras mínimas, y la jerarquía sale del contraste entre el lienzo gris y las hojas blancas, no de la profundidad.\n\nLos estados vacíos y de error usan las mismas hojas blancas: un ícono pequeño en un círculo de velo, un título, una frase y una salida concreta.",
+    "keyCharacteristics": [
+      "Hojas blancas (#ffffff) sobre un lienzo gris (#f9fafb), con bordes de 1px.",
+      "Azul ERP como único acento interactivo; el morado ERP solo aparece en el hover.",
+      "Arial en toda la interfaz, con el cuerpo en 14px y etiquetas de 12px en mayúsculas y espaciadas.",
+      "Esquinas suavemente redondeadas (8px) en casi todo; pastillas para chips e íconos.",
+      "Cifras alineadas a la derecha con numerales tabulares; los negativos en rojo y nada más lleva color.",
+      "Movimiento limitado a transiciones de color; nada entra en escena con coreografía."
+    ],
+    "rules": [
+      {
+        "name": "La Regla del Morado en Tránsito",
+        "body": "El morado ERP existe solo como estado hover de una acción primaria. Nunca es relleno en reposo, ni texto, ni fondo.",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla del Verde Único",
+        "body": "El verde sólido pertenece solo a la exportación. Un segundo botón verde le roba el significado.",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla de la Tinta Roja",
+        "body": "Una cifra solo lleva color si es negativa, y entonces es rojo alerta. Las positivas y los conteos van en tinta base. Nada de colores por categoría: el color dice \"esto resta\", no \"esto es una factura\".",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla del Azul que Actúa",
+        "body": "El azul ERP marca lo que se puede pulsar o lo que está activo. Un texto informativo (el nombre del usuario, una etiqueta) nunca va en azul.",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla de los Catorce",
+        "body": "Todo lo que se toca o se lee en una tarea mide 14px. Por encima de 14px solo van los títulos y la cifra resultado de cada resumen; una por sección, no todas.",
+        "section": "typography"
+      },
+      {
+        "name": "La Regla del Velo",
+        "body": "Lo que flota sobre la tabla (un modal o un drawer) lleva sombra `2xl` y un velo detrás. Nada más flota.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do usar el Azul ERP (#2b75e8) para toda acción primaria y estado activo, con el morado ERP (#623bea) solo en su hover.",
+      "Do mantener los controles en 14px, con padding de 6px × 12px y radio de 8px.",
+      "Do poner las superficies nuevas como hojas blancas con borde de 1px y shadow-sm sobre el lienzo #f9fafb.",
+      "Do presentar las cifras como estado de cuenta: renglones alineados a la derecha, un total con regla encima y rojo solo para negativos.",
+      "Do usar <dialog> nativo para todo lo modal y anillos focus-visible en cada control.",
+      "Do nombrar las acciones por su resultado (\"Actualizar vista\", \"Aplicar\") y los errores por lo que pasó y cómo seguir.",
+      "Do limitar el movimiento a transiciones de color (y a 300ms para drawers y paneles).",
+      "Do mostrar la moneda de cada importe cuando no es MXN, y decir qué quedó fuera de un total.",
+      "Do dejar los errores de un campo junto al campo (aria-describedby), no solo en un toast.",
+      "Do acompañar toda acción que borra trabajo armado a mano (actualizar una vista, limpiar filtros) con un aviso con **Deshacer** y una segunda vía que no caduque (el menú ⋮, el chip \"Restaurar filtros\").",
+      "Do preguntar antes de reemplazar trabajo sin guardar, con la opción segura enfocada primero.",
+      "Do confirmar con \"Aplicar\" todo lo que dispara una consulta: un select no consulta al cambiar.",
+      "Do decir por qué algo no está disponible en un texto accesible (aria-describedby) sobre un control que sigue enfocable (aria-disabled).",
+      "Do devolver el foco a quien abrió un menú, panel o drawer al cerrarlo."
+    ],
+    "donts": [
+      "Don't usar degradados decorativos, sombras pesadas sobre fondos de color ni animaciones de entrada (el viejo ComingSoon violeta es el antiejemplo).",
+      "Don't volver a las tarjetas de KPI con ícono en círculo de color: una cifra por tarjeta en un arcoíris de tonos es justo lo que el resumen reemplazó.",
+      "Don't sumar en una fila de totales columnas en monedas distintas, saldos o montos repetidos por renglón.",
+      "Don't usar el morado ERP como relleno, texto o fondo en reposo.",
+      "Don't usar el verde sólido fuera del botón de exportar.",
+      "Don't introducir una segunda familia tipográfica ni tamaños por encima de 20px.",
+      "Don't usar gris-400 para texto: solo para íconos decorativos.",
+      "Don't leer referenciaGrid.current para decidir qué se pinta: con React Compiler ese valor queda memoizado. El estado del grid entra como estado o prop.",
+      "Don't contar el ancho de columnas como cambio de una vista: el grid lo recalcula al redimensionar la ventana.",
+      "Don't escuchar cambios del grid con api.addEventListener: en esta integración no llegan. Usar las props on… de AgGridReact.",
+      "Don't hacer flotar nada sobre la tabla sin velo y sombra 2xl.",
+      "Don't dejar una explicación solo en title: no llega por teclado, toque ni lector de pantalla.",
+      "Don't aplicar una vista ni un periodo en cada change de un select: con flechas, Windows dispara uno por tecla.",
+      "Don't usar focus:ring-4 ring-blue-100 ni un color de anillo sin ring-2: el anillo del sistema es focus-visible:ring-2 ring-blue-500."
+    ]
+  }
+}
