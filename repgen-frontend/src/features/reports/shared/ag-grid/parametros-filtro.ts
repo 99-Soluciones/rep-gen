@@ -14,6 +14,7 @@ import {
   filtroFechaMayorQue,
   filtroFechaMenorQue,
   filtroIgual,
+  filtroTextoIgual,
   filtroMayorQue,
   filtroMenorQue,
 } from "./predicados-filtro";
@@ -56,7 +57,7 @@ export const textFilterParams = (
       {
         displayKey: "equals",
         displayName: "Igual a",
-        predicate: filtroIgual,
+        predicate: filtroTextoIgual,
       },
       {
         displayKey: "blank",

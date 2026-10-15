@@ -1,7 +1,7 @@
+// AG Grid llama a cada predicado como predicate(filterValues[], cellValue).
+
 /**
- * Filtro de igualdad para valores de texto o numéricos. Retorna true si el valor de la celda es exactamente igual al valor del filtro.
- * AG Grid pasa los valores del filtro como array: predicate(filterValues[], cellValue).
- *
+ * Filtro de igualdad para valores numéricos. Retorna true si el valor de la celda es exactamente igual al valor del filtro.
  * @return {boolean} Retorna true si el valor de la celda es igual al valor del filtro, de lo contrario retorna false.
  */
 export const filtroIgual = ([valorFiltro]: unknown[], valorCelda: unknown) : boolean => {
@@ -10,20 +10,18 @@ export const filtroIgual = ([valorFiltro]: unknown[], valorCelda: unknown) : boo
 
 /**
  * Filtro de comparación para valores numéricos. Retorna true si el valor de la celda es mayor que el valor del filtro.
- * @param {IFilterParams} params - Los parámetros del filtro que incluyen el valor del filtro y el valor de la celda.
- * @return {boolean} Retorna true si el valor de la celda es mayor que el valor del filtro, de lo contrario retorna false.
+ * @return {boolean} Retorna true si el valor de la celda es mayor que el valor del filtro; las celdas vacías no cumplen.
  */
-export const filtroMayorQue = (valorFiltro: number, valorCelda: number): boolean => {
-    return valorCelda > valorFiltro;
+export const filtroMayorQue = ([valorFiltro]: unknown[], valorCelda: unknown): boolean => {
+    return valorCelda != null && Number(valorCelda) > Number(valorFiltro);
 };
 
 /**
  * Filtro de comparación para valores numéricos. Retorna true si el valor de la celda es menor que el valor del filtro.
- * @param {IFilterParams} params - Los parámetros del filtro que incluyen el valor del filtro y el valor de la celda.
- * @return {boolean} Retorna true si el valor de la celda es menor que el valor del filtro, de lo contrario retorna false.
+ * @return {boolean} Retorna true si el valor de la celda es menor que el valor del filtro; las celdas vacías no cumplen.
  */
-export const filtroMenorQue = (valorFiltro: number, valorCelda: number): boolean => {
-    return valorCelda < valorFiltro;
+export const filtroMenorQue = ([valorFiltro]: unknown[], valorCelda: unknown): boolean => {
+    return valorCelda != null && Number(valorCelda) < Number(valorFiltro);
 };
 
 /**
@@ -41,9 +39,8 @@ export const filtroVacio = (_valorFiltro : unknown[], valorCelda : unknown) : bo
  * @param {string} texto - El texto a normalizar.
  * @return {string} El texto normalizado en minúsculas y sin acentos.
  */
-const normalizarTexto = (texto: string): string => {
-    return texto
-        .toString()
+const normalizarTexto = (texto: unknown): string => {
+    return String(texto)
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
@@ -52,11 +49,19 @@ const normalizarTexto = (texto: string): string => {
 /**
  * Filtro para buscar subcadenas en valores de texto. Retorna true si el valor de la celda contiene el valor del filtro,
  * ignorando mayúsculas/minúsculas y acentos.
- * @param {IFilterParams} params - Los parámetros del filtro que incluyen el valor del filtro y el valor de la celda.
  * @return {boolean} Retorna true si el valor de la celda contiene el valor del filtro, de lo contrario retorna false.
  */
-export const filtroContiene = (valorFiltro: string, valorCelda: string): boolean => {
+export const filtroContiene = ([valorFiltro]: unknown[], valorCelda: unknown): boolean => {
     return valorCelda != null && normalizarTexto(valorCelda).includes(normalizarTexto(valorFiltro));
+}
+
+/**
+ * Igualdad de texto ignorando mayúsculas y acentos, como filtroContiene. Las columnas de texto pueden
+ * traer números (p. ej. Venta ID), así que se compara como texto: "11" coincide con 11.
+ * @return {boolean} Retorna true si el valor de la celda es igual al valor del filtro, de lo contrario retorna false.
+ */
+export const filtroTextoIgual = ([valorFiltro]: unknown[], valorCelda: unknown): boolean => {
+    return valorCelda != null && normalizarTexto(valorCelda) === normalizarTexto(valorFiltro);
 }
 
 /**
