@@ -187,7 +187,9 @@ function buildBaseRecord(
     articuloMarca: getString(mappedRecord.item?.marca),
     articuloNombre: getString(mappedRecord.item?.nombre),
     articuloNombreCompleto: getString(mappedRecord.item?.nombreDisplay),
-    articuloCuentaContable: getString(mappedRecord.item?.cuentaContable),
+    articuloCuentaContable:
+      getString(mappedRecord.item?.cuentaContable) ||
+      getString(mappedRecord.item?.cuentaContableLegacy),
     categoriadeProducto1: getString(mappedRecord.item?.clasificacion1),
     categoriadeProducto2: getString(mappedRecord.item?.clasificacion2),
     categoriadeProducto3: getString(mappedRecord.item?.clasificacion3),
