@@ -54,7 +54,13 @@ describe('CreateReportConfigUseCase', () => {
       42,
       'bancos',
       'Config A',
-      [{ colId: 'a', hide: false }],
+      {
+        columnState: [{ colId: 'a', hide: false }],
+        filterModel: {
+          banco: { filterType: 'text', type: 'contains', filter: 'BBVA' },
+        },
+        periodo: 'mes_anterior',
+      },
       false,
     );
 
@@ -66,6 +72,15 @@ describe('CreateReportConfigUseCase', () => {
         [fm.reportId]: 'bancos',
         [fm.name]: 'Config A',
         [fm.isDefault]: 0,
+        // Columnas, filtros y periodo viajan juntos en el mismo campo de texto.
+        [fm.columnState]: JSON.stringify({
+          v: 2,
+          columns: [{ colId: 'a', hide: false }],
+          filters: {
+            banco: { filterType: 'text', type: 'contains', filter: 'BBVA' },
+          },
+          periodo: 'mes_anterior',
+        }),
       }),
     );
     // Clave: recupera con el recordId interno (no con el serial _id_configRec)
@@ -90,7 +105,14 @@ describe('CreateReportConfigUseCase', () => {
       response: { data: [rawRecord({ [fm.isDefault]: 1 })] },
     });
 
-    await useCase.execute('db', 42, 'bancos', 'Nueva', [], true);
+    await useCase.execute(
+      'db',
+      42,
+      'bancos',
+      'Nueva',
+      { columnState: [], filterModel: null, periodo: null },
+      true,
+    );
 
     expect(mockFileMaker.editRecord).toHaveBeenCalledWith(
       'db',
@@ -106,7 +128,14 @@ describe('CreateReportConfigUseCase', () => {
       response: { recordId: '', modId: '0' },
     });
     await expect(
-      useCase.execute('db', 42, 'bancos', 'X', [], false),
+      useCase.execute(
+        'db',
+        42,
+        'bancos',
+        'X',
+        { columnState: [], filterModel: null, periodo: null },
+        false,
+      ),
     ).rejects.toThrow();
   });
 });

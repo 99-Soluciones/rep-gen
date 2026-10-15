@@ -20,6 +20,10 @@ const rawRecord = (over: Record<string, unknown> = {}) => ({
   },
 });
 
+/** fieldData enviado en la n-ésima llamada a editRecord. */
+const fieldDataEnviado = (mock: jest.Mock, n = 0) =>
+  (mock.mock.calls[n] as [string, string, string, Record<string, unknown>])[3];
+
 describe('UpdateReportConfigUseCase', () => {
   let useCase: UpdateReportConfigUseCase;
   const mockFileMaker = {
@@ -59,10 +63,61 @@ describe('UpdateReportConfigUseCase', () => {
       'fm1',
       expect.objectContaining({
         [fm.name]: 'Editada',
-        [fm.columnState]: JSON.stringify([{ colId: 'a', hide: true }]),
+        [fm.columnState]: JSON.stringify({
+          v: 2,
+          columns: [{ colId: 'a', hide: true }],
+          filters: null,
+          periodo: null,
+        }),
       }),
     );
     expect(res.name).toBe('Editada');
+  });
+
+  it('un PATCH parcial conserva los filtros y el periodo guardados', async () => {
+    const guardado = JSON.stringify({
+      v: 2,
+      columns: [{ colId: 'a' }],
+      filters: { banco: { filterType: 'text', filter: 'BBVA' } },
+      periodo: 'mes_anterior',
+    });
+    mockFileMaker.findRecords
+      .mockResolvedValueOnce({
+        response: { data: [rawRecord({ [fm.columnState]: guardado })] },
+      })
+      .mockResolvedValueOnce({
+        response: { data: [rawRecord({ [fm.columnState]: guardado })] },
+      });
+    mockFileMaker.editRecord.mockResolvedValue({ response: { modId: '1' } });
+
+    await useCase.execute('db', 42, 'cfg-uuid-5', {
+      columnState: [{ colId: 'b' }],
+    });
+
+    const enviado: unknown = JSON.parse(
+      fieldDataEnviado(mockFileMaker.editRecord)[fm.columnState] as string,
+    );
+    expect(enviado).toEqual({
+      v: 2,
+      columns: [{ colId: 'b' }],
+      filters: { banco: { filterType: 'text', filter: 'BBVA' } },
+      periodo: 'mes_anterior',
+    });
+  });
+
+  it('cambiar solo el nombre no reescribe columnas ni filtros', async () => {
+    mockFileMaker.findRecords
+      .mockResolvedValueOnce({ response: { data: [rawRecord()] } })
+      .mockResolvedValueOnce({
+        response: { data: [rawRecord({ [fm.name]: 'Otra' })] },
+      });
+    mockFileMaker.editRecord.mockResolvedValue({ response: { modId: '1' } });
+
+    await useCase.execute('db', 42, 'cfg-uuid-5', { name: 'Otra' });
+
+    expect(fieldDataEnviado(mockFileMaker.editRecord)).toEqual({
+      [fm.name]: 'Otra',
+    });
   });
 
   it('lanza ForbiddenException si la config pertenece a otro usuario', async () => {

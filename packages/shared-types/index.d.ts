@@ -14,12 +14,19 @@ export interface ColumnStateEntry {
   aggFunc?: string | null;
 }
 
-/** Configuracion de columnas de un reporte tal como la expone la API. */
+/** Periodo relativo de una vista: se resuelve a fechas al abrirla. */
+export type PeriodoVista = 'mes_actual' | 'mes_anterior' | 'anio_en_curso';
+
+/** Vista guardada de un reporte (columnas + filtros + periodo) tal como la expone la API. */
 export interface ReportConfigResponse {
   id: string;
   reportId: string;
   name: string;
   columnState: ColumnStateEntry[];
+  /** Modelo de filtros de AG Grid (getFilterModel). null/ausente = sin filtros. */
+  filterModel?: Record<string, unknown> | null;
+  /** null/ausente = la vista no toca el rango de fechas. */
+  periodo?: PeriodoVista | null;
   isDefault: boolean;
   createdAt: string;
   updatedAt: string;

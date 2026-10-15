@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { FileMakerService } from '../../filemaker/filemaker.service';
 import { LoggerService } from '../../common/logger/logger.service';
-import type {
-  ColumnStateEntry,
-  ReportConfigResponse,
-} from '../domain/report-config.types';
-import { mapReportConfigRecord } from '../infrastructure/report-config.mapper';
+import type { ReportConfigResponse } from '../domain/report-config.types';
+import {
+  mapReportConfigRecord,
+  serializeContenidoVista,
+  type ContenidoVista,
+} from '../infrastructure/report-config.mapper';
 import {
   reportConfigFieldMap as fm,
   REPORT_CONFIG_LAYOUT,
@@ -23,9 +24,12 @@ export class CreateReportConfigUseCase {
     userId: number,
     reportId: string,
     name: string,
-    columnState: ColumnStateEntry[],
+    contenido: ContenidoVista,
     isDefault: boolean,
   ): Promise<ReportConfigResponse> {
+    // Valida antes de tocar FileMaker (lanza 400 si los filtros son enormes).
+    const contenidoSerializado = serializeContenidoVista(contenido);
+
     if (isDefault) {
       await this.clearExistingDefault(dbName, userId, reportId);
     }
@@ -34,7 +38,7 @@ export class CreateReportConfigUseCase {
       [fm.userId]: userId,
       [fm.reportId]: reportId,
       [fm.name]: name,
-      [fm.columnState]: JSON.stringify(columnState),
+      [fm.columnState]: contenidoSerializado,
       [fm.isDefault]: isDefault ? 1 : 0,
     };
 
