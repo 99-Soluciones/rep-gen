@@ -21,11 +21,19 @@ export const leerUsuario = (): UsuarioSesion | null => {
 };
 
 export const guardarUsuario = (usuario: UsuarioSesion): void => {
-  localStorage.setItem(USUARIO_STORAGE_KEY, JSON.stringify(usuario));
+  try {
+    localStorage.setItem(USUARIO_STORAGE_KEY, JSON.stringify(usuario));
+  } catch {
+    // Sin almacenamiento (modo privado, cuota llena): la sesión sigue en la cookie.
+  }
 };
 
 export const borrarUsuario = (): void => {
-  localStorage.removeItem(USUARIO_STORAGE_KEY);
-  localStorage.removeItem(USUARIO_STORAGE_KEY_LEGACY);
-  localStorage.removeItem("jwt_reportes"); // token de antes de la cookie httpOnly
+  try {
+    localStorage.removeItem(USUARIO_STORAGE_KEY);
+    localStorage.removeItem(USUARIO_STORAGE_KEY_LEGACY);
+    localStorage.removeItem("jwt_reportes"); // token de antes de la cookie httpOnly
+  } catch {
+    // Sin almacenamiento no hay nada que borrar.
+  }
 };

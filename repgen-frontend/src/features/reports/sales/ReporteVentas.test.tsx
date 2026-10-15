@@ -15,6 +15,7 @@ type TablaMockProps = {
     api?: {
       getColumns: () => Array<{ id: string }>;
       getFilterModel: () => Record<string, unknown>;
+      isDestroyed: () => boolean;
       getDisplayedRowCount: () => number;
       forEachNodeAfterFilter: (
         cb: (node: { data: { facturaGranTotalMxn?: number } }) => void,
@@ -29,6 +30,7 @@ type TablaMockProps = {
 // Lo que useReporteGrid usa del grid al quedar listo (suscripción + foto de la vista).
 const eventosGrid = vi.hoisted(() => ({
   addEventListener: () => {},
+  isDestroyed: () => false,
   getColumnState: () => [],
   getFilterModel: () => ({}),
 }));
@@ -45,6 +47,7 @@ const tablaMock = vi.hoisted(() => vi.fn((props: TablaMockProps) => {
       api: {
         getColumns: () => [{ id: 'col-1' }],
         getFilterModel: () => ({ estado: 'activo' }),
+        isDestroyed: () => false,
         getDisplayedRowCount: () => 2,
         forEachNodeAfterFilter: (cb: (node: { data: { facturaGranTotalMxn?: number } }) => void) => {
           cb({ data: { facturaGranTotalMxn: 120 } });

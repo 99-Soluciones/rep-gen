@@ -7,9 +7,7 @@ import { columnasBancos } from "./columnas";
 import { useReporteBase } from "../shared/useReporteBase";
 import { useReporteGrid } from "../shared/useReporteGrid";
 import { LineaEstado, NotaRegistros, SeccionEstado } from "../shared/EstadoKpi";
-import AccionesTabla from "../shared/AccionesTabla";
-import BotonExportar from "../shared/BotonExportar";
-import FiltroFechas from "../shared/FiltroFechas";
+import { toolbarReporte } from "../shared/toolbarReporte";
 
 // Solo MXN, igual que los KPIs: sumar monedas distintas daría una cifra falsa.
 // Los saldos no se suman (son acumulados por renglón).
@@ -24,37 +22,16 @@ const onErrorReporte = (error: unknown) => {
 };
 
 const ReporteBancos = () => {
-  const {
-    datos,
-    estaCargando,
-    error,
-    reintentar,
-    fechaDesde,
-    setFechaDesde,
-    fechaHasta,
-    setFechaHasta,
-    aplicarRango,
-    versionRango,
-  } = useReporteBase<ReportBankRecord>({
+  const base = useReporteBase<ReportBankRecord>({
     endpoint: "bancos/buscar",
     onError: onErrorReporte,
   });
+  const { datos, estaCargando, error, reintentar, aplicarRango } = base;
 
   const [mostrarResumen, setMostrarResumen] = useState(true);
-  const {
-    referenciaGrid,
-    columnasVisibles,
-    setColumnasVisibles,
-    filasVisibles,
-    actualizarFilasVisibles,
-    onGridListo,
-    configs,
-    refreshConfigs,
-    vistaActual,
-    vistaBase,
-    fijarBase,
-    onCambioVista,
-  } = useReporteGrid("bancos", aplicarRango);
+  const grid = useReporteGrid("bancos", aplicarRango);
+  const { referenciaGrid, filasVisibles, actualizarFilasVisibles, onGridListo, onCambioVista } =
+    grid;
 
   //KPIs
   const [totales, setTotales] = useState({ abonos: 0, cargos: 0, balance: 0, otraMoneda: 0 });
@@ -106,51 +83,16 @@ const ReporteBancos = () => {
               actualizarFilasVisibles();
             }}
             filasVisibles={filasVisibles}
-            accionesToolbarInicio={
-              <FiltroFechas
-                // Una vista con periodo cambia las fechas: el borrador se reinicia.
-                key={versionRango}
-                fechaDesde={fechaDesde}
-                setFechaDesde={setFechaDesde}
-                fechaHasta={fechaHasta}
-                setFechaHasta={setFechaHasta}
-              />
-            }
-            accionesToolbar={
-              <AccionesTabla
-                referenciaGrid={referenciaGrid}
-                columnasVisibles={columnasVisibles}
-                setColumnasVisibles={setColumnasVisibles}
-                reportId="bancos"
-                configs={configs}
-                onConfigsChange={refreshConfigs}
-                rango={{ desde: fechaDesde, hasta: fechaHasta }}
-                onAplicarRango={aplicarRango}
-                vistaActual={vistaActual}
-                vistaBase={vistaBase}
-                onVistaAplicada={(id) => fijarBase(id)}
-              />
-            }
-            accionesToolbarFin={
-              <BotonExportar
-                referenciaGrid={referenciaGrid}
-                nombreArchivo={`reporte_bancos_${fechaDesde}_a_${fechaHasta}`}
-                motivoDeshabilitado={
-                  estaCargando
-                    ? "Espera a que terminen de cargar los registros"
-                    : error
-                      ? "No hay registros cargados que exportar"
-                      : filasVisibles === 0
-                        ? "No hay registros que exportar con estas fechas y filtros"
-                        : null
-                }
-              />
-            }
+            {...toolbarReporte({
+              base,
+              grid,
+              reportId: "bancos",
+              nombreArchivo: "reporte_bancos",
+            })}
           />
         </div>
 
         <PanelKpiLateral
-          titulo="Resumen"
           aviso={
             totales.otraMoneda > 0
               ? `Solo MXN · ${totales.otraMoneda.toLocaleString("es-MX")} ${
@@ -161,7 +103,6 @@ const ReporteBancos = () => {
           abierto={mostrarResumen}
           onToggle={() => setMostrarResumen(!mostrarResumen)}
           storageKey="kpi-panel-bancos"
-          lado="derecha"
           estado={error ? "error" : estaCargando ? "cargando" : null}
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-x-8 gap-y-5">

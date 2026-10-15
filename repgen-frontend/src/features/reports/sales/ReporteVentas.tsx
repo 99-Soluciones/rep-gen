@@ -9,9 +9,7 @@ import type { ReportSalesItemRecord } from "@repgen/shared-types";
 import TabsVentas from "./TabsVentas";
 import { useReporteBase } from "../shared/useReporteBase";
 import { useReporteGrid } from "../shared/useReporteGrid";
-import AccionesTabla from "../shared/AccionesTabla";
-import BotonExportar from "../shared/BotonExportar";
-import FiltroFechas from "../shared/FiltroFechas";
+import { toolbarReporte } from "../shared/toolbarReporte";
 import { useTotalesVentas } from "./useTotalesVentas";
 import KpiPanelVentas from "./KpiPanelVentas";
 
@@ -71,40 +69,19 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
 
   const columnasReportes = construirColumnasVentas(schemaReportType, getLabel);
 
-  const {
-    datos,
-    estaCargando,
-    error,
-    reintentar,
-    fechaDesde,
-    setFechaDesde,
-    fechaHasta,
-    setFechaHasta,
-    aplicarRango,
-    versionRango,
-  } = useReporteBase<ReportSalesItemRecord>({
+  const base = useReporteBase<ReportSalesItemRecord>({
     endpoint: reportConfig.endpoint,
     onError: onErrorReporte,
   });
+  const { datos, estaCargando, error, reintentar, aplicarRango } = base;
 
   const [mostrarResumen, setMostrarResumen] = useState(true);
 
   const reportId =
     currentType === "facturas" ? "ventas_facturas" : "ventas_conceptos";
-  const {
-    referenciaGrid,
-    columnasVisibles,
-    setColumnasVisibles,
-    filasVisibles,
-    actualizarFilasVisibles,
-    onGridListo,
-    configs,
-    refreshConfigs,
-    vistaActual,
-    vistaBase,
-    fijarBase,
-    onCambioVista,
-  } = useReporteGrid(reportId, aplicarRango);
+  const grid = useReporteGrid(reportId, aplicarRango);
+  const { referenciaGrid, filasVisibles, actualizarFilasVisibles, onGridListo, onCambioVista } =
+    grid;
 
   const { totales, recalcularTotalesVisibles } = useTotalesVentas({
     referenciaGrid,
@@ -135,56 +112,20 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
               actualizarFilasVisibles();
             }}
             filasVisibles={filasVisibles}
-            accionesToolbarInicio={
-              <FiltroFechas
-                // Una vista con periodo cambia las fechas: el borrador se reinicia.
-                key={versionRango}
-                fechaDesde={fechaDesde}
-                setFechaDesde={setFechaDesde}
-                fechaHasta={fechaHasta}
-                setFechaHasta={setFechaHasta}
-              />
-            }
-            accionesToolbar={
-              <AccionesTabla
-                referenciaGrid={referenciaGrid}
-                columnasVisibles={columnasVisibles}
-                setColumnasVisibles={setColumnasVisibles}
-                reportId={reportId}
-                configs={configs}
-                onConfigsChange={refreshConfigs}
-                rango={{ desde: fechaDesde, hasta: fechaHasta }}
-                onAplicarRango={aplicarRango}
-                vistaActual={vistaActual}
-                vistaBase={vistaBase}
-                onVistaAplicada={(id) => fijarBase(id)}
-              />
-            }
-            accionesToolbarFin={
-              <BotonExportar
-                referenciaGrid={referenciaGrid}
-                nombreArchivo={`${reportConfig.nombreArchivo}_${fechaDesde}_a_${fechaHasta}`}
-                motivoDeshabilitado={
-                  estaCargando
-                    ? "Espera a que terminen de cargar los registros"
-                    : error
-                      ? "No hay registros cargados que exportar"
-                      : filasVisibles === 0
-                        ? "No hay registros que exportar con estas fechas y filtros"
-                        : null
-                }
-              />
-            }
+            {...toolbarReporte({
+              base,
+              grid,
+              reportId,
+              nombreArchivo: reportConfig.nombreArchivo,
+            })}
           />
         </div>
 
         <PanelKpiLateral
-          titulo="Resumen"
           aviso="Importes en MXN"
           abierto={mostrarResumen}
           onToggle={() => setMostrarResumen(!mostrarResumen)}
           storageKey="kpi-panel-ventas"
-          lado="derecha"
           estado={error ? "error" : estaCargando ? "cargando" : null}
         >
           <KpiPanelVentas

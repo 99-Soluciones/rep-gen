@@ -12,6 +12,7 @@ type TablaMockProps = {
     api?: {
       getColumns: () => Array<{ id: string }>;
       getFilterModel: () => Record<string, unknown>;
+      isDestroyed: () => boolean;
       getDisplayedRowCount: () => number;
       forEachNodeAfterFilterAndSort: (
         cb: (node: {
@@ -29,6 +30,7 @@ type TablaMockProps = {
 // Lo que useReporteGrid usa del grid al quedar listo (suscripción + foto de la vista).
 const eventosGrid = vi.hoisted(() => ({
   addEventListener: () => {},
+  isDestroyed: () => false,
   getColumnState: () => [],
   getFilterModel: () => ({}),
 }));
@@ -44,6 +46,7 @@ const tablaMock = vi.hoisted(() =>
         api: {
           getColumns: () => [{ id: "col-1" }],
           getFilterModel: () => ({ moneda: "MXN" }),
+          isDestroyed: () => false,
           getDisplayedRowCount: () => 2,
           forEachNodeAfterFilterAndSort: (
             cb: (node: {
