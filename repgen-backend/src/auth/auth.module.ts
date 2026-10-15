@@ -18,16 +18,20 @@ import { LoggerModule } from '../common/logger';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        global: true,
-        secret: configService.getOrThrow<string>('JWT_SECRET'),
-        signOptions: {
-          expiresIn: parseInt(
-            configService.get<string>('JWT_EXPIRES_IN', '3600'),
-            10,
-          ),
-        },
-      }),
+      useFactory: (configService: ConfigService) => {
+        const secret = configService.get<string>('JWT_SECRET')?.trim();
+        if (!secret) throw new Error('JWT_SECRET is required');
+        return {
+          global: true,
+          secret,
+          signOptions: {
+            expiresIn: parseInt(
+              configService.get<string>('JWT_EXPIRES_IN', '3600'),
+              10,
+            ),
+          },
+        };
+      },
     }),
     LoggerModule,
   ],

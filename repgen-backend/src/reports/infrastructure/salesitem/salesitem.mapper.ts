@@ -1,5 +1,4 @@
 import Ajv2020 from 'ajv/dist/2020';
-import { BadRequestException } from '@nestjs/common';
 import { RawRecord } from '../../../filemaker/ifilemaker';
 import type {
   ReportSalesItemRecord,
@@ -109,7 +108,7 @@ function assertSalesItemRecord(record: RawRecord, index: number): void {
     dataVar: `rawData[${index}]`,
   });
 
-  throw new BadRequestException(`SalesItem record invalido: ${details}`);
+  throw new Error(`SalesItem record invalido: ${details}`);
 }
 
 function resolveMethodOfAcquisition(

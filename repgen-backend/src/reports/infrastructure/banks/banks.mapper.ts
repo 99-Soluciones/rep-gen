@@ -1,5 +1,4 @@
 import Ajv2020 from 'ajv/dist/2020';
-import { BadRequestException } from '@nestjs/common';
 import { RawRecord } from '../../../filemaker/ifilemaker';
 import type { ReportBankRecord, BankMappedRecord } from '../../domain/banks';
 import schema from './bank-report.schema.json';
@@ -44,7 +43,7 @@ function assertBankRecord(record: RawRecord, index: number): void {
     dataVar: `rawData[${index}]`,
   });
 
-  throw new BadRequestException(`Bank record invalido: ${details}`);
+  throw new Error(`Bank record invalido: ${details}`);
 }
 
 /**
