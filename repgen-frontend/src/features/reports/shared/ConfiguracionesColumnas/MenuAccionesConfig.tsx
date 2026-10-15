@@ -1,4 +1,4 @@
-import { MoreVertical, Pencil, Plus, Save, Star, Trash2 } from "lucide-react";
+import { MoreVertical, Pencil, Plus, Save, Star, Trash2, Undo2 } from "lucide-react";
 import type { Dispatch } from "react";
 import type { ReportConfigResponse } from "../api/report-configs.api";
 import type { MenuColumnasAction, MenuColumnasState } from "./ConfiguracionesColumnas.reducer";
@@ -9,10 +9,20 @@ interface MenuAccionesConfigProps {
   estado: MenuColumnasState;
   dispatch: Dispatch<MenuColumnasAction>;
   onGuardarCambios: () => void;
+  /** Hay cambios sin guardar en la vista seleccionada. */
+  modificada: boolean;
   onRenombrar: () => void;
   onPredeterminar: () => void;
   onEliminar: () => void;
+  /** Presente mientras se puede deshacer la última "Actualizar vista". */
+  onDeshacer?: () => void;
 }
+
+// Al abrir el menú (o volver a la lista desde Renombrar/Eliminar) el foco entra
+// en la primera acción disponible, como en cualquier menú de escritorio.
+const enfocarPrimeraAccion = (lista: HTMLDivElement | null) => {
+  lista?.querySelector<HTMLButtonElement>("button:not(:disabled)")?.focus();
+};
 
 const MenuAccionesConfig = ({
   configActual,
@@ -20,9 +30,11 @@ const MenuAccionesConfig = ({
   estado,
   dispatch,
   onGuardarCambios,
+  modificada,
   onRenombrar,
   onPredeterminar,
   onEliminar,
+  onDeshacer,
 }: MenuAccionesConfigProps) => {
   const iniciarRenombrar = () => {
     if (!configActual) return;
@@ -35,15 +47,20 @@ const MenuAccionesConfig = ({
         type="button"
         onClick={() => dispatch({ type: "ABRIR_MENU" })}
         disabled={guardando}
-        className="flex items-center justify-center px-2 text-gray-600 rounded-r-lg hover:bg-blue-50 hover:text-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center justify-center px-2 text-gray-600 rounded-r-lg hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         title="Acciones de la vista"
         aria-label="Acciones de la vista"
+        aria-expanded={estado.menuAbierto}
+        aria-controls="menu-acciones-vista"
       >
         <MoreVertical className="w-4 h-4" />
       </button>
 
       {estado.menuAbierto && (
-        <div className="absolute right-0 top-full mt-2 z-50 w-64 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden animate-in fade-in zoom-in duration-150">
+        <div
+          id="menu-acciones-vista"
+          className="absolute right-0 top-full mt-2 z-50 w-64 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
+        >
           {estado.modoRenombrar ? (
             <div className="p-3 flex flex-col gap-2">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -51,8 +68,9 @@ const MenuAccionesConfig = ({
               </p>
               <input
                 type="text"
+                autoFocus
                 aria-label="Nombre de la vista"
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-blue-500 focus:border-blue-500 w-full"
+                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
                 placeholder="Nombre"
                 value={estado.nombreInput}
                 onChange={(e) =>
@@ -64,7 +82,7 @@ const MenuAccionesConfig = ({
                     dispatch({ type: "CANCELAR_RENOMBRAR" });
                 }}
               />
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-500">
                 Cambia el nombre de la vista seleccionada.
               </p>
               <div className="flex gap-2">
@@ -72,14 +90,14 @@ const MenuAccionesConfig = ({
                   type="button"
                   onClick={onRenombrar}
                   disabled={!estado.nombreInput.trim() || guardando}
-                  className="flex-1 text-sm px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-marca-morado disabled:opacity-40 font-medium"
+                  className="flex-1 text-sm px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-marca-morado disabled:opacity-40 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
                 >
                   {guardando ? "Guardando..." : "Renombrar"}
                 </button>
                 <button
                   type="button"
                   onClick={() => dispatch({ type: "CANCELAR_RENOMBRAR" })}
-                  className="text-sm px-3 py-1.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
+                  className="text-sm px-3 py-1.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
                 >
                   Cancelar
                 </button>
@@ -96,38 +114,51 @@ const MenuAccionesConfig = ({
                   type="button"
                   onClick={onEliminar}
                   disabled={guardando}
-                  className="flex-1 text-sm px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-medium"
+                  className="flex-1 text-sm px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
                 >
                   {guardando ? "Eliminando..." : "Sí, eliminar"}
                 </button>
                 <button
                   type="button"
+                  // Lo seguro primero: Enter por accidente no borra la vista.
+                  autoFocus
                   onClick={() => dispatch({ type: "CANCELAR_ELIMINAR" })}
-                  className="text-sm px-3 py-1.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
+                  className="text-sm px-3 py-1.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
                 >
                   No
                 </button>
               </div>
             </div>
           ) : (
-            <div className="py-1">
+            <div className="py-1" ref={enfocarPrimeraAccion}>
               <button
                 type="button"
                 onClick={onGuardarCambios}
-                disabled={!configActual || guardando}
-                className="w-full flex items-start gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                disabled={!configActual || !modificada || guardando}
+                className="w-full flex items-start gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <Save className="w-4 h-4 mt-0.5 text-gray-500 shrink-0" />
                 <span>
-                  Guardar cambios
-                  {configActual ? ` en "${configActual.name}"` : ""}
+                  Actualizar vista
+                  {configActual ? ` "${configActual.name}"` : ""}
                 </span>
               </button>
+              {onDeshacer && (
+                <button
+                  type="button"
+                  onClick={onDeshacer}
+                  disabled={guardando}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 transition-colors"
+                >
+                  <Undo2 className="w-4 h-4 text-gray-500 shrink-0" />
+                  Deshacer la última actualización
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => dispatch({ type: "ABRIR_POPOVER_GUARDAR" })}
                 disabled={guardando}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 disabled:opacity-40 transition-colors"
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 transition-colors"
               >
                 <Plus className="w-4 h-4 text-gray-500 shrink-0" />
                 Guardar como vista nueva...
@@ -136,7 +167,7 @@ const MenuAccionesConfig = ({
                 type="button"
                 onClick={iniciarRenombrar}
                 disabled={!configActual || guardando}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <Pencil className="w-4 h-4 text-gray-500 shrink-0" />
                 Renombrar vista...
@@ -145,19 +176,19 @@ const MenuAccionesConfig = ({
                 type="button"
                 onClick={onPredeterminar}
                 disabled={!configActual || configActual.isDefault || guardando}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
-                <Star className="w-4 h-4 text-amber-500 shrink-0" />
+                <Star className="w-4 h-4 text-gray-500 shrink-0" />
                 {configActual?.isDefault
-                  ? "Ya es predeterminada"
-                  : "Predeterminar"}
+                  ? "Ya se abre por defecto"
+                  : "Abrir por defecto"}
               </button>
               <div className="border-t border-gray-100 my-1" />
               <button
                 type="button"
                 onClick={() => dispatch({ type: "CONFIRMAR_ELIMINAR" })}
                 disabled={!configActual || guardando}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-red-600 hover:bg-red-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-red-600 hover:bg-red-50 focus:outline-none focus-visible:bg-red-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <Trash2 className="w-4 h-4 shrink-0" />
                 Eliminar vista

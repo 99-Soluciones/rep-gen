@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import type { Column } from "ag-grid-community";
 import type { ReportConfigResponse } from "./api/report-configs.api";
+import type { VistaCapturada } from "./ConfiguracionesColumnas/vista";
 import { useTenantFeatures } from "./useTenantFeatures";
 
 import ModalColumnas from "./ModalColumnas";
@@ -14,6 +15,12 @@ interface AccionesTablaProps {
   reportId: string;
   configs: ReportConfigResponse[];
   onConfigsChange: () => Promise<void>;
+  /** Rango aplicado y cómo cambiarlo: lo usan las vistas con periodo. */
+  rango?: { desde: string; hasta: string };
+  onAplicarRango?: (desde: string, hasta: string) => void;
+  vistaActual?: VistaCapturada | null;
+  vistaBase?: { configId: string | null; huella: string } | null;
+  onVistaAplicada?: (configId: string | null) => void;
 }
 
 /**
@@ -31,6 +38,11 @@ const AccionesTabla = ({
   reportId,
   configs,
   onConfigsChange,
+  rango,
+  onAplicarRango,
+  vistaActual,
+  vistaBase,
+  onVistaAplicada,
 }: AccionesTablaProps) => {
   const { habilitarConfiguraciones } = useTenantFeatures();
   const [mostrarMenuColumnas, setMostrarMenuColumnas] = useState(false);
@@ -47,11 +59,19 @@ const AccionesTabla = ({
       {/* 1. Gestión de vistas (configuraciones de columnas guardadas) */}
       {habilitarConfiguraciones && (
         <ConfiguracionesColumnas
+          // Facturas y Conceptos comparten pantalla: cada reporte tiene sus
+          // vistas, así que el selector (y su deshacer) empieza de cero.
+          key={reportId}
           referenciaGrid={referenciaGrid}
           setColumnasVisibles={setColumnasVisibles}
           reportId={reportId}
           configs={configs}
           onConfigsChange={onConfigsChange}
+          rango={rango}
+          onAplicarRango={onAplicarRango}
+          vistaActual={vistaActual}
+          vistaBase={vistaBase}
+          onVistaAplicada={onVistaAplicada}
         />
       )}
 
@@ -62,7 +82,7 @@ const AccionesTabla = ({
           onClick={() => {
             setMostrarMenuColumnas(true);
           }}
-          className="group bg-white border border-gray-300 text-gray-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 font-medium py-1.5 px-3 rounded-lg shadow-sm flex items-center justify-center transition-colors"
+          className="group bg-white border border-gray-300 text-gray-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 font-medium py-1.5 px-3 rounded-lg shadow-sm flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
         >
           <svg
             className="w-4 h-4 mr-1.5 text-gray-500 group-hover:text-blue-600 shrink-0"

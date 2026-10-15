@@ -31,6 +31,10 @@ const crearApi = () => ({
   getColumns: vi.fn(() => []),
   setFilterModel: vi.fn(),
   getDisplayedRowCount: vi.fn(() => 0),
+  addEventListener: vi.fn(),
+  getColumnState: vi.fn(() => []),
+  getFilterModel: vi.fn(() => ({})),
+  isDestroyed: () => false,
 });
 
 describe("useReporteGrid", () => {
@@ -89,5 +93,41 @@ describe("useReporteGrid", () => {
     configsMock.defaultConfig = vista("ventas_conceptos");
     rerender({ reportId: "ventas_conceptos" });
     expect(api.applyColumnState).toHaveBeenCalledTimes(2);
+  });
+
+  it("al volver a una pestaña recupera sus columnas y filtros, sin reaplicar la predeterminada", () => {
+    configsMock.defaultConfig = vista("ventas_facturas");
+    const { result, rerender } = renderHook(
+      ({ reportId }) => useReporteGrid(reportId),
+      { initialProps: { reportId: "ventas_facturas" } },
+    );
+    const api = crearApi();
+    act(() => {
+      (result.current.referenciaGrid as { current: unknown }).current = { api };
+      result.current.onGridListo({ api } as unknown as GridReadyEvent);
+    });
+
+    // El usuario filtra en Facturas.
+    const filtroFacturas = { cliente: { filterType: "text", filter: "ACME" } };
+    api.getFilterModel.mockReturnValue(filtroFacturas);
+    api.getColumnState.mockReturnValue([{ colId: "cliente", hide: false }] as never);
+    api.getColumns.mockReturnValue([{ getColId: () => "cliente" }] as never);
+    act(() => result.current.onCambioVista());
+
+    rerender({ reportId: "ventas_conceptos" });
+    expect(api.setFilterModel).toHaveBeenLastCalledWith(null);
+
+    api.setFilterModel.mockClear();
+    api.applyColumnState.mockClear();
+    configsMock.defaultConfig = vista("ventas_facturas");
+    rerender({ reportId: "ventas_facturas" });
+
+    expect(api.setFilterModel).toHaveBeenCalledWith(filtroFacturas);
+    // Solo la restauración de lo que dejó el usuario, no la vista predeterminada.
+    expect(api.applyColumnState).toHaveBeenCalledTimes(1);
+    expect(api.applyColumnState).toHaveBeenCalledWith({
+      state: [{ colId: "cliente", hide: false }],
+      applyOrder: true,
+    });
   });
 });

@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import { type RefObject } from "react";
 import ConfiguracionesColumnas from "./ConfiguracionesColumnas";
+import { huellaVista } from "./vista";
 import type { AgGridReact } from "ag-grid-react";
 import type { ReportConfigResponse } from "../api/report-configs.api";
 
@@ -16,7 +17,7 @@ vi.mock("ag-grid-react", () => ({
 }));
 
 vi.mock("react-hot-toast", () => ({
-  default: { success: toastSuccessMock, error: toastErrorMock },
+  default: { success: toastSuccessMock, error: toastErrorMock, dismiss: vi.fn() },
 }));
 
 vi.mock("../api/report-configs.api", () => ({
@@ -50,45 +51,81 @@ describe("ConfiguracionesColumnas", () => {
   const applyColumnState = vi.fn();
   const getColumnState = vi.fn(() => [{ colId: "a", hide: false, width: 120 }]);
   const getColumns = vi.fn(() => [{ getColId: () => "a", isVisible: () => true }]);
+  const getFilterModel = vi.fn((): Record<string, unknown> => ({}));
+  const setFilterModel = vi.fn();
+  const resetColumnState = vi.fn();
+  const listeners = new Map<string, () => void>();
 
   const referenciaGrid = {
-    current: { api: { applyColumnState, getColumnState, getColumns } },
+    current: {
+      api: {
+        applyColumnState,
+        getColumnState,
+        getColumns,
+        getFilterModel,
+        setFilterModel,
+        resetColumnState,
+        addEventListener: (evento: string, fn: () => void) => listeners.set(evento, fn),
+        removeEventListener: (evento: string) => listeners.delete(evento),
+        isDestroyed: () => false,
+      },
+    },
   } as unknown as RefObject<AgGridReact | null>;
 
   const setColumnasVisibles = vi.fn();
   const onConfigsChange = vi.fn().mockResolvedValue(undefined);
 
-  const renderComponente = (configsProp: ReportConfigResponse[] = configs) =>
-    render(
-      <ConfiguracionesColumnas
-        referenciaGrid={referenciaGrid}
-        setColumnasVisibles={setColumnasVisibles}
-        reportId="bancos"
-        configs={configsProp}
-        onConfigsChange={onConfigsChange}
-      />,
-    );
+  const onAplicarRango = vi.fn();
+
+  // Foto actual del grid tal como la entrega useReporteGrid (prop, no ref).
+  const vistaGrid = (filterModel: Record<string, unknown> | null = null) => ({
+    columnState: getColumnState(),
+    filterModel,
+  });
+
+  const componente = (
+    configsProp: ReportConfigResponse[] = configs,
+    vistaActual = vistaGrid(),
+  ) => (
+    <ConfiguracionesColumnas
+      referenciaGrid={referenciaGrid}
+      setColumnasVisibles={setColumnasVisibles}
+      reportId="bancos"
+      configs={configsProp}
+      onConfigsChange={onConfigsChange}
+      rango={{ desde: "2026-10-01", hasta: "2026-10-12" }}
+      onAplicarRango={onAplicarRango}
+      vistaActual={vistaActual}
+    />
+  );
+
+  const renderComponente = (
+    configsProp: ReportConfigResponse[] = configs,
+    vistaActual = vistaGrid(),
+  ) => render(componente(configsProp, vistaActual));
 
   beforeEach(() => {
     vi.clearAllMocks();
+    getFilterModel.mockReturnValue({});
   });
 
   it("lista las vistas e inicializa el selector con la predeterminada", () => {
     renderComponente();
 
     const select = screen.getByLabelText(
-      "Vista de columnas",
+      "Vista",
     ) as HTMLSelectElement;
     // La config B (cfg-uuid-2) es la predeterminada → queda seleccionada al cargar
     expect(select.value).toBe("cfg-uuid-2");
-    // La predeterminada se marca con estrella
-    expect(screen.getByRole("option", { name: /★ Config B/ })).toBeInTheDocument();
+    // A la vista lleva estrella; el lector de pantalla oye "predeterminada".
+    const predeterminada = screen.getByRole("option", { name: "Config B (predeterminada)" });
+    expect(predeterminada).toHaveTextContent("★ Config B");
   });
 
   it("aplica la vista al grid al seleccionarla en el dropdown", () => {
     renderComponente();
 
-    fireEvent.change(screen.getByLabelText("Vista de columnas"), {
+    fireEvent.change(screen.getByLabelText("Vista"), {
       target: { value: "cfg-uuid-1" },
     });
 
@@ -96,30 +133,278 @@ describe("ConfiguracionesColumnas", () => {
       state: configs[0].columnState,
       applyOrder: true,
     });
+    // Una vista sin filtros guardados limpia los filtros activos.
+    expect(setFilterModel).toHaveBeenCalledWith(null);
     expect(setColumnasVisibles).toHaveBeenCalled();
+    // Sin periodo: no toca las fechas.
+    expect(onAplicarRango).not.toHaveBeenCalled();
+  });
+
+  it("al abrir una vista con periodo aplica sus fechas", () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date(2026, 9, 12));
+    renderComponente([{ ...configs[0], periodo: "mes_anterior" }]);
+
+    fireEvent.change(screen.getByLabelText("Vista"), {
+      target: { value: "cfg-uuid-1" },
+    });
+
+    expect(onAplicarRango).toHaveBeenCalledWith("2026-09-01", "2026-09-30");
+    vi.useRealTimers();
+  });
+
+  it("'— Ninguna —' restaura las columnas originales y quita los filtros", () => {
+    renderComponente();
+
+    fireEvent.change(screen.getByLabelText("Vista"), {
+      target: { value: "" },
+    });
+
+    expect(resetColumnState).toHaveBeenCalled();
+    expect(setFilterModel).toHaveBeenCalledWith(null);
+    expect(onAplicarRango).not.toHaveBeenCalled();
+  });
+
+  it("marca la vista como sin guardar solo cuando cambian columnas o filtros, no el ancho", () => {
+    const vistaA = { ...configs[0], columnState: [{ colId: "a", hide: false, width: 300 }] };
+    const { rerender } = renderComponente([{ ...vistaA, isDefault: true }]);
+
+    // Mismo estado salvo el ancho (120 vs 300): sin cambios.
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Actualizar vista" })).toBeInTheDocument();
+
+    // Se agrega un filtro: ahora sí hay cambios.
+    rerender(
+      componente([{ ...vistaA, isDefault: true }], vistaGrid({ a: { filterType: "text", filter: "BBVA" } })),
+    );
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeEnabled();
+    // El aviso va en el botón que guarda, no en el nombre de la vista.
+    expect(screen.getByRole("button", { name: "Actualizar vista (cambios sin guardar)" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Config A (predeterminada)" })).toBeInTheDocument();
+  });
+
+  it("recién abierta no figura como modificada aunque AG Grid normalice distinto lo guardado", () => {
+    // Lo guardado difiere de lo que el grid reporta (p. ej. normalización de AG
+    // Grid), pero la referencia es el grid tal como quedó al abrir la vista.
+    const vistaA = { ...configs[0], isDefault: true, columnState: [{ colId: "a", hide: true }] };
+    const foto = vistaGrid();
+    render(
+      <ConfiguracionesColumnas
+        referenciaGrid={referenciaGrid}
+        setColumnasVisibles={setColumnasVisibles}
+        reportId="bancos"
+        configs={[vistaA]}
+        onConfigsChange={onConfigsChange}
+        vistaActual={foto}
+        vistaBase={{ configId: vistaA.id, huella: huellaVista(foto.columnState, foto.filterModel) }}
+      />,
+    );
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Actualizar vista" })).toBeInTheDocument();
+  });
+
+  it("al elegir una vista avisa para fijar la referencia", () => {
+    const onVistaAplicada = vi.fn();
+    render(
+      <ConfiguracionesColumnas
+        referenciaGrid={referenciaGrid}
+        setColumnasVisibles={setColumnasVisibles}
+        reportId="bancos"
+        configs={configs}
+        onConfigsChange={onConfigsChange}
+        vistaActual={vistaGrid()}
+        onVistaAplicada={onVistaAplicada}
+      />,
+    );
+    fireEvent.change(screen.getByLabelText("Vista"), { target: { value: "cfg-uuid-1" } });
+    expect(onVistaAplicada).toHaveBeenCalledWith("cfg-uuid-1");
+    fireEvent.change(screen.getByLabelText("Vista"), { target: { value: "" } });
+    expect(onVistaAplicada).toHaveBeenLastCalledWith(null);
+  });
+
+  it("se habilita apenas el grid cambia, sin abrir el menú ⋮ (regresión React Compiler)", () => {
+    const vistaA = { ...configs[0], isDefault: true };
+    const { rerender } = renderComponente([vistaA]);
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeDisabled();
+
+    // Ocultar una columna: useReporteGrid entrega una foto nueva como prop.
+    rerender(
+      componente([vistaA], { columnState: [{ colId: "a", hide: true, width: 120 }], filterModel: null }),
+    );
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeEnabled();
+
+    // Volver a mostrarla: vuelve a coincidir con lo guardado.
+    rerender(componente([vistaA], vistaGrid()));
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeDisabled();
   });
 
   it("guarda cambios en la vista seleccionada con el botón Guardar del grupo", async () => {
     updateReportConfigMock.mockResolvedValue(configs[1]);
+    // Un filtro activo distinto de lo guardado: la vista tiene cambios.
+    getFilterModel.mockReturnValue({ a: { filterType: "text", filter: "BBVA" } });
 
-    renderComponente();
+    renderComponente(configs, vistaGrid({ a: { filterType: "text", filter: "BBVA" } }));
 
     // La vista B está preseleccionada por ser la predeterminada
-    fireEvent.click(screen.getByTitle('Guardar cambios en "Config B"'));
+    fireEvent.click(screen.getByRole("button", { name: /^Actualizar vista/ }));
 
     await waitFor(() => {
       expect(updateReportConfigMock).toHaveBeenCalledWith("cfg-uuid-2", {
         columnState: getColumnState(),
+        filterModel: { a: { filterType: "text", filter: "BBVA" } },
+        periodo: null,
       });
       expect(onConfigsChange).toHaveBeenCalled();
       expect(toastSuccessMock).toHaveBeenCalled();
     });
   });
 
+  it("Deshacer vuelve a guardar la versión anterior de la vista", async () => {
+    updateReportConfigMock.mockResolvedValue(configs[1]);
+    renderComponente(configs, vistaGrid({ a: { filterType: "text", filter: "BBVA" } }));
+
+    fireEvent.click(screen.getByRole("button", { name: /^Actualizar vista/ }));
+    await waitFor(() => expect(toastSuccessMock).toHaveBeenCalled());
+
+    // El toast trae un botón Deshacer: se renderiza el contenido que recibió.
+    const contenido = toastSuccessMock.mock.calls[0][0] as (t: { id: string }) => React.ReactElement;
+    render(contenido({ id: "t1" }));
+    fireEvent.click(screen.getByRole("button", { name: "Deshacer" }));
+
+    await waitFor(() =>
+      expect(updateReportConfigMock).toHaveBeenLastCalledWith("cfg-uuid-2", {
+        columnState: configs[1].columnState,
+        filterModel: null,
+        periodo: null,
+      }),
+    );
+  });
+
+  it("en «Ninguna», filtros sin guardar también piden confirmación antes de abrir una vista", () => {
+    // Sin predeterminada: el selector queda en "Ninguna".
+    const sinPredeterminada = configs.map((c) => ({ ...c, isDefault: false }));
+    renderComponente(sinPredeterminada, vistaGrid({ a: { filterType: "text", filter: "BBVA" } }));
+    expect(screen.getByRole("button", { name: "Guardar vista (cambios sin guardar)" })).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Vista"), { target: { value: "cfg-uuid-1" } });
+    const aviso = screen.getByRole("alertdialog");
+    expect(aviso).toHaveTextContent("Tienes filtros o columnas sin guardar.");
+    expect(applyColumnState).not.toHaveBeenCalled();
+
+    // Guardar como nueva cancela el cambio y abre el panel de vista nueva.
+    fireEvent.click(screen.getByRole("button", { name: "Guardar como vista nueva" }));
+    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Nombre de la vista")).toBeInTheDocument();
+    expect(screen.getByLabelText("Vista")).toHaveValue("");
+  });
+
+  it("con flechas la vista queda en espera: se aplica con Enter (o al salir), no en cada tecla", () => {
+    renderComponente();
+    const selector = screen.getByLabelText("Vista");
+
+    fireEvent.keyDown(selector, { key: "ArrowUp" });
+    fireEvent.change(selector, { target: { value: "cfg-uuid-1" } });
+    expect(selector).toHaveValue("cfg-uuid-1");
+    expect(applyColumnState).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(selector, { key: "Enter" });
+    expect(applyColumnState).toHaveBeenCalledTimes(1);
+
+    // Salir del selector también confirma lo que quedó en espera.
+    fireEvent.keyDown(selector, { key: "ArrowDown" });
+    fireEvent.change(selector, { target: { value: "cfg-uuid-2" } });
+    expect(applyColumnState).toHaveBeenCalledTimes(1);
+    fireEvent.blur(selector);
+    expect(applyColumnState).toHaveBeenCalledTimes(2);
+  });
+
+  it("el aviso retiene Tab entre sus botones", () => {
+    renderComponente(configs, vistaGrid({ a: { filterType: "text", filter: "BBVA" } }));
+    fireEvent.change(screen.getByLabelText("Vista"), { target: { value: "cfg-uuid-1" } });
+    const cancelar = screen.getByRole("button", { name: "Cancelar" });
+    const actualizar = screen.getByRole("button", { name: "Actualizar y cambiar" });
+    expect(cancelar).toHaveFocus();
+
+    fireEvent.keyDown(cancelar, { key: "Tab", shiftKey: true });
+    expect(actualizar).toHaveFocus();
+    fireEvent.keyDown(actualizar, { key: "Tab" });
+    expect(cancelar).toHaveFocus();
+  });
+
+  it("Deshacer con otra vista ya abierta no toca su referencia y avisa que los cambios se descartan", async () => {
+    updateReportConfigMock.mockResolvedValue(configs[1]);
+    const onVistaAplicada = vi.fn();
+    render(
+      <ConfiguracionesColumnas
+        referenciaGrid={referenciaGrid}
+        setColumnasVisibles={setColumnasVisibles}
+        reportId="bancos"
+        configs={configs}
+        onConfigsChange={onConfigsChange}
+        vistaActual={vistaGrid({ a: { filterType: "text", filter: "BBVA" } })}
+        onVistaAplicada={onVistaAplicada}
+      />,
+    );
+    // Actualizar y cambiar: guarda B y abre A.
+    fireEvent.change(screen.getByLabelText("Vista"), { target: { value: "cfg-uuid-1" } });
+    fireEvent.click(screen.getByRole("button", { name: "Actualizar y cambiar" }));
+    await waitFor(() => expect(screen.getByLabelText("Vista")).toHaveValue("cfg-uuid-1"));
+
+    const contenido = toastSuccessMock.mock.calls[0][0] as (t: { id: string }) => React.ReactElement;
+    render(contenido({ id: "t1" }));
+    onVistaAplicada.mockClear();
+    fireEvent.click(screen.getByRole("button", { name: "Deshacer" }));
+
+    await waitFor(() =>
+      expect(toastSuccessMock).toHaveBeenLastCalledWith(
+        expect.stringContaining("Los cambios que habías guardado se descartaron."),
+      ),
+    );
+    expect(onVistaAplicada).not.toHaveBeenCalled();
+  });
+
+  describe("con cambios sin guardar, cambiar de vista pregunta primero", () => {
+    const conCambios = () =>
+      renderComponente(configs, vistaGrid({ a: { filterType: "text", filter: "BBVA" } }));
+
+    it("Cancelar deja la vista y los cambios como estaban", () => {
+      conCambios();
+      fireEvent.change(screen.getByLabelText("Vista"), { target: { value: "cfg-uuid-1" } });
+
+      expect(screen.getByRole("alertdialog")).toHaveTextContent("cambios sin guardar en «Config B»");
+      expect(applyColumnState).not.toHaveBeenCalled();
+      fireEvent.click(screen.getByRole("button", { name: "Cancelar" }));
+
+      expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+      expect(screen.getByLabelText("Vista")).toHaveValue("cfg-uuid-2");
+    });
+
+    it("Descartar abre la vista elegida sin guardar", () => {
+      conCambios();
+      fireEvent.change(screen.getByLabelText("Vista"), { target: { value: "cfg-uuid-1" } });
+      fireEvent.click(screen.getByRole("button", { name: "Descartar cambios" }));
+
+      expect(applyColumnState).toHaveBeenCalled();
+      expect(updateReportConfigMock).not.toHaveBeenCalled();
+      expect(screen.getByLabelText("Vista")).toHaveValue("cfg-uuid-1");
+    });
+
+    it("Actualizar y cambiar guarda la vista actual y luego abre la elegida", async () => {
+      updateReportConfigMock.mockResolvedValue(configs[1]);
+      conCambios();
+      fireEvent.change(screen.getByLabelText("Vista"), { target: { value: "" } });
+      fireEvent.click(screen.getByRole("button", { name: "Actualizar y cambiar" }));
+
+      await waitFor(() => expect(screen.getByLabelText("Vista")).toHaveValue(""));
+      expect(updateReportConfigMock).toHaveBeenCalledWith("cfg-uuid-2", expect.anything());
+      expect(resetColumnState).toHaveBeenCalled();
+    });
+  });
+
   it("abre el popover de vista nueva con Guardar cuando no hay vista seleccionada", () => {
     renderComponente([]);
 
-    fireEvent.click(screen.getByTitle("Guardar como vista nueva"));
+    fireEvent.click(screen.getByRole("button", { name: "Guardar vista" }));
 
     expect(
       screen.getByPlaceholderText("Nombre de la vista"),
@@ -146,15 +431,20 @@ describe("ConfiguracionesColumnas", () => {
     fireEvent.change(screen.getByPlaceholderText("Nombre de la vista"), {
       target: { value: "Mi vista" },
     });
+    fireEvent.change(screen.getByLabelText("Periodo"), {
+      target: { value: "mes_actual" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "Guardar vista nueva" }));
 
     await waitFor(() => {
       expect(createReportConfigMock).toHaveBeenCalledWith(
         "bancos",
         "Mi vista",
-        getColumnState(),
+        { columnState: getColumnState(), filterModel: null, periodo: "mes_actual" },
         false,
       );
+      // La vista nueva queda abierta con su periodo aplicado.
+      expect(onAplicarRango).toHaveBeenCalled();
       expect(onConfigsChange).toHaveBeenCalled();
       expect(toastSuccessMock).toHaveBeenCalled();
     });
@@ -165,7 +455,7 @@ describe("ConfiguracionesColumnas", () => {
 
     renderComponente();
 
-    fireEvent.change(screen.getByLabelText("Vista de columnas"), {
+    fireEvent.change(screen.getByLabelText("Vista"), {
       target: { value: "cfg-uuid-1" },
     });
     fireEvent.click(screen.getByTitle("Acciones de la vista"));
@@ -189,11 +479,11 @@ describe("ConfiguracionesColumnas", () => {
     renderComponente();
 
     // Seleccionar la config A (no es default) para poder predeterminarla
-    fireEvent.change(screen.getByLabelText("Vista de columnas"), {
+    fireEvent.change(screen.getByLabelText("Vista"), {
       target: { value: "cfg-uuid-1" },
     });
     fireEvent.click(screen.getByTitle("Acciones de la vista"));
-    fireEvent.click(screen.getByRole("button", { name: /Predeterminar/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Abrir por defecto/i }));
 
     await waitFor(() => {
       expect(updateReportConfigMock).toHaveBeenCalledWith("cfg-uuid-1", {
@@ -208,7 +498,7 @@ describe("ConfiguracionesColumnas", () => {
 
     renderComponente();
 
-    fireEvent.change(screen.getByLabelText("Vista de columnas"), {
+    fireEvent.change(screen.getByLabelText("Vista"), {
       target: { value: "cfg-uuid-1" },
     });
     fireEvent.click(screen.getByTitle("Acciones de la vista"));
@@ -222,6 +512,63 @@ describe("ConfiguracionesColumnas", () => {
     });
   });
 
+  describe("foco por teclado", () => {
+    const abrirMenu = () => {
+      fireEvent.change(screen.getByLabelText("Vista"), { target: { value: "cfg-uuid-1" } });
+      fireEvent.click(screen.getByTitle("Acciones de la vista"));
+    };
+
+    it("al abrir el menú el foco entra en la primera acción disponible", () => {
+      renderComponente();
+      abrirMenu();
+      // "Actualizar vista" está deshabilitada (sin cambios): sigue "Guardar como…".
+      expect(screen.getByRole("button", { name: /Guardar como vista nueva/ })).toHaveFocus();
+    });
+
+    it("Renombrar enfoca el campo y Eliminar enfoca «No», no «Sí, eliminar»", () => {
+      renderComponente();
+      abrirMenu();
+      fireEvent.click(screen.getByRole("button", { name: /Renombrar vista/ }));
+      expect(screen.getByLabelText("Nombre de la vista")).toHaveFocus();
+
+      fireEvent.keyDown(screen.getByLabelText("Nombre de la vista"), { key: "Escape" });
+      fireEvent.click(screen.getByRole("button", { name: /Eliminar vista/ }));
+      expect(screen.getByRole("button", { name: "No" })).toHaveFocus();
+    });
+
+    it("Escape en «Nueva vista» cierra y devuelve el foco a ⋮", () => {
+      renderComponente();
+      abrirMenu();
+      fireEvent.click(screen.getByRole("button", { name: /Guardar como vista nueva/ }));
+      const nombre = screen.getByPlaceholderText("Nombre de la vista");
+      expect(nombre).toHaveFocus();
+
+      fireEvent.keyDown(nombre, { key: "Escape" });
+      expect(screen.queryByPlaceholderText("Nombre de la vista")).not.toBeInTheDocument();
+      expect(screen.getByTitle("Acciones de la vista")).toHaveFocus();
+    });
+  });
+
+  it("tras actualizar, el menú ⋮ ofrece deshacer aunque el toast ya se haya ido", async () => {
+    updateReportConfigMock.mockResolvedValue(configs[1]);
+    renderComponente(configs, vistaGrid({ a: { filterType: "text", filter: "BBVA" } }));
+    fireEvent.click(screen.getByRole("button", { name: /^Actualizar vista/ }));
+    await waitFor(() => expect(toastSuccessMock).toHaveBeenCalled());
+
+    fireEvent.click(screen.getByTitle("Acciones de la vista"));
+    fireEvent.click(screen.getByRole("button", { name: "Deshacer la última actualización" }));
+
+    await waitFor(() =>
+      expect(updateReportConfigMock).toHaveBeenLastCalledWith("cfg-uuid-2", {
+        columnState: configs[1].columnState,
+        filterModel: null,
+        periodo: null,
+      }),
+    );
+    fireEvent.click(screen.getByTitle("Acciones de la vista"));
+    expect(screen.queryByRole("button", { name: "Deshacer la última actualización" })).not.toBeInTheDocument();
+  });
+
   it("deshabilita las acciones que requieren vista cuando no hay ninguna seleccionada", () => {
     renderComponente([]);
 
@@ -231,7 +578,7 @@ describe("ConfiguracionesColumnas", () => {
     fireEvent.click(kebab);
 
     expect(
-      screen.getByRole("button", { name: /Guardar cambios/i }),
+      screen.getByRole("button", { name: /Actualizar vista/i }),
     ).toBeDisabled();
     expect(
       screen.getByRole("button", { name: /Renombrar vista/i }),

@@ -21,9 +21,19 @@ vi.mock("./ModalColumnas", () => ({
   default: (props: Record<string, unknown>) => modalColumnasMock(props),
 }));
 
-vi.mock("./ConfiguracionesColumnas/ConfiguracionesColumnas", () => ({
-  default: (props: Record<string, unknown>) => configuracionesColumnasMock(props),
-}));
+const montajesVistas = vi.hoisted(() => ({ total: 0 }));
+
+vi.mock("./ConfiguracionesColumnas/ConfiguracionesColumnas", () => {
+  const ConfiguracionesColumnasFalso = (props: Record<string, unknown>) => {
+    // Cuenta montajes (no renders): un key distinto recrea el selector.
+    React.useState(() => {
+      montajesVistas.total += 1;
+      return null;
+    });
+    return configuracionesColumnasMock(props);
+  };
+  return { default: ConfiguracionesColumnasFalso };
+});
 
 vi.mock("./useTenantFeatures", () => ({
   useTenantFeatures: () => tenantFeaturesMock(),
@@ -82,5 +92,14 @@ describe("AccionesTabla", () => {
     expect(
       screen.queryByTestId("configuraciones-columnas"),
     ).not.toBeInTheDocument();
+  });
+
+  it("cada reporte (Facturas / Conceptos) tiene su propio selector de vistas", () => {
+    const { rerender } = render(<AccionesTabla {...props} reportId="ventas_facturas" />);
+    const antes = montajesVistas.total;
+    rerender(<AccionesTabla {...props} reportId="ventas_facturas" />);
+    expect(montajesVistas.total).toBe(antes);
+    rerender(<AccionesTabla {...props} reportId="ventas_conceptos" />);
+    expect(montajesVistas.total).toBe(antes + 1);
   });
 });

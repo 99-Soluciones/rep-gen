@@ -1,4 +1,4 @@
-import type { ColumnStateEntry, ReportConfigResponse } from "@repgen/shared-types";
+import type { ReportConfigResponse } from "@repgen/shared-types";
 import { apiFetch } from "../../../../shared/api/http";
 
 export type { ColumnStateEntry, ReportConfigResponse } from "@repgen/shared-types";
@@ -10,20 +10,24 @@ export const fetchReportConfigs = (
     `/report-configs?reportId=${encodeURIComponent(reportId)}`,
   );
 
+type ContenidoVista = Pick<ReportConfigResponse, "columnState" | "filterModel" | "periodo">;
+
 export const createReportConfig = (
   reportId: string,
   name: string,
-  columnState: ColumnStateEntry[],
+  contenido: ContenidoVista,
   isDefault: boolean,
 ): Promise<ReportConfigResponse> =>
   apiFetch<ReportConfigResponse>("/report-configs", {
     method: "POST",
-    body: { reportId, name, columnState, isDefault },
+    body: { reportId, name, ...contenido, isDefault },
   });
 
 export const updateReportConfig = (
   id: string,
-  patch: Partial<Pick<ReportConfigResponse, "name" | "columnState" | "isDefault">>,
+  patch: Partial<
+    Pick<ReportConfigResponse, "name" | "columnState" | "filterModel" | "periodo" | "isDefault">
+  >,
 ): Promise<ReportConfigResponse> =>
   apiFetch<ReportConfigResponse>(`/report-configs/${encodeURIComponent(id)}`, {
     method: "PATCH",
