@@ -32,49 +32,14 @@ export default defineConfig(({ mode }) => {
     build: {
       rolldownOptions: {
         output: {
-          manualChunks(id) {
-            if (id.includes("node_modules")) {
-              return id
-                .toString()
-                .split("node_modules/")[1]
-                .split("/")[0]
-                .toString();
-            }
-          },
+          // El primer grupo que coincide gana: "react" también se lleva
+          // react-dom, react-router-dom y react-hot-toast.
           codeSplitting: {
             groups: [
-              {
-                test: /node_modules\/react/,
-                name: "react",
-              },
-              {
-                test: /node_modules\/react-dom/,
-                name: "react-dom",
-              },
-              {
-                test: /node_modules\/react-router-dom/,
-                name: "react-router-dom",
-              },
-              {
-                test: /node_modules\/ag-grid-community/,
-                name: "ag-grid-community",
-              },
-              {
-                test: /node_modules\/ag-grid-react/,
-                name: "ag-grid-react",
-              },
-              {
-                test: /node_modules\/lucide-react/,
-                name: "lucide-react",
-              },
-              {
-                test: /node_modules\/react-hot-toast/,
-                name: "react-hot-toast",
-              },
-              {
-                test: /node_modules\/tailwindcss/,
-                name: "tailwindcss",
-              },
+              { test: /node_modules\/react/, name: "react" },
+              { test: /node_modules\/ag-grid-community/, name: "ag-grid-community" },
+              { test: /node_modules\/ag-grid-react/, name: "ag-grid-react" },
+              { test: /node_modules\/lucide-react/, name: "lucide-react" },
             ],
           },
         },
