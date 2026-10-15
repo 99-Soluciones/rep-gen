@@ -27,6 +27,22 @@ import {
 import MenuAccionesConfig from "./MenuAccionesConfig";
 import { avisarConDeshacer } from "../avisarConDeshacer";
 import PopoverGuardarConfig from "./PopoverGuardarConfig";
+import { protegerSalida, type Salida } from "../../../../shared/utils/salidaProtegida";
+import { ApiError } from "../../../../shared/api/http";
+
+/**
+ * Con la sesión expirada reintentar no sirve: se dice por qué y que lo que hay
+ * en pantalla sigue ahí. Cualquier otro fallo sí puede ser momentáneo.
+ */
+const avisarErrorVista = (error: unknown, queFallo: string) => {
+  if (error instanceof ApiError && error.status === 401) {
+    toast.error(
+      `${queFallo}: tu sesión expiró. Lo que ves en la tabla sigue aquí; para guardar, vuelve a abrir el reporte desde FileMaker.`,
+    );
+    return;
+  }
+  toast.error(`${queFallo}. Inténtalo de nuevo.`);
+};
 
 interface ConfiguracionesColumnasProps {
   referenciaGrid: React.RefObject<AgGridReact | null>;
@@ -43,7 +59,20 @@ interface ConfiguracionesColumnasProps {
   vistaBase?: { configId: string | null; huella: string } | null;
   /** Avisa que se aplicó o guardó una vista (o "Ninguna") para fijar la referencia. */
   onVistaAplicada?: (configId: string | null) => void;
+  /**
+   * Vista que estaba elegida en este reporte (al volver a una pestaña). Sin
+   * ella, el selector arranca en la predeterminada.
+   */
+  vistaInicial?: string | null;
+  /** Avisa qué vista quedó elegida, para recuperarla al volver a la pestaña. */
+  onElegirVista?: (configId: string | null) => void;
 }
+
+const TEXTO_PERDIDA: Record<Salida["motivo"] | "vista", string> = {
+  vista: "Si cambias de vista se pierden.",
+  reporte: "Si sales del reporte se pierden.",
+  sesion: "Si cierras sesión se pierden.",
+};
 
 const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   referenciaGrid,
@@ -56,11 +85,19 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   vistaActual,
   vistaBase,
   onVistaAplicada,
+  vistaInicial,
+  onElegirVista,
 }) => {
-  const [configSeleccionada, setConfigSeleccionada] = useState<string | null>(
-    null,
+  const [configSeleccionada, setConfigSeleccionadaLocal] = useState<string | null>(
+    vistaInicial ?? null,
   );
-  const [inicializado, setInicializado] = useState(false);
+  const [inicializado, setInicializado] = useState(vistaInicial !== undefined);
+  // Toda elección del usuario se recuerda por pestaña (la inicial no hace
+  // falta: useReporteGrid ya la anota al aplicar la predeterminada).
+  const setConfigSeleccionada = (id: string | null) => {
+    setConfigSeleccionadaLocal(id);
+    onElegirVista?.(id);
+  };
   const [estado, dispatch] = useReducer(
     menuColumnasReducer,
     estadoInicialMenuColumnas,
@@ -79,6 +116,11 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   // salir del selector; con el mouse se aplica al elegirla.
   const [vistaEnEspera, setVistaEnEspera] = useState<{ id: string | null } | null>(null);
   const conFlechasRef = useRef(false);
+  // Salir del reporte o cerrar sesión con cambios sin guardar: se pregunta con
+  // el mismo aviso que al cambiar de vista (salidaProtegida.ts).
+  const [salidaPendiente, setSalidaPendiente] = useState<Salida | null>(null);
+  // Ya se eligió salir: la recarga o el cambio de página no vuelven a preguntar.
+  const saliendoRef = useRef(false);
 
   // Inicializa el selector con la config predeterminada (la que se auto-aplica
   // al cargar). Patrón de ajuste de estado durante el render recomendado por
@@ -87,7 +129,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   if (!inicializado && configs.length > 0) {
     setInicializado(true);
     const def = configs.find((c) => c.isDefault);
-    if (def) setConfigSeleccionada(def.id);
+    if (def) setConfigSeleccionadaLocal(def.id);
   }
 
   // Selección vigente para el Deshacer del aviso, que corre después (y puede
@@ -148,6 +190,41 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
     }
     return false;
   })();
+
+  // Mientras haya cambios sin guardar: guardián de las salidas de la app y
+  // aviso nativo del navegador al recargar o cerrar la pestaña.
+  useEffect(() => {
+    if (!modificada) return;
+    const retirarGuardian = protegerSalida(setSalidaPendiente);
+    const avisarAlCerrar = (evento: BeforeUnloadEvent) => {
+      if (saliendoRef.current) return;
+      evento.preventDefault();
+    };
+    window.addEventListener("beforeunload", avisarAlCerrar);
+    return () => {
+      retirarGuardian();
+      window.removeEventListener("beforeunload", avisarAlCerrar);
+    };
+  }, [modificada]);
+
+  const quedarse = () => {
+    salidaPendiente?.cancelar?.();
+    setSalidaPendiente(null);
+    setCambioPendiente(null);
+    contenedorRef.current?.querySelector<HTMLElement>("select")?.focus();
+  };
+
+  const salirSinGuardar = (salida: Salida) => {
+    saliendoRef.current = true;
+    setSalidaPendiente(null);
+    salida.continuar();
+  };
+
+  const motivoSinGuardar = guardando
+    ? "Guardando la vista."
+    : configActual && !modificada
+      ? `«${configActual.name}» no tiene cambios sin guardar.`
+      : null;
 
   const aplicarPeriodo = (periodo: PeriodoVista | null | undefined) => {
     if (!periodo || !onAplicarRango) return;
@@ -212,8 +289,8 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       onVistaAplicada?.(nueva.id);
       toast.success(`Vista "${nueva.name}" guardada`);
       cerrarTodo();
-    } catch {
-      toast.error("No se pudo guardar la vista. Inténtalo de nuevo.");
+    } catch (error) {
+      avisarErrorVista(error, "No se pudo guardar la vista");
     }
     setGuardando(false);
   };
@@ -273,8 +350,8 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       );
       cerrarTodo();
       guardada = true;
-    } catch {
-      toast.error("No se pudo actualizar la vista. Inténtalo de nuevo.");
+    } catch (error) {
+      avisarErrorVista(error, "No se pudo actualizar la vista");
     }
     setGuardando(false);
     return guardada;
@@ -290,8 +367,8 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       await onConfigsChange();
       toast.success("Vista renombrada");
       cerrarTodo();
-    } catch {
-      toast.error("No se pudo renombrar la vista. Inténtalo de nuevo.");
+    } catch (error) {
+      avisarErrorVista(error, "No se pudo renombrar la vista");
     }
     setGuardando(false);
   };
@@ -304,8 +381,8 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       await onConfigsChange();
       toast.success(`"${configActual?.name}" se abrirá por defecto`);
       cerrarTodo();
-    } catch {
-      toast.error("No se pudo cambiar la vista predeterminada. Inténtalo de nuevo.");
+    } catch (error) {
+      avisarErrorVista(error, "No se pudo cambiar la vista predeterminada");
     }
     setGuardando(false);
   };
@@ -319,8 +396,8 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       setConfigSeleccionada(null);
       toast.success("Vista eliminada");
       cerrarTodo();
-    } catch {
-      toast.error("No se pudo eliminar la vista. Inténtalo de nuevo.");
+    } catch (error) {
+      avisarErrorVista(error, "No se pudo eliminar la vista");
     }
     setGuardando(false);
   };
@@ -328,14 +405,13 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   return (
     <div
       ref={contenedorRef}
-      className="relative shrink-0"
+      className="relative min-w-0 max-w-full"
       onKeyDown={(e) => {
         // Escape cierra menú/popover y devuelve el foco al botón ⋮. El input de
         // Renombrar maneja su propio Escape (vuelve a la lista del menú).
         if (e.key !== "Escape" || (e.target instanceof HTMLInputElement && estado.modoRenombrar)) return;
-        if (cambioPendiente) {
-          setCambioPendiente(null);
-          e.currentTarget.querySelector<HTMLElement>("select")?.focus();
+        if (cambioPendiente || salidaPendiente) {
+          quedarse();
           return;
         }
         if (!estado.menuAbierto && !estado.popoverGuardarAbierto) return;
@@ -344,8 +420,8 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
     >
       {/* Grupo segmentado: selector de vista + guardar + menú ⋮ comparten un
           solo borde con divisores internos, para leerse como un único control. */}
-      <div className="flex items-stretch bg-white border border-gray-300 rounded-lg shadow-sm divide-x divide-gray-200">
-        <label className="relative flex items-center gap-1.5 pl-3 pr-2 rounded-l-lg focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500">
+      <div className="flex items-stretch pointer-coarse:min-h-10 bg-white border border-gray-300 rounded-lg shadow-sm divide-x divide-gray-200">
+        <label className="relative flex min-w-0 items-center gap-1.5 pl-3 pr-2 rounded-l-lg focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500">
           <span className="text-sm text-gray-500 shrink-0">Vista:</span>
           <select
             value={(vistaEnEspera ? vistaEnEspera.id : configSeleccionada) ?? ""}
@@ -375,7 +451,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
             aria-label="Vista"
             // El selector es angosto: el nombre completo queda a la vista al pasar el cursor.
             title={configActual?.name}
-            className="pr-6 py-2 text-sm font-medium bg-transparent text-gray-700 outline-none cursor-pointer appearance-none max-w-[160px] truncate"
+            className="pr-6 py-2 text-sm font-medium bg-transparent text-gray-700 outline-none cursor-pointer appearance-none min-w-0 max-w-[160px] truncate"
           >
             <option value="">— Ninguna —</option>
             {configs.map((c) => (
@@ -396,13 +472,17 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
         <button
           type="button"
           onClick={() => {
+            if (motivoSinGuardar) return;
             if (configActual) {
               void handleGuardarCambios();
             } else {
               dispatch({ type: "ABRIR_POPOVER_GUARDAR" });
             }
           }}
-          disabled={guardando || (configActual !== null && !modificada)}
+          // aria-disabled y no disabled: sigue en el orden de tabulación y el
+          // motivo llega por teclado y lector de pantalla (como Exportar).
+          aria-disabled={motivoSinGuardar ? true : undefined}
+          aria-describedby={motivoSinGuardar ? "motivo-guardar-vista" : undefined}
           aria-label={
             !configActual
               ? modificada
@@ -419,7 +499,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
                 ? `Guarda las columnas y filtros actuales en "${configActual.name}"`
                 : `"${configActual.name}" no tiene cambios sin guardar`
           }
-          className={`group relative flex items-center gap-1.5 px-3 text-sm transition-colors hover:bg-blue-50 hover:text-blue-700 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 ${
+          className={`group relative flex items-center gap-1.5 px-3 text-sm transition-colors hover:bg-blue-50 hover:text-blue-700 aria-disabled:opacity-40 aria-disabled:cursor-not-allowed aria-disabled:hover:bg-transparent aria-disabled:hover:text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 ${
             modificada ? "font-semibold text-blue-700" : "font-medium text-gray-700"
           }`}
         >
@@ -428,9 +508,15 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
               modificada ? "text-blue-600" : "text-gray-500"
             }`}
           />
-          <span className="whitespace-nowrap">
+          {/* En teléfono queda el ícono (y el punto): el nombre accesible sigue completo. */}
+          <span className="hidden whitespace-nowrap sm:inline">
             {configActual ? "Actualizar vista" : "Guardar vista"}
           </span>
+          {motivoSinGuardar && (
+            <span id="motivo-guardar-vista" className="sr-only">
+              {motivoSinGuardar}
+            </span>
+          )}
           {/* Cambios sin guardar: punto azul en el botón que los guarda, no en el nombre. */}
           {modificada && (
             <span aria-hidden="true" className="h-2 w-2 rounded-full bg-blue-600" />
@@ -460,12 +546,12 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
         estado={estado}
         dispatch={dispatch}
         onGuardarComo={(periodo) => void handleGuardarComo(periodo)}
+        onCancelar={cerrarTodo}
       />
 
-      {cambioPendiente && (
+      {(cambioPendiente || salidaPendiente) && (
         <div
           role="alertdialog"
-          aria-modal="true"
           aria-labelledby="aviso-cambios-vista"
           className="absolute right-0 top-full mt-2 z-50 w-72 bg-white border border-gray-200 rounded-lg shadow-xl p-3 flex flex-col gap-3"
           onKeyDown={(e) => {
@@ -495,14 +581,14 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
             ) : (
               "Tienes filtros o columnas sin guardar."
             )}{" "}
-            Si cambias de vista se pierden.
+            {TEXTO_PERDIDA[salidaPendiente?.motivo ?? "vista"]}
           </p>
           <div className="flex flex-wrap justify-end gap-2">
             <button
               type="button"
               autoFocus
               disabled={guardando}
-              onClick={() => setCambioPendiente(null)}
+              onClick={quedarse}
               className="text-sm px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-100 disabled:opacity-40 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             >
               Cancelar
@@ -510,7 +596,10 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
             <button
               type="button"
               disabled={guardando}
-              onClick={() => handleSeleccionar(cambioPendiente.id)}
+              onClick={() => {
+                if (salidaPendiente) salirSinGuardar(salidaPendiente);
+                else if (cambioPendiente) handleSeleccionar(cambioPendiente.id);
+              }}
               className="text-sm px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-40 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             >
               Descartar cambios
@@ -520,19 +609,29 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
                 type="button"
                 disabled={guardando}
                 onClick={async () => {
-                  const { id } = cambioPendiente;
-                  if (await handleGuardarCambios()) handleSeleccionar(id);
+                  const salida = salidaPendiente;
+                  const cambio = cambioPendiente;
+                  if (!(await handleGuardarCambios())) return;
+                  if (salida) salirSinGuardar(salida);
+                  else if (cambio) handleSeleccionar(cambio.id);
                 }}
                 className="text-sm px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-marca-morado disabled:opacity-40 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
               >
-                {guardando ? "Guardando..." : "Actualizar y cambiar"}
+                {guardando
+                  ? "Guardando..."
+                  : salidaPendiente
+                    ? "Actualizar y salir"
+                    : "Actualizar y cambiar"}
               </button>
             ) : (
               <button
                 type="button"
                 onClick={() => {
                   // Sin vista abierta no hay qué actualizar: se guarda como nueva
-                  // y el cambio de vista se cancela (el usuario decide después).
+                  // y el cambio de vista o la salida se cancelan (el usuario
+                  // decide después).
+                  salidaPendiente?.cancelar?.();
+                  setSalidaPendiente(null);
                   setCambioPendiente(null);
                   dispatch({ type: "ABRIR_POPOVER_GUARDAR" });
                 }}
@@ -546,15 +645,15 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       )}
 
       {/* Overlay invisible para cerrar al hacer click fuera */}
-      {(estado.menuAbierto || estado.popoverGuardarAbierto || cambioPendiente) && (
+      {(estado.menuAbierto || estado.popoverGuardarAbierto || cambioPendiente || salidaPendiente) && (
         <button
           type="button"
           aria-hidden="true"
           tabIndex={-1}
           className="fixed inset-0 z-40 cursor-default"
           onClick={() => {
+            if (cambioPendiente || salidaPendiente) quedarse();
             cerrarTodo();
-            setCambioPendiente(null);
           }}
         />
       )}

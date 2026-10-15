@@ -1,10 +1,11 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import { type RefObject } from "react";
 import ConfiguracionesColumnas from "./ConfiguracionesColumnas";
 import { huellaVista } from "./vista";
 import type { AgGridReact } from "ag-grid-react";
 import type { ReportConfigResponse } from "../api/report-configs.api";
+import { salir } from "../../../../shared/utils/salidaProtegida";
 
 const createReportConfigMock = vi.hoisted(() => vi.fn());
 const updateReportConfigMock = vi.hoisted(() => vi.fn());
@@ -170,14 +171,14 @@ describe("ConfiguracionesColumnas", () => {
     const { rerender } = renderComponente([{ ...vistaA, isDefault: true }]);
 
     // Mismo estado salvo el ancho (120 vs 300): sin cambios.
-    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toHaveAttribute("aria-disabled", "true");
     expect(screen.getByRole("button", { name: "Actualizar vista" })).toBeInTheDocument();
 
     // Se agrega un filtro: ahora sí hay cambios.
     rerender(
       componente([{ ...vistaA, isDefault: true }], vistaGrid({ a: { filterType: "text", filter: "BBVA" } })),
     );
-    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).not.toHaveAttribute("aria-disabled");
     // El aviso va en el botón que guarda, no en el nombre de la vista.
     expect(screen.getByRole("button", { name: "Actualizar vista (cambios sin guardar)" })).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "Config A (predeterminada)" })).toBeInTheDocument();
@@ -199,7 +200,7 @@ describe("ConfiguracionesColumnas", () => {
         vistaBase={{ configId: vistaA.id, huella: huellaVista(foto.columnState, foto.filterModel) }}
       />,
     );
-    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toHaveAttribute("aria-disabled", "true");
     expect(screen.getByRole("button", { name: "Actualizar vista" })).toBeInTheDocument();
   });
 
@@ -225,17 +226,17 @@ describe("ConfiguracionesColumnas", () => {
   it("se habilita apenas el grid cambia, sin abrir el menú ⋮ (regresión React Compiler)", () => {
     const vistaA = { ...configs[0], isDefault: true };
     const { rerender } = renderComponente([vistaA]);
-    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toHaveAttribute("aria-disabled", "true");
 
     // Ocultar una columna: useReporteGrid entrega una foto nueva como prop.
     rerender(
       componente([vistaA], { columnState: [{ colId: "a", hide: true, width: 120 }], filterModel: null }),
     );
-    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).not.toHaveAttribute("aria-disabled");
 
     // Volver a mostrarla: vuelve a coincidir con lo guardado.
     rerender(componente([vistaA], vistaGrid()));
-    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /^Actualizar vista/ })).toHaveAttribute("aria-disabled", "true");
   });
 
   it("guarda cambios en la vista seleccionada con el botón Guardar del grupo", async () => {
@@ -589,5 +590,129 @@ describe("ConfiguracionesColumnas", () => {
     expect(
       screen.getByRole("button", { name: /Guardar como vista nueva/i }),
     ).toBeEnabled();
+  });
+
+  describe("salir con cambios sin guardar", () => {
+    const conFiltro = vistaGrid({ a: { filterType: "text", filter: "BBVA" } });
+
+    it("sin cambios sale directo, sin preguntar", () => {
+      renderComponente(configs, vistaGrid());
+      const continuar = vi.fn();
+      act(() => salir({ motivo: "reporte", continuar }));
+      expect(continuar).toHaveBeenCalledTimes(1);
+      expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+    });
+
+    it("ir a otro reporte pregunta; Cancelar libera la navegación y se queda", () => {
+      renderComponente(configs, conFiltro);
+      const continuar = vi.fn();
+      const cancelar = vi.fn();
+      act(() => salir({ motivo: "reporte", continuar, cancelar }));
+
+      const aviso = screen.getByRole("alertdialog");
+      expect(aviso).toHaveTextContent("Tienes cambios sin guardar en «Config B». Si sales del reporte se pierden.");
+      // Lo seguro primero.
+      expect(screen.getByRole("button", { name: "Cancelar" })).toHaveFocus();
+
+      fireEvent.click(screen.getByRole("button", { name: "Cancelar" }));
+      expect(cancelar).toHaveBeenCalledTimes(1);
+      expect(continuar).not.toHaveBeenCalled();
+      expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+    });
+
+    it("cerrar sesión: Descartar cambios sale y el navegador ya no vuelve a preguntar", () => {
+      renderComponente(configs, conFiltro);
+      const continuar = vi.fn();
+      act(() => salir({ motivo: "sesion", continuar }));
+      expect(screen.getByRole("alertdialog")).toHaveTextContent("Si cierras sesión se pierden.");
+
+      fireEvent.click(screen.getByRole("button", { name: "Descartar cambios" }));
+      expect(continuar).toHaveBeenCalledTimes(1);
+      // Salir lleva a otra página: el aviso nativo de beforeunload no se repite.
+      const evento = new Event("beforeunload", { cancelable: true });
+      window.dispatchEvent(evento);
+      expect(evento.defaultPrevented).toBe(false);
+    });
+
+    it("Actualizar y salir guarda la vista y después sale", async () => {
+      updateReportConfigMock.mockResolvedValue(configs[1]);
+      renderComponente(configs, conFiltro);
+      const continuar = vi.fn();
+      act(() => salir({ motivo: "reporte", continuar }));
+
+      fireEvent.click(screen.getByRole("button", { name: "Actualizar y salir" }));
+      await waitFor(() => expect(continuar).toHaveBeenCalledTimes(1));
+      expect(updateReportConfigMock).toHaveBeenCalledWith("cfg-uuid-2", expect.anything());
+    });
+
+    it("recargar o cerrar la pestaña con cambios pide confirmación al navegador", () => {
+      const { unmount } = renderComponente(configs, conFiltro);
+      const evento = new Event("beforeunload", { cancelable: true });
+      window.dispatchEvent(evento);
+      expect(evento.defaultPrevented).toBe(true);
+
+      unmount();
+      const despues = new Event("beforeunload", { cancelable: true });
+      window.dispatchEvent(despues);
+      expect(despues.defaultPrevented).toBe(false);
+    });
+  });
+
+  it("al volver a la pestaña arranca en la vista que estaba elegida, no en la predeterminada", () => {
+    const onElegirVista = vi.fn();
+    render(
+      <ConfiguracionesColumnas
+        referenciaGrid={referenciaGrid}
+        setColumnasVisibles={setColumnasVisibles}
+        reportId="bancos"
+        configs={configs}
+        onConfigsChange={onConfigsChange}
+        vistaActual={vistaGrid()}
+        vistaInicial="cfg-uuid-1"
+        onElegirVista={onElegirVista}
+      />,
+    );
+    expect(screen.getByLabelText("Vista")).toHaveValue("cfg-uuid-1");
+
+    fireEvent.change(screen.getByLabelText("Vista"), { target: { value: "" } });
+    expect(onElegirVista).toHaveBeenLastCalledWith(null);
+  });
+
+  it("«Actualizar vista» sin cambios sigue enfocable y dice por qué no guarda", () => {
+    renderComponente(configs, vistaGrid());
+    const boton = screen.getByRole("button", { name: /^Actualizar vista/ });
+    expect(boton).toHaveAttribute("aria-disabled", "true");
+    expect(boton).toHaveAccessibleDescription("«Config B» no tiene cambios sin guardar.");
+    fireEvent.click(boton);
+    expect(updateReportConfigMock).not.toHaveBeenCalled();
+  });
+
+  it("si la sesión expiró, el error de guardar dice por qué en vez de «inténtalo de nuevo»", async () => {
+    const { ApiError } = await import("../../../../shared/api/http");
+    updateReportConfigMock.mockRejectedValue(new ApiError(401, "Unauthorized"));
+    renderComponente(configs, vistaGrid({ a: { filterType: "text", filter: "BBVA" } }));
+
+    fireEvent.click(screen.getByRole("button", { name: /^Actualizar vista/ }));
+    await waitFor(() =>
+      expect(toastErrorMock).toHaveBeenCalledWith(
+        "No se pudo actualizar la vista: tu sesión expiró. Lo que ves en la tabla sigue aquí; para guardar, vuelve a abrir el reporte desde FileMaker.",
+      ),
+    );
+  });
+
+  it("«Nueva vista» es un diálogo con nombre, Cancelar y el foco adentro", () => {
+    renderComponente(configs.map((c) => ({ ...c, isDefault: false })), vistaGrid());
+    fireEvent.click(screen.getByRole("button", { name: /^Guardar vista/ }));
+
+    const dialogo = screen.getByRole("dialog", { name: "Nueva vista" });
+    expect(screen.getByLabelText("Nombre de la vista")).toHaveFocus();
+
+    // Shift+Tab desde el primer campo da la vuelta al último botón, sin salir.
+    fireEvent.keyDown(screen.getByLabelText("Nombre de la vista"), { key: "Tab", shiftKey: true });
+    expect(screen.getByRole("button", { name: "Cancelar" })).toHaveFocus();
+
+    fireEvent.click(screen.getByRole("button", { name: "Cancelar" }));
+    expect(dialogo).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Acciones de la vista" })).toHaveFocus();
   });
 });

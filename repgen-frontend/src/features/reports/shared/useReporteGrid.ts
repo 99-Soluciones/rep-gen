@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState, type Dispatch, type RefObject, type SetStateAction } from "react";
 import type { AgGridReact } from "ag-grid-react";
 import type { Column, GridApi, GridReadyEvent } from "ag-grid-community";
 import type { ReportConfigResponse } from "./api/report-configs.api";
@@ -18,6 +18,39 @@ export interface VistaBase {
 }
 
 type AplicarRango = (desde: string, hasta: string) => void;
+type SetPorReporte<V> = Dispatch<SetStateAction<Record<string, V>>>;
+
+/**
+ * Tras abrir o guardar una vista, el estado del grid en ese momento es "sin
+ * cambios" para ese reporte. Se compara grid contra grid (no contra el JSON
+ * guardado, que AG Grid puede normalizar distinto) y la foto se toma
+ * explícitamente, sin depender de que lleguen los eventos. AG Grid crea los
+ * filtros en diferido: se espera una vuelta del event loop. Función de módulo
+ * (recibe los setters) para que el efecto de la vista predeterminada la use
+ * sin depender de su identidad.
+ */
+function programarBase(
+  api: GridApi,
+  reportId: string,
+  configId: string | null,
+  setVistaActual: Dispatch<SetStateAction<VistaCapturada | null>>,
+  setBasePorReporte: SetPorReporte<VistaBase>,
+) {
+  setTimeout(() => {
+    if (api.isDestroyed()) return;
+    const foto = capturarVista(api);
+    setVistaActual(foto);
+    setBasePorReporte((previas) => ({
+      ...previas,
+      [reportId]: { configId, huella: huellaVista(foto.columnState, foto.filterModel) },
+    }));
+  }, 0);
+}
+
+const anotar = <V,>(setPorReporte: SetPorReporte<V>, reportId: string, valor: V) =>
+  setPorReporte((previas) =>
+    reportId in previas && previas[reportId] === valor ? previas : { ...previas, [reportId]: valor },
+  );
 
 // Función de módulo (no closure del hook) para que React Compiler no necesite
 // estabilizarla: el efecto y onGridListo la llaman con lo que tengan a mano.
@@ -54,21 +87,17 @@ export const useReporteGrid = (reportId: string, aplicarRango?: AplicarRango) =>
   // Foto de columnas + filtros del grid, en estado (no leída del ref en el
   // render): así React Compiler recalcula "• sin guardar" en cada cambio.
   const [vistaActual, setVistaActual] = useState<VistaCapturada | null>(null);
-  const [vistaBase, setVistaBase] = useState<VistaBase | null>(null);
+  // Por reporte: al volver a una pestaña, la vista que estaba elegida y su
+  // referencia de "sin cambios" vuelven con ella (los cambios sin guardar
+  // siguen marcados, no se dan por guardados).
+  const [basePorReporte, setBasePorReporte] = useState<Record<string, VistaBase>>({});
+  const [seleccionPorReporte, setSeleccionPorReporte] = useState<Record<string, string | null>>({});
+  const vistaBase = basePorReporte[reportId] ?? null;
+  const elegirVista = (configId: string | null) =>
+    anotar(setSeleccionPorReporte, reportId, configId);
 
-  // Tras abrir o guardar una vista, el estado del grid en ese momento es "sin
-  // cambios". Se compara grid contra grid (no contra el JSON guardado, que AG
-  // Grid puede normalizar distinto) y la foto se toma explícitamente, sin
-  // depender de que lleguen los eventos. AG Grid crea los filtros en diferido:
-  // se espera una vuelta del event loop.
   const fijarBase = (configId: string | null, api = referenciaGrid.current?.api) => {
-    if (!api) return;
-    setTimeout(() => {
-      if (api.isDestroyed()) return;
-      const foto = capturarVista(api);
-      setVistaActual(foto);
-      setVistaBase({ configId, huella: huellaVista(foto.columnState, foto.filterModel) });
-    }, 0);
+    if (api) programarBase(api, reportId, configId, setVistaActual, setBasePorReporte);
   };
   const { configs, defaultConfig, refresh: refreshConfigs } =
     useReportConfigs(reportId);
@@ -88,6 +117,10 @@ export const useReporteGrid = (reportId: string, aplicarRango?: AplicarRango) =>
   if (reportIdMostrado !== reportId) {
     setReportIdMostrado(reportId);
     if (vistaActual) setVistaPorReporte({ ...vistaPorReporte, [reportIdMostrado]: vistaActual });
+    // La foto de la otra pestaña no sirve aquí: la de esta (lo que el efecto de
+    // abajo le devuelve al grid), o ninguna en la primera visita. Así "sin
+    // guardar" se compara contra la base de esta pestaña sin esperar eventos.
+    setVistaActual(vistaPorReporte[reportId] ?? null);
   }
 
   // Al cambiar de pestaña: lo que el usuario dejó en ella, o sin filtros si es
@@ -112,9 +145,11 @@ export const useReporteGrid = (reportId: string, aplicarRango?: AplicarRango) =>
       vistaAplicadaEnRef,
       aplicarRangoRef.current,
     );
-    if (columnas) {
+    const api = referenciaGrid.current?.api;
+    if (columnas && api) {
       setColumnasVisibles(columnas);
-      fijarBase(defaultConfig?.id ?? null);
+      anotar(setSeleccionPorReporte, reportId, defaultConfig?.id ?? null);
+      programarBase(api, reportId, defaultConfig?.id ?? null, setVistaActual, setBasePorReporte);
     }
   }, [defaultConfig, reportId]);
 
@@ -127,6 +162,7 @@ export const useReporteGrid = (reportId: string, aplicarRango?: AplicarRango) =>
       aplicarRangoRef.current,
     );
     setColumnasVisibles(columnas ?? event.api.getColumns() ?? []);
+    if (columnas) elegirVista(defaultConfig?.id ?? null);
     // Sin vista predeterminada, el grid recién creado es la referencia de
     // "— Ninguna —": ocultar columnas o filtrar ya cuenta como cambio.
     fijarBase(columnas ? (defaultConfig?.id ?? null) : null, event.api);
@@ -160,6 +196,9 @@ export const useReporteGrid = (reportId: string, aplicarRango?: AplicarRango) =>
     vistaActual,
     vistaBase,
     fijarBase,
+    /** Vista elegida en este reporte; undefined hasta que se aplica la predeterminada o se elige una. */
+    vistaElegida: reportId in seleccionPorReporte ? seleccionPorReporte[reportId] : undefined,
+    elegirVista,
     onCambioVista,
   };
 };

@@ -130,4 +130,41 @@ describe("useReporteGrid", () => {
       applyOrder: true,
     });
   });
+
+  it("cada pestaña recuerda qué vista estaba elegida y sus cambios sin guardar", () => {
+    vi.useFakeTimers();
+    configsMock.defaultConfig = vista("ventas_facturas");
+    const { result, rerender } = renderHook(
+      ({ reportId }) => useReporteGrid(reportId),
+      { initialProps: { reportId: "ventas_facturas" } },
+    );
+    const api = crearApi();
+    act(() => {
+      (result.current.referenciaGrid as { current: unknown }).current = { api };
+      result.current.onGridListo({ api } as unknown as GridReadyEvent);
+      vi.runAllTimers();
+    });
+    expect(result.current.vistaElegida).toBe("cfg-ventas_facturas");
+    const baseFacturas = result.current.vistaBase;
+    expect(baseFacturas?.configId).toBe("cfg-ventas_facturas");
+
+    // El usuario filtra sin guardar.
+    api.getFilterModel.mockReturnValue({ cliente: { filterType: "text", filter: "ACME" } });
+    act(() => result.current.onCambioVista());
+    const sinGuardar = result.current.vistaActual;
+
+    // En Conceptos todavía no hay vista elegida ni referencia propia.
+    rerender({ reportId: "ventas_conceptos" });
+    expect(result.current.vistaElegida).toBeUndefined();
+    expect(result.current.vistaBase).toBeNull();
+
+    // De vuelta en Facturas: la misma vista, la misma referencia y el filtro
+    // sigue contando como cambio sin guardar (no se da por guardado).
+    rerender({ reportId: "ventas_facturas" });
+    act(() => vi.runAllTimers());
+    expect(result.current.vistaElegida).toBe("cfg-ventas_facturas");
+    expect(result.current.vistaBase).toEqual(baseFacturas);
+    expect(result.current.vistaActual).toEqual(sinGuardar);
+    vi.useRealTimers();
+  });
 });

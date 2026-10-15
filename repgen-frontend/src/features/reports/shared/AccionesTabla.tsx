@@ -21,6 +21,8 @@ interface AccionesTablaProps {
   vistaActual?: VistaCapturada | null;
   vistaBase?: { configId: string | null; huella: string } | null;
   onVistaAplicada?: (configId: string | null) => void;
+  vistaElegida?: string | null;
+  onElegirVista?: (configId: string | null) => void;
 }
 
 /**
@@ -43,6 +45,8 @@ const AccionesTabla = ({
   vistaActual,
   vistaBase,
   onVistaAplicada,
+  vistaElegida,
+  onElegirVista,
 }: AccionesTablaProps) => {
   const { habilitarConfiguraciones } = useTenantFeatures();
   const [mostrarMenuColumnas, setMostrarMenuColumnas] = useState(false);
@@ -55,12 +59,14 @@ const AccionesTabla = ({
   const modalKey = `${mostrarMenuColumnas ? "open" : "closed"}-${columnasKey}`;
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    // contents: vistas, columnas y exportar se acomodan como hermanos en la barra.
+    <div className="contents">
       {/* 1. Gestión de vistas (configuraciones de columnas guardadas) */}
       {habilitarConfiguraciones && (
         <ConfiguracionesColumnas
           // Facturas y Conceptos comparten pantalla: cada reporte tiene sus
-          // vistas, así que el selector (y su deshacer) empieza de cero.
+          // vistas, así que el selector (y su deshacer) se recrea; la vista
+          // elegida vuelve con vistaInicial.
           key={reportId}
           referenciaGrid={referenciaGrid}
           setColumnasVisibles={setColumnasVisibles}
@@ -72,6 +78,8 @@ const AccionesTabla = ({
           vistaActual={vistaActual}
           vistaBase={vistaBase}
           onVistaAplicada={onVistaAplicada}
+          vistaInicial={vistaElegida}
+          onElegirVista={onElegirVista}
         />
       )}
 
@@ -82,9 +90,10 @@ const AccionesTabla = ({
           onClick={() => {
             setMostrarMenuColumnas(true);
           }}
-          className="group bg-white border border-gray-300 text-gray-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 font-medium py-1.5 px-3 rounded-lg shadow-sm flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+          className="group bg-white border border-gray-300 text-gray-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 font-medium py-1.5 px-3 pointer-coarse:min-h-10 rounded-lg shadow-sm flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
         >
           <svg
+            aria-hidden="true"
             className="w-4 h-4 mr-1.5 text-gray-500 group-hover:text-blue-600 shrink-0"
             fill="none"
             viewBox="0 0 24 24"

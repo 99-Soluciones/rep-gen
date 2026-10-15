@@ -8,6 +8,8 @@ interface PopoverGuardarConfigProps {
   estado: MenuColumnasState;
   dispatch: Dispatch<MenuColumnasAction>;
   onGuardarComo: (periodo: PeriodoVista | null) => void;
+  /** Cierra sin guardar y devuelve el foco a quien lo abrió. */
+  onCancelar: () => void;
 }
 
 /**
@@ -21,6 +23,7 @@ const PopoverGuardarConfig = ({
   estado,
   dispatch,
   onGuardarComo,
+  onCancelar,
 }: PopoverGuardarConfigProps) => {
   // Se desmonta al cerrarse, así cada vista nueva empieza "Sin periodo".
   const [periodo, setPeriodo] = useState<PeriodoVista | "">("");
@@ -29,10 +32,32 @@ const PopoverGuardarConfig = ({
   const guardar = () => onGuardarComo(periodo || null);
 
   return (
-    <div className="absolute right-0 top-full mt-2 z-50 w-64 bg-white border border-gray-200 rounded-lg shadow-xl p-3 flex flex-col gap-2">
-      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+    <div
+      role="dialog"
+      aria-labelledby="titulo-nueva-vista"
+      className="absolute right-0 top-full mt-2 z-50 w-64 bg-white border border-gray-200 rounded-lg shadow-xl p-3 flex flex-col gap-2"
+      onKeyDown={(e) => {
+        // Tab y Shift+Tab se quedan en el diálogo hasta guardar o cancelar
+        // (Escape lo cierra desde ConfiguracionesColumnas).
+        if (e.key !== "Tab") return;
+        const enfocables = [
+          ...e.currentTarget.querySelectorAll<HTMLElement>("input, select, button:not(:disabled)"),
+        ];
+        const primero = enfocables[0];
+        const ultimo = enfocables[enfocables.length - 1];
+        if (!primero || !ultimo) return;
+        if (e.shiftKey && document.activeElement === primero) {
+          e.preventDefault();
+          ultimo.focus();
+        } else if (!e.shiftKey && document.activeElement === ultimo) {
+          e.preventDefault();
+          primero.focus();
+        }
+      }}
+    >
+      <h2 id="titulo-nueva-vista" className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
         Nueva vista
-      </p>
+      </h2>
       <input
         type="text"
         autoFocus
@@ -67,15 +92,24 @@ const PopoverGuardarConfig = ({
         Guarda las columnas y los filtros actuales. Con un periodo, al abrir la
         vista se cargan esas fechas.
       </p>
-      <button
-        type="button"
-        onClick={guardar}
-        disabled={!estado.nombreInput.trim() || guardando}
-        aria-label="Guardar vista nueva"
-        className="text-sm px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-marca-morado disabled:opacity-40 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
-      >
-        {guardando ? "Guardando..." : "Guardar"}
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={guardar}
+          disabled={!estado.nombreInput.trim() || guardando}
+          aria-label="Guardar vista nueva"
+          className="flex-1 text-sm px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-marca-morado disabled:opacity-40 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+        >
+          {guardando ? "Guardando..." : "Guardar"}
+        </button>
+        <button
+          type="button"
+          onClick={onCancelar}
+          className="text-sm px-3 py-1.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-medium text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+        >
+          Cancelar
+        </button>
+      </div>
     </div>
   );
 };

@@ -10,7 +10,11 @@ const getReportConfigsEnabled = (): Promise<boolean> => {
   if (!_featuresPromise) {
     _featuresPromise = apiFetch<TenantFeaturesResponse>("/tenant/features")
       .then((f) => f.reportConfigs)
-      .catch(() => false);
+      .catch(() => {
+        // Sin caché del fallo: el próximo reporte que se abra vuelve a preguntar.
+        _featuresPromise = null;
+        return false;
+      });
   }
   return _featuresPromise;
 };

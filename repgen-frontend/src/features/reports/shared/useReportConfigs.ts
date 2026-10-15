@@ -30,7 +30,10 @@ export const useReportConfigs = (reportId: string) => {
     };
   }, [reportId, trigger]);
 
-  const defaultConfig = configs.find((c) => c.isDefault) ?? null;
+  // Al cambiar de pestaña, hasta que llega la respuesta, `configs` todavía son
+  // las del reporte anterior: nunca se ofrecen en este.
+  const delReporte = configs.filter((c) => c.reportId === reportId);
+  const defaultConfig = delReporte.find((c) => c.isDefault) ?? null;
 
-  return { configs, defaultConfig, refresh, cargando };
+  return { configs: delReporte, defaultConfig, refresh, cargando };
 };

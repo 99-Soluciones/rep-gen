@@ -1,5 +1,6 @@
 import { apiFetch } from "../../shared/api/http";
 import { borrarUsuario, leerUsuario } from "../../features/auth/session";
+import { salir } from "../../shared/utils/salidaProtegida";
 
 interface NavVarProps {
   toggleSidebar: () => void;
@@ -60,20 +61,22 @@ const Navbar = ({ toggleSidebar, sidebarAbierto, reportSlotRef } : NavVarProps) 
         <img src="/favicon.svg" alt="RepGen" className="w-12 h-12" />
       </div>
 
-      {/* Slot central: cada reporte monta aquí su encabezado vía portal */}
+      {/* Slot central: cada reporte monta aquí su encabezado vía portal. Bajo
+          lg (también una laptop al 200% de zoom) baja a su propia fila: título,
+          tabs, usuario y salir no caben juntos. */}
       <div
         ref={reportSlotRef}
-        className="order-last w-full sm:order-0 sm:w-auto sm:flex-1 min-w-0 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 sm:mx-4"
+        className="order-last w-full lg:order-0 lg:w-auto lg:flex-1 min-w-0 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 lg:mx-4"
       />
 
       {/* Contenedor Derecho: Controles de usuario */}
       <div className="flex items-center space-x-4">
         {usuario?.tenant && (
-          <span className="sm:hidden max-w-32 truncate text-xs text-gray-500">
+          <span className="lg:hidden max-w-32 sm:max-w-48 truncate text-xs text-gray-500">
             {usuario.tenant}
           </span>
         )}
-        <span className="hidden sm:inline-block text-sm text-gray-700">
+        <span className="hidden lg:inline-block text-sm text-gray-700">
           <span className="font-medium">{nombreUsuario}</span>
           {usuario?.tenant && (
             <span className="text-gray-500"> · {usuario.tenant}</span>
@@ -81,7 +84,8 @@ const Navbar = ({ toggleSidebar, sidebarAbierto, reportSlotRef } : NavVarProps) 
         </span>
         <button
           type="button"
-          onClick={cerrarSesion}
+          // Con una vista sin guardar, el selector de vistas pregunta antes.
+          onClick={() => salir({ motivo: "sesion", continuar: () => void cerrarSesion() })}
           className="text-sm font-medium text-red-600 hover:text-red-800 hover:bg-red-50 px-3 py-1.5 rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
         >
           Cerrar sesión
