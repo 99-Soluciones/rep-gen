@@ -1,5 +1,5 @@
 import type { GridApi } from "ag-grid-community";
-import { CLAVE_NOTA_TOTALES, calcularFilaTotales } from "./totales";
+import { calcularFilaTotales } from "./totales";
 
 interface Fila {
   concepto: string;
@@ -42,16 +42,4 @@ describe("calcularFilaTotales", () => {
     expect(fila).toEqual({ abono: 1099 });
   });
 
-  it("la nota viaja con la etiqueta, fuera de las columnas", () => {
-    const fila = calcularFilaTotales(apiCon(filas, "concepto"), {
-      campos: ["cargo"],
-      etiqueta: "Suma MXN",
-      nota: "No es la facturación neta",
-    });
-    expect(fila).toEqual({
-      cargo: 1014.5,
-      concepto: "Suma MXN",
-      [CLAVE_NOTA_TOTALES]: "No es la facturación neta",
-    });
-  });
 });

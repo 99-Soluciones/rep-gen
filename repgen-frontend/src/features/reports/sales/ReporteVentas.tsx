@@ -11,7 +11,7 @@ import { useReporteBase } from "../shared/useReporteBase";
 import { useReporteGrid } from "../shared/useReporteGrid";
 import { usePreferenciaLocal } from "../shared/usePreferenciaLocal";
 import { toolbarReporte } from "../shared/toolbarReporte";
-import { calcularTotalesVentas, useTotalesVentas } from "./useTotalesVentas";
+import { calcularTotalesVentas, cuentaEnNeto, useTotalesVentas } from "./useTotalesVentas";
 import { useComparacionPeriodo } from "../shared/useComparacionPeriodo";
 import KpiPanelVentas from "./KpiPanelVentas";
 import { ResultadoCompacto } from "../shared/EstadoKpi";
@@ -21,10 +21,9 @@ export type VentasRouteType = "facturas" | "conceptos";
 const normalizeReportType = (value: string | undefined): VentasRouteType =>
   value === "conceptos" ? "conceptos" : "facturas";
 
-// Solo importes en MXN y del nivel del renglón. El rótulo dice "Suma de
-// columnas", no "Total": la cifra que manda es la Facturación neta del resumen,
-// que se calcula distinto (KpiPanelVentas): en Conceptos los montos de la
-// factura se repiten por artículo y sumarlos los duplicaría.
+// Solo importes en MXN y del nivel del renglón: en Conceptos los montos de la
+// factura se repiten por artículo y sumarlos los duplicaría. Las filas que
+// entran son las de la Facturación neta (cuentaEnNeto).
 const camposTotales: Record<VentasRouteType, string[]> = {
   facturas: [
     "facturaGranTotalMxn",
@@ -131,9 +130,12 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
             onReintentar={reintentar}
             totales={{
               campos: camposTotales[currentType],
-              // La primera columna mide 150px: rótulo corto y la aclaración debajo.
-              etiqueta: "Suma MXN",
-              nota: "No es la facturación neta",
+              // Mismas filas que la Facturación neta: el pie y el resumen cuadran.
+              // ponytail: en Conceptos, Ganancia/Costo del resumen suman también
+              // negativos que no son cancelación ni devolución (dato raro); unificar
+              // si llega a verse distinto.
+              incluirFila: (fila) => cuentaEnNeto(fila, currentType),
+              etiqueta: "Total MXN",
             }}
             onGridListo={onGridListo}
             onCambioVista={onCambioVista}

@@ -2,7 +2,6 @@ import type { CellClassParams, CellClassRules, ColDef } from "ag-grid-community"
 
 import FloatingFilterConLimpiar from "../TablaDinamica/FloatingFilterConLimpiar";
 import FiltroLista from "../TablaDinamica/FiltroLista";
-import RotuloTotales from "../TablaDinamica/RotuloTotales";
 import FloatingFiltroLista from "../TablaDinamica/FloatingFiltroLista";
 import {
   esNegativo,
@@ -173,8 +172,6 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
     // "— Ninguna —" (resetColumnState) vuelve a este estado inicial.
     ...(metadatoResuelto.oculta ? { hide: true } : {}),
     cellClassRules: reglasCelda,
-    // El rótulo de la fila de totales (con su nota, si la hay), en cualquier columna.
-    cellRendererSelector: (p) => (esRotuloTotal(p) ? { component: RotuloTotales } : undefined),
     filterParams: textFilterParams(placeholderFiltro),
     floatingFilterComponent: FloatingFilterConLimpiar,
     floatingFilterComponentParams: floatingFilterParams({

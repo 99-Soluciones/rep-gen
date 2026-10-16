@@ -35,6 +35,21 @@ const totalesIniciales: TotalesVentas = {
 type FilaVentas = Record<string, unknown>;
 
 /**
+ * Si la fila entra a la Facturación neta: las ventas (monto positivo) y, en
+ * negativo, solo cancelaciones y devoluciones. El pie de la tabla suma con esta
+ * misma regla, así su Gran Total es la Facturación neta del resumen.
+ */
+export const cuentaEnNeto = (
+  fila: { facturaGranTotalMxn?: unknown; articuloImporteConDescuentoMxn?: unknown; facturaEstatus?: unknown },
+  currentType: VentasRouteType,
+): boolean => {
+  const monto = Number(
+    currentType === "facturas" ? fila.facturaGranTotalMxn : fila.articuloImporteConDescuentoMxn,
+  );
+  return monto > 0 || (monto < 0 && (fila.facturaEstatus === "Cancelada" || fila.facturaEstatus === "Devolución"));
+};
+
+/**
  * Totales del resumen de Ventas sobre las filas dadas. Función pura: el
  * resumen la aplica a las filas filtradas de la tabla y la comparación con el
  * periodo anterior a todas las filas de ese periodo, con el mismo cálculo.

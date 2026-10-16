@@ -20,7 +20,7 @@ import {
 } from "ag-grid-community";
 import type { ColDef, GridReadyEvent, IOverlayParams } from "ag-grid-community";
 import TablaDinamicaControles from "./TablaDinamicaControles";
-import { CLAVE_NOTA_TOTALES, calcularFilaTotales, type TotalesTabla } from "./totales";
+import { calcularFilaTotales, type TotalesTabla } from "./totales";
 import { describirFiltros, type FiltroDescrito } from "./describirFiltros";
 import { LOCALE_ES } from "../ag-grid/locale-es";
 import type { ErrorCarga } from "../useReporteBase";
@@ -397,10 +397,6 @@ const TablaDinamica = <T,>({
               columnDefs={definicionesColumnas}
               theme={temaGrid}
               rowHeight={36}
-              // La fila de totales con nota lleva tres líneas en la primera columna.
-              getRowHeight={(p) =>
-                p.node.rowPinned === "bottom" && p.data?.[CLAVE_NOTA_TOTALES as keyof T] ? 56 : undefined
-              }
               headerHeight={40}
               onGridReady={handleGridReady}
               // "Sin datos" y "los filtros excluyen todo" con el aviso propio;

@@ -19,10 +19,7 @@ const KpiPanelVentas = ({ totales, comparacion, currentType, registros, total, d
   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-x-8 gap-y-5">
     <NotaRegistros registros={registros} total={total} desde={desde} hasta={hasta} />
 
-    <SeccionEstado
-      titulo="Importes"
-      nota="Puede no coincidir con la suma de columnas al pie de la tabla: aquí solo restan los importes negativos de facturas canceladas o con devolución."
-    >
+    <SeccionEstado titulo="Importes">
       <LineaEstado etiqueta="Facturado" valor={totales.totalVentas} />
       <LineaEstado etiqueta="Cancelaciones" valor={totales.totalCancelaciones} />
       <LineaEstado etiqueta="Devoluciones" valor={totales.totalDevoluciones} />

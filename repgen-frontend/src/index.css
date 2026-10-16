@@ -55,10 +55,6 @@ body,
 
 /* El rótulo de la fila de totales no es un dato de su columna: va como Label. */
 .ag-cell.rotulo-total {
-  /* Con nota (Ventas): etiqueta en una línea y la nota debajo, que sí parte. */
-  display: flex;
-  align-items: center;
-  line-height: 1.2;
   color: var(--color-gray-600);
   font-size: 0.75rem;
   font-weight: 600;
