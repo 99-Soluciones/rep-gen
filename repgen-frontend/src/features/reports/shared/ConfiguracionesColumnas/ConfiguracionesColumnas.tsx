@@ -468,7 +468,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
             aria-label="Vista"
             // El selector es angosto: el nombre completo queda a la vista al pasar el cursor.
             title={configActual?.name}
-            className="pr-6 py-2 text-sm font-medium bg-transparent text-gray-700 outline-none cursor-pointer appearance-none min-w-0 max-w-[160px] truncate"
+            className="pr-6 py-2 text-sm font-medium bg-transparent text-gray-700 outline-none cursor-pointer appearance-none min-w-0 max-w-[160px] sm:max-w-[240px] truncate"
           >
             <option value="">— Ninguna —</option>
             {configs.map((c) => (
@@ -557,6 +557,15 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
           }
         />
       </div>
+
+      {/* Mientras el reporte no tiene vistas, una línea dice para qué sirven;
+          con la primera, desaparece. En teléfono no cabe: ahí el botón ya lo
+          dice con su nombre y su title. */}
+      {configs.length === 0 && (
+        <p className="hidden text-xs text-gray-600 sm:block">
+          Guarda columnas y filtros como vista para volver a ellos.
+        </p>
+      )}
 
       {fueraDelPeriodo && periodoDeLaVista && configActual?.periodo && (
         <button

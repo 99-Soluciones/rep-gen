@@ -41,7 +41,7 @@ describe("exportarDatos", () => {
       "moneda",
     ]);
     expect(toastMock.success).toHaveBeenCalledWith(
-      "3 registros exportados a r.csv (con Moneda, que estaba oculta)",
+      "3 registros exportados a r.csv: 2 columnas (con Moneda, que estaba oculta), sin la fila de totales",
     );
   });
 
@@ -66,7 +66,7 @@ describe("exportarDatos", () => {
     expect(params.processCellCallback({ value: 1234.5 })).toBe(1234.5);
     expect(params.processCellCallback({ value: null })).toBe("");
     expect(toastMock.success).toHaveBeenCalledWith(
-      "1,234 registros exportados a reporte_bancos_2026-09-01_a_2026-09-30.csv",
+      "1,234 registros exportados a reporte_bancos_2026-09-01_a_2026-09-30.csv: 1 columna, sin la fila de totales",
     );
   });
 });

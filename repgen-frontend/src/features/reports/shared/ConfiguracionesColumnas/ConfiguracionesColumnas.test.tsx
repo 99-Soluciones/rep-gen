@@ -631,6 +631,14 @@ describe("ConfiguracionesColumnas", () => {
     expect(screen.queryByRole("menuitem", { name: "Deshacer la última actualización" })).not.toBeInTheDocument();
   });
 
+  it("sin vistas guardadas dice para qué sirven; con la primera, ya no", () => {
+    const hint = "Guarda columnas y filtros como vista para volver a ellos.";
+    const { rerender } = renderComponente([]);
+    expect(screen.getByText(hint)).toBeInTheDocument();
+    rerender(componente(configs));
+    expect(screen.queryByText(hint)).not.toBeInTheDocument();
+  });
+
   it("deshabilita las acciones que requieren vista cuando no hay ninguna seleccionada", () => {
     renderComponente([]);
 

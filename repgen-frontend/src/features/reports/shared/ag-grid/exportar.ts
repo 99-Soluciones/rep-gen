@@ -39,8 +39,10 @@ export const exportarDatos = (
       const nota = monedasOcultas.length
         ? ` (con ${monedasOcultas.map((c) => c.getColDef().headerName).join(", ")}, que estaba oculta)`
         : "";
+      // Qué se llevó, dicho para todos (antes solo lo oía el lector de pantalla).
+      const columnas = visibles.length + monedasOcultas.length;
       toast.success(
-        `${registros.toLocaleString("es-MX")} ${registros === 1 ? "registro exportado" : "registros exportados"} a ${nombreArchivo}.csv${nota}`,
+        `${registros.toLocaleString("es-MX")} ${registros === 1 ? "registro exportado" : "registros exportados"} a ${nombreArchivo}.csv: ${columnas} ${columnas === 1 ? "columna" : "columnas"}${nota}, sin la fila de totales`,
       );
     }
   };

@@ -34,6 +34,8 @@ const BotonExportar = ({
       // motivo llega por teclado y lector de pantalla (un title no).
       aria-disabled={motivoDeshabilitado ? true : undefined}
       aria-describedby="exportar-descripcion"
+      // Con el mouse, el mismo alcance al pasar el cursor; la confirmación lo repite.
+      title={descripcion}
       className="flex items-center justify-center gap-2 bg-emerald-700 hover:bg-emerald-800 aria-disabled:opacity-40 aria-disabled:hover:bg-emerald-700 aria-disabled:cursor-not-allowed text-white font-medium py-1.5 px-3 pointer-coarse:min-h-10 rounded-lg shadow-sm shrink-0 transition-colors text-center text-sm whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
       onClick={(e) => {
         if (motivoDeshabilitado) toast(motivoDeshabilitado, { id: "exportar-deshabilitado" });
