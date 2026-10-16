@@ -44,4 +44,18 @@ describe("describirCondicion", () => {
       }),
     ).toBe("menor que 0 o mayor que 1,000.5");
   });
+
+  it("pone en palabras los filtros de lista y lo que dice su botón", async () => {
+    const { resumenLista } = await import("./describirFiltros");
+    const incluir = { filterType: "lista" as const, modo: "incluir" as const, valores: ["BBVA", "Santander"] };
+    const excluir = { filterType: "lista" as const, modo: "excluir" as const, valores: ["Cancelada"] };
+    expect(describirCondicion(incluir)).toBe("es BBVA o Santander");
+    expect(describirCondicion(excluir)).toBe("todo menos Cancelada");
+    expect(describirCondicion({ filterType: "lista", modo: "incluir", valores: [""] })).toBe("es (Vacío)");
+    expect(resumenLista(null)).toBe("Todos");
+    expect(resumenLista(incluir)).toBe("BBVA, Santander");
+    expect(resumenLista({ ...incluir, valores: ["A", "B", "C"] })).toBe("3 valores");
+    expect(resumenLista(excluir)).toBe("Todo menos Cancelada");
+    expect(resumenLista({ ...incluir, valores: [] })).toBe("Ninguno");
+  });
 });

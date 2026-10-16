@@ -1,6 +1,7 @@
 import type { GridApi } from "ag-grid-community";
 import { formatearFecha } from "../../../../shared/utils/fechas";
 import { IGUAL_SIN_CENTAVOS } from "../ag-grid/filtro-monto";
+import { etiquetaValor, type ModeloLista } from "../ag-grid/filtro-lista";
 
 /** Un filtro de columna en palabras, para que se vea qué recorta la tabla. */
 export interface FiltroDescrito {
@@ -14,6 +15,9 @@ export interface FiltroDescrito {
 
 interface CondicionModelo {
   filterType?: string;
+  modo?: "incluir" | "excluir" | "texto";
+  valores?: string[];
+  condicion?: CondicionModelo;
   type?: string | null;
   filter?: unknown;
   filterTo?: unknown;
@@ -58,7 +62,28 @@ const valor = (condicion: CondicionModelo, cual: "desde" | "hasta"): string => {
   return `«${String(crudo ?? "")}»`;
 };
 
+/** Una lista de valores en palabras: "es BBVA o Santander", "todo menos Cancelada". */
+const describirLista = (condicion: CondicionModelo): string => {
+  if (condicion.modo === "texto" && condicion.condicion) return describirCondicion(condicion.condicion);
+  const valores = (condicion.valores ?? []).map(etiquetaValor);
+  if (condicion.modo === "excluir") return `todo menos ${valores.join(", ")}`;
+  return valores.length === 0 ? "ningún valor" : `es ${valores.join(" o ")}`;
+};
+
+/** Lo que dice el botón bajo el encabezado de una columna de lista, sin abrirla. */
+export const resumenLista = (modelo: ModeloLista | null | undefined): string => {
+  if (!modelo) return "Todos";
+  if (modelo.modo === "texto") return describirCondicion(modelo.condicion);
+  const valores = modelo.valores.map(etiquetaValor);
+  if (modelo.modo === "incluir") {
+    if (valores.length === 0) return "Ninguno";
+    return valores.length <= 2 ? valores.join(", ") : `${valores.length} valores`;
+  }
+  return valores.length === 1 ? `Todo menos ${valores[0]}` : `Todo menos ${valores.length}`;
+};
+
 export const describirCondicion = (condicion: CondicionModelo): string => {
+  if (condicion.filterType === "lista") return describirLista(condicion);
   if (condicion.conditions?.length) {
     const union = condicion.operator === "OR" ? " o " : " y ";
     return condicion.conditions.map(describirCondicion).join(union);

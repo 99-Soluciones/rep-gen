@@ -141,6 +141,7 @@ El color es funcional. El azul ERP marca dónde se actúa o se navega. El verde 
 Los estados vacíos y de error usan las mismas hojas blancas: un ícono pequeño en un círculo de velo, un título, una frase y una salida concreta.
 
 **Key Characteristics:**
+
 - Hojas blancas (#ffffff) sobre un lienzo gris (#f9fafb), con bordes de 1px.
 - Azul ERP como único acento interactivo; el morado ERP solo aparece en el hover.
 - Arial en toda la interfaz, con el cuerpo en 14px y etiquetas de 12px en mayúsculas y espaciadas.
@@ -153,19 +154,23 @@ Los estados vacíos y de error usan las mismas hojas blancas: un ícono pequeño
 Una paleta de herramienta: un azul de marca que actúa, grises fríos que estructuran y colores semánticos que solo hablan cuando hay algo que decir. Toda la escala `blue-50…800` de Tailwind sale de una sola variable, `--marca` (#2670e3), mezclada en oklab con blanco o negro en `src/index.css`. Es el azul ERP ajustado para que el texto blanco llegue a 4.5:1 (el #2b75e8 original daba 4.36:1). El resto son grises y semánticos por defecto de Tailwind 4 (definidos en OKLCH; los hex son sus equivalentes).
 
 ### Primary
+
 - **Azul ERP** (#2670e3): botones primarios ("Aplicar", "Reintentar", "Entendido"), el tab segmentado activo, el spinner de carga y los links de acción. También es el `accent-color` de los controles nativos (fechas, checkboxes).
 - **Azul ERP Claro** (#4886e9): anillos de foco.
 - **Azul ERP Profundo** (#1e5cbc): texto del ítem activo del sidebar y texto en hover de los botones secundarios.
 - **Velo Azul** (#eff6ff): fondo del ítem activo, hover de los botones secundarios, hover de las filas de la grilla y círculo de los íconos de estado. El azul-100 tiñe la selección de texto.
 
 ### Secondary
+
 - **Morado ERP** (#623bea): solo el hover de los botones primarios.
 
 ### Tertiary
+
 - **Verde Exportar** (#047857 → #065f46 en hover; el texto blanco da 5.48:1, el #059669 de antes daba 3.77:1): exclusivo del botón "Exportar a Excel".
 - **Rojo Alerta** (#dc2626, velo #fef2f2): cifras negativas, el estado de error de la tabla, cerrar sesión, eliminar una vista y el hover de los botones de cerrar.
 
 ### Neutral
+
 - **Lienzo Gris** (#f9fafb): fondo de la app, encabezado de la grilla, campo de búsqueda en reposo.
 - **Superficie Blanca** (#ffffff): navbar, sidebar, panel de resumen, la grilla, los modales y los botones secundarios.
 - **Línea Tenue** (#f3f4f6) y **Línea Suave** (#e5e7eb): divisores de celdas de la grilla y bordes de las tarjetas y del layout.
@@ -173,6 +178,7 @@ Una paleta de herramienta: un azul de marca que actúa, grises fríos que estruc
 - **Tintas** (#9ca3af → #111827): apagada solo para íconos decorativos (nunca para texto: no llega a 4.5:1); secundaria para etiquetas, ayudas y el tenant; media para el sidebar y el encabezado de la grilla; cuerpo para el texto de los controles y el nombre del usuario; título para h1 y h2; base para cifras y texto general.
 
 ### Named Rules
+
 **La Regla del Morado en Tránsito.** El morado ERP existe solo como estado hover de una acción primaria. Nunca es relleno en reposo, ni texto, ni fondo.
 
 **La Regla del Verde Único.** El verde sólido pertenece solo a la exportación. Un segundo botón verde le roba el significado.
@@ -191,12 +197,14 @@ Una paleta de herramienta: un azul de marca que actúa, grises fríos que estruc
 **Character:** neutra y de sistema, como una planilla. La jerarquía se construye con peso y tamaño, nunca con una segunda familia.
 
 ### Hierarchy
+
 - **Headline** (700, 1.25rem/20px): títulos de reporte en desktop y títulos de modal.
 - **Title** (700, 1.125rem/18px): títulos de reporte en móvil y la cifra resultado del resumen (Facturación neta, Flujo neto).
 - **Body** (400–500, 0.875rem/14px): el tamaño de trabajo de toda la interfaz: botones, inputs, sidebar, tabs, celdas, renglones del resumen. Las cifras usan `tabular-nums`.
 - **Label** (600, 0.75rem/12px, tracking 0.05em, MAYÚSCULAS): título del panel de resumen, sus secciones (Importes, Facturas) y el encabezado del sidebar. Las etiquetas "Desde:" y "Hasta:" usan el mismo tamaño en 500, sin mayúsculas.
 
 ### Named Rules
+
 **La Regla de los Catorce.** Todo lo que se toca o se lee en una tarea mide 14px. Por encima de 14px solo van los títulos y la cifra resultado de cada resumen; una por sección, no todas.
 
 ## Layout
@@ -212,11 +220,13 @@ El ritmo se construye sobre una base de 4px: 6, 8 y 12px dentro de los controles
 El sistema es plano con sombras de cortesía. La profundidad sale del contraste lienzo gris / hoja blanca y de bordes de 1px. `shadow-sm` acompaña tarjetas, botones y el navbar; `shadow-lg` envuelve la grilla y los menús desplegables; `shadow-2xl` queda para los modales y el drawer del sidebar, siempre sobre un velo gris oscuro al 60% con blur (`::backdrop` en los `<dialog>` nativos).
 
 ### Shadow Vocabulary
+
 - **Cortesía** (`box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)`): tarjetas, botones, navbar.
 - **Hoja de trabajo** (`box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)`): el contenedor de la grilla y los menús.
 - **Capa superior** (`box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25)`): modales y sidebar.
 
 ### Named Rules
+
 **La Regla del Velo.** Lo que flota sobre la tabla (un modal o un drawer) lleva sombra `2xl` y un velo detrás. Nada más flota.
 
 ## Shapes
@@ -226,7 +236,9 @@ Esquinas suavemente redondeadas (8px) como norma para botones, tarjetas, la gril
 ## Components
 
 ### Buttons
+
 Compactos y directos: 14px en peso 500, padding de 6px × 12px, esquinas de 8px y transición de color.
+
 - **Shape:** suavemente redondeado (8px).
 - **Primary:** Azul ERP con texto blanco. En hover pasa a morado ERP. El foco de teclado usa el anillo único del sistema: `focus-visible:ring-2 ring-blue-500` con 1px de separación. Deshabilitado: opacidad 40–50%.
 - **Secondary:** blanco con borde de control, texto en tinta-cuerpo y `shadow-sm`. En hover toma el velo azul, con borde azul-300 y texto e ícono en azul.
@@ -238,10 +250,12 @@ Compactos y directos: 14px en peso 500, padding de 6px × 12px, esquinas de 8px 
 - **Nombres:** el texto dice el resultado, no el gesto: "Aplicar" (solo esta sesión), "Actualizar vista" (sobrescribe la vista elegida), "Guardar vista" (crea una nueva).
 
 ### Chips
+
 - **Style:** pastilla gris-100 con borde gris-300, texto de 12px en peso 500 y un ícono de 12px (por ejemplo, "Importes en MXN" en el panel de resumen).
 - **Contador de registros:** pastilla de 8px junto al filtro de fechas, anunciada con `aria-live`. Gris en reposo ("340 registros"); con filtros de columna toma el velo azul y dice "12 de 340 registros · 3 filtros ▾" seguido de **Limpiar** (texto azul, quita todos los filtros). "3 filtros" es un botón (`aria-expanded`) que despliega la lista de filtros en palabras ("Banco contiene «BBVA»"), cada uno con su "X" ("Quitar filtro de Banco"); Escape o un clic fuera la cierran. Un filtro sobre una columna oculta sigue aplicando: el botón lo dice ("3 filtros, 1 en columna oculta") y la lista lo aclara. Si la carga falló, el chip dice "Sin registros cargados", no "0 registros". Limpiar avisa "Se quitaron 3 filtros." con **Deshacer**, y el chip ofrece **Restaurar filtros** hasta que se vuelva a filtrar (el aviso se va solo; el chip no). Cuenta también los filtros de columnas que quedaron fuera de pantalla, y se marca aunque el filtro todavía no excluya filas.
 
 ### Cards / Containers
+
 - **Corner Style:** 8px.
 - **Background:** superficie blanca.
 - **Shadow Strategy:** Cortesía.
@@ -249,21 +263,27 @@ Compactos y directos: 14px en peso 500, padding de 6px × 12px, esquinas de 8px 
 - **Internal Padding:** 16px en el panel de resumen; 24–32px en estados vacíos y diálogos.
 
 ### Inputs / Fields
+
 - **Style:** fondo blanco con borde de control de 1px, 6–8px de radio y texto de 14px. La búsqueda de los modales reposa en el lienzo gris y pasa a blanco con el foco.
 - **Focus:** borde y anillo en azul ERP claro. Ningún control quita el outline sin poner en su lugar un anillo `focus-visible` (2px azul-500).
 - **Checkbox:** cuadrado de 16px con radio de 4px; al marcarse se rellena de azul ERP con un check blanco. Con teclado lleva el anillo del sistema.
-- **Fechas:** en la barra son un botón que enuncia lo cargado ("Mes actual · 01/10/2026 – 15/10/2026", o solo el rango si no es un periodo), con ícono de calendario y `aria-expanded`. Abre un panel (hoja blanca de 12px de radio, sombra de menú) con "Periodo" arriba, "Desde"/"Hasta" en dos columnas y **Cancelar** / **Aplicar**; el foco entra en "Periodo". Escape, Cancelar, un clic fuera o salir con Tab lo cierran y descartan el borrador; aplicar lo cierra. "Periodo", "Desde" y "Hasta" son un borrador: se aplican con "Aplicar" o Enter. Elegir un periodo (*Mes actual*, *Mes anterior*, *Año en curso*) solo llena las fechas, así recorrer la lista con flechas no consulta FileMaker; el select refleja el borrador y dice *Personalizado* cuando no coincide, y elegir *Personalizado* lleva el foco a "Desde". Los errores de validación no van en toast: aparecen debajo en 12px rojo alerta (`role="alert"`), el input afectado toma borde rojo, `aria-invalid` y `aria-describedby`, y el error se borra al corregir. Una vista con periodo reinicia el borrador.
+- **Fechas:** en la barra son un botón que enuncia lo cargado ("Mes actual · 01/10/2026 – 15/10/2026", o solo el rango si no es un periodo), con ícono de calendario y `aria-expanded`. Abre un panel (hoja blanca de 12px de radio, sombra de menú) con "Periodo" arriba, "Desde"/"Hasta" en dos columnas y **Cancelar** / **Aplicar**; el foco entra en "Periodo". Escape, Cancelar, un clic fuera o salir con Tab lo cierran y descartan el borrador; aplicar lo cierra. "Periodo", "Desde" y "Hasta" son un borrador: se aplican con "Aplicar" o Enter. Elegir un periodo (_Mes actual_, _Mes anterior_, _Año en curso_) solo llena las fechas, así recorrer la lista con flechas no consulta FileMaker; el select refleja el borrador y dice _Personalizado_ cuando no coincide, y elegir _Personalizado_ lleva el foco a "Desde". Los errores de validación no van en toast: aparecen debajo en 12px rojo alerta (`role="alert"`), el input afectado toma borde rojo, `aria-invalid` y `aria-describedby`, y el error se borra al corregir. Una vista con periodo reinicia el borrador.
 - **Datos de las 10:42:** junto a las fechas, un botón dice de cuándo son las cifras en pantalla (la hora de la última carga correcta) y al pulsarlo vuelve a leer FileMaker con el mismo rango, sin tocar columnas, filtros ni vistas. Mientras carga dice "Actualizando…" (ícono girando, `aria-disabled`). Pasados 15 minutos agrega "· hace 25 min", el texto pasa a tinta base y el ícono al azul que actúa. Con error no aparece: la tabla ofrece Reintentar.
 - **Filtros flotantes:** cada input se nombra por su columna ("Filtrar Banco") y su "X" dice qué limpia ("Limpiar filtro de Banco").
+- **Filtros de lista:** las columnas con pocas opciones se marcan `"filtro": "lista"` en su esquema (Bancos: Banco, Número de Cuenta, Moneda, Forma Pago, Estado Ingreso/Egreso; Ventas: estatus, serie, moneda, uso CFDI, método y forma de pago, tipo de concepto, unidad, bodega, marca, estado y representantes del cliente, categorías y clasificaciones). Bajo el encabezado, en vez de una caja para escribir, un botón con caja de 30px que dice lo elegido: "Todos", "BBVA, Santander", "3 valores", "Todo menos Cancelada". Abre la misma lista que el menú de la columna (`role="dialog"`): búsqueda con el foco, "Todos · Ninguno" (actúan sobre lo buscado, como Excel) y una casilla por valor con su cuenta en 12px, por nombre, con "(Vacío)" al final; flechas entre casillas, Espacio marca. Marcar filtra al instante; todo marcado = sin filtro. Valores y cuentas salen de todos los registros cargados del rango, no de los que dejan otros filtros. El modelo guarda lo más corto de decir: _incluir_ los marcados (un valor nuevo queda fuera) o _excluir_ los desmarcados (un valor nuevo entra). Un valor elegido que ya no tiene registros en el rango sigue marcado y dice "sin registros en este rango". Una vista guardada con un filtro de texto en una de estas columnas se respeta tal cual (la lista marca lo que coincide) hasta que el usuario la toque.
+- **Excluir en texto:** las columnas de texto suman "No contiene" y "Distinto de"; como en Excel, la celda vacía pasa.
 - **Filtros de montos** (moneda y número): el input es de texto (teclado decimal en teléfono) y entiende cómo piensa finanzas: `5000` es "igual a" sin centavos (5,000.00 a 5,000.99; con decimales es exacto), `=5000` exacto, `>5000`, `>=1000`, `<0`, `<=1000` y `1000-5000` (entre, ambos incluidos; `-1200` solo es un negativo). Ignora espacios, "$" y comas de miles. Aplica tras 450 ms sin teclear; lo que no es un monto no filtra, se marca con borde rojo y `aria-invalid`, y su descripción accesible dice qué se acepta. Con el foco, una pista visible bajo el input (hoja blanca de 12px, en un portal con posición fija porque el encabezado de AG Grid recorta) dice "Monto, >5000, <0 o 1000-5000", o en rojo "No es un monto. Escribe un monto, >5000 o 1000-5000.". Un filtro de solo lectura (varias condiciones) explica lo mismo a la vista con el foco, no solo en `title`. El menú de la columna ofrece Igual a, Igual a (exacto), Mayor que, Mayor o igual que, Menor que, Menor o igual que, Entre y Vacío, con hasta dos condiciones (Y/O). El "Igual a" de vistas guardadas antes queda como exacto y se lee "=5000". Los porcentajes no ignoran nada: su "Igual a" es exacto. Las reglas viven en `ag-grid/filtro-monto.ts`. Un filtro con varias condiciones queda de solo lectura y lo explica al pasar el cursor. La "X" se ve de 20px pero responde en 36px.
 
 ### Navigation
+
 - **Navbar:** blanco, mínimo 64px. A la izquierda el botón de menú (40px, con `aria-expanded`) y el logo; al centro el h1 del reporte; a la derecha el usuario en tinta-cuerpo con " · tenant" en tinta-secundaria, y "Cerrar sesión".
 - **Sidebar:** drawer blanco de 256px, `inert` cuando está cerrado y con cierre por Escape. Abierto, el reporte detrás queda `inert` bajo el velo del sistema (gris oscuro al 60% con blur) y un clic en el velo lo cierra. Al abrirse, el foco entra en el reporte actual; al cerrarse, si estaba adentro, vuelve al botón de menú. Va con un encabezado de sección como Label gris-500. Los ítems llevan ícono de 20px y texto de 14px en peso 500, con padding de 10px × 16px y radio de 8px. Reposo en tinta-media; hover sobre el lienzo con texto azul; activo con velo azul y texto azul profundo.
 - **Tabs segmentados (Ventas):** contenedor blanco de 12px de radio con padding de 4px. El tab activo va relleno de azul ERP con texto blanco; el inactivo, en tinta-media con hover azul. En móvil se convierten en un botón de 40px ("Tipo de reporte: Facturas", `aria-expanded`) que abre un menú de links con `aria-current`; navegan, así que no son un listbox. Cada pestaña tiene sus propias vistas guardadas (el selector se recrea por reporte; las vistas de la pestaña anterior nunca se ofrecen mientras cargan las nuevas) y recuerda sus columnas, filtros, la vista elegida y su referencia de "sin cambios": al volver, se recupera lo que el usuario dejó, con los cambios sin guardar todavía marcados, no la vista predeterminada, que se aplica solo en la primera visita.
 
 ### Tabla Dinámica (signature)
+
 AG Grid con `themeQuartz.withParams(...)` (la Theming API no usa la clase `.ag-theme-quartz`: el estilo vive en los parámetros de `TablaDinamica.tsx`), dentro de una hoja blanca de 8px de radio con sombra de hoja de trabajo. Encabezado de 40px sobre el lienzo gris, en tinta-media y peso 600, sin separadores de columna. Filas de 36px divididas por la línea tenue, sin bordes de columna ni exteriores; el hover de fila toma el velo azul. El acento y el hover se leen de los tokens (`var(--color-blue-600)`, `var(--color-blue-50)`) para seguir la marca del tenant; los grises quedan fijos.
+
 - **Columna fija:** en Ventas, "Factura Folio" abre fija a la izquierda (`initialPinned`, así "— Ninguna —" la devuelve ahí). En "Columnas" cada columna tiene un alfiler para fijarla o soltarla, y no se puede aplicar sin al menos una columna visible.
 - **Fila de totales:** fija al pie, sobre el lienzo gris, en negrita con una regla gris-300 encima. Suma solo las filas filtradas y solo las columnas que el reporte declara sumables (nunca saldos ni montos que se repiten por renglón); solo MXN. El rótulo ("Total MXN" en Bancos; "Suma de columnas MXN" en Ventas, porque ahí la cifra que manda es la Facturación neta del resumen, que se calcula distinto) va en la primera columna visible pero como Label (12px, 600, mayúsculas, gris-600), para que no se lea como un dato de esa columna (un folio o una fecha). No viaja en el CSV.
 - **Tinta roja:** en las columnas de cifras (número, moneda, porcentaje), un valor negativo va en rojo alerta, también en la fila de totales; sobre el velo azul del hover pasa a rojo-700 para no bajar de 4.5:1. El signo menos sigue ahí: el color no es la única señal.
@@ -275,14 +295,17 @@ AG Grid con `themeQuartz.withParams(...)` (la Theming API no usa la clase `.ag-t
 - **Idioma:** los textos propios de AG Grid (overlays, panel de filtros, operadores, etiquetas ARIA) vienen de `ag-grid/locale-es.ts`, con `LocaleModule` registrado. Un módulo nuevo de AG Grid trae claves nuevas: se agregan ahí.
 
 ### Resumen (signature)
+
 El panel lateral se lee como estado de cuenta, no como tarjetas. Arriba, en 12px, el rango cargado ("01/09/2026 – 30/09/2026") y "Calculado sobre 12 de 340 registros (con los filtros de la tabla)": quien solo mira el resumen sabe qué periodo y qué recorte está leyendo. Cada sección (Label) es una lista de definiciones: etiqueta a la izquierda en tinta-secundaria y cifra a la derecha en tinta base, peso 500 y `tabular-nums`. El renglón resultado lleva una regla gris-300 encima y la cifra en Title. Los renglones que restan llegan en negativo, así el neto es la suma visible de lo de arriba. Los conteos van en su propia sección y sin color, con etiquetas que no repiten las de los importes ("Con devolución", no "Devoluciones"). Una sección puede llevar una nota de 12px bajo las cifras cuando el total se calcula distinto que el pie de la tabla (Facturación neta), y el aviso del panel dice cómo se agrupan las monedas ("Cada moneda por separado: MXN, USD").
 
 - **Monedas (Bancos):** MXN arriba ("Movimientos en MXN"); cada otra moneda en su propia sección ("Movimientos en USD"), con sus cifras en su moneda ("USD 5,400.00") y nunca sumada a MXN. El pie de la tabla sigue siendo solo MXN.
 - **Saldos al cierre (Bancos):** una línea por cuenta ("BBVA ··4560") con el Saldo Resultante (saldo corrido de FileMaker, `monto_ORIG_bancoRunningSaldo`) de su último movimiento en el rango: fecha más reciente y, el mismo día, el id de transacción mayor. Se calcula con todos los movimientos del rango, no con los filtrados (un filtro cambiaría cuál es "el último"), y la nota lo dice.
-- **Periodo anterior:** bajo el renglón resultado (Flujo neto en MXN, Facturación neta), una línea de 12px "vs. 01/09 – 15/09/2026  $62,400.00 · +57.7%", con el mismo cálculo que el resumen. Rango desde el día 1 dentro de un mes → los mismos días del mes anterior (mes completo → mes anterior completo); desde el 1 de enero → el mismo tramo del año anterior; cualquier otro → los mismos días justo antes. Es una consulta más a FileMaker por cambio de rango y lee el periodo completo: con filtros en la tabla dice "Sin comparar: la tabla tiene filtros". El cambio negativo va en rojo, como toda cifra que resta. Formato `es-MX` (MXN). Mientras carga, el panel se atenúa; antes de la primera carga dice "Calculando las cifras…" y la línea de resultado muestra "—" (un $0.00 se leería como "no hubo movimientos"); si la carga falla, dice "Sin cifras: el reporte no se pudo cargar" en vez de mostrar $0.00. La línea de resultado (bajo xl) agrega "· filtrado" cuando la cifra sale de filas filtradas.
+- **Periodo anterior:** bajo el renglón resultado (Flujo neto en MXN, Facturación neta), una línea de 12px "vs. 01/09 – 15/09/2026 $62,400.00 · +57.7%", con el mismo cálculo que el resumen. Rango desde el día 1 dentro de un mes → los mismos días del mes anterior (mes completo → mes anterior completo); desde el 1 de enero → el mismo tramo del año anterior; cualquier otro → los mismos días justo antes. Es una consulta más a FileMaker por cambio de rango y lee el periodo completo: con filtros en la tabla dice "Sin comparar: la tabla tiene filtros". El cambio negativo va en rojo, como toda cifra que resta. Formato `es-MX` (MXN). Mientras carga, el panel se atenúa; antes de la primera carga dice "Calculando las cifras…" y la línea de resultado muestra "—" (un $0.00 se leería como "no hubo movimientos"); si la carga falla, dice "Sin cifras: el reporte no se pudo cargar" en vez de mostrar $0.00. La línea de resultado (bajo xl) agrega "· filtrado" cuando la cifra sale de filas filtradas.
 
 ### Vistas guardadas
-Una vista es una pregunta guardada, por usuario y por reporte: columnas (visibilidad, orden, orden de clasificación, columnas fijas), filtros y, si se quiere, un periodo relativo (*Mes actual*, *Mes anterior*, *Año en curso*) que se resuelve a fechas locales al abrirla. El ancho de columnas se guarda pero nunca cuenta como cambio. El grupo segmentado es `Vista: [select] | Guardar/Actualizar vista | ⋮`:
+
+Una vista es una pregunta guardada, por usuario y por reporte: columnas (visibilidad, orden, orden de clasificación, columnas fijas), filtros y, si se quiere, un periodo relativo (_Mes actual_, _Mes anterior_, _Año en curso_) que se resuelve a fechas locales al abrirla. El ancho de columnas se guarda pero nunca cuenta como cambio. El grupo segmentado es `Vista: [select] | Guardar/Actualizar vista | ⋮`:
+
 - **Sin guardar:** el nombre de la vista no cambia. El aviso va en el botón que guarda: "Actualizar vista" se habilita, pasa a peso 600 en azul, suma un punto azul de 8px y su nombre accesible dice "Actualizar vista (cambios sin guardar)". La referencia de "sin cambios" es el grid tal como quedó al abrir o guardar la vista (`fijarBase` en `useReporteGrid`), no el JSON guardado, que AG Grid puede normalizar distinto. La foto actual llega por estado, actualizada por las props de AgGridReact (`onFilterChanged`, `onColumnVisible`, `onColumnMoved`, `onSortChanged`, `onColumnPinned`, `onDisplayedColumnsChanged` → `onCambioVista`); nunca se lee el grid durante el render (React Compiler lo memoizaría).
 - **— Ninguna —:** columnas originales del reporte y sin filtros; no toca las fechas. También puede tener cambios sin guardar: filtros puestos, o columnas distintas de como quedó el grid al cargar. Entonces "Guardar vista" lleva el punto.
 - **Antes de perder trabajo:** cambiar de vista con cambios sin guardar abre un aviso anclado al grupo (`role="alertdialog"`, Tab queda adentro, el foco arranca en **Cancelar**): "Tienes cambios sin guardar en «X». Si cambias de vista se pierden." con **Cancelar** / **Descartar cambios** / **Actualizar y cambiar** (o **Guardar como vista nueva** desde "Ninguna"). Mientras guarda, las otras opciones se bloquean. El mismo aviso protege las salidas: ir a otro reporte desde el menú o con "Atrás" del navegador ("Si sales del reporte se pierden.", con **Actualizar y salir**) y "Cerrar sesión" ("Si cierras sesión se pierden."); el logout no llama al backend hasta que se confirma. Cambiar entre pestañas de Ventas no pregunta: cada pestaña recuerda lo suyo. Recargar o cerrar la pestaña del navegador usa el aviso nativo (`beforeunload`).
@@ -290,17 +313,20 @@ Una vista es una pregunta guardada, por usuario y por reporte: columnas (visibil
 - **Deshacer:** "Actualizar vista" avisa con **Deshacer**, y el menú ⋮ ofrece "Deshacer la última actualización" mientras aplique. Deshacer vuelve a guardar la versión anterior sin tocar el grid: si la vista sigue abierta, los cambios reaparecen como sin guardar; si ya se abrió otra, no se toca su referencia y el aviso dice que lo guardado se descartó. Si al actualizar la vista pierde su periodo (las fechas en pantalla no son uno), el aviso lo dice.
 - **Teclado:** con el mouse, elegir una vista la aplica. Con flechas, la vista queda en espera en el select hasta Enter o salir del control (Escape la descarta), para no aplicar una vista ni consultar por cada tecla.
 - **Foco:** abrir ⋮ enfoca la primera acción disponible; Renombrar enfoca el campo, Eliminar enfoca **No**, Nueva vista enfoca el nombre; al cerrar, el foco vuelve a ⋮.
-- **Nueva vista:** diálogo anclado (`role="dialog"`, título "Nueva vista") con nombre, un select "Periodo" que arranca en *Sin periodo (no cambia las fechas)*, **Guardar** y **Cancelar**; Tab se queda adentro y al cerrar el foco vuelve a ⋮.
+- **Nueva vista:** diálogo anclado (`role="dialog"`, título "Nueva vista") con nombre, un select "Periodo" que arranca en _Sin periodo (no cambia las fechas)_, **Guardar** y **Cancelar**; Tab se queda adentro y al cerrar el foco vuelve a ⋮.
 
 ### Diálogos
+
 `<dialog>` nativo con `showModal()`: atrapa el foco, cierra con Escape y deja inerte la página. Hoja blanca de 12px de radio, sombra capa superior y `::backdrop` gris al 60% con blur, con título h2 enlazado por `aria-labelledby`. Se usa para las columnas visibles y la sesión expirada. Una decisión sobre el control que la provoca (el aviso de cambios sin guardar) va anclada a ese control como `alertdialog`, con el foco atrapado a mano, no en un modal a pantalla completa (por eso sin `aria-modal`: la página no queda inerte).
 
 ### Estados vacíos y de acceso
+
 Hoja blanca centrada (máx. 448px) con un ícono de 24px en un círculo de velo azul de 48px, título en Headline, una frase en 14px tinta-secundaria y una salida concreta como botón secundario ("Ir a Bancos"). Sin degradados, ilustraciones ni animación de entrada.
 
 ## Do's and Don'ts
 
 ### Do:
+
 - **Do** usar el Azul ERP (#2670e3) para toda acción primaria y estado activo, con el morado ERP (#623bea) solo en su hover.
 - **Do** mantener los controles en 14px, con padding de 6px × 12px y radio de 8px.
 - **Do** poner las superficies nuevas como hojas blancas con borde de 1px y `shadow-sm` sobre el lienzo #f9fafb.
@@ -318,6 +344,7 @@ Hoja blanca centrada (máx. 448px) con un ícono de 24px en un círculo de velo 
 - **Do** devolver el foco a quien abrió un menú, panel o drawer al cerrarlo.
 
 ### Don't:
+
 - **Don't** usar degradados decorativos, sombras pesadas sobre fondos de color ni animaciones de entrada (el viejo ComingSoon violeta es el antiejemplo).
 - **Don't** volver a las tarjetas de KPI con ícono en círculo de color: una cifra por tarjeta en un arcoíris de tonos es justo lo que el resumen reemplazó.
 - **Don't** sumar en una fila de totales columnas en monedas distintas, saldos o montos repetidos por renglón.

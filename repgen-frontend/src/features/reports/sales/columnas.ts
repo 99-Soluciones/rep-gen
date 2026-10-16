@@ -20,6 +20,8 @@ interface VentasColumnMeta {
   columnClass?: string;
   defaultHeader?: string;
   labelSlot?: string;
+  /** "lista": se filtra marcando valores (pocas opciones: banco, moneda, estatus…). */
+  filtro?: "lista";
 }
 
 interface VentasSchema {

@@ -111,7 +111,7 @@ describe("useReporteGrid", () => {
     const filtroFacturas = { cliente: { filterType: "text", filter: "ACME" } };
     api.getFilterModel.mockReturnValue(filtroFacturas);
     api.getColumnState.mockReturnValue([{ colId: "cliente", hide: false }] as never);
-    api.getColumns.mockReturnValue([{ getColId: () => "cliente" }] as never);
+    api.getColumns.mockReturnValue([{ getColId: () => "cliente", getColDef: () => ({}) }] as never);
     act(() => result.current.onCambioVista());
 
     rerender({ reportId: "ventas_conceptos" });

@@ -182,4 +182,45 @@ describe("filtros de columna", () => {
     fireEvent.blur(total);
     expect(screen.queryByText("Monto, >5000, <0 o 1000-5000")).not.toBeInTheDocument();
   });
+
+  describe("columnas de lista", () => {
+    const columnasLista = construirColumnasVentas("factura").filter((c) =>
+      ["ventaId", "facturaEstatus"].includes(c.colId!),
+    ) as ColDef[];
+    const filasLista = [
+      { ventaId: 1, facturaEstatus: "Pagada" },
+      { ventaId: 2, facturaEstatus: "Pagada" },
+      { ventaId: 3, facturaEstatus: "Cancelada" },
+      { ventaId: 4, facturaEstatus: "Vigente" },
+      { ventaId: 5, facturaEstatus: null },
+    ];
+
+    const montarLista = async () => {
+      const referenciaGrid = createRef<AgGridReact>();
+      const onGridListo = vi.fn();
+      render(
+        <TablaDinamica
+          referenciaGrid={referenciaGrid}
+          datos={filasLista}
+          definicionesColumnas={columnasLista}
+          estaCargando={false}
+          onGridListo={onGridListo}
+          filasVisibles={5}
+        />,
+      );
+      await waitFor(() => expect(onGridListo).toHaveBeenCalled());
+      return referenciaGrid.current!.api;
+    };
+
+    it("filtra por los valores marcados y el botón bajo el encabezado lo dice", async () => {
+      const api = await montarLista();
+      await act(() => api.setFilterModel({ facturaEstatus: { filterType: "lista", modo: "excluir", valores: ["Cancelada"] } }));
+      await waitFor(() => expect(api.getDisplayedRowCount()).toBe(4));
+      expect(await screen.findByRole("button", { name: "Filtrar Factura Estatus: Todo menos Cancelada" })).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole("button", { name: "Limpiar filtro de Factura Estatus" }));
+      await waitFor(() => expect(api.getDisplayedRowCount()).toBe(5));
+      expect(screen.getByRole("button", { name: "Filtrar Factura Estatus: Todos" })).toBeInTheDocument();
+    });
+  });
 });

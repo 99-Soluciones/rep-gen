@@ -1,6 +1,8 @@
 import type { CellClassParams, CellClassRules, ColDef } from "ag-grid-community";
 
 import FloatingFilterConLimpiar from "../TablaDinamica/FloatingFilterConLimpiar";
+import FiltroLista from "../TablaDinamica/FiltroLista";
+import FloatingFiltroLista from "../TablaDinamica/FloatingFiltroLista";
 import {
   esNegativo,
   formatearMoneda,
@@ -31,6 +33,8 @@ export interface ReportColumnMeta {
   labelSlot?: string;
   /** Solo moneda: campo del renglón con su código de moneda (p. ej. "moneda"). */
   currencyField?: string;
+  /** Solo texto: "lista" se filtra marcando valores en vez de escribirlos. */
+  filtro?: "lista";
 }
 
 interface ReportSchema<TReportType extends string> {
@@ -42,6 +46,8 @@ interface ReportSchema<TReportType extends string> {
 export interface ColumnContext {
   /** Grupo bajo el que aparece la columna en el modal de columnas. */
   claseColumna: string;
+  /** Se filtra con FiltroLista (vista.ts convierte los filtros de texto guardados antes). */
+  filtroLista?: boolean;
 }
 
 interface BaseColumnDef<TRowData> extends Partial<ColDef<TRowData>> {
@@ -240,6 +246,16 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
 
     case "text":
     default:
+      if (metadatoResuelto.filtro === "lista") {
+        return {
+          ...columnaBase,
+          context: { ...columnaBase.context, filtroLista: true },
+          filter: FiltroLista,
+          filterParams: undefined,
+          floatingFilterComponent: FloatingFiltroLista,
+          floatingFilterComponentParams: undefined,
+        };
+      }
       return columnaBase;
   }
 };

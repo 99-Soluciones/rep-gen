@@ -7,6 +7,7 @@ import {
   ColumnApiModule,
   ColumnAutoSizeModule,
   CsvExportModule,
+  CustomFilterModule,
   DateFilterModule,
   LocaleModule,
   ModuleRegistry,
@@ -39,6 +40,7 @@ ModuleRegistry.registerModules([
   DateFilterModule,
   CellStyleModule, // tipo numericColumn (alineación a la derecha)
   CsvExportModule,
+  CustomFilterModule, // FiltroLista (columnas de lista)
   PinnedRowModule, // fila de totales
   LocaleModule, // localeText en español (ag-grid/locale-es.ts)
   ...(import.meta.env.DEV ? [ValidationModule] : []),

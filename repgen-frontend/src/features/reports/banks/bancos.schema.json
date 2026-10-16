@@ -10,19 +10,23 @@
     },
     "Banco": {
       "field": "nombre_banco",
-      "dataType": "text"
+      "dataType": "text",
+      "filtro": "lista"
     },
     "Número de Cuenta": {
       "field": "numero_cuenta",
-      "dataType": "text"
+      "dataType": "text",
+      "filtro": "lista"
     },
     "Moneda": {
       "field": "moneda",
-      "dataType": "text"
+      "dataType": "text",
+      "filtro": "lista"
     },
     "Forma Pago": {
       "field": "formaPago",
-      "dataType": "text"
+      "dataType": "text",
+      "filtro": "lista"
     },
     "Concepto": {
       "field": "concepto",
@@ -67,11 +71,13 @@
     },
     "Estado Ingreso": {
       "field": "estadoIngreso",
-      "dataType": "text"
+      "dataType": "text",
+      "filtro": "lista"
     },
     "Estado Egreso": {
       "field": "estadoEgreso",
-      "dataType": "text"
+      "dataType": "text",
+      "filtro": "lista"
     },
     "Cuenta Contable": {
       "field": "cuentaContable",

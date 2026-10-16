@@ -18,6 +18,7 @@
     "Factura Serie": {
       "field": "facturaSerie",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Facturas"
     },
     "Factura Folio": {
@@ -33,6 +34,7 @@
     "Factura Estatus": {
       "field": "facturaEstatus",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Facturas"
     },
     "Factura Fecha de Captura": {
@@ -124,21 +126,25 @@
     "Factura Moneda": {
       "field": "facturaMoneda",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Facturas"
     },
     "Factura Uso CFDI": {
       "field": "facturaUsoCfdi",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Facturas"
     },
     "Factura Metodo Pago": {
       "field": "facturaMetodoPago",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Facturas"
     },
     "Factura Forma de Pago": {
       "field": "facturaFormaDePago",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Facturas"
     },
     "Factura Tasa Pagada": {
@@ -209,6 +215,7 @@
     "Artículo Marca": {
       "field": "articuloMarca",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Artículos"
     },
     "Artículo Nombre Completo": {
@@ -219,6 +226,7 @@
     "Unidad de Venta": {
       "field": "unidadDeVenta",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Artículos"
     },
     "Unidad de Contenido": {
@@ -239,11 +247,13 @@
     "Tipo de Concepto": {
       "field": "tipoDeConcepto",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Artículos"
     },
     "Método de Adquisición": {
       "field": "metodoDeAdquisicion",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Artículos"
 
     },
@@ -281,6 +291,7 @@
     "categoriadeProducto1": {
       "field": "categoriadeProducto1",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Artículos",
       "defaultHeader": "Categoría 1",
       "labelSlot": "articulo.categoria1"
@@ -288,6 +299,7 @@
     "categoriadeProducto2": {
       "field": "categoriadeProducto2",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Artículos",
       "defaultHeader": "Categoría 2",
       "labelSlot": "articulo.categoria2"
@@ -295,6 +307,7 @@
     "categoriadeProducto3": {
       "field": "categoriadeProducto3",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Artículos",
       "defaultHeader": "Categoría 3",
       "labelSlot": "articulo.categoria3"
@@ -302,6 +315,7 @@
     "categoriadeProducto4": {
       "field": "categoriadeProducto4",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Artículos",
       "defaultHeader": "Categoría 4",
       "labelSlot": "articulo.categoria4"
@@ -309,6 +323,7 @@
     "clasificacion1": {
       "field": "clasificacion1",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Clientes",
       "defaultHeader": "Clasificación 1",
       "labelSlot": "cliente.clasificacion1"
@@ -316,6 +331,7 @@
     "clasificacion2": {
       "field": "clasificacion2",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Clientes",
       "defaultHeader": "Clasificación 2",
       "labelSlot": "cliente.clasificacion2"
@@ -323,6 +339,7 @@
     "clasificacion3": {
       "field": "clasificacion3",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Clientes",
       "defaultHeader": "Clasificación 3",
       "labelSlot": "cliente.clasificacion3"
@@ -330,6 +347,7 @@
     "clasificacion4": {
       "field": "clasificacion4",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Clientes",
       "defaultHeader": "Clasificación 4",
       "labelSlot": "cliente.clasificacion4"
@@ -362,16 +380,19 @@
     "Cliente Estado": {
       "field": "clienteEstado",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Envío"
     },
     "Cliente Rep de Venta": {
       "field": "clienteRepDeVenta",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Representantes"
     },
     "Cliente Rep de Cobranza": {
       "field": "clienteRepDeCobranza",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Representantes"
     },
     "Observaciones en CFDI": {
@@ -387,6 +408,7 @@
     "Bodega Nombre": {
       "field": "bodegaNombre",
       "dataType": "text",
+      "filtro": "lista",
       "columnClass": "Bodegas"
     }
   },

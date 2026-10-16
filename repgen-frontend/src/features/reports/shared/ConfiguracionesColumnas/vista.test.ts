@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import { detectarPeriodo, huellaVista, resolverPeriodo } from "./vista";
 
 describe("vista: periodos", () => {
@@ -41,5 +42,36 @@ describe("vista: huella", () => {
       huellaVista([], { a: { filter: "x", type: "contains" } }),
     );
     expect(huellaVista([], {})).toBe(huellaVista([], null));
+  });
+});
+
+describe("aplicarVista con columnas de lista", () => {
+  it("un filtro de texto guardado antes en una columna de lista se respeta, no se pierde", async () => {
+    const { aplicarVista } = await import("./vista");
+    const setFilterModel = vi.fn();
+    const columna = (colId: string, lista: boolean) => ({
+      getColId: () => colId,
+      getColDef: () => ({ context: lista ? { filtroLista: true } : {} }),
+    });
+    const api = {
+      applyColumnState: vi.fn(),
+      getColumns: () => [columna("nombre_banco", true), columna("concepto", false)],
+      setFilterModel,
+    };
+    aplicarVista(api as never, {
+      columnState: [],
+      filterModel: {
+        nombre_banco: { filterType: "text", type: "contains", filter: "bbva" },
+        concepto: { filterType: "text", type: "contains", filter: "pago" },
+      },
+    });
+    expect(setFilterModel).toHaveBeenCalledWith({
+      nombre_banco: {
+        filterType: "lista",
+        modo: "texto",
+        condicion: { filterType: "text", type: "contains", filter: "bbva" },
+      },
+      concepto: { filterType: "text", type: "contains", filter: "pago" },
+    });
   });
 });

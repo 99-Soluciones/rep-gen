@@ -1,6 +1,7 @@
 import type { GridApi } from "ag-grid-community";
 import type { PeriodoVista } from "@repgen/shared-types";
 import type { ColumnStateEntry, ReportConfigResponse } from "../api/report-configs.api";
+import { envolverTextoLegado } from "../ag-grid/filtro-lista";
 
 /**
  * Una vista guardada es una "pregunta guardada": columnas + filtros de AG Grid
@@ -61,9 +62,18 @@ export const aplicarVista = (
   vista: Pick<ReportConfigResponse, "columnState" | "filterModel">,
 ) => {
   api.applyColumnState({ state: vista.columnState, applyOrder: true });
-  const existentes = new Set((api.getColumns() ?? []).map((c) => c.getColId()));
+  const columnas = new Map((api.getColumns() ?? []).map((c) => [c.getColId(), c]));
   const filtros = Object.fromEntries(
-    Object.entries(vista.filterModel ?? {}).filter(([colId]) => existentes.has(colId)),
+    Object.entries(vista.filterModel ?? {})
+      .filter(([colId]) => columnas.has(colId))
+      .map(([colId, modelo]) => {
+        // Un filtro de texto guardado cuando la columna aún no era lista: se
+        // respeta tal cual (la lista lo muestra marcado) en vez de perderse.
+        const esLista = (columnas.get(colId)?.getColDef().context as { filtroLista?: boolean } | undefined)
+          ?.filtroLista;
+        const deTexto = (modelo as { filterType?: string } | null)?.filterType === "text";
+        return [colId, esLista && deTexto ? envolverTextoLegado(modelo as object) : modelo];
+      }),
   );
   api.setFilterModel(Object.keys(filtros).length > 0 ? filtros : null);
 };

@@ -8,6 +8,8 @@ import type {
 import {
   comparadorFecha,
   filtroContiene,
+  filtroDistinto,
+  filtroNoContiene,
   filtroVacio,
   filtroFechaEnRango,
   filtroFechaIgual,
@@ -61,9 +63,19 @@ export const textFilterParams = (
         predicate: filtroContiene,
       },
       {
+        displayKey: "notContains",
+        displayName: "No contiene",
+        predicate: filtroNoContiene,
+      },
+      {
         displayKey: "equals",
         displayName: "Igual a",
         predicate: filtroTextoIgual,
+      },
+      {
+        displayKey: "notEqual",
+        displayName: "Distinto de",
+        predicate: filtroDistinto,
       },
       {
         displayKey: "blank",

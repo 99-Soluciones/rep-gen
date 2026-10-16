@@ -95,6 +95,14 @@ export const filtroTextoIgual = ([valorFiltro]: unknown[], valorCelda: unknown):
     return valorCelda != null && normalizarTexto(valorCelda) === normalizarTexto(valorFiltro);
 }
 
+/** "No contiene": como en Excel, una celda vacía no contiene nada, así que pasa. */
+export const filtroNoContiene = (valores: unknown[], valorCelda: unknown): boolean =>
+    !filtroContiene(valores, valorCelda);
+
+/** "Distinto de": una celda vacía es distinta de cualquier texto, así que pasa. */
+export const filtroDistinto = (valores: unknown[], valorCelda: unknown): boolean =>
+    !filtroTextoIgual(valores, valorCelda);
+
 /**
  * Convierte un valor de fecha a un objeto Date válido.
  * Prioriza el formato ISO (YYYY-MM-DD) para evitar desfases por zona horaria.

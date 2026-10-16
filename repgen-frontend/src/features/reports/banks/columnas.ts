@@ -11,6 +11,8 @@ type BancosReportType = "default";
 interface BancosColumnMeta {
   field: string;
   dataType: AgGridDataType;
+  /** "lista": se filtra marcando valores (pocas opciones: banco, moneda, estatus…). */
+  filtro?: "lista";
 }
 
 interface BancosSchema {
