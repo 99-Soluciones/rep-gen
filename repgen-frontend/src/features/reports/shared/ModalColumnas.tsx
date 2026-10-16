@@ -149,8 +149,8 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
             <input
               type="text"
               aria-label="Buscar columnas"
-              className="block w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:bg-white text-sm focus:ring-blue-500 focus:border-blue-500 transition-colors"
-              placeholder={`Buscar entre ${columnasVisibles.length} columnas...`}
+              className="block w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              placeholder={`Buscar entre ${columnasVisibles.length} columnas…`}
               value={textoBusqueda}
               onChange={(e) => setTextoBusqueda(e.target.value)}
             />

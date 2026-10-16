@@ -100,7 +100,7 @@ const PopoverGuardarConfig = ({
           aria-label="Guardar vista nueva"
           className="flex-1 text-sm px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-marca-morado disabled:opacity-40 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
         >
-          {guardando ? "Guardando..." : "Guardar"}
+          {guardando ? "Guardando…" : "Guardar"}
         </button>
         <button
           type="button"

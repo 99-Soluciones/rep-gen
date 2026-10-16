@@ -31,7 +31,8 @@
     },
     "Concepto": {
       "field": "concepto",
-      "dataType": "text"
+      "dataType": "text",
+      "anchoMinimo": 240
     },
     "Nombre Cliente/Proveedor": {
       "field": "nombre_comercial",

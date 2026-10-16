@@ -116,7 +116,7 @@ const MenuAccionesConfig = ({
                   disabled={!estado.nombreInput.trim() || guardando}
                   className="flex-1 text-sm px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-marca-morado disabled:opacity-40 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
                 >
-                  {guardando ? "Guardando..." : "Renombrar"}
+                  {guardando ? "Guardando…" : "Renombrar"}
                 </button>
                 <button
                   type="button"
@@ -140,7 +140,7 @@ const MenuAccionesConfig = ({
                   disabled={guardando}
                   className="flex-1 text-sm px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
                 >
-                  {guardando ? "Eliminando..." : "Sí, eliminar"}
+                  {guardando ? "Eliminando…" : "Sí, eliminar"}
                 </button>
                 <button
                   type="button"
@@ -194,7 +194,7 @@ const MenuAccionesConfig = ({
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 transition-colors"
               >
                 <Plus className="w-4 h-4 text-gray-500 shrink-0" />
-                Guardar como vista nueva...
+                Guardar como vista nueva…
               </button>
               <button
                 type="button"
@@ -204,7 +204,7 @@ const MenuAccionesConfig = ({
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <Pencil className="w-4 h-4 text-gray-500 shrink-0" />
-                Renombrar vista...
+                Renombrar vista…
               </button>
               <button
                 type="button"

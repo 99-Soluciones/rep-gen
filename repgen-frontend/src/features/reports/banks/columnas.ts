@@ -15,6 +15,7 @@ interface BancosColumnMeta {
   filtro?: "lista";
   /** Empieza oculta (dato técnico); se muestra desde Columnas o una vista. */
   oculta?: boolean;
+  anchoMinimo?: number;
 }
 
 interface BancosSchema {

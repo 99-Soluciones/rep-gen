@@ -42,7 +42,7 @@ export const exportarDatos = (
       // Qué se llevó, dicho para todos (antes solo lo oía el lector de pantalla).
       const columnas = visibles.length + monedasOcultas.length;
       toast.success(
-        `${registros.toLocaleString("es-MX")} ${registros === 1 ? "registro exportado" : "registros exportados"} a ${nombreArchivo}.csv: ${columnas} ${columnas === 1 ? "columna" : "columnas"}${nota}, sin la fila de totales`,
+        `${registros.toLocaleString("es-MX")} ${registros === 1 ? "registro" : "registros"} · ${columnas} ${columnas === 1 ? "columna" : "columnas"}${nota}, sin la fila de totales. Archivo: ${nombreArchivo}.csv`,
       );
     }
   };

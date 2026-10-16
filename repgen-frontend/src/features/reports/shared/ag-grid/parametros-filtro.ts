@@ -34,7 +34,7 @@ export type AgGridDataType =
   | "percent";
 
 export const crearPlaceholderFiltro = (nombreColumna: string): string =>
-  `${nombreColumna}...`;
+  `${nombreColumna}…`;
 
 const botonesFiltroPopup: FilterAction[] = ["reset"];
 

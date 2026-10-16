@@ -31,7 +31,7 @@ const montar = async (filas: Record<string, unknown>[] = datos) => {
   );
   await waitFor(() => expect(onGridListo).toHaveBeenCalled());
   const input = (placeholder: string) =>
-    container.querySelector(`input[placeholder="${placeholder}..."]`) as HTMLInputElement;
+    container.querySelector(`input[placeholder="${placeholder}…"]`) as HTMLInputElement;
   await waitFor(() => expect(input("Venta ID")).not.toBeNull());
   const api = referenciaGrid.current!.api;
   const aplicar = (modelo: Record<string, unknown> | null) =>

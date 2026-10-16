@@ -221,6 +221,10 @@ const TablaDinamica = <T,>({
   const defaultColDef: ColDef<T> = {
     width: 200,
     minWidth: 150,
+    // Nombres largos ("Número de Cuenta", "Saldo por Complementar") en dos
+    // líneas, no cortados; el encabezado crece solo lo necesario.
+    wrapHeaderText: true,
+    autoHeaderHeight: true,
     resizable: true,
     filter: true,
     floatingFilter: true,
@@ -345,7 +349,7 @@ const TablaDinamica = <T,>({
                   ></path>
                 </svg>
                 <span className="text-sm font-semibold text-gray-700">
-                  Cargando registros...
+                  Cargando registros…
                 </span>
               </div>
             )}

@@ -109,7 +109,7 @@ const AuthGate = ({ children }: { children: (sesion: Sesion) => ReactNode }) => 
       <div className="flex h-screen w-full items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-4">
           <div className="h-12 w-12 animate-spin motion-reduce:animate-none rounded-full border-4 border-blue-600 border-t-transparent"></div>
-          <p className="text-gray-600 font-medium">Validando credenciales...</p>
+          <p className="text-gray-600 font-medium">Validando credenciales…</p>
         </div>
       </div>
     );

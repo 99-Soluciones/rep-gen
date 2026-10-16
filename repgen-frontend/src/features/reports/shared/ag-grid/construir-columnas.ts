@@ -37,6 +37,8 @@ export interface ReportColumnMeta {
   filtro?: "lista";
   /** Empieza oculta: datos técnicos (ids, RFC) que no van en la primera pantalla. */
   oculta?: boolean;
+  /** Ancho mínimo en px, para textos que se leen enteros (Concepto). */
+  anchoMinimo?: number;
 }
 
 interface ReportSchema<TReportType extends string> {
@@ -171,6 +173,7 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
     context: { claseColumna: metadatoResuelto.columnClass || "General" },
     // "— Ninguna —" (resetColumnState) vuelve a este estado inicial.
     ...(metadatoResuelto.oculta ? { hide: true } : {}),
+    ...(metadatoResuelto.anchoMinimo ? { minWidth: metadatoResuelto.anchoMinimo } : {}),
     cellClassRules: reglasCelda,
     filterParams: textFilterParams(placeholderFiltro),
     floatingFilterComponent: FloatingFilterConLimpiar,
@@ -241,6 +244,9 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
         ...columnaBase,
         filter: "agDateColumnFilter",
         filterParams: dateFilterParams(placeholderFiltro),
+        // Sin el botón de filtro al lado y con 170px: "dd/mm/aaaa" entra entero.
+        suppressFloatingFilterButton: true,
+        minWidth: Math.max(170, metadatoResuelto.anchoMinimo ?? 0),
         floatingFilterComponentParams: floatingFilterParams({
           inputType: "date",
           defaultFilterType: "equals",

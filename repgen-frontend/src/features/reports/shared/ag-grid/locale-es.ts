@@ -6,12 +6,12 @@
  */
 export const LOCALE_ES: Record<string, string> = {
   // Overlays
-  loadingOoo: "Cargando...",
+  loadingOoo: "Cargando…",
   noRowsToShow: "No hay registros",
   noMatchingRows: "Ningún registro coincide con los filtros",
 
   // Panel de filtros
-  filterOoo: "Filtrar...",
+  filterOoo: "Filtrar…",
   applyFilter: "Aplicar",
   resetFilter: "Restablecer",
   clearFilter: "Limpiar",

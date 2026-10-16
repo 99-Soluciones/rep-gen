@@ -654,7 +654,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
                 className="text-sm px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-marca-morado disabled:opacity-40 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
               >
                 {guardando
-                  ? "Guardando..."
+                  ? "Guardando…"
                   : salidaPendiente
                     ? "Actualizar y salir"
                     : "Actualizar y cambiar"}
