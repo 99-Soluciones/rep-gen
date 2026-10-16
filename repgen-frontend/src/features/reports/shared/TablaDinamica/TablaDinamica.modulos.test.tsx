@@ -9,6 +9,10 @@ import { construirColumnasVentas } from "../../sales/columnas";
 
 // AG Grid real (sin mock): con ValidationModule activo en desarrollo, cualquier
 // módulo que falte en el registro de TablaDinamica se reporta por consola.
+// Grid real: con toda la suite en paralelo tarda más en arrancar.
+vi.setConfig({ testTimeout: 15000 });
+const ESPERA = { timeout: 5000 };
+
 describe("TablaDinamica con AG Grid real", () => {
   it.each<[string, ColDef[]]>([
     ["bancos", columnasBancos as ColDef[]],
@@ -44,10 +48,11 @@ describe("TablaDinamica con AG Grid real", () => {
         filasVisibles={1}
       />,
     );
-    await waitFor(() => expect(onGridListo).toHaveBeenCalled());
+    await waitFor(() => expect(onGridListo).toHaveBeenCalled(), ESPERA);
     // El filtro flotante propio (FloatingFilterConLimpiar) se renderiza en el header.
     await waitFor(() =>
       expect(container.querySelector(".ag-floating-filter-input input.pr-7")).not.toBeNull(),
+      ESPERA,
     );
 
     // Las mismas APIs que llaman las pantallas de reporte.

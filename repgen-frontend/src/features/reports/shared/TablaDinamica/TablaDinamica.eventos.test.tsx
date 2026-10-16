@@ -11,6 +11,10 @@ vi.mock("react-hot-toast", () => ({ default: toastMock }));
 
 // AG Grid real: los cambios que guarda una vista (visibilidad, orden, filtros)
 // deben avisar por onCambioVista, que alimenta "cambios sin guardar".
+// Grid real: con toda la suite en paralelo tarda más en arrancar y asentarse.
+vi.setConfig({ testTimeout: 15000 });
+const ESPERA = { timeout: 5000 };
+
 describe("TablaDinamica: aviso de cambios de vista (AG Grid real)", () => {
   const montar = async () => {
     vi.spyOn(console, "warn").mockImplementation(() => {});
@@ -28,7 +32,7 @@ describe("TablaDinamica: aviso de cambios de vista (AG Grid real)", () => {
         filasVisibles={1}
       />,
     );
-    await waitFor(() => expect(onGridListo).toHaveBeenCalled());
+    await waitFor(() => expect(onGridListo).toHaveBeenCalled(), ESPERA);
     return { api: referenciaGrid.current!.api, onCambioVista };
   };
 
@@ -36,14 +40,14 @@ describe("TablaDinamica: aviso de cambios de vista (AG Grid real)", () => {
     const { api, onCambioVista } = await montar();
     onCambioVista.mockClear();
     api.setColumnsVisible(["cliente"], false);
-    await waitFor(() => expect(onCambioVista).toHaveBeenCalled());
+    await waitFor(() => expect(onCambioVista).toHaveBeenCalled(), ESPERA);
   });
 
   it("avisa al aplicar un estado de columnas (como el modal o una vista)", async () => {
     const { api, onCambioVista } = await montar();
     onCambioVista.mockClear();
     api.applyColumnState({ state: [{ colId: "cliente", hide: true }] });
-    await waitFor(() => expect(onCambioVista).toHaveBeenCalled());
+    await waitFor(() => expect(onCambioVista).toHaveBeenCalled(), ESPERA);
   });
 
   it("Ventas abre con Factura Folio fijo a la izquierda, y '— Ninguna —' lo devuelve ahí", async () => {
@@ -57,9 +61,6 @@ describe("TablaDinamica: aviso de cambios de vista (AG Grid real)", () => {
     api.resetColumnState();
     expect(api.getColumn("facturaFolio")?.getPinned()).toBe("left");
   });
-
-  // Grid real: con toda la suite en paralelo tarda más en asentar los filtros.
-  const ESPERA = { timeout: 5000 };
 
   it("Limpiar quita los filtros y el aviso permite recuperarlos", async () => {
     const { api } = await montar();
@@ -97,6 +98,6 @@ describe("TablaDinamica: aviso de cambios de vista (AG Grid real)", () => {
     const { api, onCambioVista } = await montar();
     onCambioVista.mockClear();
     api.setFilterModel({ ventaId: { filterType: "text", type: "contains", filter: "V" } });
-    await waitFor(() => expect(onCambioVista).toHaveBeenCalled());
+    await waitFor(() => expect(onCambioVista).toHaveBeenCalled(), ESPERA);
   });
 });
