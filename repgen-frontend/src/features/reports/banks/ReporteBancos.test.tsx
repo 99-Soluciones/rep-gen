@@ -14,7 +14,7 @@ type TablaMockProps = {
       getFilterModel: () => Record<string, unknown>;
       isDestroyed: () => boolean;
       getDisplayedRowCount: () => number;
-      forEachNodeAfterFilterAndSort: (
+      forEachNodeAfterFilter: (
         cb: (node: {
           data: { moneda: string; abono: number; cargo: number };
         }) => void,
@@ -48,7 +48,7 @@ const tablaMock = vi.hoisted(() =>
           getFilterModel: () => ({ moneda: "MXN" }),
           isDestroyed: () => false,
           getDisplayedRowCount: () => 2,
-          forEachNodeAfterFilterAndSort: (
+          forEachNodeAfterFilter: (
             cb: (node: {
               data: { moneda: string; abono: number; cargo: number };
             }) => void,
@@ -145,7 +145,14 @@ describe("ReporteBancos", () => {
     // El filtro de columna de ag-grid se aplica localmente y no debe
     // generar una nueva solicitud al servidor.
     await new Promise((resolve) => setTimeout(resolve, 400));
-    expect(obtenerReporteMock).toHaveBeenCalledTimes(1);
+    // Dos consultas: el rango y el periodo anterior (comparación del resumen).
+    expect(obtenerReporteMock).toHaveBeenCalledTimes(2);
+    expect(obtenerReporteMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        endpoint: "bancos/buscar",
+        rangoFechas: { fechaInicio: "2026-04-01", fechaFin: "2026-04-08" },
+      }),
+    );
 
     // El toggle del panel de métricas ahora vive en PanelKpiLateral (no en
     // Filtros). Hay dos botones de colapso (desktop sobre la línea divisoria

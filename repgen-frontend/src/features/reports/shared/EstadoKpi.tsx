@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { formatearFecha } from "../../../shared/utils/fechas";
 import { ID_RESUMEN } from "./PanelKpiLateral";
 import type { EstadoCifras } from "./estadoCifras";
+import type { ComparacionPeriodo } from "./useComparacionPeriodo";
+import { formatearMoneda } from "./ag-grid/formato";
 
 const moneda = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" });
 const entero = new Intl.NumberFormat("es-MX");
@@ -36,6 +38,8 @@ interface LineaEstadoProps {
   tipo?: "moneda" | "unidades";
   /** Renglón de resultado: regla superior y cifra destacada. */
   total?: boolean;
+  /** Moneda de la cifra si no es MXN ("USD 1,000.00", como en la tabla). */
+  codigoMoneda?: string;
 }
 
 export const LineaEstado = ({
@@ -43,6 +47,7 @@ export const LineaEstado = ({
   valor,
   tipo = "moneda",
   total = false,
+  codigoMoneda,
 }: LineaEstadoProps) => (
   <div
     className={`flex items-baseline justify-between gap-4 py-1 ${
@@ -58,10 +63,66 @@ export const LineaEstado = ({
       } ${valor < 0 ? "text-red-600" : "text-gray-900"}`}
     >
       {/* `|| 0` evita "-$0.00" cuando llega -0 (p. ej. cargos negados en cero). */}
-      {tipo === "moneda" ? moneda.format(valor || 0) : entero.format(valor || 0)}
+      {tipo === "unidades"
+        ? entero.format(valor || 0)
+        : codigoMoneda && codigoMoneda !== "MXN"
+          ? formatearMoneda(valor || 0, codigoMoneda)
+          : moneda.format(valor || 0)}
     </dd>
   </div>
 );
+
+const porcentaje = new Intl.NumberFormat("es-MX", {
+  style: "percent",
+  maximumFractionDigits: 1,
+  signDisplay: "exceptZero",
+});
+
+/**
+ * El resultado frente al periodo anterior, debajo del renglón total:
+ * "vs. 01/09 – 15/09/2026   $34,800.00 · +12.1%". El periodo anterior se lee
+ * completo, así que con filtros en la tabla no se compara (no serían lo mismo).
+ */
+export const LineaComparacion = ({
+  actual,
+  comparacion,
+  filtrado,
+}: {
+  actual: number;
+  comparacion: ComparacionPeriodo;
+  filtrado: boolean;
+}) => {
+  const rango = `${formatearFecha(comparacion.rango.desde).slice(0, 5)} – ${formatearFecha(comparacion.rango.hasta)}`;
+  let detalle: ReactNode;
+  if (filtrado) {
+    detalle = "Sin comparar: la tabla tiene filtros";
+  } else if (comparacion.estado === "cargando") {
+    detalle = "Calculando…";
+  } else if (comparacion.estado === "error" || comparacion.valor === null) {
+    detalle = "No se pudo leer";
+  } else {
+    const anterior = comparacion.valor;
+    const cambio = anterior === 0 ? null : (actual - anterior) / Math.abs(anterior);
+    detalle = (
+      <>
+        <span className={anterior < 0 ? "text-red-600" : "text-gray-700"}>
+          {moneda.format(anterior || 0)}
+        </span>
+        {cambio !== null && (
+          <span className={cambio < 0 ? "text-red-600" : "text-gray-700"}> · {porcentaje.format(cambio)}</span>
+        )}
+      </>
+    );
+  }
+  return (
+    <div className="flex items-baseline justify-between gap-4 pt-0.5 text-xs">
+      <dt className="text-gray-600">vs. {rango}</dt>
+      <dd aria-busy={comparacion.estado === "cargando" && !filtrado} className="text-right tabular-nums text-gray-600">
+        {detalle}
+      </dd>
+    </div>
+  );
+};
 
 /**
  * Deja claro sobre qué se calcularon las cifras: el rango cargado y cuántas

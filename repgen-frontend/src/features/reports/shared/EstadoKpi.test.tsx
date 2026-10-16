@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { vi } from "vitest";
-import { LineaEstado, NotaRegistros, ResultadoCompacto, SeccionEstado } from "./EstadoKpi";
+import { LineaComparacion, LineaEstado, NotaRegistros, ResultadoCompacto, SeccionEstado } from "./EstadoKpi";
 
 describe("EstadoKpi", () => {
   it("marca en rojo solo los negativos y no muestra -$0.00", () => {
@@ -65,4 +65,45 @@ describe("ResultadoCompacto: lo que todavía no es una cifra", () => {
     expect(screen.getByText("· filtrado")).toBeInTheDocument();
   });
 });
+});
+
+describe("LineaComparacion", () => {
+  const rango = { desde: "2026-09-01", hasta: "2026-09-15" };
+  const enLista = (ui: React.ReactElement) => render(<dl>{ui}</dl>);
+
+  it("dice el periodo anterior, su cifra y el cambio (en rojo si baja)", () => {
+    enLista(
+      <LineaComparacion actual={900} comparacion={{ rango, valor: 1000, estado: "lista" }} filtrado={false} />,
+    );
+    expect(screen.getByText("vs. 01/09 – 15/09/2026")).toBeInTheDocument();
+    expect(screen.getByText("$1,000.00")).toBeInTheDocument();
+    expect(screen.getByText("· -10%")).toHaveClass("text-red-600");
+  });
+
+  it("con filtros en la tabla no compara (el periodo anterior se lee completo)", () => {
+    enLista(
+      <LineaComparacion actual={900} comparacion={{ rango, valor: 1000, estado: "lista" }} filtrado />,
+    );
+    expect(screen.getByText("Sin comparar: la tabla tiene filtros")).toBeInTheDocument();
+  });
+
+  it("dice cuando todavía calcula o no se pudo leer", () => {
+    const { rerender } = enLista(
+      <LineaComparacion actual={0} comparacion={{ rango, valor: null, estado: "cargando" }} filtrado={false} />,
+    );
+    expect(screen.getByText("Calculando…")).toBeInTheDocument();
+    rerender(
+      <dl>
+        <LineaComparacion actual={0} comparacion={{ rango, valor: null, estado: "error" }} filtrado={false} />
+      </dl>,
+    );
+    expect(screen.getByText("No se pudo leer")).toBeInTheDocument();
+  });
+});
+
+describe("LineaEstado en otra moneda", () => {
+  it("formatea con el código de la moneda, como la tabla", () => {
+    render(<dl><LineaEstado etiqueta="Abonos" valor={50} codigoMoneda="USD" /></dl>);
+    expect(screen.getByText(/USD\s50\.00/)).toBeInTheDocument();
+  });
 });

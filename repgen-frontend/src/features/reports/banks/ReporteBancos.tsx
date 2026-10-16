@@ -8,7 +8,15 @@ import { columnasBancos } from "./columnas";
 import { useReporteBase } from "../shared/useReporteBase";
 import { useReporteGrid } from "../shared/useReporteGrid";
 import { usePreferenciaLocal } from "../shared/usePreferenciaLocal";
-import { LineaEstado, NotaRegistros, ResultadoCompacto, SeccionEstado } from "../shared/EstadoKpi";
+import {
+  LineaComparacion,
+  LineaEstado,
+  NotaRegistros,
+  ResultadoCompacto,
+  SeccionEstado,
+} from "../shared/EstadoKpi";
+import { useComparacionPeriodo } from "../shared/useComparacionPeriodo";
+import { flujoNetoMxn, movimientosPorMoneda, saldosAlCierre, type MovimientosMoneda } from "./calcularBancos";
 import { toolbarReporte } from "../shared/toolbarReporte";
 
 // Solo MXN, igual que los KPIs: sumar monedas distintas daría una cifra falsa.
@@ -35,32 +43,33 @@ const ReporteBancos = () => {
   const { referenciaGrid, filasVisibles, actualizarFilasVisibles, onGridListo, onCambioVista } =
     grid;
 
-  //KPIs
-  const [totales, setTotales] = useState({ abonos: 0, cargos: 0, balance: 0, otraMoneda: 0 });
+  // Resumen: cada moneda se suma aparte (MXN arriba; las demás, cada una en
+  // su moneda), sobre las filas que dejan los filtros de la tabla.
+  const [porMoneda, setPorMoneda] = useState<Record<string, MovimientosMoneda>>({});
 
   const recalcularTotales = () => {
-    if (!referenciaGrid.current || !referenciaGrid.current.api) return;
-
-    let tAbonos = 0;
-    let tCargos = 0;
-    let otraMoneda = 0;
-
-    referenciaGrid.current.api.forEachNodeAfterFilterAndSort((node) => {
-      const data = node.data as ReportBankRecord;
-      if (data.moneda !== "MXN") {
-        otraMoneda += 1; // Solo se suman registros en MXN; los demás se avisan.
-        return;
-      }
-      tAbonos += data.abono || 0;
-      tCargos += data.cargo || 0;
+    const api = referenciaGrid.current?.api;
+    if (!api) return;
+    const filas: ReportBankRecord[] = [];
+    api.forEachNodeAfterFilter((node) => {
+      if (node.data) filas.push(node.data as ReportBankRecord);
     });
-    setTotales({
-      abonos: tAbonos,
-      cargos: tCargos,
-      balance: tAbonos - tCargos,
-      otraMoneda,
-    });
+    setPorMoneda(movimientosPorMoneda(filas));
   };
+
+  const mxn = porMoneda.MXN ?? { abonos: 0, cargos: 0 };
+  const flujoMxn = mxn.abonos - mxn.cargos;
+  const otrasMonedas = Object.keys(porMoneda).filter((m) => m !== "MXN").sort();
+  // Saldos con todos los movimientos del rango: un filtro de la tabla
+  // cambiaría cuál es "el último" y el saldo no sería el de la cuenta.
+  const saldos = saldosAlCierre(datos);
+  const filtrado = filasVisibles !== datos.length;
+  const comparacion = useComparacionPeriodo<ReportBankRecord>({
+    endpoint: "bancos/buscar",
+    desde: base.fechaDesde,
+    hasta: base.fechaHasta,
+    calcular: flujoNetoMxn,
+  });
 
   return (
     <div className="flex flex-col xl:h-full">
@@ -79,7 +88,7 @@ const ReporteBancos = () => {
           <ResultadoCompacto
             etiqueta="Flujo neto"
             filtrado={filasVisibles !== datos.length}
-            valor={totales.balance}
+            valor={flujoMxn}
             estado={estadoCifras(error, estaCargando, base.cargadoEn)}
             onAbrirResumen={() => setMostrarResumen(true)}
           />
@@ -109,11 +118,9 @@ const ReporteBancos = () => {
 
         <PanelKpiLateral
           aviso={
-            totales.otraMoneda > 0
-              ? `Solo MXN · ${totales.otraMoneda.toLocaleString("es-MX")} ${
-                  totales.otraMoneda === 1 ? "movimiento" : "movimientos"
-                } en otra moneda sin sumar`
-              : "Solo transacciones en MXN"
+            otrasMonedas.length > 0
+              ? `Cada moneda por separado: MXN, ${otrasMonedas.join(", ")}`
+              : "Importes en MXN"
           }
           abierto={mostrarResumen}
           onToggle={() => setMostrarResumen(!mostrarResumen)}
@@ -127,11 +134,39 @@ const ReporteBancos = () => {
               desde={base.fechaDesde}
               hasta={base.fechaHasta}
             />
-            <SeccionEstado titulo="Movimientos">
-              <LineaEstado etiqueta="Abonos" valor={totales.abonos} />
-              <LineaEstado etiqueta="Cargos" valor={-totales.cargos} />
-              <LineaEstado etiqueta="Flujo neto" valor={totales.balance} total />
+            <SeccionEstado titulo={otrasMonedas.length > 0 ? "Movimientos en MXN" : "Movimientos"}>
+              <LineaEstado etiqueta="Abonos" valor={mxn.abonos} />
+              <LineaEstado etiqueta="Cargos" valor={-mxn.cargos} />
+              <LineaEstado etiqueta="Flujo neto" valor={flujoMxn} total />
+              <LineaComparacion actual={flujoMxn} comparacion={comparacion} filtrado={filtrado} />
             </SeccionEstado>
+            {otrasMonedas.map((codigo) => (
+              <SeccionEstado key={codigo} titulo={`Movimientos en ${codigo}`}>
+                <LineaEstado etiqueta="Abonos" valor={porMoneda[codigo].abonos} codigoMoneda={codigo} />
+                <LineaEstado etiqueta="Cargos" valor={-porMoneda[codigo].cargos} codigoMoneda={codigo} />
+                <LineaEstado
+                  etiqueta="Flujo neto"
+                  valor={porMoneda[codigo].abonos - porMoneda[codigo].cargos}
+                  codigoMoneda={codigo}
+                  total
+                />
+              </SeccionEstado>
+            ))}
+            {saldos.length > 0 && (
+              <SeccionEstado
+                titulo="Saldos al cierre"
+                nota="Saldo resultante del último movimiento de cada cuenta en el rango, con todos los movimientos (sin los filtros de la tabla)."
+              >
+                {saldos.map((s) => (
+                  <LineaEstado
+                    key={`${s.banco}|${s.cuenta}`}
+                    etiqueta={`${s.banco}${s.cuenta ? ` ··${s.cuenta.slice(-4)}` : ""}`}
+                    valor={s.saldo}
+                    codigoMoneda={s.moneda}
+                  />
+                ))}
+              </SeccionEstado>
+            )}
           </div>
         </PanelKpiLateral>
       </div>

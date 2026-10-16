@@ -11,7 +11,8 @@ import { useReporteBase } from "../shared/useReporteBase";
 import { useReporteGrid } from "../shared/useReporteGrid";
 import { usePreferenciaLocal } from "../shared/usePreferenciaLocal";
 import { toolbarReporte } from "../shared/toolbarReporte";
-import { useTotalesVentas } from "./useTotalesVentas";
+import { calcularTotalesVentas, useTotalesVentas } from "./useTotalesVentas";
+import { useComparacionPeriodo } from "../shared/useComparacionPeriodo";
 import KpiPanelVentas from "./KpiPanelVentas";
 import { ResultadoCompacto } from "../shared/EstadoKpi";
 
@@ -91,6 +92,12 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
     referenciaGrid,
     currentType,
   });
+  const comparacion = useComparacionPeriodo<Record<string, unknown>>({
+    endpoint: reportConfig.endpoint,
+    desde: base.fechaDesde,
+    hasta: base.fechaHasta,
+    calcular: (filas) => calcularTotalesVentas(filas, currentType).facturacionNeta,
+  });
 
   return (
     <div className="flex flex-col w-full xl:h-full">
@@ -147,6 +154,7 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
         >
           <KpiPanelVentas
             totales={totales}
+            comparacion={comparacion}
             currentType={currentType}
             registros={filasVisibles}
             total={datos.length}
