@@ -36,6 +36,8 @@ export interface ReportColumnMeta {
   currencyField?: string;
   /** Solo texto: "lista" se filtra marcando valores en vez de escribirlos. */
   filtro?: "lista";
+  /** Empieza oculta: datos técnicos (ids, RFC) que no van en la primera pantalla. */
+  oculta?: boolean;
 }
 
 interface ReportSchema<TReportType extends string> {
@@ -168,6 +170,8 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
     headerName,
     field: campoTipado,
     context: { claseColumna: metadatoResuelto.columnClass || "General" },
+    // "— Ninguna —" (resetColumnState) vuelve a este estado inicial.
+    ...(metadatoResuelto.oculta ? { hide: true } : {}),
     cellClassRules: reglasCelda,
     // El rótulo de la fila de totales (con su nota, si la hay), en cualquier columna.
     cellRendererSelector: (p) => (esRotuloTotal(p) ? { component: RotuloTotales } : undefined),

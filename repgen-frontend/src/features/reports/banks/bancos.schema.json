@@ -6,7 +6,8 @@
     },
     "Id de Transacción": {
       "field": "idTransaccionBanco",
-      "dataType": "text"
+      "dataType": "text",
+      "oculta": true
     },
     "Banco": {
       "field": "nombre_banco",
@@ -38,7 +39,8 @@
     },
     "RFC": {
       "field": "rfc",
-      "dataType": "text"
+      "dataType": "text",
+      "oculta": true
     },
     "Abono": {
       "field": "abono",
@@ -81,7 +83,8 @@
     },
     "Cuenta Contable": {
       "field": "cuentaContable",
-      "dataType": "text"
+      "dataType": "text",
+      "oculta": true
     },
     "Texto al Complementar": {
       "field": "textoComplementario",
@@ -91,24 +94,24 @@
   "reportTypes": {
     "default": [
       "Fecha",
-      "Id de Transacción",
       "Banco",
       "Número de Cuenta",
-      "Moneda",
-      "Forma Pago",
       "Concepto",
-      "Nombre Cliente/Proveedor",
-      "RFC",
       "Abono",
       "Cargo",
-      "Tipo de Cambio",
       "Saldo Resultante",
-      "Saldo por Complementar",
-      "Saldo por Identificar",
+      "Moneda",
+      "Nombre Cliente/Proveedor",
+      "Forma Pago",
       "Estado Ingreso",
       "Estado Egreso",
-      "Cuenta Contable",
-      "Texto al Complementar"
+      "Saldo por Complementar",
+      "Saldo por Identificar",
+      "Tipo de Cambio",
+      "Texto al Complementar",
+      "Id de Transacción",
+      "RFC",
+      "Cuenta Contable"
     ]
   }
 }

@@ -13,6 +13,8 @@ interface BancosColumnMeta {
   dataType: AgGridDataType;
   /** "lista": se filtra marcando valores (pocas opciones: banco, moneda, estatus…). */
   filtro?: "lista";
+  /** Empieza oculta (dato técnico); se muestra desde Columnas o una vista. */
+  oculta?: boolean;
 }
 
 interface BancosSchema {
