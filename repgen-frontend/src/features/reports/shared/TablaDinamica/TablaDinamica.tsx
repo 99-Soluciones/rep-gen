@@ -308,6 +308,7 @@ const TablaDinamica = <T,>({
             onLimpiarFiltros={limpiarFiltros}
             onRestaurarFiltros={filtrosQuitados ? restaurarFiltros : undefined}
             sinRegistros={Boolean(error) && !estaCargando}
+            cargandoSinDatos={estaCargando && datos.length === 0}
             accionesToolbarInicio={accionesToolbarInicio}
             accionesToolbar={accionesToolbar}
             accionesToolbarFin={accionesToolbarFin}

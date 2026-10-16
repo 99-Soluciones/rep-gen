@@ -54,4 +54,9 @@ describe("ActualizarDatos", () => {
     act(() => vi.advanceTimersByTime(24 * 60 * 60_000));
     expect(screen.getByRole("button")).toHaveTextContent("hace 1 día");
   });
+
+  it("la primera lectura dice «Cargando datos…», no «Actualizando…»", () => {
+    render(<ActualizarDatos cargadoEn={null} estaCargando onActualizar={() => {}} />);
+    expect(screen.getByRole("button", { name: "Cargando datos" })).toHaveTextContent("Cargando datos…");
+  });
 });

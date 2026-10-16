@@ -64,4 +64,18 @@ describe("TablaDinamica", () => {
 
     expect(contadorConTexto("0 registros")).toBeInTheDocument();
   });
+
+  it("cargando sin nada en pantalla no dice «0 registros»", () => {
+    render(
+      <TablaDinamica
+        referenciaGrid={referenciaGrid}
+        datos={[]}
+        definicionesColumnas={[]}
+        estaCargando
+        onGridListo={onGridListo}
+        filasVisibles={0}
+      />,
+    );
+    expect(contadorConTexto("Cargando registros…")).toBeInTheDocument();
+  });
 });

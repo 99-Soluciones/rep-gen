@@ -39,8 +39,11 @@ const ActualizarDatos = ({ cargadoEn, estaCargando, onActualizar }: ActualizarDa
 
   const minutos = cargadoEn ? Math.floor((ahora - cargadoEn.getTime()) / 60_000) : 0;
   const viejos = minutos >= MINUTOS_PARA_VIEJOS;
+  // Sin una carga previa no hay nada que "actualizar": es la primera lectura.
   const texto = estaCargando
-    ? "Actualizando…"
+    ? cargadoEn
+      ? "Actualizando…"
+      : "Cargando datos…"
     : `Datos de las ${hora.format(cargadoEn!)}${viejos ? ` · hace ${antiguedad(minutos)}` : ""}`;
 
   return (
@@ -51,7 +54,9 @@ const ActualizarDatos = ({ cargadoEn, estaCargando, onActualizar }: ActualizarDa
       }}
       // aria-disabled y no disabled: mientras carga sigue enfocable (DESIGN.md).
       aria-disabled={estaCargando || undefined}
-      aria-label={estaCargando ? "Actualizando datos" : `${texto}. Actualizar datos`}
+      aria-label={
+        estaCargando ? (cargadoEn ? "Actualizando datos" : "Cargando datos") : `${texto}. Actualizar datos`
+      }
       className={`group shrink-0 inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 pointer-coarse:min-h-10 text-sm whitespace-nowrap tabular-nums transition-colors hover:bg-blue-50 hover:text-blue-700 aria-disabled:cursor-wait aria-disabled:hover:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
         viejos ? "font-medium text-gray-900" : "text-gray-600"
       }`}

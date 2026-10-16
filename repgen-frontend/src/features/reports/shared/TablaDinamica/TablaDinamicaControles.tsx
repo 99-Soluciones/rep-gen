@@ -13,6 +13,8 @@ interface TablaDinamicaControlesProps {
   onRestaurarFiltros?: () => void;
   /** La carga falló: un "0 registros" se leería como un rango sin movimientos. */
   sinRegistros?: boolean;
+  /** Cargando sin nada en pantalla todavía: "0 registros" sería falso. */
+  cargandoSinDatos?: boolean;
   accionesToolbarInicio?: ReactNode;
   accionesToolbar?: ReactNode;
   accionesToolbarFin?: ReactNode;
@@ -30,6 +32,7 @@ const TablaDinamicaControles = ({
   onLimpiarFiltros,
   onRestaurarFiltros,
   sinRegistros = false,
+  cargandoSinDatos = false,
   accionesToolbarInicio,
   accionesToolbar,
   accionesToolbarFin,
@@ -88,6 +91,8 @@ const TablaDinamicaControles = ({
         <span aria-live="polite">
           {sinRegistros ? (
             "Sin registros cargados"
+          ) : cargandoSinDatos ? (
+            "Cargando registros…"
           ) : (
             <>
               <span className={`font-semibold ${hayFiltroActivo ? "text-blue-800" : "text-gray-900"}`}>
