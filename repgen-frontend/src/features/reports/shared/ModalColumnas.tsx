@@ -65,6 +65,16 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
 
   if (!abierto) return null;
 
+  // close() nativo: dispara onClose (→ onCerrar) y devuelve el foco a quien
+  // abrió el diálogo, el botón "Columnas". Sin él, el foco caía en <body>.
+  const cerrar = () => {
+    const dialogo = dialogoRef.current;
+    if (dialogo?.open && typeof dialogo.close === "function") dialogo.close();
+    else onCerrar();
+  };
+  const totalColumnas = Object.keys(borradorColumnas).length;
+  const marcadas = Object.values(borradorColumnas).filter(Boolean).length;
+
   const api = referenciaGrid.current?.api;
   // Con búsqueda activa, "mostrar/ocultar todas" actúan solo sobre lo encontrado.
   const columnasEnLista = Object.values(clasesAgrupadas).flat();
@@ -86,12 +96,18 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
         {/* Header del Modal */}
         <div className="px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:justify-between sm:items-center bg-white gap-4">
           <div className="flex justify-between items-center w-full">
-            <h2 id="modal-columnas-titulo" className="text-xl font-bold text-gray-800">
-              Columnas visibles
-            </h2>
+            {/* La cuenta va al lado, no dentro del título: el diálogo se llama "Columnas visibles". */}
+            <div className="flex items-baseline gap-2">
+              <h2 id="modal-columnas-titulo" className="text-xl font-bold text-gray-800">
+                Columnas visibles
+              </h2>
+              <span className="text-sm text-gray-600 tabular-nums">
+                {marcadas} de {totalColumnas}
+              </span>
+            </div>
             <button
               type="button"
-              onClick={onCerrar}
+              onClick={cerrar}
               className="text-gray-500 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-gray-100 sm:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               title="Cerrar"
               aria-label="Cerrar"
@@ -142,7 +158,7 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
 
           <button
             type="button"
-            onClick={onCerrar}
+            onClick={cerrar}
             className="hidden sm:flex text-gray-500 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             title="Cerrar"
             aria-label="Cerrar"
@@ -194,7 +210,7 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
               setBorradorColumnas(nuevoBorrador);
             }}
             disabled={sinResultados}
-            className="rounded text-sm font-semibold text-gray-600 hover:text-red-600 transition-colors disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="rounded text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
             Ocultar{sufijoLista}
           </button>
@@ -300,7 +316,7 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
           )}
           <button
             type="button"
-            onClick={onCerrar}
+            onClick={cerrar}
             className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 transition-colors"
           >
             Cancelar
@@ -323,7 +339,7 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
                 });
                 setColumnasVisibles(api.getColumns() ?? []);
               }
-              onCerrar();
+              cerrar();
             }}
             className="px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-marca-morado disabled:opacity-40 disabled:hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 transition-colors shadow-sm"
           >

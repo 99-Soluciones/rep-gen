@@ -10,6 +10,12 @@ const TabsVentas = ({ reportType }: TabsVentasProps) => {
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
+  const botonRef = useRef<HTMLButtonElement>(null);
+
+  // Al abrir, el foco entra en la pestaña actual (como el menú lateral).
+  useEffect(() => {
+    if (menuAbierto) menuRef.current?.querySelector<HTMLElement>('[aria-current="page"]')?.focus();
+  }, [menuAbierto]);
 
   useEffect(() => {
     if (!menuAbierto) return;
@@ -24,6 +30,7 @@ const TabsVentas = ({ reportType }: TabsVentasProps) => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setMenuAbierto(false);
+        botonRef.current?.focus();
       }
     };
 
@@ -41,6 +48,7 @@ const TabsVentas = ({ reportType }: TabsVentasProps) => {
       <div className="sm:hidden flex items-center gap-2">
         <div className="relative" ref={menuRef}>
           <button
+            ref={botonRef}
             type="button"
             className="h-10 inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-sm font-semibold text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             aria-expanded={menuAbierto}

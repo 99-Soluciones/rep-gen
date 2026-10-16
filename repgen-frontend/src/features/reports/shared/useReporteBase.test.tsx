@@ -181,4 +181,18 @@ describe("useReporteBase", () => {
     expect(obtenerReporteMock).toHaveBeenLastCalledWith(obtenerReporteMock.mock.calls[0][0]);
     await waitFor(() => expect(result.current.cargadoEn).not.toBe(primera));
   });
+
+  it("al cambiar de endpoint no deja ver los registros del anterior mientras carga", async () => {
+    obtenerReporteMock.mockResolvedValueOnce([{ id: 1 }]);
+    const { result, rerender } = renderHook(({ endpoint }) => useReporteBase<{ id: number }>({ endpoint }), {
+      initialProps: { endpoint: "ventas/buscar" },
+    });
+    await waitFor(() => expect(result.current.datos).toEqual([{ id: 1 }]));
+
+    obtenerReporteMock.mockReturnValueOnce(new Promise(() => {}));
+    rerender({ endpoint: "ventas-por-concepto/buscar" });
+    expect(result.current.datos).toEqual([]);
+    expect(result.current.estaCargando).toBe(true);
+    expect(result.current.cargadoEn).toBeNull();
+  });
 });

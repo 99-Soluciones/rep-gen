@@ -89,6 +89,17 @@ export const useReporteBase = <T,>({
   const [versionRango, setVersionRango] = useState(0);
   const [cargadoEn, setCargadoEn] = useState<Date | null>(null);
 
+  // Otro endpoint (p. ej. Facturas → Conceptos): sus registros no son estos.
+  // Se vacía en el render del cambio, antes de pintar filas ajenas bajo las
+  // columnas nuevas; el resumen vuelve a "Calculando las cifras…".
+  const [endpointMostrado, setEndpointMostrado] = useState(endpoint);
+  if (endpointMostrado !== endpoint) {
+    setEndpointMostrado(endpoint);
+    setDatos([]);
+    setCargadoEn(null);
+    setEstaCargando(true);
+  }
+
   const onErrorRef = useRef(onError);
   // Qué se cargó por última vez con éxito (los registros en pantalla).
   const cargadoRef = useRef<{ endpoint: string; desde: string; hasta: string } | null>(null);

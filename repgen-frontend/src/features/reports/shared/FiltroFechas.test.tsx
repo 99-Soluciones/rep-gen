@@ -165,4 +165,38 @@ describe("FiltroFechas", () => {
     expect(props.setFechaDesde).not.toHaveBeenCalled();
     vi.useRealTimers();
   });
+
+  describe("‹ › y atajos", () => {
+    beforeEach(() => {
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(new Date(2026, 9, 16));
+    });
+    afterEach(() => vi.useRealTimers());
+
+    it("‹ desde el mes en curso aplica el mes anterior completo; › no pasa de hoy", () => {
+      render(<FiltroFechas {...props} fechaDesde="2026-10-01" fechaHasta="2026-10-16" />);
+      fireEvent.click(screen.getByRole("button", { name: "Periodo anterior: del 01/09/2026 al 30/09/2026" }));
+      expect(props.setFechaDesde).toHaveBeenCalledWith("2026-09-01");
+      expect(props.setFechaHasta).toHaveBeenCalledWith("2026-09-30");
+
+      const siguiente = screen.getByRole("button", { name: "No hay periodo siguiente: el rango llega a hoy" });
+      expect(siguiente).toHaveAttribute("aria-disabled", "true");
+      vi.mocked(props.setFechaDesde).mockClear();
+      fireEvent.click(siguiente);
+      expect(props.setFechaDesde).not.toHaveBeenCalled();
+    });
+
+    it("Enter en Periodo aplica, y Aplicar sin cambios sigue enfocable y dice por qué", () => {
+      render(<FiltroFechas {...props} fechaDesde="2026-10-01" fechaHasta="2026-10-16" />);
+      fireEvent.click(screen.getByRole("button", { name: /^Fechas:/ }));
+      const aplicar = screen.getByRole("button", { name: "Aplicar" });
+      expect(aplicar).toHaveAttribute("aria-disabled", "true");
+      expect(aplicar).toHaveAccessibleDescription("Las fechas son las que ya están cargadas.");
+
+      const periodo = screen.getByLabelText("Periodo");
+      fireEvent.change(periodo, { target: { value: "mes_anterior" } });
+      fireEvent.keyDown(periodo, { key: "Enter" });
+      expect(props.setFechaDesde).toHaveBeenCalledWith("2026-09-01");
+    });
+  });
 });

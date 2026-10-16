@@ -6,6 +6,14 @@ export const MINUTOS_PARA_VIEJOS = 15;
 
 const hora = new Intl.DateTimeFormat("es-MX", { hour: "numeric", minute: "2-digit" });
 
+/** "25 min", "3 h", "2 días": una pestaña abierta desde ayer no dice "1440 min". */
+const antiguedad = (minutos: number) =>
+  minutos < 60
+    ? `${minutos} min`
+    : minutos < 24 * 60
+      ? `${Math.floor(minutos / 60)} h`
+      : `${Math.floor(minutos / (24 * 60))} ${Math.floor(minutos / (24 * 60)) === 1 ? "día" : "días"}`;
+
 interface ActualizarDatosProps {
   /** Fin de la última carga correcta; null antes de la primera. */
   cargadoEn: Date | null;
@@ -33,7 +41,7 @@ const ActualizarDatos = ({ cargadoEn, estaCargando, onActualizar }: ActualizarDa
   const viejos = minutos >= MINUTOS_PARA_VIEJOS;
   const texto = estaCargando
     ? "Actualizando…"
-    : `Datos de las ${hora.format(cargadoEn!)}${viejos ? ` · hace ${minutos} min` : ""}`;
+    : `Datos de las ${hora.format(cargadoEn!)}${viejos ? ` · hace ${antiguedad(minutos)}` : ""}`;
 
   return (
     <button

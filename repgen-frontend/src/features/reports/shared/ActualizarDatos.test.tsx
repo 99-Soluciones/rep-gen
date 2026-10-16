@@ -45,4 +45,13 @@ describe("ActualizarDatos", () => {
     );
     expect(container).toBeEmptyDOMElement();
   });
+
+  it("después de una hora dice horas, y después de un día, días", () => {
+    vi.useFakeTimers();
+    render(<ActualizarDatos cargadoEn={new Date()} estaCargando={false} onActualizar={() => {}} />);
+    act(() => vi.advanceTimersByTime(3 * 60 * 60_000 + 60_000));
+    expect(screen.getByRole("button")).toHaveTextContent("hace 3 h");
+    act(() => vi.advanceTimersByTime(24 * 60 * 60_000));
+    expect(screen.getByRole("button")).toHaveTextContent("hace 1 día");
+  });
 });

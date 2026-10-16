@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { CalendarDays, ChevronDown } from "lucide-react";
+import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { formatearFecha, obtenerFechaHoyFormateada } from "../../../shared/utils/fechas";
 import type { PeriodoVista } from "@repgen/shared-types";
-import { detectarPeriodo, PERIODOS, resolverPeriodo } from "./ConfiguracionesColumnas/vista";
+import { detectarPeriodo, PERIODOS, resolverPeriodo, type Rango } from "./ConfiguracionesColumnas/vista";
+import { desplazarRango } from "./desplazarRango";
 
 interface FiltroFechasProps {
   fechaDesde: string;
@@ -49,6 +50,18 @@ const FiltroFechas = (props: FiltroFechasProps) => {
   const mismoAnio = fechaDesde.slice(0, 4) === fechaHasta.slice(0, 4);
   const rango = `${formatearFecha(fechaDesde).slice(0, mismoAnio ? 5 : undefined)} – ${formatearFecha(fechaHasta)}`;
 
+  // ‹ › aplican directo (un clic explícito): el periodo de al lado del mismo tamaño.
+  const anterior = desplazarRango({ desde: fechaDesde, hasta: fechaHasta }, -1);
+  const siguiente = desplazarRango({ desde: fechaDesde, hasta: fechaHasta }, 1);
+  const irA = (destino: Rango | null) => {
+    if (!destino) return;
+    props.setFechaDesde(destino.desde);
+    props.setFechaHasta(destino.hasta);
+  };
+  const enPalabras = (r: Rango) => `${formatearFecha(r.desde)} al ${formatearFecha(r.hasta)}`;
+  const claseFlecha =
+    "flex w-8 items-center justify-center text-gray-600 transition-colors hover:bg-blue-50 hover:text-blue-700 aria-disabled:cursor-not-allowed aria-disabled:opacity-40 aria-disabled:hover:bg-transparent aria-disabled:hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 pointer-coarse:w-10";
+
   return (
     <div
       ref={grupoRef}
@@ -59,6 +72,16 @@ const FiltroFechas = (props: FiltroFechasProps) => {
         cerrar();
       }}
     >
+      <div className="flex items-stretch divide-x divide-gray-200 overflow-hidden rounded-lg border border-gray-300 bg-white shadow-sm">
+      <button
+        type="button"
+        onClick={() => irA(anterior)}
+        aria-disabled={anterior ? undefined : true}
+        aria-label={anterior ? `Periodo anterior: del ${enPalabras(anterior)}` : "No hay periodo anterior"}
+        className={claseFlecha}
+      >
+        <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+      </button>
       <button
         ref={botonRef}
         type="button"
@@ -66,7 +89,7 @@ const FiltroFechas = (props: FiltroFechasProps) => {
         aria-expanded={abierto}
         aria-controls={ID_PANEL}
         aria-label={`Fechas: ${periodo ? `${periodo.etiqueta}, ` : ""}del ${formatearFecha(fechaDesde)} al ${formatearFecha(fechaHasta)}. Cambiar`}
-        className="group flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-1.5 pointer-coarse:min-h-10 text-sm text-gray-700 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+        className="group flex items-center gap-2 px-3 py-1.5 pointer-coarse:min-h-10 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
       >
         <CalendarDays className="h-4 w-4 shrink-0 text-gray-500 group-hover:text-blue-600" aria-hidden="true" />
         <span className="whitespace-nowrap tabular-nums">
@@ -78,6 +101,16 @@ const FiltroFechas = (props: FiltroFechasProps) => {
           aria-hidden="true"
         />
       </button>
+      <button
+        type="button"
+        onClick={() => irA(siguiente)}
+        aria-disabled={siguiente ? undefined : true}
+        aria-label={siguiente ? `Periodo siguiente: del ${enPalabras(siguiente)}` : "No hay periodo siguiente: el rango llega a hoy"}
+        className={claseFlecha}
+      >
+        <ChevronRight className="h-4 w-4" aria-hidden="true" />
+      </button>
+      </div>
 
       {abierto && <FormularioFechas {...props} onCerrar={cerrar} />}
     </div>
@@ -107,6 +140,7 @@ const FormularioFechas = ({
 
   const aplicarFechas = (evento: FormEvent) => {
     evento.preventDefault();
+    if (fechasSinCambios) return;
     if (!borradorFechas.fechaDesde || !borradorFechas.fechaHasta) {
       setError({
         mensaje: "Completa las dos fechas.",
@@ -181,6 +215,12 @@ const FormularioFechas = ({
           autoFocus
           value={periodoBorrador ?? ""}
           onChange={(e) => elegirPeriodo(e.target.value as PeriodoVista | "")}
+          // Un <select> no envía el formulario con Enter: se pide a mano, como en las fechas.
+          onKeyDown={(e) => {
+            if (e.key !== "Enter") return;
+            e.preventDefault();
+            e.currentTarget.form?.requestSubmit();
+          }}
           className="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="">Personalizado</option>
@@ -242,11 +282,18 @@ const FormularioFechas = ({
         </button>
         <button
           type="submit"
-          disabled={fechasSinCambios}
-          className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-marca-morado disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+          // aria-disabled: sigue enfocable y dice por qué (DESIGN.md).
+          aria-disabled={fechasSinCambios || undefined}
+          aria-describedby={fechasSinCambios ? "fechas-sin-cambios" : undefined}
+          className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-marca-morado aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
         >
           Aplicar
         </button>
+        {fechasSinCambios && (
+          <span id="fechas-sin-cambios" className="sr-only">
+            Las fechas son las que ya están cargadas.
+          </span>
+        )}
       </div>
     </form>
   );

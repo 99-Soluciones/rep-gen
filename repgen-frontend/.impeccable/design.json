@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-16T15:37:05Z",
+  "generatedAt": "2026-10-16T15:52:07Z",
   "title": "Design System: RepGen",
   "extensions": {
     "colorMeta": {
@@ -359,7 +359,7 @@
   ],
   "narrative": {
     "northStar": "El Libro Mayor Claro",
-    "overview": "RepGen se lee como un libro mayor bien llevado: hojas blancas sobre una mesa gris, columnas ordenadas y la cifra siempre a la vista. La tabla AG Grid es la superficie principal, y todo lo demás (encabezado, filtro de fechas, acciones, KPIs laterales) se acomoda a su alrededor en controles compactos de 14px. La densidad es de herramienta de trabajo diario, no de dashboard decorativo: filas de 36px, una fila de totales al pie y un resumen lateral que se lee como estado de cuenta, no como tarjetas.\n\nEl color es funcional. El azul ERP marca dónde se actúa o se navega. El verde aparece únicamente en la exportación; el rojo, en los errores, en cerrar sesión y en las cifras negativas, como en la tinta roja de un libro contable. Los grises de Tailwind dan la estructura. Las superficies son planas, con bordes de un pixel y sombras mínimas, y la jerarquía sale del contraste entre el lienzo gris y las hojas blancas, no de la profundidad.\n\nLos estados vacíos y de error usan las mismas hojas blancas: un ícono pequeño en un círculo de velo, un título, una frase y una salida concreta.",
+    "overview": "RepGen se lee como un libro mayor bien llevado: hojas blancas sobre una mesa gris, columnas ordenadas y la cifra siempre a la vista. La tabla AG Grid es la superficie principal, y todo lo demás (encabezado, filtro de fechas, acciones, KPIs laterales) se acomoda a su alrededor en controles compactos de 14px. La densidad es de herramienta de trabajo diario, no de dashboard decorativo: filas de 36px, una fila de totales al pie y un resumen lateral que se lee como estado de cuenta, no como tarjetas.\n\nEl color es funcional. El azul ERP marca dónde se actúa o se navega. El verde aparece únicamente en la exportación; el rojo, en los errores, en cerrar sesión y en las cifras negativas, como en la tinta roja de un libro contable. Los grises de Tailwind dan la estructura. Las superficies son planas, con bordes de un pixel y sombras mínimas, y la jerarquía sale del contraste entre el lienzo gris y las hojas blancas, no de la profundidad.\n\nLos estados vacíos y de error usan las mismas hojas blancas: un ícono pequeño en un círculo de velo, un título, una frase y una salida concreta.\n\n- Hojas blancas (#ffffff) sobre un lienzo gris (#f9fafb), con bordes de 1px.\n- Azul ERP como único acento interactivo; el morado ERP solo aparece en el hover.\n- Arial en toda la interfaz, con el cuerpo en 14px y etiquetas de 12px en mayúsculas y espaciadas.\n- Esquinas suavemente redondeadas (8px) en casi todo; pastillas para chips e íconos.\n- Cifras alineadas a la derecha con numerales tabulares; los negativos en rojo y nada más lleva color.\n- Movimiento limitado a transiciones de color; nada entra en escena con coreografía.",
     "keyCharacteristics": [
       "Hojas blancas (#ffffff) sobre un lienzo gris (#f9fafb), con bordes de 1px.",
       "Azul ERP como único acento interactivo; el morado ERP solo aparece en el hover.",
