@@ -59,7 +59,7 @@ export const LineaEstado = ({
     </dt>
     <dd
       className={`text-right tabular-nums whitespace-nowrap ${
-        total ? "text-lg font-bold" : "text-sm font-medium"
+        total ? "text-sm font-semibold" : "text-sm font-medium"
       } ${valor < 0 ? "text-red-600" : "text-gray-900"}`}
     >
       {/* `|| 0` evita "-$0.00" cuando llega -0 (p. ej. cargos negados en cero). */}
@@ -115,7 +115,7 @@ export const LineaComparacion = ({
     );
   }
   return (
-    <div className="flex items-baseline justify-between gap-4 pt-0.5 text-xs">
+    <div className="flex flex-wrap items-baseline justify-between gap-x-4 pt-0.5 text-sm">
       <dt className="text-gray-600">vs. {rango}</dt>
       <dd aria-busy={comparacion.estado === "cargando" && !filtrado} className="text-right tabular-nums text-gray-600">
         {detalle}
@@ -123,6 +123,35 @@ export const LineaComparacion = ({
     </div>
   );
 };
+
+/**
+ * El titular del resumen: la cifra resultado (Flujo neto, Facturación neta)
+ * arriba de todo, en Headline, con el periodo anterior al lado en 14px. El
+ * estado de cuenta de abajo muestra cómo se llega a ella.
+ */
+export const ResultadoResumen = ({
+  etiqueta,
+  valor,
+  comparacion,
+  filtrado,
+}: {
+  etiqueta: string;
+  valor: number;
+  comparacion: ComparacionPeriodo;
+  filtrado: boolean;
+}) => (
+  <section aria-labelledby="titular-resumen" className="col-span-full flex flex-col">
+    <h3 id="titular-resumen" className="text-sm font-semibold text-gray-700">
+      {etiqueta}
+    </h3>
+    <p className={`text-xl font-bold tabular-nums ${valor < 0 ? "text-red-600" : "text-gray-900"}`}>
+      {moneda.format(valor || 0)}
+    </p>
+    <dl className="mt-0.5">
+      <LineaComparacion actual={valor} comparacion={comparacion} filtrado={filtrado} />
+    </dl>
+  </section>
+);
 
 /**
  * Deja claro sobre qué se calcularon las cifras: el rango cargado y cuántas

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { vi } from "vitest";
-import { LineaComparacion, LineaEstado, NotaRegistros, ResultadoCompacto, SeccionEstado } from "./EstadoKpi";
+import { LineaComparacion, LineaEstado, NotaRegistros, ResultadoCompacto, ResultadoResumen, SeccionEstado } from "./EstadoKpi";
 
 describe("EstadoKpi", () => {
   it("marca en rojo solo los negativos y no muestra -$0.00", () => {
@@ -105,5 +105,22 @@ describe("LineaEstado en otra moneda", () => {
   it("formatea con el código de la moneda, como la tabla", () => {
     render(<dl><LineaEstado etiqueta="Abonos" valor={50} codigoMoneda="USD" /></dl>);
     expect(screen.getByText(/USD\s50\.00/)).toBeInTheDocument();
+  });
+});
+
+describe("ResultadoResumen", () => {
+  it("encabeza el resumen con la cifra y el periodo anterior", () => {
+    const rango = { desde: "2026-09-01", hasta: "2026-09-15" };
+    render(
+      <ResultadoResumen
+        etiqueta="Flujo neto"
+        valor={-1200}
+        comparacion={{ rango, valor: 1000, estado: "lista" }}
+        filtrado={false}
+      />,
+    );
+    const titular = screen.getByRole("region", { name: "Flujo neto" });
+    expect(titular).toHaveTextContent("-$1,200.00");
+    expect(titular).toHaveTextContent("vs. 01/09 – 15/09/2026");
   });
 });

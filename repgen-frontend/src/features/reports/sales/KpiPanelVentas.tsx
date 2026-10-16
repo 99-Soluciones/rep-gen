@@ -1,4 +1,4 @@
-import { LineaComparacion, LineaEstado, NotaRegistros, SeccionEstado } from "../shared/EstadoKpi";
+import { LineaEstado, NotaRegistros, ResultadoResumen, SeccionEstado } from "../shared/EstadoKpi";
 import type { ComparacionPeriodo } from "../shared/useComparacionPeriodo";
 import type { TotalesVentas } from "./useTotalesVentas";
 import type { VentasRouteType } from "./ReporteVentas";
@@ -17,6 +17,12 @@ interface KpiPanelVentasProps {
 // de los tres renglones de arriba.
 const KpiPanelVentas = ({ totales, comparacion, currentType, registros, total, desde, hasta }: KpiPanelVentasProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-x-8 gap-y-5">
+    <ResultadoResumen
+      etiqueta="Facturación neta"
+      valor={totales.facturacionNeta}
+      comparacion={comparacion}
+      filtrado={registros !== total}
+    />
     <NotaRegistros registros={registros} total={total} desde={desde} hasta={hasta} />
 
     <SeccionEstado titulo="Importes">
@@ -24,11 +30,6 @@ const KpiPanelVentas = ({ totales, comparacion, currentType, registros, total, d
       <LineaEstado etiqueta="Cancelaciones" valor={totales.totalCancelaciones} />
       <LineaEstado etiqueta="Devoluciones" valor={totales.totalDevoluciones} />
       <LineaEstado etiqueta="Facturación neta" valor={totales.facturacionNeta} total />
-      <LineaComparacion
-        actual={totales.facturacionNeta}
-        comparacion={comparacion}
-        filtrado={registros !== total}
-      />
     </SeccionEstado>
 
     {currentType === "facturas" ? (

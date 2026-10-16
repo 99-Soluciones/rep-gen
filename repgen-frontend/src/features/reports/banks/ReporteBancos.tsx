@@ -9,10 +9,10 @@ import { useReporteBase } from "../shared/useReporteBase";
 import { useReporteGrid } from "../shared/useReporteGrid";
 import { usePreferenciaLocal } from "../shared/usePreferenciaLocal";
 import {
-  LineaComparacion,
   LineaEstado,
   NotaRegistros,
   ResultadoCompacto,
+  ResultadoResumen,
   SeccionEstado,
 } from "../shared/EstadoKpi";
 import { useComparacionPeriodo } from "../shared/useComparacionPeriodo";
@@ -129,6 +129,12 @@ const ReporteBancos = () => {
           estado={estadoCifras(error, estaCargando, base.cargadoEn)}
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-x-8 gap-y-5">
+            <ResultadoResumen
+              etiqueta={otrasMonedas.length > 0 ? "Flujo neto en MXN" : "Flujo neto"}
+              valor={flujoMxn}
+              comparacion={comparacion}
+              filtrado={filtrado}
+            />
             <NotaRegistros
               registros={filasVisibles}
               total={datos.length}
@@ -139,7 +145,6 @@ const ReporteBancos = () => {
               <LineaEstado etiqueta="Abonos" valor={mxn.abonos} />
               <LineaEstado etiqueta="Cargos" valor={-mxn.cargos} />
               <LineaEstado etiqueta="Flujo neto" valor={flujoMxn} total />
-              <LineaComparacion actual={flujoMxn} comparacion={comparacion} filtrado={filtrado} />
             </SeccionEstado>
             {otrasMonedas.map((codigo) => (
               <SeccionEstado key={codigo} titulo={`Movimientos en ${codigo}`}>
