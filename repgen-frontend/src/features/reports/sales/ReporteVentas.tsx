@@ -97,6 +97,7 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
     desde: base.fechaDesde,
     hasta: base.fechaHasta,
     calcular: (filas) => calcularTotalesVentas(filas, currentType).facturacionNeta,
+    intento: base.intento,
   });
 
   return (

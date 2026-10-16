@@ -23,6 +23,8 @@ interface UseReporteBaseState<T> {
   error: ErrorCarga | null;
   /** Vuelve a consultar el mismo rango (también sirve para traer datos más nuevos). */
   reintentar: () => void;
+  /** Cuántas veces se pidió volver a consultar: lo que dependa de los datos lo sigue. */
+  intento: number;
   /** Cuándo terminó la última carga correcta: los datos en pantalla son de esa hora. */
   cargadoEn: Date | null;
   fechaDesde: string;
@@ -169,6 +171,7 @@ export const useReporteBase = <T,>({
     estaCargando,
     error,
     reintentar: () => setIntento((n) => n + 1),
+    intento,
     cargadoEn,
     fechaDesde,
     setFechaDesde,

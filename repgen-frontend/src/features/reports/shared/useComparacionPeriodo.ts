@@ -15,20 +15,24 @@ export interface ComparacionPeriodo {
  * Lee el periodo anterior al rango cargado (una consulta más a FileMaker por
  * cada cambio de rango) y le aplica el mismo cálculo que al resumen. Usa
  * todas las filas: los filtros de la tabla no aplican al periodo anterior.
+ * `intento` (el de useReporteBase) hace que "Actualizar datos" también la
+ * vuelva a leer, para no comparar datos nuevos contra una cifra vieja.
  */
 export const useComparacionPeriodo = <T,>({
   endpoint,
   desde,
   hasta,
   calcular,
+  intento = 0,
 }: {
   endpoint: string;
   desde: string;
   hasta: string;
   calcular: (filas: T[]) => number;
+  intento?: number;
 }): ComparacionPeriodo => {
   const rango = periodoAnterior({ desde, hasta });
-  const clave = `${endpoint}|${rango.desde}|${rango.hasta}`;
+  const clave = `${endpoint}|${rango.desde}|${rango.hasta}|${intento}`;
   const [resultado, setResultado] = useState<{ clave: string; filas: T[] | null; error: boolean } | null>(null);
 
   useEffect(() => {

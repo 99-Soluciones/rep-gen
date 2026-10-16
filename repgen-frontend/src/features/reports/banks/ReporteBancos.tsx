@@ -69,6 +69,7 @@ const ReporteBancos = () => {
     desde: base.fechaDesde,
     hasta: base.fechaHasta,
     calcular: flujoNetoMxn,
+    intento: base.intento,
   });
 
   return (
