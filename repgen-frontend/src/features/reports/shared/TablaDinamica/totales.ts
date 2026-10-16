@@ -12,7 +12,12 @@ export interface TotalesTabla<T> {
    * en ella parece un resumen de ese campo.
    */
   etiqueta?: string;
+  /** Aclaración bajo la etiqueta (p. ej. "No es la facturación neta"). */
+  nota?: string;
 }
+
+/** Clave de la fila de totales donde viaja la nota (no es una columna). */
+export const CLAVE_NOTA_TOTALES = "__notaTotales";
 
 // Fila de totales sobre las filas visibles (después de los filtros de columna).
 export function calcularFilaTotales<T>(
@@ -33,7 +38,10 @@ export function calcularFilaTotales<T>(
   const primeraColumna = api.getAllDisplayedColumns()[0]?.getColDef().field;
   const etiqueta =
     totales.etiqueta && primeraColumna && !(primeraColumna in sumas)
-      ? { [primeraColumna]: totales.etiqueta }
+      ? {
+          [primeraColumna]: totales.etiqueta,
+          ...(totales.nota ? { [CLAVE_NOTA_TOTALES]: totales.nota } : {}),
+        }
       : {};
   return { ...sumas, ...etiqueta };
 }

@@ -2,6 +2,7 @@ import type { CellClassParams, CellClassRules, ColDef } from "ag-grid-community"
 
 import FloatingFilterConLimpiar from "../TablaDinamica/FloatingFilterConLimpiar";
 import FiltroLista from "../TablaDinamica/FiltroLista";
+import RotuloTotales from "../TablaDinamica/RotuloTotales";
 import FloatingFiltroLista from "../TablaDinamica/FloatingFiltroLista";
 import {
   esNegativo,
@@ -58,7 +59,7 @@ interface BaseColumnDef<TRowData> extends Partial<ColDef<TRowData>> {
 
 // Clases de index.css. El rótulo ("Total MXN") cae en la primera columna
 // visible, sea del tipo que sea; la tinta roja, solo en columnas de cifras.
-const esRotuloTotal = ({ node, value }: CellClassParams) =>
+const esRotuloTotal = ({ node, value }: Pick<CellClassParams, "node" | "value">) =>
   node.rowPinned === "bottom" && typeof value === "string" && value !== "";
 const reglasCelda: CellClassRules = { "rotulo-total": esRotuloTotal };
 const reglasCeldaCifra: CellClassRules = {
@@ -168,6 +169,8 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
     field: campoTipado,
     context: { claseColumna: metadatoResuelto.columnClass || "General" },
     cellClassRules: reglasCelda,
+    // El rótulo de la fila de totales (con su nota, si la hay), en cualquier columna.
+    cellRendererSelector: (p) => (esRotuloTotal(p) ? { component: RotuloTotales } : undefined),
     filterParams: textFilterParams(placeholderFiltro),
     floatingFilterComponent: FloatingFilterConLimpiar,
     floatingFilterComponentParams: floatingFilterParams({

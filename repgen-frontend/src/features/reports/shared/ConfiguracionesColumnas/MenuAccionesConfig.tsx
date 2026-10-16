@@ -1,5 +1,5 @@
 import { MoreVertical, Pencil, Plus, Save, Star, Trash2, Undo2 } from "lucide-react";
-import type { Dispatch } from "react";
+import type { Dispatch, KeyboardEvent } from "react";
 import type { ReportConfigResponse } from "../api/report-configs.api";
 import type { MenuColumnasAction, MenuColumnasState } from "./ConfiguracionesColumnas.reducer";
 
@@ -22,6 +22,29 @@ interface MenuAccionesConfigProps {
 // en la primera acción disponible, como en cualquier menú de escritorio.
 const enfocarPrimeraAccion = (lista: HTMLDivElement | null) => {
   lista?.querySelector<HTMLButtonElement>("button:not(:disabled)")?.focus();
+};
+
+// Teclado de menú: flechas (circulares), Inicio y Fin entre las acciones
+// disponibles. Tab no recorre el menú: lo cierra y sigue de largo.
+const navegarMenu = (evento: KeyboardEvent<HTMLDivElement>, cerrar: () => void) => {
+  if (evento.key === "Tab") {
+    cerrar();
+    return;
+  }
+  const acciones = [
+    ...evento.currentTarget.querySelectorAll<HTMLButtonElement>("[role=menuitem]:not(:disabled)"),
+  ];
+  if (acciones.length === 0) return;
+  const actual = acciones.indexOf(document.activeElement as HTMLButtonElement);
+  const destino = {
+    ArrowDown: acciones[(actual + 1) % acciones.length],
+    ArrowUp: acciones[(actual - 1 + acciones.length) % acciones.length],
+    Home: acciones[0],
+    End: acciones[acciones.length - 1],
+  }[evento.key];
+  if (!destino) return;
+  evento.preventDefault();
+  destino.focus();
 };
 
 const MenuAccionesConfig = ({
@@ -50,6 +73,7 @@ const MenuAccionesConfig = ({
         className="flex items-center justify-center px-2 text-gray-600 rounded-r-lg hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         title="Acciones de la vista"
         aria-label="Acciones de la vista"
+        aria-haspopup="menu"
         aria-expanded={estado.menuAbierto}
         aria-controls="menu-acciones-vista"
       >
@@ -130,9 +154,16 @@ const MenuAccionesConfig = ({
               </div>
             </div>
           ) : (
-            <div className="py-1" ref={enfocarPrimeraAccion}>
+            <div
+              role="menu"
+              aria-label="Acciones de la vista"
+              className="py-1"
+              ref={enfocarPrimeraAccion}
+              onKeyDown={(e) => navegarMenu(e, () => dispatch({ type: "CERRAR_TODO" }))}
+            >
               <button
                 type="button"
+                role="menuitem"
                 onClick={onGuardarCambios}
                 disabled={!configActual || !modificada || guardando}
                 className="w-full flex items-start gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
@@ -146,6 +177,7 @@ const MenuAccionesConfig = ({
               {onDeshacer && (
                 <button
                   type="button"
+                  role="menuitem"
                   onClick={onDeshacer}
                   disabled={guardando}
                   className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 transition-colors"
@@ -156,6 +188,7 @@ const MenuAccionesConfig = ({
               )}
               <button
                 type="button"
+                role="menuitem"
                 onClick={() => dispatch({ type: "ABRIR_POPOVER_GUARDAR" })}
                 disabled={guardando}
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 transition-colors"
@@ -165,6 +198,7 @@ const MenuAccionesConfig = ({
               </button>
               <button
                 type="button"
+                role="menuitem"
                 onClick={iniciarRenombrar}
                 disabled={!configActual || guardando}
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
@@ -174,6 +208,7 @@ const MenuAccionesConfig = ({
               </button>
               <button
                 type="button"
+                role="menuitem"
                 onClick={onPredeterminar}
                 disabled={!configActual || configActual.isDefault || guardando}
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
@@ -183,9 +218,10 @@ const MenuAccionesConfig = ({
                   ? "Ya se abre por defecto"
                   : "Abrir por defecto"}
               </button>
-              <div className="border-t border-gray-100 my-1" />
+              <div role="separator" className="border-t border-gray-100 my-1" />
               <button
                 type="button"
+                role="menuitem"
                 onClick={() => dispatch({ type: "CONFIRMAR_ELIMINAR" })}
                 disabled={!configActual || guardando}
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-red-600 hover:bg-red-50 focus:outline-none focus-visible:bg-red-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"

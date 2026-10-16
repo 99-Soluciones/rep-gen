@@ -154,6 +154,32 @@ describe("ConfiguracionesColumnas", () => {
     vi.useRealTimers();
   });
 
+  it("recorrer fechas no es un cambio sin guardar: ofrece volver al periodo y Actualizar lo conserva", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date(2026, 9, 12));
+    updateReportConfigMock.mockResolvedValue(configs[0]);
+    // Vista con periodo "Mes anterior"; en pantalla está octubre (rango del componente).
+    const vistaA = { ...configs[0], isDefault: true, periodo: "mes_anterior" as const };
+    const { rerender } = renderComponente([vistaA]);
+
+    expect(screen.getByRole("button", { name: "Actualizar vista" })).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(screen.getByRole("button", { name: "Volver a mes anterior" }));
+    expect(onAplicarRango).toHaveBeenCalledWith("2026-09-01", "2026-09-30");
+
+    // Un filtro sí es un cambio; actualizar guarda el periodo de la vista, no las fechas.
+    getFilterModel.mockReturnValue({ a: { filterType: "text", filter: "BBVA" } });
+    rerender(componente([vistaA], vistaGrid({ a: { filterType: "text", filter: "BBVA" } })));
+    fireEvent.click(screen.getByRole("button", { name: /^Actualizar vista/ }));
+    await waitFor(() =>
+      expect(updateReportConfigMock).toHaveBeenCalledWith("cfg-uuid-1", {
+        columnState: getColumnState(),
+        filterModel: { a: { filterType: "text", filter: "BBVA" } },
+        periodo: "mes_anterior",
+      }),
+    );
+    vi.useRealTimers();
+  });
+
   it("'— Ninguna —' restaura las columnas originales y quita los filtros", () => {
     renderComponente();
 
@@ -427,7 +453,7 @@ describe("ConfiguracionesColumnas", () => {
 
     fireEvent.click(screen.getByTitle("Acciones de la vista"));
     fireEvent.click(
-      screen.getByRole("button", { name: /Guardar como vista nueva/i }),
+      screen.getByRole("menuitem", { name: /Guardar como vista nueva/i }),
     );
     fireEvent.change(screen.getByPlaceholderText("Nombre de la vista"), {
       target: { value: "Mi vista" },
@@ -460,7 +486,7 @@ describe("ConfiguracionesColumnas", () => {
       target: { value: "cfg-uuid-1" },
     });
     fireEvent.click(screen.getByTitle("Acciones de la vista"));
-    fireEvent.click(screen.getByRole("button", { name: /Renombrar vista/i }));
+    fireEvent.click(screen.getByRole("menuitem", { name: /Renombrar vista/i }));
     fireEvent.change(screen.getByLabelText("Nombre de la vista"), {
       target: { value: "Nuevo" },
     });
@@ -484,7 +510,7 @@ describe("ConfiguracionesColumnas", () => {
       target: { value: "cfg-uuid-1" },
     });
     fireEvent.click(screen.getByTitle("Acciones de la vista"));
-    fireEvent.click(screen.getByRole("button", { name: /Abrir por defecto/i }));
+    fireEvent.click(screen.getByRole("menuitem", { name: /Abrir por defecto/i }));
 
     await waitFor(() => {
       expect(updateReportConfigMock).toHaveBeenCalledWith("cfg-uuid-1", {
@@ -503,7 +529,7 @@ describe("ConfiguracionesColumnas", () => {
       target: { value: "cfg-uuid-1" },
     });
     fireEvent.click(screen.getByTitle("Acciones de la vista"));
-    fireEvent.click(screen.getByRole("button", { name: /Eliminar vista/i }));
+    fireEvent.click(screen.getByRole("menuitem", { name: /Eliminar vista/i }));
     // Aparece la confirmación inline
     fireEvent.click(screen.getByRole("button", { name: /Sí, eliminar/i }));
 
@@ -523,30 +549,65 @@ describe("ConfiguracionesColumnas", () => {
       renderComponente();
       abrirMenu();
       // "Actualizar vista" está deshabilitada (sin cambios): sigue "Guardar como…".
-      expect(screen.getByRole("button", { name: /Guardar como vista nueva/ })).toHaveFocus();
+      expect(screen.getByRole("menuitem", { name: /Guardar como vista nueva/ })).toHaveFocus();
     });
 
     it("Renombrar enfoca el campo y Eliminar enfoca «No», no «Sí, eliminar»", () => {
       renderComponente();
       abrirMenu();
-      fireEvent.click(screen.getByRole("button", { name: /Renombrar vista/ }));
+      fireEvent.click(screen.getByRole("menuitem", { name: /Renombrar vista/ }));
       expect(screen.getByLabelText("Nombre de la vista")).toHaveFocus();
 
       fireEvent.keyDown(screen.getByLabelText("Nombre de la vista"), { key: "Escape" });
-      fireEvent.click(screen.getByRole("button", { name: /Eliminar vista/ }));
+      fireEvent.click(screen.getByRole("menuitem", { name: /Eliminar vista/ }));
       expect(screen.getByRole("button", { name: "No" })).toHaveFocus();
     });
 
     it("Escape en «Nueva vista» cierra y devuelve el foco a ⋮", () => {
       renderComponente();
       abrirMenu();
-      fireEvent.click(screen.getByRole("button", { name: /Guardar como vista nueva/ }));
+      fireEvent.click(screen.getByRole("menuitem", { name: /Guardar como vista nueva/ }));
       const nombre = screen.getByPlaceholderText("Nombre de la vista");
       expect(nombre).toHaveFocus();
 
       fireEvent.keyDown(nombre, { key: "Escape" });
       expect(screen.queryByPlaceholderText("Nombre de la vista")).not.toBeInTheDocument();
       expect(screen.getByTitle("Acciones de la vista")).toHaveFocus();
+    });
+
+    it("el menú se recorre con flechas, Inicio y Fin, y Tab lo cierra", () => {
+      renderComponente();
+      abrirMenu();
+      const menu = screen.getByRole("menu", { name: "Acciones de la vista" });
+      const nueva = screen.getByRole("menuitem", { name: /Guardar como vista nueva/ });
+      fireEvent.keyDown(nueva, { key: "ArrowDown" });
+      expect(screen.getByRole("menuitem", { name: /Renombrar vista/ })).toHaveFocus();
+      fireEvent.keyDown(menu, { key: "End" });
+      expect(screen.getByRole("menuitem", { name: /Eliminar vista/ })).toHaveFocus();
+      // Circular: después de la última vuelve a la primera disponible.
+      fireEvent.keyDown(menu, { key: "ArrowDown" });
+      expect(nueva).toHaveFocus();
+
+      fireEvent.keyDown(nueva, { key: "Tab" });
+      expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+    });
+
+    it("un clic fuera cierra el menú sin tragarse el clic", () => {
+      const fuera = vi.fn();
+      render(
+        <>
+          {componente()}
+          <button type="button" onClick={fuera}>
+            Fuera
+          </button>
+        </>,
+      );
+      abrirMenu();
+      const boton = screen.getByRole("button", { name: "Fuera" });
+      fireEvent.pointerDown(boton);
+      fireEvent.click(boton);
+      expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+      expect(fuera).toHaveBeenCalled();
     });
   });
 
@@ -557,7 +618,7 @@ describe("ConfiguracionesColumnas", () => {
     await waitFor(() => expect(toastSuccessMock).toHaveBeenCalled());
 
     fireEvent.click(screen.getByTitle("Acciones de la vista"));
-    fireEvent.click(screen.getByRole("button", { name: "Deshacer la última actualización" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Deshacer la última actualización" }));
 
     await waitFor(() =>
       expect(updateReportConfigMock).toHaveBeenLastCalledWith("cfg-uuid-2", {
@@ -567,7 +628,7 @@ describe("ConfiguracionesColumnas", () => {
       }),
     );
     fireEvent.click(screen.getByTitle("Acciones de la vista"));
-    expect(screen.queryByRole("button", { name: "Deshacer la última actualización" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: "Deshacer la última actualización" })).not.toBeInTheDocument();
   });
 
   it("deshabilita las acciones que requieren vista cuando no hay ninguna seleccionada", () => {
@@ -579,16 +640,16 @@ describe("ConfiguracionesColumnas", () => {
     fireEvent.click(kebab);
 
     expect(
-      screen.getByRole("button", { name: /Actualizar vista/i }),
+      screen.getByRole("menuitem", { name: /Actualizar vista/i }),
     ).toBeDisabled();
     expect(
-      screen.getByRole("button", { name: /Renombrar vista/i }),
+      screen.getByRole("menuitem", { name: /Renombrar vista/i }),
     ).toBeDisabled();
     expect(
-      screen.getByRole("button", { name: /Eliminar vista/i }),
+      screen.getByRole("menuitem", { name: /Eliminar vista/i }),
     ).toBeDisabled();
     expect(
-      screen.getByRole("button", { name: /Guardar como vista nueva/i }),
+      screen.getByRole("menuitem", { name: /Guardar como vista nueva/i }),
     ).toBeEnabled();
   });
 

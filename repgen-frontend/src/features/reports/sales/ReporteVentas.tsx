@@ -128,7 +128,12 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
             estaCargando={estaCargando}
             error={error}
             onReintentar={reintentar}
-            totales={{ campos: camposTotales[currentType], etiqueta: "Suma de columnas MXN" }}
+            totales={{
+              campos: camposTotales[currentType],
+              // La primera columna mide 150px: rótulo corto y la aclaración debajo.
+              etiqueta: "Suma MXN",
+              nota: "No es la facturación neta",
+            }}
             onGridListo={onGridListo}
             onCambioVista={onCambioVista}
             onActualizacionModulo={() => {

@@ -69,12 +69,16 @@ const FiltroLista = ({ model, onModelChange, api, column, getValue }: CustomFilt
     aplicar(nuevos);
   };
 
-  // Flechas entre casillas (Espacio ya marca o desmarca).
-  const moverFoco = (evento: KeyboardEvent<HTMLUListElement>) => {
+  // Flechas entre la búsqueda y las casillas (Espacio ya marca o desmarca):
+  // ↓ desde la búsqueda entra en la lista, ↑ desde la primera casilla vuelve.
+  const moverFoco = (evento: KeyboardEvent<HTMLElement>) => {
     if (evento.key !== "ArrowDown" && evento.key !== "ArrowUp") return;
     const casillas = [...(listaRef.current?.querySelectorAll<HTMLInputElement>("input[type=checkbox]") ?? [])];
     const actual = casillas.indexOf(document.activeElement as HTMLInputElement);
-    const siguiente = casillas[actual + (evento.key === "ArrowDown" ? 1 : -1)];
+    const siguiente =
+      actual === 0 && evento.key === "ArrowUp"
+        ? buscarRef.current
+        : casillas[actual + (evento.key === "ArrowDown" ? 1 : -1)];
     if (siguiente) {
       evento.preventDefault();
       siguiente.focus();
@@ -94,6 +98,7 @@ const FiltroLista = ({ model, onModelChange, api, column, getValue }: CustomFilt
           type="search"
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
+          onKeyDown={moverFoco}
           placeholder={`Buscar ${nombreColumna.toLowerCase()}`}
           aria-label={`Buscar en ${nombreColumna}`}
           className="w-full rounded-md border border-gray-300 bg-white py-1.5 pl-8 pr-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"

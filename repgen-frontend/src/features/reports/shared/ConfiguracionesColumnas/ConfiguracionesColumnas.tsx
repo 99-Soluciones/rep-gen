@@ -13,8 +13,8 @@ import {
 import {
   aplicarVista,
   capturarVista,
-  detectarPeriodo,
   huellaVista,
+  PERIODOS,
   resolverPeriodo,
   restaurarOriginal,
   type Rango,
@@ -142,10 +142,11 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   const api = referenciaGrid.current?.api;
   const configActual = configs.find((c) => c.id === configSeleccionada) ?? null;
 
-  // "• sin guardar": columnas/filtros distintos de lo guardado, o (si la vista
-  // tiene periodo) un rango de fechas distinto del que el periodo da hoy. Solo
-  // se comparan las columnas que existen en ambos lados, para que un campo
-  // nuevo del reporte no marque como modificadas todas las vistas viejas.
+  // "• sin guardar": columnas o filtros distintos de lo guardado. Las fechas no
+  // cuentan: recorrerlas (‹ ›, otro mes) es navegar, no editar la vista, y no
+  // debe activar el aviso de salida. Solo se comparan las columnas que existen
+  // en ambos lados, para que un campo nuevo del reporte no marque como
+  // modificadas todas las vistas viejas.
   // Se calcula solo con props/estado (nunca leyendo el grid en el render).
   const modificada = (() => {
     if (!vistaActual) return false;
@@ -160,14 +161,9 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
     }
     const actual = vistaActual;
     const huellaActualCompleta = huellaVista(actual.columnState, actual.filterModel);
-    const conPeriodoDistinto = () => {
-      if (!configActual.periodo || !rango) return false;
-      const esperado = resolverPeriodo(configActual.periodo);
-      return esperado.desde !== rango.desde || esperado.hasta !== rango.hasta;
-    };
     // Lo normal: comparar contra el grid tal como quedó al abrir/guardar la vista.
     if (vistaBase?.configId === configActual.id) {
-      return huellaActualCompleta !== vistaBase.huella || conPeriodoDistinto();
+      return huellaActualCompleta !== vistaBase.huella;
     }
     // Sin referencia todavía: comparar contra lo guardado.
     const guardadas = new Set(configActual.columnState.map((c) => c.colId));
@@ -183,12 +179,18 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       configActual.columnState.filter((c) => existentes.has(c.colId)),
       filtrosGuardados,
     );
-    if (huellaActual !== huellaGuardada) return true;
-    if (configActual.periodo && rango) {
-      const esperado = resolverPeriodo(configActual.periodo);
-      return esperado.desde !== rango.desde || esperado.hasta !== rango.hasta;
-    }
-    return false;
+    return huellaActual !== huellaGuardada;
+  })();
+
+  // Fechas distintas del periodo de la vista: un aviso tranquilo para volver,
+  // no un cambio sin guardar.
+  const periodoDeLaVista = configActual?.periodo
+    ? PERIODOS.find((p) => p.valor === configActual.periodo)
+    : undefined;
+  const fueraDelPeriodo = (() => {
+    if (!configActual?.periodo || !rango) return false;
+    const esperado = resolverPeriodo(configActual.periodo);
+    return esperado.desde !== rango.desde || esperado.hasta !== rango.hasta;
   })();
 
   // Mientras haya cambios sin guardar: guardián de las salidas de la app y
@@ -240,6 +242,18 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       ?.querySelector<HTMLElement>("[aria-controls='menu-acciones-vista']")
       ?.focus();
   };
+
+  // Menú o "Nueva vista" abiertos: un clic fuera los cierra y ese clic sigue su
+  // curso (antes un velo invisible se lo tragaba).
+  const flotanteAbierto = estado.menuAbierto || estado.popoverGuardarAbierto;
+  useEffect(() => {
+    if (!flotanteAbierto) return;
+    const alPresionar = (evento: PointerEvent) => {
+      if (!contenedorRef.current?.contains(evento.target as Node)) dispatch({ type: "CERRAR_TODO" });
+    };
+    document.addEventListener("pointerdown", alPresionar);
+    return () => document.removeEventListener("pointerdown", alPresionar);
+  }, [flotanteAbierto]);
 
   const aplicarConfig = (config: ReportConfigResponse) => {
     if (!api) return;
@@ -333,19 +347,15 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
     setGuardando(true);
     let guardada = false;
     try {
-      // Una vista con periodo pasa a guardar el que coincide con las fechas en
-      // pantalla; si no coincide ninguno, deja de tocar las fechas.
-      const periodo =
-        anterior.periodo && rango ? detectarPeriodo(rango) : (anterior.periodo ?? null);
+      // Actualizar guarda columnas y filtros; el periodo de la vista se queda
+      // (las fechas en pantalla son navegación, no parte del cambio).
+      const periodo = anterior.periodo ?? null;
       await updateReportConfig(anterior.id, { ...capturarVista(api), periodo });
       await onConfigsChange();
       onVistaAplicada?.(anterior.id);
       setVersionAnterior(anterior);
-      const sinPeriodo = anterior.periodo && !periodo
-        ? " Ya no cambia las fechas: las de pantalla no son un periodo."
-        : "";
       // Si el aviso se va, Deshacer sigue en el menú ⋮ de esta vista.
-      avisarConDeshacer(`Vista "${anterior.name}" actualizada.${sinPeriodo}`, () =>
+      avisarConDeshacer(`Vista "${anterior.name}" actualizada.`, () =>
         void deshacerActualizacion(anterior),
       );
       cerrarTodo();
@@ -405,7 +415,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   return (
     <div
       ref={contenedorRef}
-      className="relative min-w-0 max-w-full"
+      className="relative flex min-w-0 max-w-full items-center gap-2"
       onKeyDown={(e) => {
         // Escape cierra menú/popover y devuelve el foco al botón ⋮. El input de
         // Renombrar maneja su propio Escape (vuelve a la lista del menú).
@@ -414,8 +424,15 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
           quedarse();
           return;
         }
-        if (!estado.menuAbierto && !estado.popoverGuardarAbierto) return;
+        if (!flotanteAbierto) return;
         cerrarTodo();
+      }}
+      onBlur={(e) => {
+        // El foco salió del grupo (Tab, otro control): se cierra lo flotante.
+        const destino = e.relatedTarget as Node | null;
+        if (flotanteAbierto && destino && !e.currentTarget.contains(destino)) {
+          dispatch({ type: "CERRAR_TODO" });
+        }
       }}
     >
       {/* Grupo segmentado: selector de vista + guardar + menú ⋮ comparten un
@@ -541,6 +558,16 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
         />
       </div>
 
+      {fueraDelPeriodo && periodoDeLaVista && configActual?.periodo && (
+        <button
+          type="button"
+          onClick={() => aplicarPeriodo(configActual.periodo)}
+          className="shrink-0 rounded text-xs font-medium text-blue-700 underline-offset-2 hover:underline pointer-coarse:min-h-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          Volver a {periodoDeLaVista.etiqueta.toLowerCase()}
+        </button>
+      )}
+
       <PopoverGuardarConfig
         guardando={guardando}
         estado={estado}
@@ -644,15 +671,15 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
         </div>
       )}
 
-      {/* Overlay invisible para cerrar al hacer click fuera */}
-      {(estado.menuAbierto || estado.popoverGuardarAbierto || cambioPendiente || salidaPendiente) && (
+      {/* Velo invisible solo para el aviso de cambios: un clic fuera equivale a Cancelar. */}
+      {(cambioPendiente || salidaPendiente) && (
         <button
           type="button"
           aria-hidden="true"
           tabIndex={-1}
           className="fixed inset-0 z-40 cursor-default"
           onClick={() => {
-            if (cambioPendiente || salidaPendiente) quedarse();
+            quedarse();
             cerrarTodo();
           }}
         />

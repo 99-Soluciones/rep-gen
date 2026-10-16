@@ -60,4 +60,15 @@ describe("FiltroLista", () => {
     fireEvent.keyDown(primera, { key: "ArrowDown" });
     expect(segunda).toHaveFocus();
   });
+
+  it("↓ desde la búsqueda entra en la lista y ↑ desde la primera casilla vuelve", () => {
+    montar();
+    const buscar = screen.getByRole("searchbox");
+    const [primera] = screen.getAllByRole("checkbox");
+    buscar.focus();
+    fireEvent.keyDown(buscar, { key: "ArrowDown" });
+    expect(primera).toHaveFocus();
+    fireEvent.keyDown(primera, { key: "ArrowUp" });
+    expect(buscar).toHaveFocus();
+  });
 });
