@@ -62,8 +62,11 @@ const TablaDinamicaControles = ({
   return (
     // Una sola fila que se parte limpia: a la izquierda lo que se está viendo
     // (fechas, contador); a la derecha, como un bloque, lo que se puede hacer
-    // (vistas, columnas, exportar). Si no cabe, el bloque baja entero.
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2 border-b border-gray-100 bg-white">
+    // (vistas, columnas, exportar). Si no cabe, el bloque baja entero y, con
+    // justify-between, empieza a la izquierda bajo la primera fila (con ml-auto
+    // quedaba escalonado a la derecha).
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-3 py-2 border-b border-gray-100 bg-white">
+      <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
       {accionesToolbarInicio}
       <div
         className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 pointer-coarse:min-h-10 border rounded-lg text-sm whitespace-nowrap transition-colors ${
@@ -192,7 +195,8 @@ const TablaDinamicaControles = ({
           </button>
         )}
       </div>
-      <div className="ml-auto flex min-w-0 max-w-full flex-wrap items-center justify-end gap-2">
+      </div>
+      <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">
         {accionesToolbar}
         {accionesToolbarFin}
       </div>

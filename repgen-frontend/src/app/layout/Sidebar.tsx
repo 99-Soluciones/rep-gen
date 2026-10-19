@@ -21,7 +21,7 @@ const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
       inert={!isOpen}
       className={`
         absolute top-0 left-0 h-full z-100
-        w-64 bg-white border-r border-gray-200 flex flex-col shadow-2xl 
+        w-72 bg-white border-r border-gray-200 flex flex-col shadow-2xl 
         transition-transform duration-300 ease-in-out motion-reduce:transition-none
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
       `}
@@ -101,9 +101,10 @@ const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
               d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
             />
           </svg>
-          <span>Cuentas por cobrar</span>
-          <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
-            Próximamente
+          {/* Dos líneas, no una pastilla al lado: en el ancho del menú se pegaban. */}
+          <span className="flex min-w-0 flex-col">
+            <span>Cuentas por cobrar</span>
+            <span className="text-xs font-normal text-gray-500">Próximamente</span>
           </span>
         </NavLink>
 
@@ -130,9 +131,9 @@ const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
             />
           </svg>
 
-          <span>Inventarios</span>
-          <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
-            Próximamente
+          <span className="flex min-w-0 flex-col">
+            <span>Inventarios</span>
+            <span className="text-xs font-normal text-gray-500">Próximamente</span>
           </span>
         </NavLink>
       </nav>
