@@ -49,25 +49,27 @@ ModuleRegistry.registerModules([
 
 // Tema del sistema ("El Libro Mayor Claro", DESIGN.md). Con la Theming API la
 // grilla no lleva la clase .ag-theme-quartz: el estilo va en los parámetros.
+// Los colores son los tokens de Tailwind (index.css), con el hex de respaldo:
+// si el sistema cambia un gris, la grilla lo sigue.
 const temaGrid = themeQuartz.withParams({
   fontFamily: "Arial, Helvetica, sans-serif",
   fontSize: 14,
-  foregroundColor: "#111827",
+  foregroundColor: "var(--color-gray-900, #111827)",
   // Token de marca (index.css): si un tenant cambia su azul, la grilla lo sigue.
   accentColor: "var(--color-blue-600, #2670e3)",
-  borderColor: "#e5e7eb",
+  borderColor: "var(--color-gray-200, #e5e7eb)",
   wrapperBorder: false,
-  headerBackgroundColor: "#f9fafb",
-  headerTextColor: "#4b5563",
+  headerBackgroundColor: "var(--color-gray-50, #f9fafb)",
+  headerTextColor: "var(--color-gray-600, #4b5563)",
   headerFontWeight: 600,
   headerColumnBorder: false,
-  headerColumnResizeHandleColor: "#d1d5db",
-  rowBorder: { color: "#f3f4f6" },
+  headerColumnResizeHandleColor: "var(--color-gray-300, #d1d5db)",
+  rowBorder: { color: "var(--color-gray-100, #f3f4f6)" },
   columnBorder: false,
   rowHoverColor: "var(--color-blue-50, #eff6ff)",
-  pinnedRowBackgroundColor: "#f9fafb",
+  pinnedRowBackgroundColor: "var(--color-gray-50, #f9fafb)",
   pinnedRowFontWeight: 700,
-  pinnedRowBorder: { color: "#d1d5db" },
+  pinnedRowBorder: { color: "var(--color-gray-300, #d1d5db)" },
 });
 
 /**
