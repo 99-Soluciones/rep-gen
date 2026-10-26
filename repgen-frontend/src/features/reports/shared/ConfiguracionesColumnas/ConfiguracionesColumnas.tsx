@@ -558,15 +558,6 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
         />
       </div>
 
-      {/* Mientras el reporte no tiene vistas, una línea dice para qué sirven;
-          con la primera, desaparece. En teléfono no cabe: ahí el botón ya lo
-          dice con su nombre y su title. */}
-      {configs.length === 0 && (
-        <p className="hidden text-xs text-gray-600 sm:block">
-          Guarda columnas y filtros como vista para volver a ellos.
-        </p>
-      )}
-
       {fueraDelPeriodo && periodoDeLaVista && configActual?.periodo && (
         <button
           type="button"
