@@ -51,6 +51,14 @@ jobs:
       - name: Test
         run: pnpm --filter generador-reportes-backend test
 
+      # Levanta la app HTTP completa (AppModule + platform-express): atrapa lo
+      # que compila y pasa los unitarios pero no arranca, como el rxjs que
+      # @nestjs/platform-express 12 no declara. No necesita FileMaker ni .env.
+      - name: E2E (la app arranca)
+        run: pnpm --filter generador-reportes-backend test:e2e
+        env:
+          JWT_SECRET: ci-only-not-a-real-secret
+
       - name: Build
         run: pnpm --filter generador-reportes-backend build
 
