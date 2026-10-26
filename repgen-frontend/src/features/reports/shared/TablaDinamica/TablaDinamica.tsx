@@ -333,8 +333,13 @@ const TablaDinamica = <T,>({
           />
 
           {/* min-h-72: encabezado, filtros, totales y ~5 filas aunque la pantalla
-              sea baja; si no caben, la barra se va con el scroll de la página. */}
-          <div className="relative flex-1 min-h-72" ref={gridContainerRef}>
+              sea baja; si no caben, la barra se va con el scroll de la página.
+              Bajo xl en pantallas bajas (zoom 200%, laptop chica) el mínimo es
+              casi el alto del área: al bajar, la tabla llena la pantalla. */}
+          <div
+            className="relative flex-1 min-h-72 max-xl:[@media(max-height:40rem)]:min-h-[calc(100cqh-1rem)]"
+            ref={gridContainerRef}
+          >
             {/* Solo sobre el cuerpo: fechas y acciones siguen usables mientras carga. */}
             {estaCargando && (
               <div
