@@ -15,6 +15,14 @@ overrides:
   # GHSA-q7qp-rjg7-q26m: @nestjs/platform-express pins multer@2.4.0; drop once Nest ships >=2.5.0
   multer: ^2.5.0
 
+# @nestjs/platform-express@12 importa rxjs sin declararlo: con node_modules
+# aislado de pnpm el backend no arranca ("No driver (HTTP) has been selected").
+# Como peer usa el rxjs del backend; quitar cuando Nest lo declare.
+packageExtensions:
+  '@nestjs/platform-express@12':
+    peerDependencies:
+      rxjs: ^7.8.0
+
 minimumReleaseAge: 10080
 # Versiones ya en uso por las apps que quedarian bloqueadas por la ventana de 7 dias
 minimumReleaseAgeExclude:
