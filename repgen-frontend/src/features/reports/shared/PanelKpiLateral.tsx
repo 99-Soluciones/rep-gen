@@ -183,7 +183,11 @@ const PanelKpiLateral = ({
       id={ID_RESUMEN}
       tabIndex={-1}
       aria-label={titulo}
-      className={`relative w-full focus:outline-none transition-[width] duration-300 motion-reduce:transition-none xl:overflow-visible xl:sticky xl:top-4 xl:self-start ${
+      // El ancho se anima solo al abrir o cerrar: durante el arrastre, cada
+      // pointermove reiniciaría la transición y el panel iría detrás del cursor.
+      className={`relative w-full focus:outline-none ${
+        resizing ? "" : "transition-[width] duration-300 motion-reduce:transition-none"
+      } xl:overflow-visible xl:sticky xl:top-4 xl:self-start ${
         abierto ? "xl:w-(--kpi-panel-width)" : "xl:w-9"
       }`}
       style={{ "--kpi-panel-width": `${panelWidth}px` } as CSSProperties}

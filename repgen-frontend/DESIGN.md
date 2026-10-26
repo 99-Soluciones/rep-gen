@@ -335,7 +335,7 @@ Hoja blanca centrada (máx. 448px) con un ícono de 24px en un círculo de velo 
 - **Do** presentar las cifras como estado de cuenta: renglones alineados a la derecha, un total con regla encima y rojo solo para negativos.
 - **Do** usar `<dialog>` nativo para todo lo modal y anillos `focus-visible` en cada control.
 - **Do** nombrar las acciones por su resultado ("Actualizar vista", "Aplicar") y los errores por lo que pasó y cómo seguir.
-- **Do** limitar el movimiento a transiciones de color (y a 300ms para drawers y paneles).
+- **Do** limitar el movimiento a transiciones de color (y a 300ms para drawers y paneles, al abrir o cerrar; nunca mientras se arrastra un borde).
 - **Do** mostrar la moneda de cada importe cuando no es MXN, y decir qué quedó fuera de un total.
 - **Do** decir de cuándo son los datos ("Datos de las 10:42") y ofrecer volver a leerlos sin recargar la página.
 - **Do** dejar los errores de un campo junto al campo (`aria-describedby`), no solo en un toast.
