@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import {
   Navigate,
   Outlet,
@@ -7,10 +7,25 @@ import {
   useBlocker,
 } from "react-router-dom";
 import Layout from "./layout/Layout";
-import ReporteBancos from "../features/reports/banks/ReporteBancos";
-import ReporteVentas from "../features/reports/sales/ReporteVentas";
 import ComingSoon from "../shared/ui/ComingSoon/ComingSoon";
 import { hayTrabajoSinGuardar, salir } from "../shared/utils/salidaProtegida";
+
+// Los reportes traen AG Grid (~240 KB gz): fuera del bundle inicial para que
+// el login no lo espere. Se piden al cargar la app, en paralelo con el login y
+// la validación de sesión, así que al entrar ya suelen estar listos. Si falla
+// la descarga (p. ej. tras un deploy), lo atrapa el errorElement con "Recarga".
+const cargarBancos = () => import("../features/reports/banks/ReporteBancos");
+const cargarVentas = () => import("../features/reports/sales/ReporteVentas");
+const ReporteBancos = lazy(cargarBancos);
+const ReporteVentas = lazy(cargarVentas);
+void cargarBancos().catch(() => {});
+void cargarVentas().catch(() => {});
+
+const CargandoReporte = () => (
+  <p role="status" className="p-6 text-sm text-gray-600">
+    Cargando reporte…
+  </p>
+);
 
 // "/ventas/facturas" y "/ventas/conceptos" son el mismo reporte: cada pestaña
 // recuerda sus columnas y filtros, así que cambiar entre ellas no pierde nada.
@@ -42,7 +57,9 @@ const crearRouter = (reporteInicio: string | null) => {
     {
       element: (
         <Layout>
-          <Outlet />
+          <Suspense fallback={<CargandoReporte />}>
+            <Outlet />
+          </Suspense>
           <GuardiaSalida />
         </Layout>
       ),
