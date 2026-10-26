@@ -219,7 +219,7 @@ const PanelKpiLateral = ({
             aria-expanded={abierto}
             aria-label={toggleLabel}
             title={toggleLabel}
-            className={`absolute top-1/2 -translate-y-1/2 z-40 hidden xl:inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 ${handlePosClass}`}
+            className={`absolute top-1/2 -translate-y-1/2 z-40 hidden xl:inline-flex h-8 w-8 pointer-coarse:h-10 pointer-coarse:w-10 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 ${handlePosClass}`}
           >
             <svg
               aria-hidden="true"
@@ -310,7 +310,7 @@ const PanelKpiLateral = ({
               aria-expanded={abierto}
               aria-label={toggleLabel}
               title="Mostrar resumen"
-              className="relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+              className="relative z-10 inline-flex h-8 w-8 pointer-coarse:h-10 pointer-coarse:w-10 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
             >
               <svg
                 aria-hidden="true"
