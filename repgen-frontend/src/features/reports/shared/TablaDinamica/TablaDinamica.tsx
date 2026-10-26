@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
+import { CalendarX, FunnelX } from "lucide-react";
 import {
   CellStyleModule,
   ClientSideRowModelApiModule,
@@ -70,29 +71,34 @@ const temaGrid = themeQuartz.withParams({
 });
 
 /**
- * Sin filas que mostrar. Si hay registros pero los filtros los excluyen todos,
- * la salida está aquí mismo: "Limpiar filtros" (con su aviso para deshacer).
+ * Sin filas que mostrar, con la salida aquí mismo: si los filtros excluyen
+ * todo, "Limpiar filtros" (con su aviso para deshacer); si el rango no tiene
+ * movimientos, la acción que traiga el reporte (p. ej. el periodo anterior).
  */
 const SinFilas = ({
   overlayType,
   onLimpiarFiltros,
-}: IOverlayParams & { onLimpiarFiltros: () => void }) => {
+  accionSinRegistros,
+}: IOverlayParams & { onLimpiarFiltros: () => void; accionSinRegistros?: AccionSinRegistros }) => {
   const hayRegistros = overlayType === "noMatchingRows";
+  const Icono = hayRegistros ? FunnelX : CalendarX;
+  const accion = hayRegistros ? { etiqueta: "Limpiar filtros", onClick: onLimpiarFiltros } : accionSinRegistros;
   return (
     <div className="flex flex-col items-center gap-3 px-4 text-center text-sm text-gray-600">
+      <Icono className="h-6 w-6 text-gray-400" aria-hidden="true" />
       <p>
         {hayRegistros
           ? "Ningún registro coincide con los filtros."
           : "No hay registros en este rango de fechas."}
       </p>
-      {hayRegistros && (
+      {accion && (
         <button
           type="button"
-          onClick={onLimpiarFiltros}
+          onClick={accion.onClick}
           // El overlay de AG Grid no recibe clics; el botón sí.
           className="pointer-events-auto rounded-lg border border-gray-300 bg-white px-3 py-1.5 font-medium text-gray-700 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
         >
-          Limpiar filtros
+          {accion.etiqueta}
         </button>
       )}
     </div>
@@ -143,7 +149,14 @@ interface TablaDinamicaProps<T> {
   accionesToolbarInicio?: React.ReactNode;
   accionesToolbar?: React.ReactNode;
   accionesToolbarFin?: React.ReactNode;
+  /** Botón del aviso "No hay registros en este rango de fechas". */
+  accionSinRegistros?: AccionSinRegistros;
   filasVisibles: number;
+}
+
+export interface AccionSinRegistros {
+  etiqueta: string;
+  onClick: () => void;
 }
 
 const TablaDinamica = <T,>({
@@ -160,6 +173,7 @@ const TablaDinamica = <T,>({
   accionesToolbarInicio,
   accionesToolbar,
   accionesToolbarFin,
+  accionSinRegistros,
   filasVisibles,
 }: TablaDinamicaProps<T>) => {
   const gridContainerRef = useRef<HTMLDivElement | null>(null);
@@ -406,7 +420,7 @@ const TablaDinamica = <T,>({
               // "Sin datos" y "los filtros excluyen todo" con el aviso propio;
               // mientras carga o con error, el velo de arriba ya lo dice.
               overlayComponentSelector={elegirOverlay}
-              overlayComponentParams={{ onLimpiarFiltros: limpiarFiltros }}
+              overlayComponentParams={{ onLimpiarFiltros: limpiarFiltros, accionSinRegistros }}
               suppressOverlays={estaCargando || error ? ["noRows", "noMatchingRows"] : undefined}
               defaultColDef={defaultColDef}
               onModelUpdated={handleModelUpdated}

@@ -100,4 +100,23 @@ describe("TablaDinamica: aviso de cambios de vista (AG Grid real)", () => {
     api.setFilterModel({ ventaId: { filterType: "text", type: "contains", filter: "V" } });
     await waitFor(() => expect(onCambioVista).toHaveBeenCalled(), ESPERA);
   });
+
+  it("un rango sin registros ofrece la acción del reporte (el periodo anterior)", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const onClick = vi.fn();
+    render(
+      <TablaDinamica
+        referenciaGrid={createRef<AgGridReact>()}
+        datos={[]}
+        definicionesColumnas={construirColumnasVentas("factura") as ColDef[]}
+        estaCargando={false}
+        onGridListo={vi.fn()}
+        accionSinRegistros={{ etiqueta: "Ver periodo anterior", onClick }}
+        filasVisibles={0}
+      />,
+    );
+    expect(await screen.findByText("No hay registros en este rango de fechas.", {}, ESPERA)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Ver periodo anterior" }));
+    expect(onClick).toHaveBeenCalled();
+  });
 });

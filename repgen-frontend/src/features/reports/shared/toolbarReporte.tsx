@@ -2,6 +2,7 @@ import AccionesTabla from "./AccionesTabla";
 import ActualizarDatos from "./ActualizarDatos";
 import BotonExportar from "./BotonExportar";
 import FiltroFechas from "./FiltroFechas";
+import { desplazarRango } from "./desplazarRango";
 import type { useReporteBase } from "./useReporteBase";
 import type { useReporteGrid } from "./useReporteGrid";
 
@@ -35,7 +36,13 @@ export const toolbarReporte = ({
   grid,
   reportId,
   nombreArchivo,
-}: ToolbarReporteProps) => ({
+}: ToolbarReporteProps) => {
+  const anterior = desplazarRango({ desde: base.fechaDesde, hasta: base.fechaHasta }, -1);
+  return {
+  // Rango sin movimientos: lo siguiente que uno haría es mirar el periodo anterior.
+  accionSinRegistros: anterior
+    ? { etiqueta: "Ver periodo anterior", onClick: () => base.aplicarRango(anterior.desde, anterior.hasta) }
+    : undefined,
   accionesToolbarInicio: (
     <>
       <FiltroFechas
@@ -88,4 +95,5 @@ export const toolbarReporte = ({
       }
     />
   ),
-});
+  };
+};
