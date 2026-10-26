@@ -8,14 +8,33 @@ allowBuilds:
   '@nestjs/core': true
   '@nestjs/cli': true
   unrs-resolver: true
+  '@parcel/watcher': false
 
 overrides:
   js-yaml: ^5.2.1
+  # GHSA-q7qp-rjg7-q26m: @nestjs/platform-express pins multer@2.4.0; drop once Nest ships >=2.5.0
+  multer: ^2.5.0
 
 minimumReleaseAge: 10080
 # Versiones ya en uso por las apps que quedarian bloqueadas por la ventana de 7 dias
 minimumReleaseAgeExclude:
   - '@types/node'
   - eslint
+  - nanoid@3.3.18
+  - qs@6.15.4 || 6.16.0
+  - fast-uri@3.1.6 || 3.1.7 || 3.1.8 || 3.1.9
+  - vitest@4.1.11
+  - '@vitest/mocker@4.1.11 || 4.1.12'
+  - multer@2.5.0
+  - undici@7.29.1 || 7.30.1 || 8.10.2 || 8.12.2
+  - js-yaml@5.4.1
+  - moment@2.31.0
+  - brace-expansion@1.1.19 || 1.1.20 || 1.1.21 || 2.1.5 || 2.1.6 || 2.1.7 || 5.0.10 || 5.0.11 || 5.0.12
+  - source-map-js@1.2.2
+  - proxy-addr@2.0.8
+  - handlebars@4.7.10
+  - vite@8.2.4
+  - zod@4.6.6
+  - body-parser@2.4.0
 trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 525600

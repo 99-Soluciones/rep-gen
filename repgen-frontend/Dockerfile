@@ -4,7 +4,7 @@
 # a contexto raiz como repgen-backend/Dockerfile (lockfile unico del workspace
 # y dependencia @repgen/shared-types), y anadirle el rewrite /api que hoy hace
 # vercel.json, porque nginx.conf no lo aplica.
-FROM node:20-alpine AS deps
+FROM node:24-alpine AS deps
 WORKDIR /app
 
 RUN corepack enable
@@ -12,7 +12,7 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
-FROM node:20-alpine AS build
+FROM node:24-alpine AS build
 WORKDIR /app
 
 RUN corepack enable

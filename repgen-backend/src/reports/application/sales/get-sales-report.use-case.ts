@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import type { Cache } from 'cache-manager';
+import type { Cache } from '@nestjs/cache-manager';
 import { FileMakerService } from '../../../filemaker/filemaker.service';
 import { cleanData, salesFieldMapJson } from '../../infrastructure/sales';
 import { BaseReportService } from '../shared/base-report.service';

@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import type { Cache } from 'cache-manager';
+import type { Cache } from '@nestjs/cache-manager';
 import { LoggerService } from '../common/logger/logger.service';
 import { FileMakerService } from '../filemaker/filemaker.service';
 
