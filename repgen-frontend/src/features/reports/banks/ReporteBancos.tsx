@@ -166,7 +166,19 @@ const ReporteBancos = () => {
                 {saldos.map((s) => (
                   <LineaEstado
                     key={`${s.banco}|${s.cuenta}`}
-                    etiqueta={`${s.banco}${s.cuenta ? ` ··${s.cuenta.slice(-4)}` : ""}`}
+                    etiqueta={
+                      <>
+                        {s.banco}
+                        {s.cuenta && (
+                          <>
+                            {" "}
+                            <span aria-hidden="true">··</span>
+                            <span className="sr-only">terminación </span>
+                            {s.cuenta.slice(-4)}
+                          </>
+                        )}
+                      </>
+                    }
                     valor={s.saldo}
                     codigoMoneda={s.moneda}
                   />

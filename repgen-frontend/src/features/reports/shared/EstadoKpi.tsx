@@ -33,7 +33,7 @@ export const SeccionEstado = ({
 );
 
 interface LineaEstadoProps {
-  etiqueta: string;
+  etiqueta: ReactNode;
   valor: number;
   tipo?: "moneda" | "unidades";
   /** Renglón de resultado: regla superior y cifra destacada. */
