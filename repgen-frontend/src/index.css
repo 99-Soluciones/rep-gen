@@ -69,3 +69,8 @@ body,
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+
+/* Placeholders legibles: el de Tailwind (50% del texto) queda en ~3.5:1; el gris 500 da 4.83:1. */
+::placeholder {
+  color: var(--color-gray-500);
+}

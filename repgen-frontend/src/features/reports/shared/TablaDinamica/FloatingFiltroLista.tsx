@@ -23,8 +23,11 @@ const FloatingFiltroLista = (props: CustomFloatingFilterProps<IFilter, unknown, 
           aria-label={`Filtrar ${nombre}: ${texto}`}
           // Caja como los demás filtros flotantes: se lee como un control, no como texto.
           // pr-7 deja lugar a la X solo cuando la hay; sin ella, el chevron va al borde.
-          className={`flex h-[30px] w-full items-center justify-between gap-1 rounded border border-gray-300 bg-white pl-2 text-left text-sm transition-colors hover:border-blue-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-            activo ? "pr-7 font-medium text-gray-900" : "pr-2 font-normal text-gray-600"
+          // Activo: borde azul y velo, como los demás filtros flotantes con filtro.
+          className={`flex h-[30px] w-full items-center justify-between gap-1 rounded border pl-2 text-left text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+            activo
+              ? "border-blue-600 bg-blue-50 pr-7 font-medium text-gray-900"
+              : "border-gray-300 bg-white pr-2 font-normal text-gray-600 hover:border-blue-300"
           }`}
         >
           <span className="min-w-0 truncate">{texto}</span>

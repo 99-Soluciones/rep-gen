@@ -60,19 +60,22 @@ const FiltroFechas = (props: FiltroFechasProps) => {
   };
   const enPalabras = (r: Rango) => `${formatearFecha(r.desde)} al ${formatearFecha(r.hasta)}`;
   const claseFlecha =
-    "flex w-8 items-center justify-center text-gray-600 transition-colors hover:bg-blue-50 hover:text-blue-700 aria-disabled:cursor-not-allowed aria-disabled:opacity-40 aria-disabled:hover:bg-transparent aria-disabled:hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 pointer-coarse:w-10";
+    // Azules en reposo: navegar por periodos es la acción más usada de la barra.
+    // Deshabilitadas pasan a gris; un azul tenue seguiría pareciendo pulsable.
+    "flex w-9 shrink-0 items-center justify-center text-blue-600 transition-colors hover:bg-blue-50 hover:text-blue-700 aria-disabled:cursor-not-allowed aria-disabled:text-gray-300 aria-disabled:hover:bg-transparent aria-disabled:hover:text-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 pointer-coarse:w-10";
 
   return (
     <div
       ref={grupoRef}
-      className="relative shrink-0"
+      // En teléfono no puede pasar del ancho de la barra: el › quedaba recortado.
+      className="relative min-w-0 max-w-full shrink-0"
       onKeyDown={(event) => {
         if (event.key !== "Escape" || !abierto) return;
         event.stopPropagation();
         cerrar();
       }}
     >
-      <div className="flex items-stretch divide-x divide-gray-200 overflow-hidden rounded-lg border border-gray-300 bg-white shadow-sm">
+      <div className="flex max-w-full items-stretch divide-x divide-gray-200 overflow-hidden rounded-lg border border-gray-300 bg-white shadow-sm">
       <button
         type="button"
         onClick={() => irA(anterior)}
@@ -80,7 +83,7 @@ const FiltroFechas = (props: FiltroFechasProps) => {
         aria-label={anterior ? `Periodo anterior: del ${enPalabras(anterior)}` : "No hay periodo anterior"}
         className={claseFlecha}
       >
-        <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+        <ChevronLeft className="h-5 w-5" aria-hidden="true" />
       </button>
       <button
         ref={botonRef}
@@ -89,15 +92,18 @@ const FiltroFechas = (props: FiltroFechasProps) => {
         aria-expanded={abierto}
         aria-controls={ID_PANEL}
         aria-label={`Fechas: ${periodo ? `${periodo.etiqueta}, ` : ""}del ${formatearFecha(fechaDesde)} al ${formatearFecha(fechaHasta)}. Cambiar`}
-        className="group flex items-center gap-2 px-3 py-1.5 pointer-coarse:min-h-10 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+        // Las flechas no se encogen; el enunciado sí, con "…" solo si de verdad no
+        // cabe (el nombre accesible lo dice completo). Bajo sm sin los íconos
+        // decorativos: la caja entera ya se lee como botón.
+        className="group flex min-w-0 items-center gap-2 px-3 py-1.5 pointer-coarse:min-h-10 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
       >
-        <CalendarDays className="h-4 w-4 shrink-0 text-gray-500 group-hover:text-blue-600" aria-hidden="true" />
-        <span className="whitespace-nowrap tabular-nums">
+        <CalendarDays className="hidden h-4 w-4 shrink-0 text-gray-500 group-hover:text-blue-600 sm:block" aria-hidden="true" />
+        <span className="min-w-0 truncate tabular-nums">
           {periodo && <span className="font-medium">{periodo.etiqueta} · </span>}
           {rango}
         </span>
         <ChevronDown
-          className={`h-4 w-4 shrink-0 text-gray-400 transition-transform motion-reduce:transition-none ${abierto ? "rotate-180" : ""}`}
+          className={`hidden h-4 w-4 shrink-0 text-gray-400 transition-transform motion-reduce:transition-none sm:block ${abierto ? "rotate-180" : ""}`}
           aria-hidden="true"
         />
       </button>
@@ -108,7 +114,7 @@ const FiltroFechas = (props: FiltroFechasProps) => {
         aria-label={siguiente ? `Periodo siguiente: del ${enPalabras(siguiente)}` : "No hay periodo siguiente: el rango llega a hoy"}
         className={claseFlecha}
       >
-        <ChevronRight className="h-4 w-4" aria-hidden="true" />
+        <ChevronRight className="h-5 w-5" aria-hidden="true" />
       </button>
       </div>
 

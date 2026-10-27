@@ -67,6 +67,10 @@ const temaGrid = themeQuartz.withParams({
   rowBorder: { color: "var(--color-gray-100, #f3f4f6)" },
   columnBorder: false,
   rowHoverColor: "var(--color-blue-50, #eff6ff)",
+  // El 50% por defecto da ~3.5:1; en los filtros flotantes el placeholder es la única pista visible.
+  inputPlaceholderTextColor: "var(--color-gray-500, #6b7280)",
+  // Borde de control, como los filtros de lista (por defecto tomaba el gris-200 de la grilla).
+  inputBorder: { color: "var(--color-gray-300, #d1d5db)" },
   pinnedRowBackgroundColor: "var(--color-gray-50, #f9fafb)",
   pinnedRowFontWeight: 700,
   pinnedRowBorder: { color: "var(--color-gray-300, #d1d5db)" },

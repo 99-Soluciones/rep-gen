@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import type { CustomFloatingFilterProps } from "ag-grid-react";
 import type { IFilter, IFloatingFilterParent } from "ag-grid-community";
 import { interpretarMonto, montoATexto } from "../ag-grid/filtro-monto";
@@ -258,11 +258,21 @@ const FloatingFilterConLimpiar = (props: FloatingFilterProps) => {
   return (
     <div className="ag-floating-filter-input w-full">
       <div className="relative flex w-full items-center">
+        {/* La lupa solo en texto: un monto (">5000") o una fecha no se "buscan". */}
+        {inputType === "text" && (
+          <Search
+            className="pointer-events-none absolute left-2 h-3.5 w-3.5 text-gray-400"
+            aria-hidden="true"
+          />
+        )}
         <input
           ref={inputRef}
           onFocus={(evento) => setEnfocado(posicionBajo(evento.currentTarget))}
           onBlur={() => setEnfocado(null)}
-          className={`ag-input-field-input ag-text-field-input w-full pr-7 ${invalido ? "border-red-600!" : ""}`}
+          // Con filtro: borde azul y velo, para ver de un vistazo qué columnas filtran.
+          className={`ag-input-field-input ag-text-field-input w-full pr-7 ${inputType === "text" ? "ps-7!" : ""} ${
+            invalido ? "border-red-600!" : filtroActivo ? "border-blue-600! bg-blue-50!" : ""
+          }`}
           // Montos como texto: ">", "<" y el guion del rango no caben en type="number".
           type={inputType === "number" ? "text" : inputType}
           inputMode={inputType === "number" ? "decimal" : undefined}

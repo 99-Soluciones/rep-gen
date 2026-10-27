@@ -86,13 +86,14 @@ const FiltroLista = ({ model, onModelChange, api, column, getValue }: CustomFilt
   };
 
   const nombreColumna = column.getColDef().headerName ?? column.getColId();
+  // Con puntero táctil miden 40px de alto, como el resto de los controles de la barra.
   const claseAccion =
-    "rounded font-medium text-blue-700 underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500";
+    "inline-flex items-center rounded font-medium text-blue-700 underline-offset-2 hover:underline pointer-coarse:min-h-10 pointer-coarse:px-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500";
 
   return (
     <div role="dialog" aria-label={`Filtrar ${nombreColumna}`} className="flex w-64 flex-col gap-2 p-2 text-sm text-gray-900">
       <label className="relative flex items-center">
-        <Search className="pointer-events-none absolute left-2 h-4 w-4 text-gray-500" aria-hidden="true" />
+        <Search className="pointer-events-none absolute left-2 h-4 w-4 text-gray-400" aria-hidden="true" />
         <input
           ref={buscarRef}
           type="search"
