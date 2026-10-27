@@ -128,7 +128,7 @@ export const ${reportCamel}FieldMapJson = {
  * @returns {string}
  */
 function getHelperTemplate(reportPascal, reportKebab, reportCamel) {
-  return `import { RawRecord } from '../../domain/reports.types';
+  return `import { RawRecord } from '../../../filemaker/ifilemaker';
 import type { ${reportPascal}MappedRecord } from '../../domain/${reportKebab}';
 import { ${reportCamel}FieldMapJson } from './${reportKebab}-field-map';
 import {
@@ -194,7 +194,7 @@ function getUseCaseTemplate(reportPascal, reportKebab, reportCamel) {
   return `import { Injectable, Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
-import type { Filter${reportPascal}Model, Report${reportPascal}Record } from '../../domain/${reportKebab}';
+import type { Report${reportPascal}Record } from '../../domain/${reportKebab}';
 
 import { BaseReportService } from '../shared/base-report.service';
 import { FileMakerService } from '../../../filemaker/filemaker.service';
@@ -206,7 +206,6 @@ import { LoggerService } from '../../../common/logger';
 
 @Injectable()
 export class Get${reportPascal}ReportUseCase extends BaseReportService<
-  Filter${reportPascal}Model,
   Report${reportPascal}Record,
   GetBankPermissionsUseCase
 > {
@@ -225,16 +224,6 @@ export class Get${reportPascal}ReportUseCase extends BaseReportService<
         cachePrefix: '${reportPascal}Report',
         dateField: [${reportCamel}FieldMapJson.data.valor3],
         permissionFieldName: [${reportCamel}FieldMapJson.data.valor1],
-        fieldMapping: {
-          valor1: ${reportCamel}FieldMapJson.data.valor1,
-          valor2: ${reportCamel}FieldMapJson.data.valor2,
-          valor3: ${reportCamel}FieldMapJson.data.valor3,
-        },
-        globalSearchFields: [
-          ${reportCamel}FieldMapJson.data.valor1,
-          ${reportCamel}FieldMapJson.data.valor2,
-          ${reportCamel}FieldMapJson.data.valor3,
-        ],
         cleanDataFunction: cleanData,
         permissionFiltersFunction: get${reportPascal}BaseFilters,
       },
@@ -283,7 +272,7 @@ export async function get${reportPascal}BaseFilters(
 function getMappingConfigTemplate(reportPascal, reportKebab) {
   return `import Ajv2020 from 'ajv/dist/2020';
 import { BadRequestException } from '@nestjs/common';
-import type { RawRecord } from '../../domain/reports.types';
+import type { RawRecord } from '../../../filemaker/ifilemaker';
 import type { Report${reportPascal}Record, ${reportPascal}MappedRecord } from '../../domain/${reportKebab}';
 import schema from './${reportKebab}-report.schema.json';
 
@@ -352,20 +341,13 @@ export function cleanData(rawData: RawRecord[]): Report${reportPascal}Record[] {
  * @returns {String}
  */
 function getInterfaceTemplate(reportPascal) {
-  return `import type { FilterModel } from '../reports.types';
-/**
+  return `/**
  * Primeras dos interfaces para la salida del reporte de bancos, con campos opcionales para facilitar la limpieza y transformación de datos.
  */
 export interface Report${reportPascal}Record {
   valor1: number;
   valor2: string;
   valor3: number;
-}
-
-export interface Filter${reportPascal}Model {
-  valor1?: FilterModel;
-  valor2?: FilterModel;
-  valor3?: FilterModel;
 }
 
 /**

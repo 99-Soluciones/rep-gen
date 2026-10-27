@@ -27,7 +27,7 @@ flowchart TD
   E --> F[RawRecord array]
   F --> G[Mapper específico]
   G --> H[ReportRecord array]
-  H --> I[PaginatedResponse]
+  H --> I["ReportResponse { data }"]
 ```
 
 ## Fuente en repo
@@ -36,10 +36,10 @@ flowchart TD
 
 ## Pasos resumidos
 
-1. Controller recibe `globalSearch`, `filterModel`, `dateRange` (+ paginación query)
+1. Controller recibe solo `dateRange` (el filtrado y la paginación son del lado del cliente)
 2. Use case delega a `BaseReportService`
-3. Servicio arma cache key, query, filtros, fechas
-4. FM devuelve crudos → mapper → `data` + `meta`
+3. Servicio arma cache key (tenant + usuario + rango) y query (permisos × campos de fecha)
+4. FM devuelve crudos → mapper → `{ data }`
 
 ## Criterios de aceptación
 
@@ -61,24 +61,15 @@ Base path: `/api/v1/reports`
 |--------|------|----------|
 | POST | `bancos/buscar` | `GetBankReportUseCase` |
 | POST | `ventas/buscar` | `GetSalesReportUseCase` |
-| POST | `ventas-item/buscar` | `GetSalesitemReportUseCase` |
+| POST | `ventas-por-concepto/buscar` | `GetSalesitemReportUseCase` |
 
-## Query params comunes
+## Body (DTO)
 
-- `page` (default 1)
-- `limit` (default 50)
+`SearchReportDto` (común a los tres): `{ dateRange: { startDate, endDate } }` en formato `YYYY-MM-DD`. Sin query params; campos extra → 400.
 
-## Body (DTOs)
+## Respuesta
 
-- `SearchBankReportDto`
-- `SearchSalesReportDto`
-- `SearchSalesItemReportDto`
-
-Campos body: `globalSearch`, `filterModel`, `dateRange`
-
-## Caso especial bancos
-
-Si `filterModel.abono` o `cargo` tienen `filter === 0`, se normaliza a `''` antes del use case.
+`{ data: Report*Record[] }` con todos los registros del rango que el usuario puede ver.
 
 ## Criterios de aceptación
 
@@ -99,9 +90,9 @@ Si `filterModel.abono` o `cargo` tienen `filter === 0`, se normaliza a `''` ante
 
 - Cache key y política de cache
 - Construcción de consulta FileMaker
-- Aplicación de filtros y rango de fechas
+- Rango de fechas y permisos (una condición por permiso × campo de fecha)
 - Invocación del mapper inyectado
-- Respuesta `PaginatedResponse` con `data` y `meta`
+- Respuesta `ReportResponse` (`{ data }`)
 
 ## Regla
 
@@ -109,7 +100,7 @@ No contiene reglas de negocio del reporte (cancelaciones, devoluciones → mappe
 
 ## Criterios de aceptación
 
-- [ ] Descripción `meta` (total, página, etc.)
+- [ ] Contrato de respuesta `{ data }` (sin `meta` ni paginación: el cliente filtra y pagina)
 - [ ] Tests: `base-report.service.spec.ts` referenciados
 
 ---
@@ -136,7 +127,7 @@ No contiene reglas de negocio del reporte (cancelaciones, devoluciones → mappe
 ## Frontend relacionado
 
 - `features/reports/banks/ui/ReporteBancos.tsx`
-- `config/ag-grid/Reportes/bancos/`
+- `features/reports/banks/`
 
 ## Criterios de aceptación
 
@@ -192,7 +183,7 @@ Documentadas en `EXPLICACION_FLUJO_REPORTES.md` §5:
 
 ## Endpoint
 
-`POST /reports/ventas-item/buscar`
+`POST /reports/ventas-por-concepto/buscar`
 
 ## Criterios de aceptación
 
@@ -234,7 +225,7 @@ Documentadas en `EXPLICACION_FLUJO_REPORTES.md` §5:
 
 ## Objetivo
 
-Documentar validación (`class-validator`) y forma esperada del `filterModel` que envía AG Grid.
+Documentar validación (`class-validator`) de `SearchReportDto`: `dateRange` obligatorio con fechas `YYYY-MM-DD`.
 
 ## Criterios de aceptación
 

@@ -10,7 +10,7 @@
     }
   },
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc6 -p tsconfig.json"
   },
   "devDependencies": {
     "typescript": "npm:@typescript/typescript6@^6.0.2"

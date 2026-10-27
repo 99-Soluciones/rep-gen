@@ -1,5 +1,7 @@
 # Cambios en Reportes desde el PR #14 (post-merge a `main`)
 
+> **Nota (2026-10-08):** registro histórico. Las rutas citadas (`src/components/Reportes/...`) cambiaron con la reorganización por features (Fase 2); ver [EVALUACION_ODATA_Y_ARQUITECTURA.md](../../docs/architecture/EVALUACION_ODATA_Y_ARQUITECTURA.md).
+
 Resumen de todo lo que cambió en `repgen-frontend` desde que el PR #14
 (`6cabfea`) se mezcló a `main`. `main` no se ha movido desde entonces; todo lo
 de aquí vive en `feature/deploy-vercel` (20 commits) más los cambios locales
@@ -20,7 +22,7 @@ Relacionado con **SUB-7.5** (componentes compartidos: tabla/filtros/KPI) y
 | Dashboard de KPIs                     | Componente `CardsKpi` reutilizable, más métricas, colores semánticos                                                                | [§4](#4-dashboard-de-kpis)                          |
 | Fixes                                 | Export solo columnas visibles, evitar peticiones redundantes, predicados AG Grid                                                    | [§5](#5-fixes)                                      |
 | Estilos                               | Fuente Arial, colores de marca ERP                                                                                                  | [§6](#6-estilos)                                    |
-| `DrawerFiltros` sin uso               | Se mantiene a propósito para filtros futuros                                                                                        | [§7](#7-drawerfiltros-sin-uso-por-ahora)            |
+| `DrawerFiltros` eliminado             | Quedó sin uso y se borró junto con su test                                                                                          | [§7](#7-drawerfiltros-eliminado)                    |
 
 ---
 
@@ -52,7 +54,7 @@ flowchart LR
 ### 2.1 Fechas junto al título
 
 `Filtros.tsx` ya no delega el rango de fechas a un drawer aparte
-(`DrawerFiltros`, ver [§7](#7-deuda-técnica-detectada)): los inputs `Desde` /
+(`DrawerFiltros`, ya eliminado, ver [§7](#7-drawerfiltros-eliminado)): los inputs `Desde` /
 `Hasta` y el botón `Aplicar` están inline, a la derecha del título. En móvil
 caen debajo del título (antes se traslapaban) usando
 `flex-col sm:flex-row sm:justify-between`.
@@ -204,9 +206,8 @@ columnas del grid, incluyendo las ocultas por el usuario.
 `d8ed935` — los filtros de AG Grid (floating filters por columna) se aplican
 **client-side**; no deben disparar una petición nueva al backend. Se quitó el
 debounce y el callback `onFiltroCambiado` de `ReporteBancos`, `ReporteVentas`
-y `TablaDinamica`; `useReporteBase` ahora lee `modeloFiltros` desde una `ref`
-y solo reenvía el último filtro conocido cuando ocurre una solicitud real
-(cambio de fecha, página o límite).
+y `TablaDinamica`. Después se quitó también `modeloFiltros`: `useReporteBase`
+ya no envía filtros de columna al backend, solo el rango de fechas.
 
 ### 5.3 Predicados de AG Grid
 
@@ -229,14 +230,12 @@ opciones del filtro.
 
 ---
 
-## 7. `DrawerFiltros` sin uso por ahora
+## 7. `DrawerFiltros` eliminado
 
-`DrawerFiltros.tsx` (y su test) ya no se importan desde ningún lado — desde
-que el rango de fechas se alineó en `Filtros.tsx` (§2.1), el drawer quedó sin
-consumidores. **Se deja a propósito, no es código muerto a eliminar:** la
-idea es reutilizarlo como base para filtros adicionales (más allá de fechas)
-más adelante, cuando se necesiten. Si se retoma, probablemente reciba props
-extra para los nuevos filtros en vez de solo `fechaDesde`/`fechaHasta`.
+Desde que el rango de fechas se alineó en `Filtros.tsx` (§2.1), el drawer
+quedó sin consumidores. Al principio se dejó para filtros futuros, pero
+`DrawerFiltros.tsx` y su test se eliminaron (`0f6d2b6`). Si más adelante se
+necesitan filtros adicionales, se construyen desde cero.
 
 ---
 

@@ -183,6 +183,67 @@ describe('FileMakerService', () => {
     expect(res.response.modId).toBe('3');
   });
 
+  it('findRecords should return empty data when FileMaker reports no records (code 401)', async () => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => ({ response: { token: 'tn' } }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: () => ({
+          messages: [{ code: '401', message: 'No records match' }],
+        }),
+      });
+
+    const res = await service.findRecords('dbN', 'layoutN', [{ f: 'v' }]);
+    expect(res.response.data).toEqual([]);
+    expect(res.response.dataInfo.foundCount).toBe(0);
+  });
+
+  it('findRecords should throw on a real FileMaker error instead of returning empty data', async () => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => ({ response: { token: 'tx' } }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: () => ({
+          messages: [{ code: '102', message: 'Field is missing' }],
+        }),
+      });
+
+    await expect(
+      service.findRecords('dbX', 'layoutX', [{ f: 'v' }]),
+    ).rejects.toBeInstanceOf(InternalServerErrorException);
+  });
+
+  it('should encode the database name so a tenant cannot alter the URL path', async () => {
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => ({ response: { token: 'tu' } }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => ({ response: { data: [] } }),
+      });
+    global.fetch = fetchMock;
+
+    await service.findRecords('../otra/db', 'layout', [{ f: 'v' }]);
+
+    const findUrl = (fetchMock.mock.calls as string[][])[1][0];
+    expect(findUrl).toBe(
+      'https://fm.example.com/fmi/data/vLatest/databases/..%2Fotra%2Fdb/layouts/layout/_find',
+    );
+  });
+
   it('getRecord should authenticate and return the record data', async () => {
     global.fetch = jest
       .fn()

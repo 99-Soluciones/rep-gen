@@ -1,38 +1,50 @@
-import { Zap, Rocket } from "lucide-react";
-import "./ComingSoon.css";
+import { Hourglass } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface ComingSoonProps {
   titulo?: string;
   mensaje?: string;
-  icono?: "rocket" | "zap";
+  /** Tras un error al pintar: la salida es recargar, no ir a un reporte que pudo ser el que falló. */
+  recargar?: boolean;
 }
 
+const CLASE_SALIDA =
+  "mt-6 inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500";
+
+/**
+ * Estado vacío para reportes que aún no existen: una hoja blanca del sistema
+ * (DESIGN.md), sin degradados ni animación, con un camino de salida concreto.
+ */
 const ComingSoon = ({
-  titulo = "Reporte en Desarrollo",
-  mensaje = "Estamos trabajando intensamente para ofrecerte reportes aún más potentes y útiles",
-  icono = "rocket",
-}: ComingSoonProps) => {
-  const IconComponent = icono === "rocket" ? Rocket : Zap;
-
-  return (
-    <div className="coming-soon-container">
-      <div className="coming-soon-content">
-        <div className="coming-soon-icon">
-          <IconComponent size={64} />
-        </div>
-
-        <h1 className="coming-soon-titulo">{titulo}</h1>
-
-        <p className="coming-soon-mensaje">{mensaje}</p>
-
-        <div className="coming-soon-dots">
-          <span className="dot"></span>
-          <span className="dot"></span>
-          <span className="dot"></span>
-        </div>
+  titulo = "Este reporte aún no está disponible",
+  mensaje = "Mientras tanto, puedes consultar Bancos y Ventas desde el menú.",
+  recargar = false,
+}: ComingSoonProps) => (
+  <>
+  <title>{`${titulo} · RepGen`}</title>
+  <div className="flex min-h-full items-center justify-center p-6">
+    <div className="w-full max-w-md rounded-lg border border-gray-200 bg-white p-8 text-center shadow-sm">
+      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-50">
+        <Hourglass className="h-6 w-6 text-blue-600" aria-hidden="true" />
       </div>
+      <h1 className="text-xl font-bold text-gray-800">{titulo}</h1>
+      <p className="mt-2 text-sm leading-relaxed text-gray-600">{mensaje}</p>
+      {recargar ? (
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className={CLASE_SALIDA}
+        >
+          Recargar la página
+        </button>
+      ) : (
+        <Link to="/bancos" className={CLASE_SALIDA}>
+          Ir a Bancos
+        </Link>
+      )}
     </div>
-  );
-};
+  </div>
+  </>
+);
 
 export default ComingSoon;

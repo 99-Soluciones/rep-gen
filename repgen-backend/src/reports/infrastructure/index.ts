@@ -4,7 +4,6 @@ export {
   mapBankRecordsWithCleanKeys,
   getBankRawFieldName,
   resolveMovimiento,
-  applyPersonaMovimientoFields,
   cleanData as cleanBankData,
 } from './banks';
 export {

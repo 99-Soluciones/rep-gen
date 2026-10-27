@@ -1,0 +1,175 @@
+import { useParams } from "react-router-dom";
+import { construirColumnasVentas } from "./columnas";
+import { useColumnLabels } from "../shared/column-labels/useColumnLabels";
+import EncabezadoReporte from "../shared/EncabezadoReporte";
+import TablaDinamica from "../shared/TablaDinamica/TablaDinamica";
+import PanelKpiLateral from "../shared/PanelKpiLateral";
+import { estadoCifras } from "../shared/estadoCifras";
+import type { ReportSalesItemRecord } from "@repgen/shared-types";
+import TabsVentas from "./TabsVentas";
+import { useReporteBase } from "../shared/useReporteBase";
+import { useReporteGrid } from "../shared/useReporteGrid";
+import { usePreferenciaLocal } from "../shared/usePreferenciaLocal";
+import { toolbarReporte } from "../shared/toolbarReporte";
+import { calcularTotalesVentas, cuentaEnNeto, useTotalesVentas } from "./useTotalesVentas";
+import { useComparacionPeriodo } from "../shared/useComparacionPeriodo";
+import KpiPanelVentas from "./KpiPanelVentas";
+import { ResultadoCompacto } from "../shared/EstadoKpi";
+
+export type VentasRouteType = "facturas" | "conceptos";
+
+const normalizeReportType = (value: string | undefined): VentasRouteType =>
+  value === "conceptos" ? "conceptos" : "facturas";
+
+// Solo importes en MXN y del nivel del renglón: en Conceptos los montos de la
+// factura se repiten por artículo y sumarlos los duplicaría. Las filas que
+// entran son las de la Facturación neta (cuentaEnNeto).
+const camposTotales: Record<VentasRouteType, string[]> = {
+  facturas: [
+    "facturaGranTotalMxn",
+    "pagoGranTotalMxn",
+    "importeSinDescuentoMxn",
+    "descuentoMontoMxn",
+    "importeConDescuentoMxn",
+    "ivaMxn",
+    "iepsMxn",
+    "ivaRetenidoMxn",
+    "isrRetenidoMxn",
+  ],
+  conceptos: [
+    "articuloImporteSinDescuentoMxn",
+    "articuloDescuentoMontoMxn",
+    "articuloImporteConDescuentoMxn",
+    "articuloIVAMxn",
+    "articuloIEPSMxn",
+    "articuloIVARetenidoMxn",
+    "articuloISRretenidoMxn",
+    "costoDirectoSubTotalMxn",
+    "gananciaBrutaMxn",
+  ],
+};
+
+const onErrorReporte = (error: unknown) => {
+  console.error("Error cargando reporte de ventas:", error);
+};
+
+const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
+  const params = useParams<{ reportType?: string }>();
+  const currentType = normalizeReportType(reportType ?? params.reportType);
+  const { getLabel } = useColumnLabels();
+
+  const schemaReportType = currentType === "facturas" ? "factura" : "conceptos";
+
+  const reportConfig = {
+    endpoint:
+      currentType === "facturas"
+        ? "ventas/buscar"
+        : "ventas-por-concepto/buscar",
+    nombreArchivo:
+      currentType === "facturas"
+        ? "reporte_ventas_facturas"
+        : "reporte_ventas_conceptos",
+  };
+
+  const columnasReportes = construirColumnasVentas(schemaReportType, getLabel);
+
+  const base = useReporteBase<ReportSalesItemRecord>({
+    endpoint: reportConfig.endpoint,
+    onError: onErrorReporte,
+  });
+  const { datos, estaCargando, error, reintentar, aplicarRango } = base;
+
+  const [mostrarResumen, setMostrarResumen] = usePreferenciaLocal("kpi-panel-ventas-abierto", true);
+
+  const reportId =
+    currentType === "facturas" ? "ventas_facturas" : "ventas_conceptos";
+  const grid = useReporteGrid(reportId, aplicarRango);
+  const { referenciaGrid, filasVisibles, actualizarFilasVisibles, onGridListo, onCambioVista } =
+    grid;
+
+  const { totales, recalcularTotalesVisibles } = useTotalesVentas({
+    referenciaGrid,
+    currentType,
+  });
+  const comparacion = useComparacionPeriodo<Record<string, unknown>>({
+    endpoint: reportConfig.endpoint,
+    desde: base.fechaDesde,
+    hasta: base.fechaHasta,
+    calcular: (filas) => calcularTotalesVentas(filas, currentType).facturacionNeta,
+    intento: base.intento,
+  });
+
+  return (
+    <div className="flex flex-col w-full xl:h-full">
+      <EncabezadoReporte
+        titulo="Reporte de Ventas"
+        tituloPagina={`Ventas · ${currentType === "facturas" ? "Facturas" : "Conceptos"}`}
+        encabezadoExtra={<TabsVentas reportType={currentType} />}
+      />
+
+      <div className="flex flex-col xl:flex-row xl:flex-1 xl:min-h-0 gap-2">
+        {/* Bajo xl, resultado + tabla ocupan la primera pantalla (100cqh, el
+            alto de <main>) y el resumen queda debajo; en xl, alto completo.
+            Es un mínimo: en pantallas bajas (zoom 200%, teléfono horizontal)
+            la tabla conserva sus filas y la página hace scroll. flex-none bajo
+            xl: con flex-1 la base 0% ignoraría el alto. */}
+        <div className="flex-none min-w-0 flex flex-col min-h-[100cqh] xl:flex-1 xl:min-h-0">
+          <ResultadoCompacto
+            etiqueta="Facturación neta"
+            filtrado={filasVisibles !== datos.length}
+            valor={totales.facturacionNeta}
+            estado={estadoCifras(error, estaCargando, base.cargadoEn)}
+            onAbrirResumen={() => setMostrarResumen(true)}
+          />
+          <TablaDinamica<ReportSalesItemRecord>
+            referenciaGrid={referenciaGrid}
+            datos={datos}
+            definicionesColumnas={columnasReportes}
+            estaCargando={estaCargando}
+            error={error}
+            onReintentar={reintentar}
+            totales={{
+              campos: camposTotales[currentType],
+              // Mismas filas que la Facturación neta: el pie y el resumen cuadran.
+              incluirFila: (fila) => cuentaEnNeto(fila, currentType),
+              etiqueta: "Total MXN",
+            }}
+            onGridListo={onGridListo}
+            onCambioVista={onCambioVista}
+            onActualizacionModulo={() => {
+              recalcularTotalesVisibles();
+              actualizarFilasVisibles();
+            }}
+            filasVisibles={filasVisibles}
+            {...toolbarReporte({
+              base,
+              grid,
+              reportId,
+              nombreArchivo: reportConfig.nombreArchivo,
+            })}
+          />
+        </div>
+
+        <PanelKpiLateral
+          aviso="Importes en MXN"
+          abierto={mostrarResumen}
+          onToggle={() => setMostrarResumen(!mostrarResumen)}
+          storageKey="kpi-panel-ventas"
+          estado={estadoCifras(error, estaCargando, base.cargadoEn)}
+        >
+          <KpiPanelVentas
+            totales={totales}
+            comparacion={comparacion}
+            currentType={currentType}
+            registros={filasVisibles}
+            total={datos.length}
+            desde={base.fechaDesde}
+            hasta={base.fechaHasta}
+          />
+        </PanelKpiLateral>
+      </div>
+    </div>
+  );
+};
+
+export default ReporteVentas;

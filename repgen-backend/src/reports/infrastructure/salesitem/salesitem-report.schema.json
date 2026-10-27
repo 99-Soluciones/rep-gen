@@ -431,6 +431,12 @@
                         "number"
                     ]
                 },
+                "venta.itm|inv.ITM_|_x_invItmID::cuentaContable_ingresoOrInventario_v0_27_1": {
+                    "type": [
+                        "string",
+                        "number"
+                    ]
+                },
                 "venta.itm|inv.ITM_|_x_invItmID::itm_cuentaContable_v0_20_1": {
                     "type": [
                         "string",

@@ -69,7 +69,6 @@ export class LoggerService implements NestLoggerService {
       defaultMeta: {
         service: this.getServiceName(),
         environment: nodeEnv,
-        timestamp: new Date().toISOString(),
       },
       transports,
     });

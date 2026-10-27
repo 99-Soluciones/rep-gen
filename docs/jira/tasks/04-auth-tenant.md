@@ -143,7 +143,7 @@ flowchart LR
 | | |
 |---|---|
 | **Método** | `GET /api/v1/tenant/column-labels` |
-| **Auth** | Bearer JWT (obligatorio) |
+| **Auth** | JWT obligatorio: cookie httpOnly `jwt_reportes` (respaldo: `Authorization: Bearer`) |
 | **Tenant** | Del claim JWT (`req.tenant`), no por query |
 | **Origen datos** | FileMaker: base = `tenantId`, layout = `columnas_prefs`, primer registro |
 
@@ -183,7 +183,7 @@ flowchart LR
 | `cliente.clasificacion1` … `clasificacion4` | Encabezados clasificación cliente en ventas |
 | `articulo.categoria1` … `categoria4` | Encabezados categoría artículo en ventas |
 
-Lista tipada FE: `repgen-frontend/src/shared/config/dynamic-column-slots.ts`.
+Slots válidos: los `labelSlot` de `features/reports/sales/ventas.schema.json` (`cliente.clasificacion1..4`, `articulo.categoria1..4`), resueltos por `resolverSlot` en `column-labels.context.ts`.
 
 ---
 
@@ -223,12 +223,12 @@ export const columnLabelsRelations = {
 
 | Archivo | Responsabilidad |
 |---------|-----------------|
-| `features/auth/ui/Autenticacion.tsx` | Monta `<ColumnLabelsProvider tenant={tenantActivo}>` |
-| `features/reports/shared/context/ColumnLabelsProvider.tsx` | Fetch + estado |
-| `features/reports/shared/api/column-labels.api.ts` | `GET` con `jwt_reportes` |
-| `features/reports/shared/context/column-labels.context.ts` | `resolverSlot`, cache `sessionStorage` |
-| `config/ag-grid/Reportes/ventas/ventas.schema.json` | `labelSlot` + `defaultHeader` por columna |
-| `components/Reportes/ReporteVentas/ReporteVentas.tsx` | `useColumnLabels()` → `construirColumnasVentas(..., getLabel)` |
+| `app/App.tsx` | Dentro de `AuthGate`, monta `<ColumnLabelsProvider tenant={tenant}>` |
+| `features/reports/shared/column-labels/ColumnLabelsProvider.tsx` | Fetch + estado |
+| `features/reports/shared/api/column-labels.api.ts` | `GET` vía `apiFetch` (cookie httpOnly) |
+| `features/reports/shared/column-labels/column-labels.context.ts` | `resolverSlot`, cache `sessionStorage` |
+| `features/reports/sales/ventas.schema.json` | `labelSlot` + `defaultHeader` por columna |
+| `features/reports/sales/ReporteVentas.tsx` | `useColumnLabels()` → `construirColumnasVentas(..., getLabel)` |
 
 ### Fallback
 

@@ -49,7 +49,11 @@ export class ReportConfigsController {
       req.id,
       dto.reportId,
       dto.name,
-      dto.columnState as ColumnStateEntry[],
+      {
+        columnState: dto.columnState as ColumnStateEntry[],
+        filterModel: dto.filterModel ?? null,
+        periodo: dto.periodo ?? null,
+      },
       dto.isDefault ?? false,
     );
   }
@@ -64,6 +68,8 @@ export class ReportConfigsController {
     return this.updateConfig.execute(req.tenant, req.id, id, {
       name: dto.name,
       columnState: dto.columnState as ColumnStateEntry[] | undefined,
+      filterModel: dto.filterModel,
+      periodo: dto.periodo,
       isDefault: dto.isDefault,
     });
   }

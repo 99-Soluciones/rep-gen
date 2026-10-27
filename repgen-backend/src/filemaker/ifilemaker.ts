@@ -10,11 +10,9 @@ export interface GetTokenResponse {
   };
 }
 
-export interface LogOutResponse {
-  message: {
-    code: string;
-    message: string;
-  };
+/** Cuerpo de error de la Data API: { messages: [{ code, message }] }. */
+export interface FileMakerErrorBody {
+  messages?: { code: string; message: string }[];
 }
 
 export interface FindRecordsResult {

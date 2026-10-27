@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdateReportConfigUseCase } from './update-report-config.use-case';
 import { FileMakerService } from '../../filemaker/filemaker.service';
 import { LoggerService } from '../../common/logger/logger.service';
@@ -19,6 +23,10 @@ const rawRecord = (over: Record<string, unknown> = {}) => ({
     ...over,
   },
 });
+
+/** fieldData enviado en la n-ésima llamada a editRecord. */
+const fieldDataEnviado = (mock: jest.Mock, n = 0) =>
+  (mock.mock.calls[n] as [string, string, string, Record<string, unknown>])[3];
 
 describe('UpdateReportConfigUseCase', () => {
   let useCase: UpdateReportConfigUseCase;
@@ -43,6 +51,7 @@ describe('UpdateReportConfigUseCase', () => {
   it('actualiza nombre y columnState del registro propio', async () => {
     mockFileMaker.findRecords
       .mockResolvedValueOnce({ response: { data: [rawRecord()] } }) // ownership
+      .mockResolvedValueOnce({ response: { data: [rawRecord()] } }) // nombre libre (es la propia)
       .mockResolvedValueOnce({
         response: { data: [rawRecord({ [fm.name]: 'Editada' })] },
       }); // recarga
@@ -59,10 +68,62 @@ describe('UpdateReportConfigUseCase', () => {
       'fm1',
       expect.objectContaining({
         [fm.name]: 'Editada',
-        [fm.columnState]: JSON.stringify([{ colId: 'a', hide: true }]),
+        [fm.columnState]: JSON.stringify({
+          v: 2,
+          columns: [{ colId: 'a', hide: true }],
+          filters: null,
+          periodo: null,
+        }),
       }),
     );
     expect(res.name).toBe('Editada');
+  });
+
+  it('un PATCH parcial conserva los filtros y el periodo guardados', async () => {
+    const guardado = JSON.stringify({
+      v: 2,
+      columns: [{ colId: 'a' }],
+      filters: { banco: { filterType: 'text', filter: 'BBVA' } },
+      periodo: 'mes_anterior',
+    });
+    mockFileMaker.findRecords
+      .mockResolvedValueOnce({
+        response: { data: [rawRecord({ [fm.columnState]: guardado })] },
+      })
+      .mockResolvedValueOnce({
+        response: { data: [rawRecord({ [fm.columnState]: guardado })] },
+      });
+    mockFileMaker.editRecord.mockResolvedValue({ response: { modId: '1' } });
+
+    await useCase.execute('db', 42, 'cfg-uuid-5', {
+      columnState: [{ colId: 'b' }],
+    });
+
+    const enviado: unknown = JSON.parse(
+      fieldDataEnviado(mockFileMaker.editRecord)[fm.columnState] as string,
+    );
+    expect(enviado).toEqual({
+      v: 2,
+      columns: [{ colId: 'b' }],
+      filters: { banco: { filterType: 'text', filter: 'BBVA' } },
+      periodo: 'mes_anterior',
+    });
+  });
+
+  it('cambiar solo el nombre no reescribe columnas ni filtros', async () => {
+    mockFileMaker.findRecords
+      .mockResolvedValueOnce({ response: { data: [rawRecord()] } })
+      .mockResolvedValueOnce({ response: { data: [rawRecord()] } }) // nombre libre
+      .mockResolvedValueOnce({
+        response: { data: [rawRecord({ [fm.name]: 'Otra' })] },
+      });
+    mockFileMaker.editRecord.mockResolvedValue({ response: { modId: '1' } });
+
+    await useCase.execute('db', 42, 'cfg-uuid-5', { name: 'Otra' });
+
+    expect(fieldDataEnviado(mockFileMaker.editRecord)).toEqual({
+      [fm.name]: 'Otra',
+    });
   });
 
   it('lanza ForbiddenException si la config pertenece a otro usuario', async () => {
@@ -109,5 +170,26 @@ describe('UpdateReportConfigUseCase', () => {
       'fm1',
       expect.objectContaining({ [fm.isDefault]: 1 }),
     );
+  });
+
+  it('no renombra a un nombre que ya usa otra vista, y no toca nada', async () => {
+    mockFileMaker.findRecords
+      .mockResolvedValueOnce({ response: { data: [rawRecord()] } }) // ownership
+      .mockResolvedValueOnce({
+        response: {
+          data: [
+            rawRecord(),
+            rawRecord({ [fm.id]: 'cfg-uuid-9', [fm.name]: 'Cobranza' }),
+          ],
+        },
+      });
+
+    await expect(
+      useCase.execute('db', 42, 'cfg-uuid-5', {
+        name: 'COBRANZA',
+        isDefault: true,
+      }),
+    ).rejects.toThrow(ConflictException);
+    expect(mockFileMaker.editRecord).not.toHaveBeenCalled();
   });
 });

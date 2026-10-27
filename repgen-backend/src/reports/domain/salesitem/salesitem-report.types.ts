@@ -1,79 +1,5 @@
-import type { FilterModel } from '../reports.types';
-import {
-  FilterSalesModel,
-  ReportSalesRecord,
-} from '../sales/sales-report.types';
-
-/**
- * ReportSalesItemRecord extiende ReportSalesRecord con campos adicionales específicos para el reporte de ventas por artículo.
- */
-export interface ReportSalesItemRecord extends ReportSalesRecord {
-  tipoDeConcepto?: string;
-  metodoDeAdquisicion?: string;
-  costoDirectoUnitarioMxn?: number;
-  costoDirectoSubTotalMxn?: number;
-  gananciaBrutaMxn?: number;
-  costoTasa?: number;
-  margenTasa?: number;
-  articuloSku?: string;
-  articuloMarca?: string;
-  articuloNombre?: string;
-  articuloNombreCompleto?: string;
-  articuloCuentaContable?: string;
-  categoriadeProducto1?: string;
-  categoriadeProducto2?: string;
-  categoriadeProducto3?: string;
-  categoriadeProducto4?: string;
-  claveDeProductoOServicio?: string;
-  cantidad?: number;
-  unidadDeVenta?: string;
-  unidadDeContenido?: string;
-  contenidoUnitario?: number;
-  contenidoSubTotal?: number;
-  precioUnitario?: number;
-  articuloImporteSinDescuentoMxn?: number;
-  articuloDescuentoMontoMxn?: number;
-  articuloImporteConDescuentoMxn?: number;
-  articuloIVAMxn?: number;
-  articuloIEPSMxn?: number;
-  articuloIVARetenidoMxn?: number;
-  articuloISRretenidoMxn?: number;
-}
-/**
- * FilterSalesItemModel extiende FilterSalesModel con campos adicionales para filtrar por criterios específicos de artículos en el reporte de ventas por artículo.
- */
-export interface FilterSalesItemModel extends FilterSalesModel {
-  tipoDeConcepto?: FilterModel;
-  metodoDeAdquisicion?: FilterModel;
-  costoDirectoUnitarioMxn?: FilterModel;
-  costoDirectoSubTotalMxn?: FilterModel;
-  gananciaBrutaMxn?: FilterModel;
-  costoTasa?: FilterModel;
-  margenTasa?: FilterModel;
-  articuloSku?: FilterModel;
-  articuloMarca?: FilterModel;
-  articuloNombre?: FilterModel;
-  articuloNombreCompleto?: FilterModel;
-  articuloCuentaContable?: FilterModel;
-  categoriadeProducto1?: FilterModel;
-  categoriadeProducto2?: FilterModel;
-  categoriadeProducto3?: FilterModel;
-  categoriadeProducto4?: FilterModel;
-  claveDeProductoOServicio?: FilterModel;
-  cantidad?: FilterModel;
-  unidadDeVenta?: FilterModel;
-  unidadDeContenido?: FilterModel;
-  contenidoUnitario?: FilterModel;
-  contenidoSubTotal?: FilterModel;
-  precioUnitario?: FilterModel;
-  articuloImporteSinDescuentoMxn?: FilterModel;
-  articuloDescuentoMontoMxn?: FilterModel;
-  articuloImporteConDescuentoMxn?: FilterModel;
-  articuloIVAMxn?: FilterModel;
-  articuloIEPSMxn?: FilterModel;
-  articuloIVARetenidoMxn?: FilterModel;
-  articuloISRretenidoMxn?: FilterModel;
-}
+// Contrato de la API, compartido con el frontend.
+export type { ReportSalesItemRecord } from '@repgen/shared-types';
 
 /**
  * Interaz para el mapeo de registros raw de ventas por artículo a un formato con keys limpias, utilizando las definiciones en salesItemFieldMap.json.
@@ -182,6 +108,7 @@ export interface SalesItemMappedRecord {
     nombreDisplay?: string;
     sku?: string;
     cuentaContable?: string;
+    cuentaContableLegacy?: string;
     tipo?: number;
     clasificacion1?: string;
     clasificacion2?: string;

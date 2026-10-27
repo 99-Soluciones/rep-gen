@@ -15,17 +15,17 @@ flowchart TD
   E --> F["RawRecord[]"]
   F --> G[Mapper del reporte]
   G --> H["ReportRecord[]"]
-  H --> I[Respuesta paginada]
+  H --> I["Respuesta { data }"]
 ```
 
 Resumen del flujo:
 
-1. El controller recibe `globalSearch`, `filterModel` y `dateRange`.
+1. El controller recibe solo `dateRange` (`YYYY-MM-DD`). El filtrado, orden y paginación se hacen en el cliente (AG Grid).
 2. El use case delega la consulta al `BaseReportService`.
 3. El servicio base construye la consulta de FileMaker y revisa cache.
 4. FileMaker devuelve registros crudos (`RawRecord`).
 5. El mapper transforma esos registros en el formato del reporte.
-6. La API responde con datos limpios y metadatos.
+6. La API responde `{ data }` con todos los registros limpios del rango.
 
 ## 2) Contratos De Datos
 
@@ -38,31 +38,28 @@ Representa la respuesta cruda de FileMaker.
 - `fieldData`: campos principales del registro.
 - `portalData`: datos de portales, cuando existen.
 
-### `FilterModel`
+### `DateRange`
 
-Representa un filtro generado por la UI.
+Rango inclusivo que llega en el body (`SearchReportDto`).
 
-- `filterType`: tipo de filtro, por ejemplo `text` o `number`.
-- `type`: operador, por ejemplo `equals`, `greaterThan`, `empty`.
-- `filter`: valor concreto del filtro.
+- `startDate`, `endDate`: fechas `YYYY-MM-DD`. El servicio base las convierte a `MM/DD/YYYY...MM/DD/YYYY` para el find de FileMaker.
 
 ## 3) Que Hace `BaseReportService`
 
 El servicio base centraliza la parte repetida entre reportes:
 
-- construye la cache key;
-- arma la consulta para FileMaker;
-- aplica filtros y rango de fechas;
+- construye la cache key (incluye tenant y usuario, porque los permisos son por usuario);
+- arma la consulta para FileMaker: una condición por cada permiso × cada campo de fecha;
 - pide los datos a `FileMakerService`;
-- llama al mapper específico del reporte;
-- devuelve una respuesta con `data` y `meta`.
+- llama al mapper específico del reporte (si un registro no cumple el esquema, responde 500);
+- devuelve una respuesta `{ data }`.
 
 ### Regla importante
 
 El servicio base no conoce la lógica de negocio del reporte. Solo sabe:
 
 - donde consultar;
-- como filtrar;
+- sobre qué campos aplicar el rango de fechas y los permisos;
 - como cachear;
 - que funcion usar para limpiar los datos.
 

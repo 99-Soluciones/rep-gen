@@ -2,7 +2,7 @@
 # El contexto de build es la RAIZ del monorepo (no esta carpeta):
 #   docker build -f repgen-backend/Dockerfile -t repgen-backend .
 
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 RUN corepack enable
 WORKDIR /repo
 
@@ -21,7 +21,7 @@ COPY repgen-backend/package.json repgen-backend/
 COPY packages/shared-types/package.json packages/shared-types/
 RUN pnpm install --frozen-lockfile --prod --filter generador-reportes-backend...
 
-FROM node:22-alpine AS runtime
+FROM node:24-alpine AS runtime
 ENV NODE_ENV=production
 WORKDIR /repo
 COPY --from=prod-deps /repo ./

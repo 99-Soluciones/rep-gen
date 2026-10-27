@@ -1,5 +1,4 @@
 import Ajv2020 from 'ajv/dist/2020';
-import { BadRequestException } from '@nestjs/common';
 import { RawRecord } from '../../../filemaker/ifilemaker';
 import type {
   ReportSalesItemRecord,
@@ -109,7 +108,7 @@ function assertSalesItemRecord(record: RawRecord, index: number): void {
     dataVar: `rawData[${index}]`,
   });
 
-  throw new BadRequestException(`SalesItem record invalido: ${details}`);
+  throw new Error(`SalesItem record invalido: ${details}`);
 }
 
 function resolveMethodOfAcquisition(
@@ -187,7 +186,9 @@ function buildBaseRecord(
     articuloMarca: getString(mappedRecord.item?.marca),
     articuloNombre: getString(mappedRecord.item?.nombre),
     articuloNombreCompleto: getString(mappedRecord.item?.nombreDisplay),
-    articuloCuentaContable: getString(mappedRecord.item?.cuentaContable),
+    articuloCuentaContable:
+      getString(mappedRecord.item?.cuentaContable) ||
+      getString(mappedRecord.item?.cuentaContableLegacy),
     categoriadeProducto1: getString(mappedRecord.item?.clasificacion1),
     categoriadeProducto2: getString(mappedRecord.item?.clasificacion2),
     categoriadeProducto3: getString(mappedRecord.item?.clasificacion3),
@@ -318,12 +319,11 @@ function buildReturnRecord(
   const devolucionCantidad = getNumber(mappedRecord.devolucion?.item?.qty);
   const facturaTipoDeCambio = normalizeExchangeRate(source.facturaTipoDeCambio);
   const costoDirectoUnitarioMxn = source.costoDirectoUnitarioMxn || 0;
-  const articuloImporteSinDescuentoMxn = getNumber(
-    mappedRecord.sub?.sinDescuentoSinIEPS,
-  );
-  const articuloDescuentoMontoMxn = getNumber(mappedRecord.sub?.descuento);
+  // Importe de lo devuelto (no del renglón completo), igual que su costo.
   const articuloImporteConDescuentoMxn =
-    articuloImporteSinDescuentoMxn - articuloDescuentoMontoMxn;
+    (getNumber(mappedRecord.unit?.sinDescuentoSinIEPS) -
+      getNumber(mappedRecord.unit?.descuento)) *
+    devolucionCantidad;
   const costoDirectoSubTotalMxn = costoDirectoUnitarioMxn * devolucionCantidad;
   const gananciaBrutaMxn =
     articuloImporteConDescuentoMxn - costoDirectoSubTotalMxn;
@@ -384,11 +384,7 @@ function buildReturnRecord(
     articuloDescuentoMontoMxn: negate(
       getNumber(mappedRecord.unit?.descuento) * devolucionCantidad,
     ),
-    articuloImporteConDescuentoMxn: negate(
-      (getNumber(mappedRecord.unit?.sinDescuentoSinIEPS) -
-        getNumber(mappedRecord.unit?.descuento)) *
-        devolucionCantidad,
-    ),
+    articuloImporteConDescuentoMxn: negate(articuloImporteConDescuentoMxn),
     articuloIVAMxn: negate(getNumber(mappedRecord.devolucion?.item?.contraIVA)),
     articuloIEPSMxn: negate(
       getNumber(mappedRecord.devolucion?.item?.contraIEPS),

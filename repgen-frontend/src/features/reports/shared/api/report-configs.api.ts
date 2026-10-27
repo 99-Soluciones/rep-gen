@@ -1,65 +1,38 @@
-import type { ColumnStateEntry, ReportConfigResponse } from "@repgen/shared-types";
+import type { ReportConfigResponse } from "@repgen/shared-types";
+import { apiFetch } from "../../../../shared/api/http";
 
 export type { ColumnStateEntry, ReportConfigResponse } from "@repgen/shared-types";
 
-const API_URL = import.meta.env.VITE_API_URL || "/api/v1";
-
-const JSON_HEADERS = { "Content-Type": "application/json" };
-
-export const fetchReportConfigs = async (
+export const fetchReportConfigs = (
   reportId: string,
-): Promise<ReportConfigResponse[]> => {
-  const respuesta = await fetch(
-    `${API_URL}/report-configs?reportId=${encodeURIComponent(reportId)}`,
-    { method: "GET", credentials: "include" },
+): Promise<ReportConfigResponse[]> =>
+  apiFetch<ReportConfigResponse[]>(
+    `/report-configs?reportId=${encodeURIComponent(reportId)}`,
   );
-  if (!respuesta.ok) {
-    throw new Error(`Error al cargar configuraciones (${respuesta.status})`);
-  }
-  return respuesta.json() as Promise<ReportConfigResponse[]>;
-};
 
-export const createReportConfig = async (
+type ContenidoVista = Pick<ReportConfigResponse, "columnState" | "filterModel" | "periodo">;
+
+export const createReportConfig = (
   reportId: string,
   name: string,
-  columnState: ColumnStateEntry[],
+  contenido: ContenidoVista,
   isDefault: boolean,
-): Promise<ReportConfigResponse> => {
-  const respuesta = await fetch(`${API_URL}/report-configs`, {
+): Promise<ReportConfigResponse> =>
+  apiFetch<ReportConfigResponse>("/report-configs", {
     method: "POST",
-    credentials: "include",
-    headers: JSON_HEADERS,
-    body: JSON.stringify({ reportId, name, columnState, isDefault }),
+    body: { reportId, name, ...contenido, isDefault },
   });
-  if (!respuesta.ok) {
-    throw new Error(`Error al guardar configuración (${respuesta.status})`);
-  }
-  return respuesta.json() as Promise<ReportConfigResponse>;
-};
 
-export const updateReportConfig = async (
+export const updateReportConfig = (
   id: string,
-  patch: Partial<Pick<ReportConfigResponse, "name" | "columnState" | "isDefault">>,
-): Promise<ReportConfigResponse> => {
-  const respuesta = await fetch(`${API_URL}/report-configs/${id}`, {
+  patch: Partial<
+    Pick<ReportConfigResponse, "name" | "columnState" | "filterModel" | "periodo" | "isDefault">
+  >,
+): Promise<ReportConfigResponse> =>
+  apiFetch<ReportConfigResponse>(`/report-configs/${encodeURIComponent(id)}`, {
     method: "PATCH",
-    credentials: "include",
-    headers: JSON_HEADERS,
-    body: JSON.stringify(patch),
+    body: patch,
   });
-  if (!respuesta.ok) {
-    throw new Error(`Error al actualizar configuración (${respuesta.status})`);
-  }
 
-  return respuesta.json() as Promise<ReportConfigResponse>;
-};
-
-export const deleteReportConfig = async (id: string): Promise<void> => {
-  const respuesta = await fetch(`${API_URL}/report-configs/${id}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
-  if (!respuesta.ok) {
-    throw new Error(`Error al eliminar configuración (${respuesta.status})`);
-  }
-};
+export const deleteReportConfig = (id: string): Promise<void> =>
+  apiFetch<void>(`/report-configs/${encodeURIComponent(id)}`, { method: "DELETE" });

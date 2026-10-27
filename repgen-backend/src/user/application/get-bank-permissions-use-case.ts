@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-// import { CACHE_MANAGER } from '@nestjs/cache-manager'; // <--- Usar esto en un futuro
-// import { Cache } from 'cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from '@nestjs/cache-manager';
 import { FileMakerService } from '../../filemaker/filemaker.service';
 import type {
   FindRecordsResult,
@@ -10,13 +10,16 @@ import type {
 import { userBankPermissionFieldMapJson } from '../infrastructure/user-bank-permission-field-map';
 import { BankPermission } from '../domain';
 import { LoggerService } from '../../common/logger';
+
+// Con TTL para que un permiso revocado en FileMaker deje de aplicar sin reiniciar.
+const PERMISSIONS_CACHE_TTL_MS = 5 * 60 * 1000;
+
 @Injectable()
 export class GetBankPermissionsUseCase {
-  private banksUserHasAccess: Map<string, BankPermission> = new Map();
-  private totalBanksByTenent: Map<string, number> = new Map();
   constructor(
     private readonly fmService: FileMakerService,
     private readonly logger: LoggerService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
   async execute(dbName: string, user: number): Promise<FindRecordsResult> {
     const query: FileMakerCondition[] = [
@@ -37,9 +40,10 @@ export class GetBankPermissionsUseCase {
     dbName: string,
     user: number,
   ): Promise<BankPermission> {
-    const cacheKey = `${dbName}-${user}`;
+    const cacheKey = `bank-permissions:${dbName}-${user}`;
 
-    const cachedPermissions = this.banksUserHasAccess.get(cacheKey);
+    const cachedPermissions =
+      await this.cacheManager.get<BankPermission>(cacheKey);
     if (cachedPermissions) {
       this.logger.log(
         `Permisos de bancos obtenidos de cache para el usuario ${user} en la base de datos ${dbName}. Cantidad: ${cachedPermissions.banksNames.length}`,
@@ -60,12 +64,13 @@ export class GetBankPermissionsUseCase {
             newPermission.banksNames.push(bankName as string);
           }
         });
-        //Por cuestion de tiempo, se dejara para despues, pero la idea es obtener el total de bancos para cada tenant y guardarlo en cache, esto con la finalidad de validar que si el usuario tiene acceso a todos los bancos o no, y asi evitar hacer consultas innecesarias a filemaker
-        //const portalData = permissions.response.data[0].portalData?.['Bancos'];
-        //const totalBanks = this.getTotalBanksByTenant(portalData as [], dbName);
       }
 
-      this.banksUserHasAccess.set(cacheKey, newPermission);
+      await this.cacheManager.set(
+        cacheKey,
+        newPermission,
+        PERMISSIONS_CACHE_TTL_MS,
+      );
 
       return newPermission;
     } catch (error) {
@@ -76,23 +81,5 @@ export class GetBankPermissionsUseCase {
       );
       throw error;
     }
-  }
-
-  private getTotalBanksByTenant(portalData: [], dbName: string): number {
-    const cacheKey = `total-banks-${dbName}`;
-    let total = 0;
-    const cachedTotal = this.totalBanksByTenent.get(cacheKey);
-    if (cachedTotal !== undefined) {
-      return cachedTotal;
-    }
-
-    portalData.forEach((bank) => {
-      if (bank['_isCarpetaCuenta|v0.17.0'] === 'Cuenta') {
-        total++;
-      }
-    });
-
-    this.totalBanksByTenent.set(cacheKey, total);
-    return total;
   }
 }

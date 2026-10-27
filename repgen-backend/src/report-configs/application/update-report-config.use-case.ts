@@ -7,13 +7,18 @@ import { FileMakerService } from '../../filemaker/filemaker.service';
 import { LoggerService } from '../../common/logger/logger.service';
 import type {
   ColumnStateEntry,
+  PeriodoVista,
   ReportConfigResponse,
 } from '../domain/report-config.types';
-import { mapReportConfigRecord } from '../infrastructure/report-config.mapper';
+import {
+  mapReportConfigRecord,
+  serializeContenidoVista,
+} from '../infrastructure/report-config.mapper';
 import {
   reportConfigFieldMap as fm,
   REPORT_CONFIG_LAYOUT,
 } from '../infrastructure/report-config-field-map';
+import { asegurarNombreLibre } from './nombre-vista';
 
 @Injectable()
 export class UpdateReportConfigUseCase {
@@ -29,6 +34,8 @@ export class UpdateReportConfigUseCase {
     patch: {
       name?: string;
       columnState?: ColumnStateEntry[];
+      filterModel?: Record<string, unknown> | null;
+      periodo?: PeriodoVista | null;
       isDefault?: boolean;
     },
   ): Promise<ReportConfigResponse> {
@@ -37,6 +44,18 @@ export class UpdateReportConfigUseCase {
       userId,
       configId,
     );
+
+    // Antes de tocar nada: un nombre repetido no deja el default a medio cambiar.
+    if (patch.name !== undefined) {
+      await asegurarNombreLibre(
+        this.fileMakerService,
+        dbName,
+        userId,
+        record.reportId,
+        patch.name,
+        record.id,
+      );
+    }
 
     if (patch.isDefault === true) {
       await this.clearExistingDefault(
@@ -49,8 +68,25 @@ export class UpdateReportConfigUseCase {
 
     const fieldData: Record<string, unknown> = {};
     if (patch.name !== undefined) fieldData[fm.name] = patch.name;
-    if (patch.columnState !== undefined)
-      fieldData[fm.columnState] = JSON.stringify(patch.columnState);
+    // El campo guarda columnas + filtros + periodo juntos: un PATCH parcial se
+    // combina con lo guardado para no borrar lo que no viene en la petición.
+    if (
+      patch.columnState !== undefined ||
+      patch.filterModel !== undefined ||
+      patch.periodo !== undefined
+    ) {
+      fieldData[fm.columnState] = serializeContenidoVista({
+        columnState: patch.columnState ?? record.columnState,
+        filterModel:
+          patch.filterModel !== undefined
+            ? patch.filterModel
+            : (record.filterModel ?? null),
+        periodo:
+          patch.periodo !== undefined
+            ? patch.periodo
+            : (record.periodo ?? null),
+      });
+    }
     if (patch.isDefault !== undefined)
       fieldData[fm.isDefault] = patch.isDefault ? 1 : 0;
 

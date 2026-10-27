@@ -41,7 +41,7 @@
 |-----------------|----------------|--------|
 | 401 en reportes | JWT expirado o ausente | Re-login |
 | 429 | Throttle excedido | Esperar / revisar límites |
-| 400 validation | filterModel inválido | Revisar DTO y payload FE |
+| 400 validation | `dateRange` ausente o fuera de formato `YYYY-MM-DD` (o frontend desactualizado enviando campos viejos) | Revisar payload FE / desplegar back y front juntos |
 | FM 401/403 | Credenciales FM o layout | Verificar env y relations |
 | Tabla vacía | Rango fechas / permisos banco | Ajustar filtros |
 | Columnas sin label | Tenant labels API | Ver SUB-4.4 |
@@ -60,9 +60,9 @@
 ## Límites documentados
 
 - Global throttler: 100/min
-- Reportes bancos: 20/min
+- Reportes (`bancos`, `ventas`, `ventas-por-concepto`): 20/min cada uno
 - Login: 5/min
-- Paginación default: 50 registros
+- Sin paginación en servidor: cada búsqueda trae todo el rango de fechas (`FM_FIND_LIMIT` en `BaseReportService`); AG Grid filtra y pagina en el cliente
 
 ## Cache
 
@@ -70,7 +70,7 @@
 
 ## Criterios de aceptación
 
-- [ ] Recomendaciones `limit` para reportes grandes
+- [ ] Recomendaciones de rango de fechas para reportes grandes
 - [ ] Herramienta load test si usan `autocannon` en monorepo
 
 ---

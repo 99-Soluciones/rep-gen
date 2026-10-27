@@ -52,9 +52,9 @@ sequenceDiagram
 | `vite.config.ts` | Proxy de dev `/api` → `localhost:3000` |
 | `vercel.json` | Rewrite de `/api/:path*` → backend real (antes del catch-all SPA) |
 | `.env` | `VITE_API_URL=/api/v1` (antes: URL absoluta a `localhost:3000`) |
-| `src/features/auth/ui/Autenticacion.tsx` | Ya no guarda `accessToken` en `localStorage`. El login manda `credentials: "include"`. Para **retomar sesión** sin un token fresco de FileMaker (ej. al recargar la página), ya no puede leer el JWT de `localStorage` (es httpOnly) — ahora llama a `GET /auth/me`: 200 = sesión válida, 401 = no hay sesión. |
-| `src/layout/Navbar.tsx` | `cerrarSesion` ahora llama a `POST /auth/logout` (que limpia la cookie en el servidor) antes de redirigir — JS ya no puede borrar una cookie httpOnly directamente. |
-| `src/services/api.reportes.ts`, `src/features/reports/shared/api/report-configs.api.ts`, `src/features/reports/shared/api/column-labels.api.ts` | Se eliminó la lectura manual de `localStorage.getItem("jwt_reportes")` y el header `Authorization`. Se agregó `credentials: "include"` a cada `fetch`. |
+| `src/features/auth/AuthGate.tsx` | Ya no guarda `accessToken` en `localStorage`. El login manda `credentials: "include"`. Para **retomar sesión** sin un token fresco de FileMaker (ej. al recargar la página), ya no puede leer el JWT de `localStorage` (es httpOnly) — ahora llama a `GET /auth/me`: 200 = sesión válida, 401 = no hay sesión. |
+| `src/app/layout/Navbar.tsx` | `cerrarSesion` ahora llama a `POST /auth/logout` (que limpia la cookie en el servidor) antes de redirigir — JS ya no puede borrar una cookie httpOnly directamente. |
+| `src/features/reports/shared/api/reportes.api.ts`, `src/features/reports/shared/api/report-configs.api.ts`, `src/features/reports/shared/api/column-labels.api.ts` | Se eliminó la lectura manual de `localStorage.getItem("jwt_reportes")` y el header `Authorization`. Se agregó `credentials: "include"` a cada `fetch`. |
 
 `usuario:v1` (nombre y tenant, no sensible) **se mantiene** en `localStorage` — solo se movió el JWT. Sirve como pista rápida de "puede que haya sesión" antes de confirmar con `/auth/me`, y para mostrar el nombre en el navbar sin otra llamada de red.
 
@@ -81,7 +81,7 @@ No fue solo "compila y los tests pasan" — se levantaron ambos servidores (`rep
 
 ## 7. Qué falta / decisiones pendientes
 
-- **`no-fetch-in-effect`** (el `fetch` de login sigue viviendo en un `useEffect` de `Autenticacion.tsx`) no se tocó en esta pasada — es un cambio de patrón (ej. un loader de React Router) independiente del tema de seguridad, y no fue parte de lo que se pidió resolver ahora.
+- **`no-fetch-in-effect`** (el `fetch` de login sigue viviendo en un `useEffect` de `AuthGate.tsx`) no se tocó en esta pasada — es un cambio de patrón (ej. un loader de React Router) independiente del tema de seguridad, y no fue parte de lo que se pidió resolver ahora.
 - El `JWT_EXPIRES_IN` actual (por defecto 3600s = 1h) define el `maxAge` de la cookie. Si en el futuro se quiere sesión más larga con revocación (refresh tokens), **eso sí requeriría persistencia** (DB o similar) — no aplica a lo implementado aquí.
 - El fallback a `Authorization: Bearer` en el guard puede eliminarse una vez se confirme que ningún cliente viejo (build cacheado, integración externa) sigue dependiendo de él.
 

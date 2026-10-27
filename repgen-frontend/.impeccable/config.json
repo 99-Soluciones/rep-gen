@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "arial",
+        "createdAt": "2026-10-16T16:19:05.689Z",
+        "reason": "Claude triage: DESIGN.md typography specifies Arial across the whole interface; line dates from the initial frontend commit 7ca2247"
+      }
+    ]
+  }
+}

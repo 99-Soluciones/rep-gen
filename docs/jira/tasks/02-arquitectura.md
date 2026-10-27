@@ -45,7 +45,7 @@ Estado actual vs objetivo (`PROUESTA_ARQUITECTURA.md` §4).
 ## Estado actual
 
 - **Objetivo parcial:** `src/features/reports/{banks,sales}/`, `src/app/`, `src/shared/`
-- **Legacy coexistiendo:** `src/components/Reportes/`, `src/layout/`, `src/services/api.reportes.ts`
+- **Estructura por features completada (Fase 2, 2026-10):** ya no existen `src/components/`, `src/layout/`, `src/services/`, `src/config/`, `src/interfaces/` ni `src/utils/`. Ver [EVALUACION_ODATA_Y_ARQUITECTURA.md](../../architecture/EVALUACION_ODATA_Y_ARQUITECTURA.md)
 
 ## Convención objetivo
 

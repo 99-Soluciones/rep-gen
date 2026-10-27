@@ -1,18 +1,26 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type {
   GetTokenResponse,
   FindRecordsResult,
   GetRecordResponse,
-  LogOutResponse,
   FileMakerCondition,
   CreateRecordResponse,
   EditRecordResponse,
+  FileMakerErrorBody,
 } from './ifilemaker';
 import { LoggerService } from '../common/logger/';
+
+/** Código de FileMaker para "ningún registro coincide": un find vacío, no un error. */
+const FM_NO_RECORDS_MATCH = '401';
+
 /**
  * Servicio para interactuar con la API de FileMaker.
- * Proporciona métodos para autenticarse, cerrar sesión y realizar búsquedas de registros en FileMaker.
+ * Proporciona métodos para autenticarse y realizar operaciones sobre registros en FileMaker.
  * Este servicio maneja la autenticación y el almacenamiento del token de sesión,
  * así como la lógica para reintentar las consultas en caso de que el token haya expirado.
  */
@@ -63,6 +71,18 @@ export class FileMakerService {
   }
 
   /**
+   * URL de la base de datos en la Data API. dbName y layout se codifican porque
+   * el tenant llega del cliente: sin codificar, un "/" o ".." cambiaría la ruta.
+   */
+  private databaseUrl(dbName: string, path = ''): string {
+    return `${this.fmServer}/fmi/data/vLatest/databases/${encodeURIComponent(dbName)}${path}`;
+  }
+
+  private layoutPath(layout: string, path = ''): string {
+    return `/layouts/${encodeURIComponent(layout)}${path}`;
+  }
+
+  /**
    * Método para autenticarse con FileMaker y obtener un token de sesión.
    * @returns Promise<string> El token de sesión de FileMaker.
    */
@@ -95,7 +115,7 @@ export class FileMakerService {
       return inFlight;
     }
 
-    const url = `${this.fmServer}/fmi/data/vLatest/databases/${dbName}/sessions`;
+    const url = this.databaseUrl(dbName, '/sessions');
     const credentials = Buffer.from(
       `${this.username}:${this.password}`,
     ).toString('base64');
@@ -135,110 +155,115 @@ export class FileMakerService {
         this.authInFlight.delete(dbName);
       });
   }
+
   /**
-   * Borra el token de sesión de FileMaker para cerrar la sesión. Si no hay un token de sesión activo, simplemente retorna sin hacer nada.
-   * @returns void
+   * Único punto de salida hacia la Data API para operaciones con token:
+   * reutiliza (u obtiene) el token de la BD, reautentica una sola vez si
+   * FileMaker responde 401 (token expirado o inválido) y convierte cualquier
+   * error de FileMaker en una excepción, en vez de devolverlo como datos.
+   * @param noRecordsResult Si se indica, el código FM 401 ("no records match")
+   * se devuelve como este resultado vacío en lugar de lanzar.
    */
-  async logoutFileMaker(dbName: string): Promise<void> {
-    const token = this.tokens.get(dbName);
-    if (!token) {
-      return;
+  private async request<T>(
+    dbName: string,
+    path: string,
+    init: RequestInit,
+    noRecordsResult?: T,
+  ): Promise<T> {
+    const send = async (): Promise<Response> => {
+      const token = await this.authFileMaker(dbName);
+      return this.fetchWithTimeout(this.databaseUrl(dbName, path), {
+        ...init,
+        headers: { ...init.headers, Authorization: `Bearer ${token}` },
+      });
+    };
+
+    let response: Response;
+    try {
+      response = await send();
+      if (response.status === 401) {
+        this.tokens.delete(dbName);
+        response = await send();
+      }
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      this.logger.error('No se pudo conectar con FileMaker', error as Error, {
+        tenant: dbName,
+        path,
+      });
+      throw new InternalServerErrorException(
+        'No se pudo conectar con FileMaker',
+      );
     }
 
-    this.tokens.delete(dbName);
+    let body: unknown;
+    try {
+      body = await response.json();
+    } catch {
+      body = undefined;
+    }
 
-    const url = `${this.fmServer}/fmi/data/vLatest/databases/${dbName}/sessions/${token}`;
+    if (response.ok) return body as T;
 
-    const response = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
+    const fmMessage = (body as FileMakerErrorBody | undefined)?.messages?.[0];
+    if (
+      noRecordsResult !== undefined &&
+      fmMessage?.code === FM_NO_RECORDS_MATCH
+    ) {
+      return noRecordsResult;
+    }
+
+    this.logger.error(
+      `FileMaker respondió ${response.status} (código ${fmMessage?.code ?? 'desconocido'}) en ${init.method} ${path}`,
+      undefined,
+      {
+        tenant: dbName,
+        status: response.status,
+        fmCode: fmMessage?.code,
+        fmMessage: fmMessage?.message,
       },
-    });
+    );
+    throw new InternalServerErrorException(
+      'Error al comunicarse con FileMaker',
+    );
+  }
 
-    if (!response.ok) {
-      throw new InternalServerErrorException(
-        'Error al cerrar sesión en FileMaker',
-      );
-    }
-
-    const data = (await response.json()) as LogOutResponse;
-    if (data.message.code !== '0') {
-      throw new InternalServerErrorException(
-        'Error al cerrar sesión en FileMaker: ' + data.message.message,
-      );
-    }
+  private emptyFindResult(dbName: string, layout: string): FindRecordsResult {
+    return {
+      response: {
+        data: [],
+        dataInfo: {
+          database: dbName,
+          layout,
+          table: '',
+          totalRecordCount: 0,
+          foundCount: 0,
+          returnedCount: 0,
+        },
+      },
+    };
   }
 
   /**
    * Obtiene todos los registros de una base de datos y layout.
    * @param dbName El nombre de la base de datos en FileMaker.
    * @param layout El nombre del layout en FileMaker.
+   * @param limit Máximo de registros (la Data API devuelve 100 si no se indica).
    * @returns Promise<FindRecordsResult> El resultado de la búsqueda.
    */
   async getAllRecords(
     dbName: string,
     layout: string,
+    limit?: number,
   ): Promise<FindRecordsResult> {
-    const url = encodeURI(
-      `${this.fmServer}/fmi/data/vLatest/databases/${dbName}/layouts/${layout}/records`,
+    return this.request<FindRecordsResult>(
+      dbName,
+      this.layoutPath(layout, limit ? `/records?_limit=${limit}` : '/records'),
+      { method: 'GET' },
+      this.emptyFindResult(dbName, layout),
     );
-    try {
-      let dbToken = this.tokens.get(dbName);
-      if (!dbToken) {
-        this.tokens.delete(dbName);
-        await this.authFileMaker(dbName);
-        if (!this.tokens.get(dbName)) {
-          this.logger.error(
-            `No se pudo obtener un token de sesión válido para la base de datos ${dbName} después de intentar autenticarse.`,
-            undefined,
-            { tenant: dbName },
-          );
-          throw new InternalServerErrorException(
-            'No se pudo acceder a FileMaker: no se obtuvo un token de sesión válido.',
-          );
-        }
-        dbToken = this.tokens.get(dbName)!;
-      }
-
-      const executeGetAllRecords = async (token: string): Promise<Response> => {
-        return this.fetchWithTimeout(url, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      };
-      let response = await executeGetAllRecords(dbToken);
-      if (response.status === 401) {
-        this.tokens.delete(dbName);
-        await this.authFileMaker(dbName);
-        const newToken = this.tokens.get(dbName);
-        if (!newToken) {
-          this.logger.error(
-            `No se pudo obtener un token de sesión válido para la base de datos ${dbName} después de reintentar autenticarse.`,
-            undefined,
-            { tenant: dbName },
-          );
-          throw new InternalServerErrorException(
-            'No se pudo obtener un token de sesión válido para la base de datos ${dbName} después de reintentar autenticarse.',
-          );
-        }
-        response = await executeGetAllRecords(newToken);
-      }
-      const result = (await response.json()) as FindRecordsResult;
-      return result;
-    } catch (error) {
-      this.logger.error(
-        `Error al obtener todos los registros de la base de datos ${dbName} y layout ${layout}`,
-        error as Error,
-        { tenant: dbName, layout },
-      );
-      throw new InternalServerErrorException(
-        `Error al obtener todos los registros de la base de datos ${dbName} y layout ${layout}`,
-      );
-    }
   }
+
   /**
    * Realiza una búsqueda de registros en FileMaker.
    * @param dbName El nombre de la base de datos en FileMaker donde se realizará la búsqueda.
@@ -246,7 +271,7 @@ export class FileMakerService {
    * @param query Un array de objetos que representan los criterios de búsqueda. Cada objeto debe tener la estructura { fieldName: value }.
    * @param offset El número de registro desde el cual comenzar a devolver resultados (paginación). Por defecto es 1.
    * @param limit El número máximo de registros a devolver. Por defecto es 50.
-   * @returns Promise<FindRecordsResult> El resultado de la búsqueda.
+   * @returns Promise<FindRecordsResult> El resultado de la búsqueda; vacío si ningún registro coincide.
    */
   async findRecords(
     dbName: string,
@@ -255,77 +280,20 @@ export class FileMakerService {
     offset: number = 1,
     limit: number = 50,
   ): Promise<FindRecordsResult> {
-    const url = encodeURI(
-      `${this.fmServer}/fmi/data/vLatest/databases/${dbName}/layouts/${layout}/_find`,
+    const result = await this.request<FindRecordsResult>(
+      dbName,
+      this.layoutPath(layout, '/_find'),
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, offset, limit }),
+      },
+      this.emptyFindResult(dbName, layout),
     );
-
-    const body = {
-      query,
-      offset,
-      limit,
-    };
-    try {
-      let dbToken = this.tokens.get(dbName);
-      if (!dbToken) {
-        this.tokens.delete(dbName);
-        await this.authFileMaker(dbName);
-        if (!this.tokens.get(dbName)) {
-          this.logger.error(
-            `No se pudo obtener un token de sesión válido para la base de datos ${dbName} después de intentar autenticarse.`,
-            undefined,
-            { tenant: dbName },
-          );
-          throw new InternalServerErrorException(
-            'No se pudo acceder a FileMaker: no se obtuvo un token de sesión válido.',
-          );
-        }
-        dbToken = this.tokens.get(dbName)!;
-      }
-
-      const executeFind = async (token: string): Promise<Response> => {
-        return this.fetchWithTimeout(url, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body),
-        });
-      };
-
-      let response = await executeFind(dbToken);
-      if (response.status === 401) {
-        this.tokens.delete(dbName);
-        await this.authFileMaker(dbName);
-        const newToken = this.tokens.get(dbName);
-        if (!newToken) {
-          this.logger.error(
-            `No se pudo obtener un token de sesión válido para la base de datos ${dbName} después de reintentar autenticarse.`,
-            undefined,
-            { tenant: dbName },
-          );
-          throw new InternalServerErrorException(
-            'No se pudo acceder a FileMaker: no se obtuvo un token de sesión válido tras reintentar.',
-          );
-        }
-        response = await executeFind(newToken);
-      }
-
-      this.logger.log(
-        `Búsqueda realizada en la base de datos ${dbName} con layout ${layout}. Status: ${response.status}`,
-      );
-      const result = (await response.json()) as FindRecordsResult;
-      return result;
-    } catch (error) {
-      this.logger.error(
-        'Error al realizar la búsqueda de registros en FileMaker',
-        error as Error,
-        { tenant: dbName, layout },
-      );
-      throw new InternalServerErrorException(
-        'Error al realizar la búsqueda de registros en FileMaker',
-      );
-    }
+    this.logger.log(
+      `Búsqueda realizada en la base de datos ${dbName} con layout ${layout}. Registros: ${result?.response?.data?.length ?? 0}`,
+    );
+    return result;
   }
 
   async getRecord(
@@ -333,42 +301,11 @@ export class FileMakerService {
     layout: string,
     recordId: string,
   ): Promise<GetRecordResponse> {
-    const url = `${this.fmServer}/fmi/data/vLatest/databases/${dbName}/layouts/${layout}/records/${recordId}`;
-
-    const executeGet = async (tokenToUse: string): Promise<Response> => {
-      return this.fetchWithTimeout(url, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${tokenToUse}`,
-        },
-      });
-    };
-
-    let token = this.tokens.get(dbName);
-    if (!token) {
-      this.tokens.delete(dbName);
-      token = await this.authFileMaker(dbName);
-    }
-    let response = await executeGet(token);
-
-    if (response.status === 401) {
-      this.tokens.delete(dbName);
-      token = await this.authFileMaker(dbName);
-      response = await executeGet(token);
-    }
-
-    if (!response.ok) {
-      this.logger.error(
-        `Error al obtener registro ${recordId} en FileMaker en ${dbName}: ${response.status}`,
-        undefined,
-        { tenant: dbName, layout, recordId },
-      );
-      throw new InternalServerErrorException(
-        'Error al obtener registro en FileMaker',
-      );
-    }
-
-    return (await response.json()) as GetRecordResponse;
+    return this.request<GetRecordResponse>(
+      dbName,
+      this.layoutPath(layout, `/records/${encodeURIComponent(recordId)}`),
+      { method: 'GET' },
+    );
   }
 
   async createRecord(
@@ -376,43 +313,15 @@ export class FileMakerService {
     layout: string,
     fieldData: Record<string, unknown>,
   ): Promise<CreateRecordResponse> {
-    const url = `${this.fmServer}/fmi/data/vLatest/databases/${dbName}/layouts/${layout}/records`;
-
-    const executeCreate = async (tokenToUse: string): Promise<Response> => {
-      return this.fetchWithTimeout(url, {
+    const result = await this.request<CreateRecordResponse>(
+      dbName,
+      this.layoutPath(layout, '/records'),
+      {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${tokenToUse}`,
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fieldData }),
-      });
-    };
-    let token = this.tokens.get(dbName);
-    if (!token) {
-      this.tokens.delete(dbName);
-      token = await this.authFileMaker(dbName);
-    }
-    let response = await executeCreate(token);
-    if (response.status === 401) {
-      this.tokens.delete(dbName);
-      token = await this.authFileMaker(dbName);
-      response = await executeCreate(token);
-    }
-
-    if (!response.ok) {
-      this.logger.error(
-        `Error al crear registro en FileMaker en ${dbName}: ${response.status} ${response.statusText}`,
-        undefined,
-        { tenant: dbName, layout },
-      );
-      throw new InternalServerErrorException(
-        'Error al crear registro en FileMaker',
-      );
-    }
-
-    const result = (await response.json()) as CreateRecordResponse;
-
+      },
+    );
     this.logger.log(
       `Registro creado en la base de datos ${dbName}, layout ${layout}, recordId ${result.response.recordId}`,
     );
@@ -425,44 +334,15 @@ export class FileMakerService {
     recordId: string,
     fieldData: Record<string, unknown>,
   ): Promise<EditRecordResponse> {
-    const url = `${this.fmServer}/fmi/data/vLatest/databases/${dbName}/layouts/${layout}/records/${recordId}`;
-
-    const executeEdit = async (tokenToUse: string): Promise<Response> => {
-      return this.fetchWithTimeout(url, {
+    const result = await this.request<EditRecordResponse>(
+      dbName,
+      this.layoutPath(layout, `/records/${encodeURIComponent(recordId)}`),
+      {
         method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${tokenToUse}`,
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fieldData }),
-      });
-    };
-
-    let token = this.tokens.get(dbName);
-    if (!token) {
-      this.tokens.delete(dbName);
-      token = await this.authFileMaker(dbName);
-    }
-    let response = await executeEdit(token);
-
-    if (response.status === 401) {
-      this.tokens.delete(dbName);
-      token = await this.authFileMaker(dbName);
-      response = await executeEdit(token);
-    }
-
-    if (!response.ok) {
-      this.logger.error(
-        `Error al editar registro ${recordId} en FileMaker en ${dbName}: ${response.status} ${response.statusText}`,
-        undefined,
-        { tenant: dbName, layout, recordId },
-      );
-      throw new InternalServerErrorException(
-        'Error al editar registro en FileMaker',
-      );
-    }
-
-    const result = (await response.json()) as EditRecordResponse;
+      },
+    );
     this.logger.log(
       `Registro ${recordId} editado en la base de datos ${dbName}`,
     );
@@ -474,41 +354,11 @@ export class FileMakerService {
     layout: string,
     recordId: string,
   ): Promise<void> {
-    const url = `${this.fmServer}/fmi/data/vLatest/databases/${dbName}/layouts/${layout}/records/${recordId}`;
-
-    const executeDelete = async (tokenToUse: string): Promise<Response> => {
-      return this.fetchWithTimeout(url, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${tokenToUse}`,
-          'Content-Type': 'application/json',
-        },
-      });
-    };
-
-    let token = this.tokens.get(dbName);
-    if (!token) {
-      this.tokens.delete(dbName);
-      token = await this.authFileMaker(dbName);
-    }
-    let response = await executeDelete(token);
-
-    if (response.status === 401) {
-      this.tokens.delete(dbName);
-      token = await this.authFileMaker(dbName);
-      response = await executeDelete(token);
-    }
-
-    if (!response.ok) {
-      this.logger.error(
-        `Error al eliminar registro en FileMaker en ${dbName}: ${response.status} ${response.statusText}`,
-        undefined,
-        { tenant: dbName, layout, recordId },
-      );
-      throw new InternalServerErrorException(
-        'Error al eliminar registro en FileMaker',
-      );
-    }
+    await this.request<unknown>(
+      dbName,
+      this.layoutPath(layout, `/records/${encodeURIComponent(recordId)}`),
+      { method: 'DELETE' },
+    );
     this.logger.log(
       `Registro ${recordId} eliminado en la base de datos ${dbName}`,
     );

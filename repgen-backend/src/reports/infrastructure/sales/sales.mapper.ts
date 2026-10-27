@@ -1,4 +1,3 @@
-import { BadRequestException } from '@nestjs/common';
 import Ajv2020 from 'ajv/dist/2020';
 
 import { RawRecord } from '../../../filemaker/ifilemaker';
@@ -85,7 +84,7 @@ function assertSalesRecord(record: RawRecord, index: number): void {
     dataVar: `rawData[${index}]`,
   });
 
-  throw new BadRequestException(`Sales record invalido: ${details}`);
+  throw new Error(`Sales record invalido: ${details}`);
 }
 
 function buildBaseRecord(mappedRecord: SalesMappedRecord): ReportSalesRecord {

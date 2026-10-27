@@ -2,6 +2,8 @@
 
 Fecha: 2026-04-22
 
+> **Nota (2026-10-08):** documento histórico. La estructura del frontend se implementó en la Fase 2, con ajustes respecto a esta propuesta. La estructura vigente está en [EVALUACION_ODATA_Y_ARQUITECTURA.md](EVALUACION_ODATA_Y_ARQUITECTURA.md).
+
 ## 1) Objetivo
 
 - Mantener backend y frontend separados, con organización interna por feature de negocio.

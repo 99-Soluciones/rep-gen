@@ -10,6 +10,7 @@ import { LoggerService } from '../common/logger/logger.service';
 @Injectable()
 export class AuthService {
   private readonly master_key: string;
+  private readonly isProduction: boolean;
   constructor(
     private jwtService: JwtService,
     private fileMakerService: FileMakerService,
@@ -17,6 +18,8 @@ export class AuthService {
     private configService: ConfigService,
   ) {
     this.master_key = this.configService.get<string>('MASTER_KEY') ?? '';
+    this.isProduction =
+      this.configService.get<string>('NODE_ENV') === 'production';
   }
   /**
    * De momento, simula la validación de un token proporcionado por FileMaker. En una implementación real,
@@ -30,7 +33,8 @@ export class AuthService {
     dbName: string,
   ): Promise<ValidateTokenResult> {
     try {
-      if (token === this.master_key) {
+      // La master key es solo para desarrollo: emite un JWT para cualquier tenant.
+      if (!this.isProduction && this.master_key && token === this.master_key) {
         const payload = {
           id: 2,
           name: 'Developer',

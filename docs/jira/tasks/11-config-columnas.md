@@ -32,7 +32,7 @@ Antes, las columnas visibles se perdían al recargar. Ahora cada usuario guarda 
 flowchart TD
   U[Usuario en barra de Filtros] --> SEL[ConfiguracionesColumnas]
   SEL -->|seleccionar / guardar / actualizar / eliminar| API[report-configs.api.ts]
-  API -->|JWT Bearer| CTRL[ReportConfigsController /api/v1/report-configs]
+  API -->|cookie httpOnly jwt_reportes| CTRL[ReportConfigsController /api/v1/report-configs]
   CTRL --> UC[Use cases report-configs]
   UC --> FM[FileMakerService CRUD]
   FM --> LAYOUT[(Layout api_configReporte)]
@@ -203,43 +203,45 @@ Documentar la UI de gestión de configuraciones (vive en la barra de Filtros) y 
 
 ## Componente
 
-`src/components/Reportes/Filtros/ConfiguracionesColumnas.tsx`
+`src/features/reports/shared/ConfiguracionesColumnas/ConfiguracionesColumnas.tsx`
 
-- **Selector** (`<select>`): al elegir una config se aplica al grid con `api.applyColumnState({ state, applyOrder: true })` y se sincroniza `columnasVisibles`.
+- **Selector** (`<select>`): al elegir una config se aplica al grid con `aplicarVista` (`ConfiguracionesColumnas/vista.ts`: `applyColumnState({ state, applyOrder: true })` + `filterModel`) y se sincroniza `columnasVisibles`.
 - **Menú ⋮:** acciones de la config activa — **Actualizar** (sobrescribe nombre + `getColumnState()`), **Predeterminar**, **Eliminar** (con confirmación inline).
 - **«Guardar como…»:** popover con input → `createReportConfig`.
-- **Feedback:** `react-hot-toast` (`<Toaster>` ya montado en `src/layout/Layout.tsx`).
-- **Cierre de popovers:** overlay invisible `fixed inset-0` (patrón de `DrawerFiltros`).
+- **Feedback:** `react-hot-toast` (`<Toaster>` ya montado en `src/app/layout/Layout.tsx`).
+- **Cierre de popovers:** overlay invisible `fixed inset-0` (sin librería de popovers).
 - **Inicialización:** el selector arranca en la config predeterminada usando **ajuste de estado durante el render** (no `useEffect`; la regla `react-hooks/set-state-in-effect` lo prohíbe).
 - **Fuente de verdad:** el estado real del grid (`api.getColumnState()`) — fuera del modal no existe el concepto de «borrador».
 
 ## Hook
 
-`src/shared/hooks/useReportConfigs.ts` — devuelve `{ configs, defaultConfig, refresh, cargando }`.
+`src/features/reports/shared/useReportConfigs.ts` — devuelve `{ configs, defaultConfig, refresh, cargando }`.
 
 ## Auto-aplicar la predeterminada (al cargar)
 
-`ReporteBancos.tsx` y `ReporteVentas.tsx` consumen `useReportConfigs(reportId)` y aplican la config default cuando **grid y datos** están listos, resolviendo la race condition con dos refs:
+`ReporteBancos.tsx` y `ReporteVentas.tsx` no lo hacen directamente: llaman a `useReporteGrid(reportId, aplicarRango)`, que usa `useReportConfigs(reportId)` por dentro y aplica la vista predeterminada (columnas, filtros y periodo) **una vez por reporte**, en cuanto el grid y las vistas están listos, en cualquier orden. Los dos caminos llaman a `aplicarVistaPredeterminada`:
 
 ```mermaid
 flowchart LR
-  A[onGridReady] -->|guarda| R1[gridReadyRef]
-  B[fetch configs] -->|defaultConfig| EFF[useEffect]
-  R1 --> EFF
-  EFF -->|si ambos listos y no aplicado| APP[applyColumnState applyOrder:true]
-  APP --> R2[defaultAppliedRef = true]
+  A[onGridListo] --> AVP[aplicarVistaPredeterminada]
+  B[useReportConfigs → defaultConfig] -->|useEffect| AVP
+  AVP -->|si hay grid, vista del reportId actual y no aplicada aún| APP[aplicarVista: applyColumnState + filterModel]
+  APP --> P[periodo → aplicarRango]
+  APP --> R[vistaAplicadaEnRef.add reportId]
 ```
 
-En `ReporteVentas` el `reportId` deriva del tipo (`ventas_facturas` / `ventas_conceptos`) y se resetea `defaultAppliedRef` al cambiar de pestaña.
+- `useReportConfigs` filtra `configs` por `reportId`, así que al cambiar de pestaña nunca se aplica la vista del reporte anterior mientras carga la nueva.
+- `vistaAplicadaEnRef` es un `Set` de `reportId`: en `ReporteVentas` (`ventas_facturas` / `ventas_conceptos`) cada pestaña aplica su predeterminada la primera vez; al volver a una pestaña manda lo que el usuario dejó ahí (`vistaPorReporte`), no la predeterminada.
 
 ## Ubicación en código
 
 | Archivo | Rol |
 |---------|-----|
-| `components/Reportes/Filtros/ConfiguracionesColumnas.tsx` | Selector + menú ⋮ + popover guardar |
-| `shared/hooks/useReportConfigs.ts` | Carga de configs por reporte |
-| `components/Reportes/ReporteBancos.tsx` | `reportId="bancos"` + auto-apply default |
-| `components/Reportes/ReporteVentas/ReporteVentas.tsx` | `reportId` derivado + reset por pestaña |
+| `features/reports/shared/ConfiguracionesColumnas/ConfiguracionesColumnas.tsx` | Selector + menú ⋮ + popover guardar |
+| `features/reports/shared/useReportConfigs.ts` | Carga de configs por reporte |
+| `features/reports/shared/useReporteGrid.ts` | Aplica la predeterminada una vez por reporte |
+| `features/reports/banks/ReporteBancos.tsx` | `useReporteGrid("bancos", aplicarRango)` |
+| `features/reports/sales/ReporteVentas.tsx` | `useReporteGrid(reportId, aplicarRango)` con `reportId` según la pestaña |
 
 ## Criterios de aceptación
 
@@ -259,7 +261,7 @@ Documentar el cliente HTTP de configuraciones y el reacomodo de responsabilidade
 
 ## Cliente API
 
-`src/features/reports/shared/api/report-configs.api.ts` — patrón de `column-labels.api.ts` (fetch + `Authorization: Bearer` desde `localStorage.jwt_reportes`).
+`src/features/reports/shared/api/report-configs.api.ts` — igual que `column-labels.api.ts`: todas las llamadas pasan por `apiFetch` (`src/shared/api/http.ts`), que envía la cookie httpOnly `jwt_reportes` con `credentials: "include"`. No hay encabezado `Authorization`.
 
 | Función | Método → URL |
 |---------|--------------|
@@ -271,15 +273,16 @@ Documentar el cliente HTTP de configuraciones y el reacomodo de responsabilidade
 ## Reacomodo de responsabilidades
 
 - **`ModalColumnas.tsx`** vuelve a su rol original: **solo** mostrar/ocultar columnas (se le retiró el panel de configuraciones).
-- **`Filtros.tsx`** recibe `reportId`, `configs`, `onConfigsChange` y los entrega a `ConfiguracionesColumnas` (en la fila de acciones, junto a Métricas/Columnas/Exportar).
+- **`AccionesTabla.tsx`** recibe `reportId`, `configs`, `onConfigsChange` (de `useReporteGrid`) y los entrega a `ConfiguracionesColumnas`, junto al botón de Columnas.
 
 ## Ubicación en código
 
 | Archivo | Rol |
 |---------|-----|
 | `features/reports/shared/api/report-configs.api.ts` | Cliente HTTP CRUD |
-| `components/Reportes/Filtros/Filtros.tsx` | Thread de props a `ConfiguracionesColumnas` |
-| `components/Reportes/Filtros/ModalColumnas.tsx` | Solo visibilidad de columnas |
+| `features/reports/shared/AccionesTabla.tsx` | Thread de props a `ConfiguracionesColumnas` |
+| `features/reports/shared/useReporteGrid.ts` | Carga de vistas y aplicación de la predeterminada |
+| `features/reports/shared/ModalColumnas.tsx` | Solo visibilidad de columnas |
 
 ## Criterios de aceptación
 
@@ -317,8 +320,8 @@ npx jest filemaker
 
 | Spec | Cubre |
 |------|-------|
-| `components/Reportes/Filtros/ConfiguracionesColumnas.test.tsx` | Selector aplica, guardar como, predeterminar, eliminar, ⋮ deshabilitado |
-| `components/Reportes/Filtros/Filtros.test.tsx` | Mock de `ConfiguracionesColumnas` + props nuevas |
+| `features/reports/shared/ConfiguracionesColumnas/ConfiguracionesColumnas.test.tsx` | Selector aplica, guardar como, predeterminar, eliminar, ⋮ deshabilitado |
+| `features/reports/shared/Filtros.test.tsx` | Mock de `ConfiguracionesColumnas` + props nuevas |
 
 ```bash
 cd repgen-frontend

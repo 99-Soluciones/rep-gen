@@ -32,7 +32,7 @@ cliente.clasificacion1 … cliente.clasificacion4
 articulo.categoria1    … articulo.categoria4
 ```
 
-Definición tipada en frontend: `shared/config/dynamic-column-slots.ts`.
+Slots válidos: los `labelSlot` de `features/reports/sales/ventas.schema.json` (`cliente.clasificacion1..4`, `articulo.categoria1..4`), resueltos por `resolverSlot` en `column-labels.context.ts`.
 
 ---
 
@@ -47,8 +47,8 @@ sequenceDiagram
   participant FE as ColumnLabelsProvider
   participant GRID as AG Grid (Ventas)
 
-  Note over FE: Tras login, tenant en localStorage
-  FE->>API: GET /api/v1/tenant/column-labels<br/>Authorization: Bearer JWT
+  Note over FE: Tras login, JWT en cookie httpOnly, tenant en localStorage
+  FE->>API: GET /api/v1/tenant/column-labels<br/>Cookie: jwt_reportes
   API->>API: JwtAuthGuard → req.tenant
   SVC->>CACHE: get column-labels:{tenant}
   alt cache hit
@@ -68,9 +68,9 @@ sequenceDiagram
 ### Orden en la aplicación
 
 1. Usuario entra desde FileMaker con `?token=…&tenant=miBase`.
-2. `POST /auth/login-token` genera JWT con `tenant: dbName`.
-3. `Autenticacion.tsx` monta `<ColumnLabelsProvider tenant={tenantActivo}>`.
-4. El provider llama `GET /tenant/column-labels` con el JWT.
+2. `POST /auth/login-token` genera JWT con `tenant: dbName` y lo guarda en la cookie httpOnly `jwt_reportes`.
+3. `app/App.tsx` monta `<ColumnLabelsProvider tenant={tenant}>` dentro de `AuthGate`, ya con sesión.
+4. El provider llama `GET /tenant/column-labels` vía `apiFetch`; el navegador envía la cookie.
 5. `ReporteVentas` usa `useColumnLabels().getLabel` al construir columnas.
 6. `ColumnBuilder` usa `labelSlot` + `labelResolver` → `headerName` final.
 
@@ -83,10 +83,10 @@ sequenceDiagram
 ```http
 GET /api/v1/tenant/column-labels HTTP/1.1
 Host: localhost:3000
-Authorization: Bearer <jwt>
+Cookie: jwt_reportes=<jwt>
 ```
 
-- **Autenticación:** obligatoria (`JwtAuthGuard`).
+- **Autenticación:** obligatoria (`JwtAuthGuard`). El guard lee primero la cookie `jwt_reportes`; si no está, acepta `Authorization: Bearer <jwt>` (respaldo para clientes sin cookie, p. ej. `curl`). Ver `docs/auth/AUTH_COOKIE_HTTPONLY.md`.
 - **Tenant:** no va en query; se toma de `req.tenant` (claim del JWT).
 - **Throttle:** límite global del app (100 req/min), sin throttle específico.
 
@@ -192,25 +192,29 @@ Tests: `column-labels.mapper.spec.ts`.
 | Archivo | Rol |
 |---------|-----|
 | `features/reports/shared/api/column-labels.api.ts` | `fetchColumnLabels()` |
-| `features/reports/shared/context/ColumnLabelsProvider.tsx` | Estado, fetch, cache local |
-| `features/reports/shared/context/column-labels.context.ts` | Context, `resolverSlot`, sessionStorage |
-| `features/reports/shared/context/useColumnLabels.ts` | Hook `getLabel`, `labels`, `isLoading` |
-| `features/auth/ui/Autenticacion.tsx` | Monta provider con `tenantActivo` |
-| `config/ag-grid/Reportes/construir-columnas.ag-grid.ts` | `resolverNombreEncabezado` |
-| `config/ag-grid/Reportes/ventas/ventas.schema.json` | `labelSlot` por columna |
-| `config/ag-grid/Reportes/ventas/ventas.columnas.ts` | `construirColumnasVentas(schema, getLabel)` |
+| `features/reports/shared/column-labels/ColumnLabelsProvider.tsx` | Estado, fetch, cache local |
+| `features/reports/shared/column-labels/column-labels.context.ts` | Context, `resolverSlot`, sessionStorage |
+| `features/reports/shared/column-labels/useColumnLabels.ts` | Hook `getLabel`, `labels`, `isLoading` |
+| `app/App.tsx` | Monta el provider con el tenant de la sesión (tras `AuthGate`) |
+| `features/reports/shared/ag-grid/construir-columnas.ts` | `resolverNombreEncabezado` |
+| `features/reports/sales/ventas.schema.json` | `labelSlot` por columna |
+| `features/reports/sales/columnas.ts` | `construirColumnasVentas(schema, getLabel)` |
 
 ### Montaje del provider
 
 Solo cuando la autenticación fue exitosa:
 
 ```tsx
-<ColumnLabelsProvider tenant={tenantActivo}>
-  <BrowserRouter>… reportes …</BrowserRouter>
-</ColumnLabelsProvider>
+<AuthGate>
+  {({ tenant, reporteInicio }) => (
+    <ColumnLabelsProvider tenant={tenant}>
+      <AppRouter reporteInicio={reporteInicio} />
+    </ColumnLabelsProvider>
+  )}
+</AuthGate>
 ```
 
-`tenantActivo` sale de `datos.user.tenant` tras login o de `localStorage.usuario`.
+`tenantActivo` sale de `user.tenant` tras login o de `localStorage["usuario:v1"]` (sesión retomada y confirmada con `GET /auth/me`).
 
 ### Resiliencia
 
@@ -221,7 +225,7 @@ Solo cuando la autenticación fue exitosa:
 
 ### Resolución del encabezado (AG Grid)
 
-En `construir-columnas.ag-grid.ts`:
+En `construir-columnas.ts`:
 
 ```typescript
 if (meta.labelSlot && labelResolver) {
@@ -287,7 +291,7 @@ Los **valores de las celdas** vienen del reporte de ventas; los **encabezados** 
 |---------|---------|
 | Siempre «Clasificación 1» genérico | ¿API 200? ¿`labelSlot` en schema? ¿`getLabel` devuelve string no vacío? |
 | 404 en API | ¿Existe registro en `columnas_prefs` para esa base? |
-| 401 | JWT en `localStorage.jwt_reportes` |
+| 401 | Cookie `jwt_reportes` ausente o expirada (DevTools → Application → Cookies); re-login desde FileMaker |
 | Etiquetas de otro tenant | `ColumnLabelsProvider` tiene `key={tenant}`; borrar `sessionStorage` `repgen:column-labels:*` |
 | Cambio en FM no se ve | Cache backend 10 min; sessionStorage en pestaña |
 | Encabezado con espacios raros | Mapper ya hace `trim` |
@@ -298,9 +302,10 @@ Los **valores de las celdas** vienen del reporte de ventas; los **encabezados** 
 # Backend — test mapper
 cd repgen-backend && pnpm test -- column-labels.mapper.spec
 
-# API (sustituir TOKEN y TENANT)
-curl -s -H "Authorization: Bearer TOKEN" \
+# API (sustituir TOKEN; el tenant viaja dentro del JWT)
+curl -s --cookie "jwt_reportes=TOKEN" \
   http://localhost:3000/api/v1/tenant/column-labels | jq
+# También funciona con -H "Authorization: Bearer TOKEN" (respaldo del guard)
 ```
 
 ---

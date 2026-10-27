@@ -7,7 +7,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import type { AuthenticatedRequest, JwtPayload } from './ijwt';
-import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { JWT_COOKIE_NAME } from '../auth.constants';
@@ -16,7 +15,6 @@ import { JWT_COOKIE_NAME } from '../auth.constants';
 export class JwtAuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
-    private configService: ConfigService,
     private reflector: Reflector,
   ) {}
 
@@ -45,10 +43,7 @@ export class JwtAuthGuard implements CanActivate {
 
     try {
       //SE VERIFICA EL TOKEN
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
-        secret:
-          this.configService.get<string>('JWT_SECRET') ?? 'default_secret',
-      });
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(token);
       request.id = payload.id;
       request.user = payload.user;
       request.role = payload.role;
