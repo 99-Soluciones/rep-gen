@@ -539,6 +539,25 @@ describe("ConfiguracionesColumnas", () => {
     });
   });
 
+  it("no deja guardar una vista nueva con el nombre de otra: lo dice junto al campo", () => {
+    renderComponente();
+    fireEvent.click(screen.getByTitle("Acciones de la vista"));
+    fireEvent.click(screen.getByRole("menuitem", { name: /Guardar como vista nueva/i }));
+    const nombre = screen.getByPlaceholderText("Nombre de la vista");
+    expect(nombre).toHaveAttribute("maxLength", "60");
+
+    fireEvent.change(nombre, { target: { value: " config a " } });
+    expect(screen.getByRole("alert")).toHaveTextContent("Ya hay una vista con ese nombre.");
+    expect(nombre).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByRole("button", { name: "Guardar vista nueva" })).toBeDisabled();
+    fireEvent.keyDown(nombre, { key: "Enter" });
+    expect(createReportConfigMock).not.toHaveBeenCalled();
+
+    fireEvent.change(nombre, { target: { value: "Config A 2" } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Guardar vista nueva" })).toBeEnabled();
+  });
+
   describe("foco por teclado", () => {
     const abrirMenu = () => {
       fireEvent.change(screen.getByLabelText("Vista"), { target: { value: "cfg-uuid-1" } });
@@ -584,7 +603,10 @@ describe("ConfiguracionesColumnas", () => {
       expect(screen.getByRole("menuitem", { name: /Renombrar vista/ })).toHaveFocus();
       fireEvent.keyDown(menu, { key: "End" });
       expect(screen.getByRole("menuitem", { name: /Eliminar vista/ })).toHaveFocus();
-      // Circular: después de la última vuelve a la primera disponible.
+      // Circular: después de la última vuelve a la primera, también si no está
+      // disponible ("Actualizar vista", sin cambios): se enfoca y dice por qué.
+      fireEvent.keyDown(menu, { key: "ArrowDown" });
+      expect(screen.getByRole("menuitem", { name: /Actualizar vista/ })).toHaveFocus();
       fireEvent.keyDown(menu, { key: "ArrowDown" });
       expect(nueva).toHaveFocus();
 
@@ -639,18 +661,19 @@ describe("ConfiguracionesColumnas", () => {
     expect(kebab).toBeEnabled();
     fireEvent.click(kebab);
 
-    expect(
-      screen.getByRole("menuitem", { name: /Actualizar vista/i }),
-    ).toBeDisabled();
-    expect(
-      screen.getByRole("menuitem", { name: /Renombrar vista/i }),
-    ).toBeDisabled();
-    expect(
-      screen.getByRole("menuitem", { name: /Eliminar vista/i }),
-    ).toBeDisabled();
+    // Siguen enfocables (aria-disabled) y dicen por qué no están disponibles.
+    for (const accion of [/Actualizar vista/i, /Renombrar vista/i, /Eliminar vista/i]) {
+      const item = screen.getByRole("menuitem", { name: accion });
+      expect(item).toHaveAttribute("aria-disabled", "true");
+      expect(item).toHaveTextContent("Primero elige una vista.");
+    }
     expect(
       screen.getByRole("menuitem", { name: /Guardar como vista nueva/i }),
-    ).toBeEnabled();
+    ).not.toHaveAttribute("aria-disabled");
+
+    // Un clic en una acción no disponible no hace nada.
+    fireEvent.click(screen.getByRole("menuitem", { name: /Eliminar vista/i }));
+    expect(screen.queryByRole("button", { name: "Sí, eliminar" })).not.toBeInTheDocument();
   });
 
   describe("salir con cambios sin guardar", () => {
@@ -759,6 +782,23 @@ describe("ConfiguracionesColumnas", () => {
         "No se pudo actualizar la vista: tu sesión expiró. Lo que ves en la tabla sigue aquí; para guardar, vuelve a abrir el reporte desde FileMaker.",
       ),
     );
+  });
+
+  it("si otra pestaña ya guardó ese nombre (409), lo dice y recarga las vistas", async () => {
+    const { ApiError } = await import("../../../../shared/api/http");
+    createReportConfigMock.mockRejectedValueOnce(new ApiError(409, "Conflict"));
+    renderComponente();
+    fireEvent.click(screen.getByTitle("Acciones de la vista"));
+    fireEvent.click(screen.getByRole("menuitem", { name: /Guardar como vista nueva/i }));
+    fireEvent.change(screen.getByPlaceholderText("Nombre de la vista"), { target: { value: "Cobranza" } });
+    fireEvent.click(screen.getByRole("button", { name: "Guardar vista nueva" }));
+
+    await waitFor(() =>
+      expect(toastErrorMock).toHaveBeenCalledWith("No se pudo guardar la vista: ya hay una vista con ese nombre."),
+    );
+    expect(onConfigsChange).toHaveBeenCalled();
+    // El panel sigue abierto con lo escrito, para corregir el nombre.
+    expect(screen.getByPlaceholderText("Nombre de la vista")).toHaveValue("Cobranza");
   });
 
   it("«Nueva vista» es un diálogo con nombre, Cancelar y el foco adentro", () => {

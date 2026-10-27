@@ -1,6 +1,6 @@
 import { useState, type Dispatch } from "react";
 import type { PeriodoVista } from "@repgen/shared-types";
-import { PERIODOS } from "./vista";
+import { MAX_NOMBRE_VISTA, PERIODOS } from "./vista";
 import type { MenuColumnasAction, MenuColumnasState } from "./ConfiguracionesColumnas.reducer";
 
 interface PopoverGuardarConfigProps {
@@ -10,6 +10,8 @@ interface PopoverGuardarConfigProps {
   onGuardarComo: (periodo: PeriodoVista | null) => void;
   /** Cierra sin guardar y devuelve el foco a quien lo abrió. */
   onCancelar: () => void;
+  /** Por qué el nombre escrito no sirve (repetido); null si sirve. */
+  errorNombre?: string | null;
 }
 
 /**
@@ -24,6 +26,7 @@ const PopoverGuardarConfig = ({
   dispatch,
   onGuardarComo,
   onCancelar,
+  errorNombre = null,
 }: PopoverGuardarConfigProps) => {
   // Se desmonta al cerrarse, así cada vista nueva empieza "Sin periodo".
   const [periodo, setPeriodo] = useState<PeriodoVista | "">("");
@@ -35,7 +38,7 @@ const PopoverGuardarConfig = ({
     <div
       role="dialog"
       aria-labelledby="titulo-nueva-vista"
-      className="absolute right-0 top-full mt-2 z-50 w-64 bg-white border border-gray-200 rounded-lg shadow-xl p-3 flex flex-col gap-2"
+      className="absolute right-0 top-full mt-2 z-50 w-64 bg-white border border-gray-200 rounded-xl shadow-lg p-3 flex flex-col gap-2"
       onKeyDown={(e) => {
         // Tab y Shift+Tab se quedan en el diálogo hasta guardar o cancelar
         // (Escape lo cierra desde ConfiguracionesColumnas).
@@ -62,7 +65,12 @@ const PopoverGuardarConfig = ({
         type="text"
         autoFocus
         aria-label="Nombre de la vista"
-        className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
+        maxLength={MAX_NOMBRE_VISTA}
+        aria-invalid={errorNombre ? true : undefined}
+        aria-describedby={errorNombre ? "error-nombre-vista" : undefined}
+        className={`text-sm border rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full ${
+          errorNombre ? "border-red-600" : "border-gray-300"
+        }`}
         placeholder="Nombre de la vista"
         value={estado.nombreInput}
         onChange={(e) =>
@@ -73,6 +81,11 @@ const PopoverGuardarConfig = ({
           if (e.key === "Enter") guardar();
         }}
       />
+      {errorNombre && (
+        <p id="error-nombre-vista" role="alert" className="text-xs text-red-600">
+          {errorNombre}
+        </p>
+      )}
       <label className="flex flex-col gap-1 text-xs font-medium text-gray-600">
         Periodo
         <select
@@ -96,7 +109,7 @@ const PopoverGuardarConfig = ({
         <button
           type="button"
           onClick={guardar}
-          disabled={!estado.nombreInput.trim() || guardando}
+          disabled={!estado.nombreInput.trim() || guardando || !!errorNombre}
           aria-label="Guardar vista nueva"
           className="flex-1 text-sm px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-marca-morado disabled:opacity-40 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
         >

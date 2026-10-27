@@ -15,6 +15,7 @@ import {
   capturarVista,
   huellaVista,
   PERIODOS,
+  problemaNombreVista,
   resolverPeriodo,
   restaurarOriginal,
   type Rango,
@@ -34,7 +35,14 @@ import { ApiError } from "../../../../shared/api/http";
  * Con la sesión expirada reintentar no sirve: se dice por qué y que lo que hay
  * en pantalla sigue ahí. Cualquier otro fallo sí puede ser momentáneo.
  */
-const avisarErrorVista = (error: unknown, queFallo: string) => {
+const avisarErrorVista = (error: unknown, queFallo: string, alRepetirNombre?: () => void) => {
+  // Otra pestaña guardó una vista con ese nombre: se recargan las vistas y el
+  // aviso junto al campo lo dice (el panel sigue abierto con lo escrito).
+  if (error instanceof ApiError && error.status === 409) {
+    toast.error(`${queFallo}: ya hay una vista con ese nombre.`);
+    alRepetirNombre?.();
+    return;
+  }
   if (error instanceof ApiError && error.status === 401) {
     toast.error(
       `${queFallo}: tu sesión expiró. Lo que ves en la tabla sigue aquí; para guardar, vuelve a abrir el reporte desde FileMaker.`,
@@ -141,6 +149,12 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
 
   const api = referenciaGrid.current?.api;
   const configActual = configs.find((c) => c.id === configSeleccionada) ?? null;
+  // Lo mismo vale para una vista nueva y para renombrar (que puede conservar su nombre).
+  const errorNombre = problemaNombreVista(
+    estado.nombreInput,
+    configs,
+    estado.modoRenombrar ? configSeleccionada : null,
+  );
 
   // "• sin guardar": columnas o filtros distintos de lo guardado. Las fechas no
   // cuentan: recorrerlas (‹ ›, otro mes) es navegar, no editar la vista, y no
@@ -287,7 +301,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   };
 
   const handleGuardarComo = async (periodo: PeriodoVista | null) => {
-    if (!api || !estado.nombreInput.trim()) return;
+    if (!api || !estado.nombreInput.trim() || errorNombre) return;
     setGuardando(true);
     try {
       const nueva = await createReportConfig(
@@ -304,7 +318,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       toast.success(`Vista "${nueva.name}" guardada`);
       cerrarTodo();
     } catch (error) {
-      avisarErrorVista(error, "No se pudo guardar la vista");
+      avisarErrorVista(error, "No se pudo guardar la vista", () => void onConfigsChange());
     }
     setGuardando(false);
   };
@@ -368,7 +382,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   };
 
   const handleRenombrar = async () => {
-    if (!configSeleccionada || !estado.nombreInput.trim()) return;
+    if (!configSeleccionada || !estado.nombreInput.trim() || errorNombre) return;
     setGuardando(true);
     try {
       await updateReportConfig(configSeleccionada, {
@@ -378,7 +392,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       toast.success("Vista renombrada");
       cerrarTodo();
     } catch (error) {
-      avisarErrorVista(error, "No se pudo renombrar la vista");
+      avisarErrorVista(error, "No se pudo renombrar la vista", () => void onConfigsChange());
     }
     setGuardando(false);
   };
@@ -555,6 +569,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
               ? () => void deshacerActualizacion(versionAnterior)
               : undefined
           }
+          errorNombre={errorNombre}
         />
       </div>
 
@@ -574,13 +589,14 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
         dispatch={dispatch}
         onGuardarComo={(periodo) => void handleGuardarComo(periodo)}
         onCancelar={cerrarTodo}
+        errorNombre={errorNombre}
       />
 
       {(cambioPendiente || salidaPendiente) && (
         <div
           role="alertdialog"
           aria-labelledby="aviso-cambios-vista"
-          className="absolute right-0 top-full mt-2 z-50 w-72 bg-white border border-gray-200 rounded-lg shadow-xl p-3 flex flex-col gap-3"
+          className="absolute right-0 top-full mt-2 z-50 w-72 bg-white border border-gray-200 rounded-xl shadow-lg p-3 flex flex-col gap-3"
           onKeyDown={(e) => {
             // Tab y Shift+Tab se quedan dentro del aviso hasta elegir una opción.
             if (e.key !== "Tab") return;
@@ -599,7 +615,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
             }
           }}
         >
-          <p id="aviso-cambios-vista" className="text-sm text-gray-700">
+          <p id="aviso-cambios-vista" className="text-sm text-gray-700 break-words">
             {configActual ? (
               <>
                 Tienes cambios sin guardar en{" "}

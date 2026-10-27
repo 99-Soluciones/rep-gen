@@ -1,7 +1,8 @@
-import { MoreVertical, Pencil, Plus, Save, Star, Trash2, Undo2 } from "lucide-react";
-import type { Dispatch, KeyboardEvent } from "react";
+import { MoreVertical, Pencil, Plus, Save, Star, Trash2, Undo2, type LucideIcon } from "lucide-react";
+import type { Dispatch, KeyboardEvent, ReactNode } from "react";
 import type { ReportConfigResponse } from "../api/report-configs.api";
 import type { MenuColumnasAction, MenuColumnasState } from "./ConfiguracionesColumnas.reducer";
+import { MAX_NOMBRE_VISTA } from "./vista";
 
 interface MenuAccionesConfigProps {
   configActual: ReportConfigResponse | null;
@@ -16,23 +17,70 @@ interface MenuAccionesConfigProps {
   onEliminar: () => void;
   /** Presente mientras se puede deshacer la última "Actualizar vista". */
   onDeshacer?: () => void;
+  /** Por qué el nombre escrito no sirve (repetido); null si sirve. */
+  errorNombre?: string | null;
 }
 
 // Al abrir el menú (o volver a la lista desde Renombrar/Eliminar) el foco entra
 // en la primera acción disponible, como en cualquier menú de escritorio.
 const enfocarPrimeraAccion = (lista: HTMLDivElement | null) => {
-  lista?.querySelector<HTMLButtonElement>("button:not(:disabled)")?.focus();
+  lista?.querySelector<HTMLButtonElement>("[role=menuitem]:not([aria-disabled])")?.focus();
 };
 
-// Teclado de menú: flechas (circulares), Inicio y Fin entre las acciones
-// disponibles. Tab no recorre el menú: lo cierra y sigue de largo.
+const SIN_VISTA = "Primero elige una vista.";
+
+/**
+ * Acción del menú. No disponible, sigue enfocable (`aria-disabled`, como en
+ * el patrón de menú de ARIA) y dice por qué en una segunda línea: así el
+ * motivo llega por teclado, toque y lector de pantalla, no solo al mouse.
+ */
+const AccionMenu = ({
+  icono: Icono,
+  onClick,
+  deshabilitada,
+  motivo,
+  peligro = false,
+  children,
+}: {
+  icono: LucideIcon;
+  onClick: () => void;
+  deshabilitada: boolean;
+  motivo?: string | null;
+  peligro?: boolean;
+  children: ReactNode;
+}) => (
+  <button
+    type="button"
+    role="menuitem"
+    onClick={() => {
+      if (!deshabilitada) onClick();
+    }}
+    aria-disabled={deshabilitada || undefined}
+    className={`group w-full flex items-start gap-2.5 px-3 py-2 text-sm text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 aria-disabled:cursor-not-allowed aria-disabled:text-gray-500 aria-disabled:hover:bg-transparent aria-disabled:focus-visible:bg-gray-50 ${
+      peligro ? "text-red-600 hover:bg-red-50 focus-visible:bg-red-50" : "text-gray-700 hover:bg-gray-50 focus-visible:bg-blue-50"
+    }`}
+  >
+    <Icono
+      aria-hidden="true"
+      className={`w-4 h-4 mt-0.5 shrink-0 group-aria-disabled:text-gray-300 ${peligro ? "" : "text-gray-500"}`}
+    />
+    <span className="min-w-0 break-words">
+      {children}
+      {deshabilitada && motivo && <span className="block text-xs text-gray-500">{motivo}</span>}
+    </span>
+  </button>
+);
+
+// Teclado de menú: flechas (circulares), Inicio y Fin entre todas las acciones,
+// también las no disponibles (dicen por qué). Tab no recorre el menú: lo cierra
+// y sigue de largo.
 const navegarMenu = (evento: KeyboardEvent<HTMLDivElement>, cerrar: () => void) => {
   if (evento.key === "Tab") {
     cerrar();
     return;
   }
   const acciones = [
-    ...evento.currentTarget.querySelectorAll<HTMLButtonElement>("[role=menuitem]:not(:disabled)"),
+    ...evento.currentTarget.querySelectorAll<HTMLButtonElement>("[role=menuitem]"),
   ];
   if (acciones.length === 0) return;
   const actual = acciones.indexOf(document.activeElement as HTMLButtonElement);
@@ -58,6 +106,7 @@ const MenuAccionesConfig = ({
   onPredeterminar,
   onEliminar,
   onDeshacer,
+  errorNombre = null,
 }: MenuAccionesConfigProps) => {
   const iniciarRenombrar = () => {
     if (!configActual) return;
@@ -70,7 +119,7 @@ const MenuAccionesConfig = ({
         type="button"
         onClick={() => dispatch({ type: "ABRIR_MENU" })}
         disabled={guardando}
-        className="flex items-center justify-center px-2 text-gray-600 rounded-r-lg hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center justify-center px-2 pointer-coarse:px-3 text-gray-600 rounded-r-lg hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         title="Acciones de la vista"
         aria-label="Acciones de la vista"
         aria-haspopup="menu"
@@ -83,7 +132,7 @@ const MenuAccionesConfig = ({
       {estado.menuAbierto && (
         <div
           id="menu-acciones-vista"
-          className="absolute right-0 top-full mt-2 z-50 w-64 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
+          className="absolute right-0 top-full mt-2 z-50 w-64 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
         >
           {estado.modoRenombrar ? (
             <div className="p-3 flex flex-col gap-2">
@@ -94,7 +143,12 @@ const MenuAccionesConfig = ({
                 type="text"
                 autoFocus
                 aria-label="Nombre de la vista"
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
+                maxLength={MAX_NOMBRE_VISTA}
+                aria-invalid={errorNombre ? true : undefined}
+                aria-describedby={errorNombre ? "error-renombrar-vista" : undefined}
+                className={`text-sm border rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full ${
+                  errorNombre ? "border-red-600" : "border-gray-300"
+                }`}
                 placeholder="Nombre"
                 value={estado.nombreInput}
                 onChange={(e) =>
@@ -106,14 +160,20 @@ const MenuAccionesConfig = ({
                     dispatch({ type: "CANCELAR_RENOMBRAR" });
                 }}
               />
-              <p className="text-xs text-gray-500">
-                Cambia el nombre de la vista seleccionada.
-              </p>
+              {errorNombre ? (
+                <p id="error-renombrar-vista" role="alert" className="text-xs text-red-600">
+                  {errorNombre}
+                </p>
+              ) : (
+                <p className="text-xs text-gray-500">
+                  Cambia el nombre de la vista seleccionada.
+                </p>
+              )}
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={onRenombrar}
-                  disabled={!estado.nombreInput.trim() || guardando}
+                  disabled={!estado.nombreInput.trim() || guardando || !!errorNombre}
                   className="flex-1 text-sm px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-marca-morado disabled:opacity-40 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
                 >
                   {guardando ? "Guardando…" : "Renombrar"}
@@ -129,7 +189,7 @@ const MenuAccionesConfig = ({
             </div>
           ) : estado.confirmandoEliminar ? (
             <div className="p-3 flex flex-col gap-2">
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-gray-700 break-words">
                 ¿Eliminar la vista{" "}
                 <span className="font-semibold">{configActual?.name}</span>?
               </p>
@@ -161,74 +221,56 @@ const MenuAccionesConfig = ({
               ref={enfocarPrimeraAccion}
               onKeyDown={(e) => navegarMenu(e, () => dispatch({ type: "CERRAR_TODO" }))}
             >
-              <button
-                type="button"
-                role="menuitem"
+              <AccionMenu
+                icono={Save}
                 onClick={onGuardarCambios}
-                disabled={!configActual || !modificada || guardando}
-                className="w-full flex items-start gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                deshabilitada={!configActual || !modificada || guardando}
+                motivo={!configActual ? SIN_VISTA : !modificada ? "No tiene cambios sin guardar." : null}
               >
-                <Save className="w-4 h-4 mt-0.5 text-gray-500 shrink-0" />
-                <span>
-                  Actualizar vista
-                  {configActual ? ` "${configActual.name}"` : ""}
-                </span>
-              </button>
+                Actualizar vista
+                {configActual ? ` "${configActual.name}"` : ""}
+              </AccionMenu>
               {onDeshacer && (
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={onDeshacer}
-                  disabled={guardando}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 transition-colors"
-                >
-                  <Undo2 className="w-4 h-4 text-gray-500 shrink-0" />
+                <AccionMenu icono={Undo2} onClick={onDeshacer} deshabilitada={guardando}>
                   Deshacer la última actualización
-                </button>
+                </AccionMenu>
               )}
-              <button
-                type="button"
-                role="menuitem"
+              <AccionMenu
+                icono={Plus}
                 onClick={() => dispatch({ type: "ABRIR_POPOVER_GUARDAR" })}
-                disabled={guardando}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 transition-colors"
+                deshabilitada={guardando}
               >
-                <Plus className="w-4 h-4 text-gray-500 shrink-0" />
                 Guardar como vista nueva…
-              </button>
-              <button
-                type="button"
-                role="menuitem"
+              </AccionMenu>
+              <AccionMenu
+                icono={Pencil}
                 onClick={iniciarRenombrar}
-                disabled={!configActual || guardando}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                deshabilitada={!configActual || guardando}
+                motivo={!configActual ? SIN_VISTA : null}
               >
-                <Pencil className="w-4 h-4 text-gray-500 shrink-0" />
                 Renombrar vista…
-              </button>
-              <button
-                type="button"
-                role="menuitem"
+              </AccionMenu>
+              <AccionMenu
+                icono={Star}
                 onClick={onPredeterminar}
-                disabled={!configActual || configActual.isDefault || guardando}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:bg-blue-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                deshabilitada={!configActual || !!configActual.isDefault || guardando}
+                // "Ya se abre por defecto" ya dice por qué no está disponible.
+                motivo={!configActual ? SIN_VISTA : null}
               >
-                <Star className="w-4 h-4 text-gray-500 shrink-0" />
                 {configActual?.isDefault
                   ? "Ya se abre por defecto"
                   : "Abrir por defecto"}
-              </button>
+              </AccionMenu>
               <div role="separator" className="border-t border-gray-100 my-1" />
-              <button
-                type="button"
-                role="menuitem"
+              <AccionMenu
+                icono={Trash2}
                 onClick={() => dispatch({ type: "CONFIRMAR_ELIMINAR" })}
-                disabled={!configActual || guardando}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left text-red-600 hover:bg-red-50 focus:outline-none focus-visible:bg-red-50 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                deshabilitada={!configActual || guardando}
+                motivo={!configActual ? SIN_VISTA : null}
+                peligro
               >
-                <Trash2 className="w-4 h-4 shrink-0" />
                 Eliminar vista
-              </button>
+              </AccionMenu>
             </div>
           )}
         </div>

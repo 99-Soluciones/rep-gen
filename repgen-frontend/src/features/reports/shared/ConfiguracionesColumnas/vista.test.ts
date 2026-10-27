@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import { detectarPeriodo, huellaVista, resolverPeriodo } from "./vista";
+import { detectarPeriodo, huellaVista, problemaNombreVista, resolverPeriodo } from "./vista";
 
 describe("vista: periodos", () => {
   const hoy = new Date(2026, 9, 12); // 12 oct 2026, hora local
@@ -73,5 +73,27 @@ describe("aplicarVista con columnas de lista", () => {
       },
       concepto: { filterType: "text", type: "contains", filter: "pago" },
     });
+  });
+});
+
+describe("vista: nombre", () => {
+  const vistas = [
+    { id: "a", name: "Conciliación" },
+    { id: "b", name: "Cobranza  semanal" },
+  ];
+
+  it("no deja repetir un nombre, sin importar mayúsculas ni espacios", () => {
+    expect(problemaNombreVista("conciliación ", vistas)).toBe("Ya hay una vista con ese nombre.");
+    expect(problemaNombreVista("Cobranza semanal", vistas)).toBe("Ya hay una vista con ese nombre.");
+    expect(problemaNombreVista("Conciliación BBVA", vistas)).toBeNull();
+  });
+
+  it("renombrar una vista a su propio nombre no es repetirlo", () => {
+    expect(problemaNombreVista("CONCILIACIÓN", vistas, "a")).toBeNull();
+    expect(problemaNombreVista("Conciliación", vistas, "b")).toBe("Ya hay una vista con ese nombre.");
+  });
+
+  it("un nombre vacío no es un problema de nombre (lo bloquea el botón)", () => {
+    expect(problemaNombreVista("   ", vistas)).toBeNull();
   });
 });

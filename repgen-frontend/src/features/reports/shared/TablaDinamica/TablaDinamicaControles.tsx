@@ -126,7 +126,7 @@ const TablaDinamicaControles = ({
             {mostrarLista && (
               <div
                 id={ID_LISTA_FILTROS}
-                className="absolute left-0 top-full mt-2 z-50 w-80 max-w-[calc(100vw-2rem)] whitespace-normal rounded-lg border border-gray-200 bg-white text-gray-900 shadow-lg"
+                className="absolute left-0 top-full mt-2 z-50 w-80 max-w-[calc(100vw-2rem)] whitespace-normal rounded-xl border border-gray-200 bg-white text-gray-900 shadow-lg"
               >
                 <ul aria-label="Filtros activos" className="py-1">
                   {filtros.map((filtro) => (

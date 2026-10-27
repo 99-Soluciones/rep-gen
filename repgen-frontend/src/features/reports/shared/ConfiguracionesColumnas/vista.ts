@@ -13,6 +13,27 @@ export interface Rango {
   hasta: string;
 }
 
+/** Igual que el @MaxLength del backend (create/update-report-config.dto.ts). */
+export const MAX_NOMBRE_VISTA = 60;
+
+/**
+ * Por qué no sirve un nombre (null = sirve). Dos vistas con el mismo nombre no
+ * se distinguen en el selector; mayúsculas y espacios de más no cuentan.
+ * `propia` es la vista que se renombra: conservar su nombre no es repetirlo.
+ */
+export const problemaNombreVista = (
+  nombre: string,
+  vistas: Pick<ReportConfigResponse, "id" | "name">[],
+  propia: string | null = null,
+): string | null => {
+  const clave = (texto: string) => texto.trim().replace(/\s+/g, " ").toLocaleLowerCase("es");
+  const buscado = clave(nombre);
+  if (!buscado) return null;
+  return vistas.some((v) => v.id !== propia && clave(v.name) === buscado)
+    ? "Ya hay una vista con ese nombre."
+    : null;
+};
+
 export const PERIODOS: { valor: PeriodoVista; etiqueta: string }[] = [
   { valor: "mes_actual", etiqueta: "Mes actual" },
   { valor: "mes_anterior", etiqueta: "Mes anterior" },
