@@ -182,7 +182,7 @@ describe('ReporteVentas', () => {
           Boolean(
             node?.tagName === 'DD' &&
               /200\.00/.test(node.textContent ?? '') &&
-              node.previousElementSibling?.textContent === 'Facturado',
+              node.previousElementSibling?.textContent === 'Facturación bruta',
           ),
         ),
       ).toBeInTheDocument(),

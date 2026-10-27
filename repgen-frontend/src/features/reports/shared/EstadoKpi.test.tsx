@@ -108,6 +108,17 @@ describe("LineaEstado en otra moneda", () => {
   });
 });
 
+describe("LineaEstado con porcentaje", () => {
+  it("muestra la proporción antes de la cifra, y nada si no hay base", () => {
+    const { rerender } = render(
+      <dl><LineaEstado etiqueta="Descuentos" valor={-56} porcentaje={0.0056} /></dl>,
+    );
+    expect(screen.getByText("Descuentos").nextElementSibling).toHaveTextContent(/0\.56\s?%.*-\$56\.00/);
+    rerender(<dl><LineaEstado etiqueta="Descuentos" valor={0} porcentaje={0 / 0} /></dl>);
+    expect(screen.queryByText(/%/)).not.toBeInTheDocument();
+  });
+});
+
 describe("ResultadoResumen", () => {
   it("encabeza el resumen con la cifra y el periodo anterior", () => {
     const rango = { desde: "2026-09-01", hasta: "2026-09-15" };

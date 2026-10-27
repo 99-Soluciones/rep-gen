@@ -131,9 +131,6 @@ const ReporteVentas = ({ reportType }: { reportType?: VentasRouteType }) => {
             totales={{
               campos: camposTotales[currentType],
               // Mismas filas que la Facturación neta: el pie y el resumen cuadran.
-              // ponytail: en Conceptos, Ganancia/Costo del resumen suman también
-              // negativos que no son cancelación ni devolución (dato raro); unificar
-              // si llega a verse distinto.
               incluirFila: (fila) => cuentaEnNeto(fila, currentType),
               etiqueta: "Total MXN",
             }}

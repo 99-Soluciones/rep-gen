@@ -26,11 +26,17 @@ const KpiPanelVentas = ({ totales, comparacion, currentType, registros, total, d
     <NotaRegistros registros={registros} total={total} desde={desde} hasta={hasta} />
 
     <SeccionEstado titulo="Importes">
-      <LineaEstado etiqueta="Facturado" valor={totales.totalVentas} />
+      <LineaEstado etiqueta="Facturación bruta" valor={totales.totalVentas} />
       <LineaEstado etiqueta="Cancelaciones" valor={totales.totalCancelaciones} />
       <LineaEstado etiqueta="Devoluciones" valor={totales.totalDevoluciones} />
       <LineaEstado etiqueta="Facturación neta" valor={totales.facturacionNeta} total />
     </SeccionEstado>
+
+    {currentType === "facturas" && (
+      <SeccionEstado titulo="Importe">
+        <LineaEstado etiqueta="Importe sin descuentos" valor={totales.importeSinDescuentos} />
+      </SeccionEstado>
+    )}
 
     {currentType === "facturas" ? (
       <SeccionEstado titulo="Facturas">
@@ -41,10 +47,34 @@ const KpiPanelVentas = ({ totales, comparacion, currentType, registros, total, d
         <LineaEstado etiqueta="Con devolución" valor={totales.devoluciones} tipo="unidades" />
       </SeccionEstado>
     ) : (
-      <SeccionEstado titulo="Rentabilidad">
-        <LineaEstado etiqueta="Costo directo" valor={totales.costoDirecto} />
-        <LineaEstado etiqueta="Ganancia bruta" valor={totales.gananciaBruta} />
-      </SeccionEstado>
+      // Como el resumen de FileMaker: los % salen del importe (una base en 0 no muestra %).
+      <>
+        <SeccionEstado titulo="Facturas">
+          <LineaEstado etiqueta="Facturadas" valor={totales.facturas} tipo="unidades" />
+        </SeccionEstado>
+        <SeccionEstado titulo="Importe">
+          <LineaEstado etiqueta="Sin descuentos" valor={totales.importeSinDescuentos} />
+          <LineaEstado
+            etiqueta="Descuentos"
+            valor={-totales.descuentos}
+            porcentaje={totales.descuentos / totales.importeSinDescuentos}
+          />
+          <LineaEstado etiqueta="Con descuentos" valor={totales.importeConDescuentos} total />
+        </SeccionEstado>
+        <SeccionEstado titulo="Rentabilidad">
+          <LineaEstado
+            etiqueta="Costo directo"
+            valor={totales.costoDirecto}
+            porcentaje={totales.costoDirecto / totales.importeConDescuentos}
+          />
+          <LineaEstado
+            etiqueta="Ganancia bruta"
+            valor={totales.gananciaBruta}
+            porcentaje={totales.gananciaBruta / totales.importeConDescuentos}
+            total
+          />
+        </SeccionEstado>
+      </>
     )}
   </div>
 );

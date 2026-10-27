@@ -8,8 +8,13 @@ export interface TotalesVentas {
   totalCancelaciones: number;
   totalDevoluciones: number;
   facturacionNeta: number;
+  importeSinDescuentos: number;
+  descuentos: number;
+  importeConDescuentos: number;
   gananciaBruta: number;
   costoDirecto: number;
+  /** Conceptos: facturas distintas con venta (las filas son artículos). */
+  facturas: number;
   facturasVencidas: number;
   facturasPagadas: number;
   facturasVigentes: number;
@@ -22,8 +27,12 @@ const totalesIniciales: TotalesVentas = {
   totalCancelaciones: 0,
   totalDevoluciones: 0,
   facturacionNeta: 0,
+  importeSinDescuentos: 0,
+  descuentos: 0,
+  importeConDescuentos: 0,
   gananciaBruta: 0,
   costoDirecto: 0,
+  facturas: 0,
   facturasVencidas: 0,
   facturasPagadas: 0,
   facturasVigentes: 0,
@@ -68,6 +77,8 @@ export const calcularTotalesVentas = (
         t.totalCancelaciones += fila.facturaEstatus === "Cancelada" && total < 0 ? total : 0;
         t.totalDevoluciones += fila.facturaEstatus === "Devolución" && total < 0 ? total : 0;
       }
+      // Mismas filas que el neto (y que el pie): cancelaciones y devoluciones llegan negadas.
+      t.importeSinDescuentos += cuentaEnNeto(fila, currentType) ? Number(fila.importeSinDescuentoMxn) || 0 : 0;
       t.facturasVencidas += fila.facturaEstatus === "Vencida" && total > 0 ? 1 : 0;
       t.facturasPagadas += fila.facturaEstatus === "Pagada" && total > 0 ? 1 : 0;
       t.facturasVigentes += fila.facturaEstatus === "Vigente" && total > 0 ? 1 : 0;
@@ -75,6 +86,7 @@ export const calcularTotalesVentas = (
       t.devoluciones += fila.facturaEstatus === "Devolución" && total < 0 ? 1 : 0;
     }
   } else {
+    const ventas = new Set<unknown>();
     for (const fila of filas) {
       if (!fila.articuloImporteConDescuentoMxn) continue;
       const importe = Number(fila.articuloImporteConDescuentoMxn);
@@ -87,9 +99,16 @@ export const calcularTotalesVentas = (
       t.totalVentas += importe > 0 ? suma : 0;
       t.totalCancelaciones += importe < 0 && fila.facturaEstatus === "Cancelada" ? suma : 0;
       t.totalDevoluciones += importe < 0 && fila.facturaEstatus === "Devolución" ? suma : 0;
+      if (importe > 0) ventas.add(fila.ventaId);
+      // Mismas filas que el neto y que el pie de la tabla.
+      if (!cuentaEnNeto(fila, currentType)) continue;
+      t.importeSinDescuentos += Number(fila.articuloImporteSinDescuentoMxn) || 0;
+      t.descuentos += Number(fila.articuloDescuentoMontoMxn) || 0;
+      t.importeConDescuentos += importe;
       t.gananciaBruta += Number(fila.gananciaBrutaMxn) || 0;
       t.costoDirecto += Number(fila.costoDirectoSubTotalMxn) || 0;
     }
+    t.facturas = ventas.size;
   }
 
   t.facturacionNeta = t.totalVentas + t.totalCancelaciones + t.totalDevoluciones;

@@ -40,7 +40,15 @@ interface LineaEstadoProps {
   total?: boolean;
   /** Moneda de la cifra si no es MXN ("USD 1,000.00", como en la tabla). */
   codigoMoneda?: string;
+  /** Proporción sobre su base (0.0056 → "0.56 %"), en gris antes de la cifra. */
+  porcentaje?: number | null;
 }
+
+const proporcion = new Intl.NumberFormat("es-MX", {
+  style: "percent",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
 
 export const LineaEstado = ({
   etiqueta,
@@ -48,6 +56,7 @@ export const LineaEstado = ({
   tipo = "moneda",
   total = false,
   codigoMoneda,
+  porcentaje,
 }: LineaEstadoProps) => (
   <div
     className={`flex items-baseline justify-between gap-4 py-1 ${
@@ -62,6 +71,9 @@ export const LineaEstado = ({
         total ? "text-sm font-semibold" : "text-sm font-medium"
       } ${valor < 0 ? "text-red-600" : "text-gray-900"}`}
     >
+      {porcentaje != null && Number.isFinite(porcentaje) && (
+        <span className="mr-3 font-normal text-gray-500">{proporcion.format(porcentaje)}</span>
+      )}
       {/* `|| 0` evita "-$0.00" cuando llega -0 (p. ej. cargos negados en cero). */}
       {tipo === "unidades"
         ? entero.format(valor || 0)
