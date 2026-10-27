@@ -24,6 +24,14 @@
 
   /* Solo para el hover de la acción primaria (La Regla del Morado en Tránsito). */
   --color-marca-morado: var(--marca-hover);
+
+  /* El resumen al abrirse: solo opacidad (no mueve el layout de la grilla). */
+  --animate-aparecer: aparecer 150ms ease-out;
+  @keyframes aparecer {
+    from {
+      opacity: 0;
+    }
+  }
 }
 
 :root {

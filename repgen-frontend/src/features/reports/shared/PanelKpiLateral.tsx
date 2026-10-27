@@ -75,10 +75,14 @@ const PanelKpiLateral = ({
         Calculando las cifras…
       </p>
     ) : (
-      <div
-        aria-busy={estado === "cargando"}
-        className={estado === "cargando" ? "opacity-50 transition-opacity" : "transition-opacity"}
-      >
+      // Recargando: las cifras quedan legibles (atenuadas bajaban a ~2:1) y una
+      // línea dice que son las de la carga anterior.
+      <div aria-busy={estado === "cargando"}>
+        {estado === "cargando" && (
+          <p role="status" className="mb-2 text-xs text-gray-500">
+            Actualizando… estas son las cifras de la carga anterior.
+          </p>
+        )}
         {children}
       </div>
     );
@@ -100,6 +104,8 @@ const PanelKpiLateral = ({
   const [resizing, setResizing] = useState(false);
   const startXRef = useRef(0);
   const startWidthRef = useRef(panelWidth);
+  // Solo el puntero que empezó el arrastre lo mueve: un segundo dedo no lo hace saltar.
+  const pointerIdRef = useRef<number | null>(null);
 
   // Durante el arrastre el ancho cambia en cada mousemove: se guarda al soltar.
   useEffect(() => {
@@ -112,6 +118,7 @@ const PanelKpiLateral = ({
     if (!resizing) return;
 
     const handleMove = (event: PointerEvent) => {
+      if (event.pointerId !== pointerIdRef.current) return;
       // Panel a la izquierda: arrastrar hacia la derecha lo ensancha.
       // Panel a la derecha: arrastrar hacia la izquierda lo ensancha.
       const delta =
@@ -125,26 +132,34 @@ const PanelKpiLateral = ({
       setPanelWidth(nextWidth);
     };
 
-    const handleUp = () => {
+    const terminar = () => {
+      pointerIdRef.current = null;
       setResizing(false);
+    };
+    const handleUp = (event: PointerEvent) => {
+      if (event.pointerId === pointerIdRef.current) terminar();
     };
 
     // Puntero (mouse, touch o lápiz). pointercancel cierra el arrastre si el
-    // sistema lo interrumpe, para no dejarlo pegado.
+    // sistema lo interrumpe, y blur si la ventana pierde el foco a medio
+    // arrastre (Alt+Tab): el pointerup ya no llegaría y quedaría pegado.
     window.addEventListener("pointermove", handleMove);
     window.addEventListener("pointerup", handleUp);
     window.addEventListener("pointercancel", handleUp);
+    window.addEventListener("blur", terminar);
 
     return () => {
       window.removeEventListener("pointermove", handleMove);
       window.removeEventListener("pointerup", handleUp);
       window.removeEventListener("pointercancel", handleUp);
+      window.removeEventListener("blur", terminar);
     };
   }, [resizing, minWidth, maxWidth, lado]);
 
   const handleResizeStart = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0) return;
+    if (event.button !== 0 || resizing) return;
     event.preventDefault();
+    pointerIdRef.current = event.pointerId;
     startXRef.current = event.clientX;
     startWidthRef.current = panelWidth;
     setResizing(true);
@@ -183,11 +198,10 @@ const PanelKpiLateral = ({
       id={ID_RESUMEN}
       tabIndex={-1}
       aria-label={titulo}
-      // El ancho se anima solo al abrir o cerrar: durante el arrastre, cada
-      // pointermove reiniciaría la transición y el panel iría detrás del cursor.
-      className={`relative w-full focus:outline-none ${
-        resizing ? "" : "transition-[width] duration-300 motion-reduce:transition-none"
-      } xl:overflow-visible xl:sticky xl:top-4 xl:self-start ${
+      // El ancho no se anima: cada paso obligaba a la grilla (40+ columnas) a
+      // rehacer su layout, ~8 cuadros lentos por apertura medidos sin
+      // throttling. Cambia de una vez y el contenido aparece con opacidad.
+      className={`relative w-full focus:outline-none xl:overflow-visible xl:sticky xl:top-4 xl:self-start ${
         abierto ? "xl:w-(--kpi-panel-width)" : "xl:w-9"
       }`}
       style={{ "--kpi-panel-width": `${panelWidth}px` } as CSSProperties}
@@ -237,7 +251,7 @@ const PanelKpiLateral = ({
             </svg>
           </button>
 
-          <div className="mt-3 xl:mt-0">
+          <div className="mt-3 xl:mt-0 motion-safe:animate-aparecer">
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 flex flex-col gap-3 xl:max-h-[calc(100cqh-1rem)] xl:overflow-hidden">
               {/* Botón de colapso a la izquierda del título; solo móvil, en
                   desktop el toggle vive centrado sobre la línea divisoria */}

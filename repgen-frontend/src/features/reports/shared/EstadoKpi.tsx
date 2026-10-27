@@ -220,9 +220,7 @@ export const ResultadoCompacto = ({
   return (
     <div
       aria-busy={estado === "cargando" || sinCifra}
-      className={`mx-2 mt-2 flex items-center justify-between gap-3 rounded-lg border border-gray-100 bg-white px-3 py-2 shadow-sm xl:hidden ${
-        estado === "cargando" ? "opacity-50" : ""
-      }`}
+      className="mx-2 mt-2 flex items-center justify-between gap-3 rounded-lg border border-gray-100 bg-white px-3 py-2 shadow-sm xl:hidden"
     >
       <p className="flex min-w-0 flex-wrap items-baseline gap-x-2 text-sm">
         <span className="text-gray-600">{etiqueta}</span>
@@ -235,6 +233,8 @@ export const ResultadoCompacto = ({
           {sinCifra ? "—" : moneda.format(valor || 0)}
         </span>
         {filtrado && !sinCifra && <span className="text-xs text-gray-500">· filtrado</span>}
+        {/* Recargando: la cifra sigue legible y se dice que es la anterior (atenuada bajaba a ~2:1). */}
+        {estado === "cargando" && <span className="text-xs text-gray-500">· actualizando…</span>}
       </p>
       <button
         type="button"
