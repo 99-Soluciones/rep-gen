@@ -319,12 +319,11 @@ function buildReturnRecord(
   const devolucionCantidad = getNumber(mappedRecord.devolucion?.item?.qty);
   const facturaTipoDeCambio = normalizeExchangeRate(source.facturaTipoDeCambio);
   const costoDirectoUnitarioMxn = source.costoDirectoUnitarioMxn || 0;
-  const articuloImporteSinDescuentoMxn = getNumber(
-    mappedRecord.sub?.sinDescuentoSinIEPS,
-  );
-  const articuloDescuentoMontoMxn = getNumber(mappedRecord.sub?.descuento);
+  // Importe de lo devuelto (no del renglón completo), igual que su costo.
   const articuloImporteConDescuentoMxn =
-    articuloImporteSinDescuentoMxn - articuloDescuentoMontoMxn;
+    (getNumber(mappedRecord.unit?.sinDescuentoSinIEPS) -
+      getNumber(mappedRecord.unit?.descuento)) *
+    devolucionCantidad;
   const costoDirectoSubTotalMxn = costoDirectoUnitarioMxn * devolucionCantidad;
   const gananciaBrutaMxn =
     articuloImporteConDescuentoMxn - costoDirectoSubTotalMxn;
@@ -385,11 +384,7 @@ function buildReturnRecord(
     articuloDescuentoMontoMxn: negate(
       getNumber(mappedRecord.unit?.descuento) * devolucionCantidad,
     ),
-    articuloImporteConDescuentoMxn: negate(
-      (getNumber(mappedRecord.unit?.sinDescuentoSinIEPS) -
-        getNumber(mappedRecord.unit?.descuento)) *
-        devolucionCantidad,
-    ),
+    articuloImporteConDescuentoMxn: negate(articuloImporteConDescuentoMxn),
     articuloIVAMxn: negate(getNumber(mappedRecord.devolucion?.item?.contraIVA)),
     articuloIEPSMxn: negate(
       getNumber(mappedRecord.devolucion?.item?.contraIEPS),
