@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import type { Column } from "ag-grid-community";
-import { Pin } from "lucide-react";
+import { Pin, Search, X } from "lucide-react";
 import type { ColumnContext } from "./ag-grid/construir-columnas";
 
 interface ModalColumnasProps {
@@ -112,39 +112,13 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
               title="Cerrar"
               aria-label="Cerrar"
             >
-              <svg
-                aria-hidden="true"
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <X aria-hidden="true" className="w-6 h-6" />
             </button>
           </div>
 
           <div className="relative w-full sm:max-w-md shrink-0">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg
-                aria-hidden="true"
-                className="h-4 w-4 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
+              <Search aria-hidden="true" className="h-4 w-4 text-gray-400" />
             </div>
             <input
               type="text"
@@ -163,20 +137,7 @@ const ModalColumnas: React.FC<ModalColumnasProps> = ({
             title="Cerrar"
             aria-label="Cerrar"
           >
-            <svg
-              aria-hidden="true"
-              className="w-6 h-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X aria-hidden="true" className="w-6 h-6" />
           </button>
         </div>
 

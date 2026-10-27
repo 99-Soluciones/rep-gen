@@ -1,6 +1,7 @@
 import { apiFetch } from "../../shared/api/http";
 import { borrarUsuario, leerUsuario } from "../../features/auth/session";
 import { salir } from "../../shared/utils/salidaProtegida";
+import { Menu } from "lucide-react";
 
 interface NavVarProps {
   toggleSidebar: () => void;
@@ -42,20 +43,7 @@ const Navbar = ({ toggleSidebar, sidebarAbierto, reportSlotRef } : NavVarProps) 
           aria-controls="menu-reportes"
         >
           {/* Icono de Hamburguesa */}
-          <svg
-            aria-hidden="true"
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
+          <Menu aria-hidden="true" className="w-6 h-6" />
         </button>
 
         <img src="/favicon.svg" alt="RepGen" className="w-12 h-12" />

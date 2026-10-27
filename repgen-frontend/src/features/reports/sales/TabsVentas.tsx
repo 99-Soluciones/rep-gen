@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
 
 interface TabsVentasProps {
   reportType: "facturas" | "conceptos";
@@ -57,20 +58,7 @@ const TabsVentas = ({ reportType }: TabsVentasProps) => {
             onClick={() => setMenuAbierto((prev) => !prev)}
           >
             {reportType === "facturas" ? "Facturas" : "Conceptos"}
-            <svg
-              aria-hidden="true"
-              className="h-4 w-4 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+            <ChevronDown aria-hidden="true" className="h-4 w-4 text-gray-400" />
           </button>
           {menuAbierto ? (
             <div

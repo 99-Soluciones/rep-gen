@@ -7,6 +7,7 @@ import {
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
+import { ChartColumn, ChevronLeft, ChevronRight, Info } from "lucide-react";
 
 import type { EstadoCifras } from "./estadoCifras";
 
@@ -33,23 +34,6 @@ interface PanelKpiLateralProps {
 
 /** Destino de "Ver resumen" (ResultadoCompacto): recibe el foco y la página baja hasta él. */
 export const ID_RESUMEN = "resumen-reporte";
-
-const ICONO_METRICAS = (
-  <svg
-    aria-hidden="true"
-    className="w-5 h-5 shrink-0"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-    />
-  </svg>
-);
 
 const PanelKpiLateral = ({
   titulo = "Resumen",
@@ -182,12 +166,8 @@ const PanelKpiLateral = ({
 
   // Chevron según el lado del panel: al colapsar apunta hacia el borde donde
   // se repliega; al expandir, hacia donde crecerá el panel.
-  const CHEVRON_IZQUIERDA = "M15 19l-7-7 7-7";
-  const CHEVRON_DERECHA = "M9 5l7 7-7 7";
-  const pathColapsar =
-    lado === "derecha" ? CHEVRON_DERECHA : CHEVRON_IZQUIERDA;
-  const pathExpandir =
-    lado === "derecha" ? CHEVRON_IZQUIERDA : CHEVRON_DERECHA;
+  const IconoColapsar = lado === "derecha" ? ChevronRight : ChevronLeft;
+  const IconoExpandir = lado === "derecha" ? ChevronLeft : ChevronRight;
 
   // El manejador de resize vive en el borde que colinda con la tabla.
   const handlePosClass =
@@ -235,20 +215,7 @@ const PanelKpiLateral = ({
             title={toggleLabel}
             className={`absolute top-1/2 -translate-y-1/2 z-40 hidden xl:inline-flex h-8 w-8 pointer-coarse:h-10 pointer-coarse:w-10 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 ${handlePosClass}`}
           >
-            <svg
-              aria-hidden="true"
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d={pathColapsar}
-              />
-            </svg>
+            <IconoColapsar aria-hidden="true" className="w-4 h-4" />
           </button>
 
           <div className="mt-3 xl:mt-0 motion-safe:animate-aparecer">
@@ -264,20 +231,7 @@ const PanelKpiLateral = ({
                   title={toggleLabel}
                   className="inline-flex xl:hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-blue-700 shadow-sm hover:bg-blue-50 hover:border-blue-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 >
-                  <svg
-                    aria-hidden="true"
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d={pathColapsar}
-                    />
-                  </svg>
+                  <IconoColapsar aria-hidden="true" className="w-4 h-4" />
                 </button>
                 <div className="flex flex-col gap-1">
                   <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -285,20 +239,7 @@ const PanelKpiLateral = ({
                   </h2>
                   {aviso && (
                     <span className="inline-flex items-center gap-1 self-start px-2 py-0.5 bg-gray-100 border border-gray-300 rounded-full">
-                      <svg
-                        aria-hidden="true"
-                        className="w-3 h-3 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="16" x2="12" y2="12" />
-                        <line x1="12" y1="8" x2="12.01" y2="8" />
-                      </svg>
+                      <Info aria-hidden="true" className="w-3 h-3 text-gray-400" />
                       <span className="text-xs font-medium text-gray-600">
                         {aviso}
                       </span>
@@ -326,20 +267,7 @@ const PanelKpiLateral = ({
               title="Mostrar resumen"
               className="relative z-10 inline-flex h-8 w-8 pointer-coarse:h-10 pointer-coarse:w-10 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 shadow-md hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
             >
-              <svg
-                aria-hidden="true"
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d={pathExpandir}
-                />
-              </svg>
+              <IconoExpandir aria-hidden="true" className="w-4 h-4" />
             </button>
           </div>
 
@@ -351,7 +279,7 @@ const PanelKpiLateral = ({
             aria-label={toggleLabel}
             className="flex xl:hidden w-full items-center justify-center gap-2 py-2 px-3 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-sm hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
-            {ICONO_METRICAS}
+            <ChartColumn aria-hidden="true" className="w-5 h-5 shrink-0" />
             <span>Mostrar resumen</span>
           </button>
         </>

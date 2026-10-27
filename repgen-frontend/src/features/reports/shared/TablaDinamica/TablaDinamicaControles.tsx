@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, ListFilter, X } from "lucide-react";
 import type { FiltroDescrito } from "./describirFiltros";
 
 interface TablaDinamicaControlesProps {
@@ -76,20 +76,7 @@ const TablaDinamicaControles = ({
         }`}
       >
         {hayFiltroActivo && !sinRegistros && (
-          <svg
-            className="w-3.5 h-3.5 text-blue-500 shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M3 4h18M6 8h12M9 12h6M11 16h2"
-            />
-          </svg>
+          <ListFilter className="w-3.5 h-3.5 text-blue-500 shrink-0" aria-hidden="true" />
         )}
         <span aria-live="polite">
           {sinRegistros ? (

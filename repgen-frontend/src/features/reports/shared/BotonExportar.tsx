@@ -1,6 +1,7 @@
 import React from "react";
 import { AgGridReact } from "ag-grid-react";
 import toast from "react-hot-toast";
+import { Download } from "lucide-react";
 import { exportarDatos } from "./ag-grid/exportar";
 
 interface BotonExportarProps {
@@ -42,20 +43,7 @@ const BotonExportar = ({
         else exportar(e);
       }}
     >
-      <svg
-        aria-hidden="true"
-        className="w-4 h-4 text-emerald-100"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-        />
-      </svg>
+      <Download aria-hidden="true" className="w-4 h-4 text-emerald-100" />
       {/* Un solo texto: el nombre accesible es "Exportar CSV" (en teléfono se ve "Exportar"). */}
       <span>
         Exportar{" "}
