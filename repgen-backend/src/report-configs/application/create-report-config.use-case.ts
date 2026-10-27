@@ -11,6 +11,7 @@ import {
   reportConfigFieldMap as fm,
   REPORT_CONFIG_LAYOUT,
 } from '../infrastructure/report-config-field-map';
+import { asegurarNombreLibre } from './nombre-vista';
 
 @Injectable()
 export class CreateReportConfigUseCase {
@@ -29,6 +30,13 @@ export class CreateReportConfigUseCase {
   ): Promise<ReportConfigResponse> {
     // Valida antes de tocar FileMaker (lanza 400 si los filtros son enormes).
     const contenidoSerializado = serializeContenidoVista(contenido);
+    await asegurarNombreLibre(
+      this.fileMakerService,
+      dbName,
+      userId,
+      reportId,
+      name,
+    );
 
     if (isDefault) {
       await this.clearExistingDefault(dbName, userId, reportId);

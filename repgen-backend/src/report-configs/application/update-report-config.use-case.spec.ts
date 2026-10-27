@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdateReportConfigUseCase } from './update-report-config.use-case';
 import { FileMakerService } from '../../filemaker/filemaker.service';
 import { LoggerService } from '../../common/logger/logger.service';
@@ -47,6 +51,7 @@ describe('UpdateReportConfigUseCase', () => {
   it('actualiza nombre y columnState del registro propio', async () => {
     mockFileMaker.findRecords
       .mockResolvedValueOnce({ response: { data: [rawRecord()] } }) // ownership
+      .mockResolvedValueOnce({ response: { data: [rawRecord()] } }) // nombre libre (es la propia)
       .mockResolvedValueOnce({
         response: { data: [rawRecord({ [fm.name]: 'Editada' })] },
       }); // recarga
@@ -108,6 +113,7 @@ describe('UpdateReportConfigUseCase', () => {
   it('cambiar solo el nombre no reescribe columnas ni filtros', async () => {
     mockFileMaker.findRecords
       .mockResolvedValueOnce({ response: { data: [rawRecord()] } })
+      .mockResolvedValueOnce({ response: { data: [rawRecord()] } }) // nombre libre
       .mockResolvedValueOnce({
         response: { data: [rawRecord({ [fm.name]: 'Otra' })] },
       });
@@ -164,5 +170,26 @@ describe('UpdateReportConfigUseCase', () => {
       'fm1',
       expect.objectContaining({ [fm.isDefault]: 1 }),
     );
+  });
+
+  it('no renombra a un nombre que ya usa otra vista, y no toca nada', async () => {
+    mockFileMaker.findRecords
+      .mockResolvedValueOnce({ response: { data: [rawRecord()] } }) // ownership
+      .mockResolvedValueOnce({
+        response: {
+          data: [
+            rawRecord(),
+            rawRecord({ [fm.id]: 'cfg-uuid-9', [fm.name]: 'Cobranza' }),
+          ],
+        },
+      });
+
+    await expect(
+      useCase.execute('db', 42, 'cfg-uuid-5', {
+        name: 'COBRANZA',
+        isDefault: true,
+      }),
+    ).rejects.toThrow(ConflictException);
+    expect(mockFileMaker.editRecord).not.toHaveBeenCalled();
   });
 });

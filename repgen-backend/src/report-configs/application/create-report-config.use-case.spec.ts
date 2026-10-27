@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConflictException } from '@nestjs/common';
 import { CreateReportConfigUseCase } from './create-report-config.use-case';
 import { FileMakerService } from '../../filemaker/filemaker.service';
 import { LoggerService } from '../../common/logger/logger.service';
@@ -39,6 +40,8 @@ describe('CreateReportConfigUseCase', () => {
     }).compile();
     useCase = module.get(CreateReportConfigUseCase);
     jest.clearAllMocks();
+    // Sin vistas previas: el nombre está libre.
+    mockFileMaker.findRecords.mockResolvedValue({ response: { data: [] } });
   });
 
   it('crea el registro y lo recupera por su recordId interno de FileMaker', async () => {
@@ -137,5 +140,23 @@ describe('CreateReportConfigUseCase', () => {
         false,
       ),
     ).rejects.toThrow();
+  });
+
+  it('no crea una vista con el nombre de otra (sin importar mayúsculas ni espacios)', async () => {
+    mockFileMaker.findRecords.mockResolvedValue({
+      response: { data: [rawRecord({ [fm.name]: 'Config  A' })] },
+    });
+
+    await expect(
+      useCase.execute(
+        'db',
+        42,
+        'bancos',
+        ' config a ',
+        { columnState: [], filterModel: null, periodo: null },
+        false,
+      ),
+    ).rejects.toThrow(ConflictException);
+    expect(mockFileMaker.createRecord).not.toHaveBeenCalled();
   });
 });

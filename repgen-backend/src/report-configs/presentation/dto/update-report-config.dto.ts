@@ -2,9 +2,11 @@ import {
   IsArray,
   IsBoolean,
   IsIn,
+  IsNotEmpty,
   IsObject,
   IsOptional,
   IsString,
+  MaxLength,
 } from 'class-validator';
 import {
   PERIODOS_VISTA,
@@ -12,7 +14,10 @@ import {
 } from '../../domain/report-config.types';
 
 export class UpdateReportConfigDto {
+  // Mismo límite que el input del frontend (MAX_NOMBRE_VISTA): un nombre más largo no se lee en el selector.
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(60)
   @IsOptional()
   name?: string;
 

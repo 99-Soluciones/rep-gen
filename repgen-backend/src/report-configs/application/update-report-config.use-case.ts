@@ -18,6 +18,7 @@ import {
   reportConfigFieldMap as fm,
   REPORT_CONFIG_LAYOUT,
 } from '../infrastructure/report-config-field-map';
+import { asegurarNombreLibre } from './nombre-vista';
 
 @Injectable()
 export class UpdateReportConfigUseCase {
@@ -43,6 +44,18 @@ export class UpdateReportConfigUseCase {
       userId,
       configId,
     );
+
+    // Antes de tocar nada: un nombre repetido no deja el default a medio cambiar.
+    if (patch.name !== undefined) {
+      await asegurarNombreLibre(
+        this.fileMakerService,
+        dbName,
+        userId,
+        record.reportId,
+        patch.name,
+        record.id,
+      );
+    }
 
     if (patch.isDefault === true) {
       await this.clearExistingDefault(

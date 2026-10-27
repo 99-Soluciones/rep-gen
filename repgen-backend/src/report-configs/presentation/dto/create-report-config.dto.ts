@@ -2,9 +2,11 @@ import {
   IsArray,
   IsBoolean,
   IsIn,
+  IsNotEmpty,
   IsObject,
   IsOptional,
   IsString,
+  MaxLength,
 } from 'class-validator';
 import {
   PERIODOS_VISTA,
@@ -15,7 +17,10 @@ export class CreateReportConfigDto {
   @IsString()
   reportId!: string;
 
+  // Mismo límite que el input del frontend (MAX_NOMBRE_VISTA): un nombre más largo no se lee en el selector.
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(60)
   name!: string;
 
   @IsArray()
