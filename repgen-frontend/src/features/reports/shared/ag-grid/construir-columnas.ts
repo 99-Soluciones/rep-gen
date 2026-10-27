@@ -62,9 +62,27 @@ interface BaseColumnDef<TRowData> extends Partial<ColDef<TRowData>> {
 
 // Clases de index.css. El rótulo ("Total MXN") cae en la primera columna
 // visible, sea del tipo que sea; la tinta roja, solo en columnas de cifras.
-const esRotuloTotal = ({ node, value }: Pick<CellClassParams, "node" | "value">) =>
-  node.rowPinned === "bottom" && typeof value === "string" && value !== "";
+const esRotuloTotal = ({ node, value }: { node: CellClassParams["node"] | null; value: unknown }) =>
+  node?.rowPinned === "bottom" && typeof value === "string" && value !== "";
 const reglasCelda: CellClassRules = { "rotulo-total": esRotuloTotal };
+
+/**
+ * El rótulo se escribe tal cual en cualquier columna. Sin esto, una columna de
+ * texto con números (Venta ID) la infiere AG Grid como numérica y su
+ * formateador por defecto pinta "Invalid Number"; las de cifras lo pasarían
+ * por formatearMoneda. Pasa en cuanto una vista deja otra columna primera.
+ */
+const conRotuloTotal = <TRowData>(columna: ColDef<TRowData>): ColDef<TRowData> => {
+  const formatear = columna.valueFormatter;
+  return {
+    ...columna,
+    valueFormatter: (params) => {
+      if (esRotuloTotal(params)) return params.value as string;
+      if (typeof formatear === "function") return formatear(params);
+      return params.value == null ? "" : String(params.value);
+    },
+  };
+};
 const reglasCeldaCifra: CellClassRules = {
   ...reglasCelda,
   "cifra-negativa": ({ value }) => esNegativo(value),
@@ -138,7 +156,7 @@ export class ColumnBuilder<
         labelResolver,
       );
 
-      return construirColumnaPorTipo<TRowData>(headerName, meta, columnId);
+      return conRotuloTotal(construirColumnaPorTipo<TRowData>(headerName, meta, columnId));
     }) as ColDef<TRowData>[];
   }
 }

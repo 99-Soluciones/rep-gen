@@ -76,4 +76,34 @@ describe("TablaDinamica con AG Grid real", () => {
     await new Promise((resolve) => setTimeout(resolve, 50));
     expect(avisosAgGrid).toEqual([]);
   });
+
+  it("el rótulo del pie se lee aunque la primera columna tenga números (Venta ID en Conceptos)", async () => {
+    const referenciaGrid = createRef<AgGridReact>();
+    const onGridListo = vi.fn();
+    render(
+      <TablaDinamica
+        referenciaGrid={referenciaGrid}
+        // ventaId llega como número: AG Grid infiere la columna como numérica.
+        datos={[{ ventaId: 7, facturaFolio: "101", articuloImporteConDescuentoMxn: 100 }]}
+        definicionesColumnas={construirColumnasVentas("conceptos") as ColDef[]}
+        estaCargando={false}
+        onGridListo={onGridListo}
+        filasVisibles={1}
+        totales={{ campos: ["articuloImporteConDescuentoMxn"], etiqueta: "Total MXN" }}
+      />,
+    );
+    await waitFor(() => expect(onGridListo).toHaveBeenCalled(), ESPERA);
+    const api = referenciaGrid.current!.api;
+    // Una vista que no fija el folio deja Venta ID como primera columna.
+    api.applyColumnState({ state: [{ colId: "facturaFolio", pinned: null, hide: true }] });
+    api.setGridOption("pinnedBottomRowData", [{ ventaId: "Total MXN" }]);
+
+    const columna = api.getColumn("ventaId")!;
+    expect(columna.getColDef().cellDataType).toBe("number");
+    const formatear = columna.getColDef().valueFormatter as (p: unknown) => string;
+    const nodo = api.getPinnedBottomRow(0)!;
+    expect(formatear({ value: "Total MXN", node: nodo, data: nodo.data, colDef: columna.getColDef(), column: columna, api })).toBe("Total MXN");
+    // Las filas normales siguen como antes.
+    expect(formatear({ value: 7, node: api.getDisplayedRowAtIndex(0), colDef: columna.getColDef(), column: columna, api })).toBe("7");
+  });
 });
