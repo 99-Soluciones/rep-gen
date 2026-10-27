@@ -39,8 +39,11 @@ Estructura de navegación y pantallas principales.
 
 1. Usuario obtiene token en FileMaker (proceso externo)
 2. FE envía `POST {API}/auth/login-token` con `token` + `tenant`
-3. Almacena JWT (verificar: localStorage / sessionStorage / memory)
+3. El backend devuelve el JWT en la cookie httpOnly `jwt_reportes`; el FE solo guarda `{ name, tenant }` en `localStorage["usuario:v1"]` y limpia `?token=` de la URL
 4. Redirige a reportes
+5. Sin `?token=`: si hay usuario guardado, confirma la sesión con `GET /auth/me` (401 → pide entrar desde FileMaker)
+
+Detalle: `repgen-frontend/docs/AUTENTICACION_COOKIE_HTTPONLY.md`.
 
 ## Criterios de aceptación
 
@@ -186,7 +189,7 @@ flowchart TB
 ## Flujo resumido
 
 1. **Mount:** lee `sessionStorage` `repgen:column-labels:{tenant}` si existe (pintado rápido).
-2. **Fetch:** `GET` con Bearer JWT; guarda en state + sessionStorage.
+2. **Fetch:** `GET` vía `apiFetch` (cookie de sesión); guarda en state + sessionStorage.
 3. **Error:** si hay cache de sesión, sigue usando labels cacheadas.
 4. **Consumo:** `ReporteVentas` → `useMemo(() => construirColumnasVentas(type, getLabel), [type, getLabel])`.
 5. **Cambio tenant:** `key={tenant}` remonta provider y evita mezclar clientes.

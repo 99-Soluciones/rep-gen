@@ -98,7 +98,7 @@ Tipo exportado: `ColumnLabelsContextValue` (`column-labels.context.ts`).
 }
 ```
 
-Duplicado en FE y BE; deben mantenerse alineados.
+Tipo único en `@repgen/shared-types` (`packages/shared-types/index.d.ts`); FE y BE lo importan de ahí.
 
 ---
 
@@ -109,10 +109,10 @@ Duplicado en FE y BE; deben mantenerse alineados.
 | Momento | Fuente de `tenantActivo` |
 |---------|--------------------------|
 | Login desde FM (`?token=&tenant=`) | `datos.user.tenant` tras `POST /auth/login-token` |
-| Sesión ya guardada | `localStorage.usuario` → JSON `{ tenant }` |
+| Sesión ya guardada | `localStorage["usuario:v1"]` (respaldo: `usuario`) → JSON `{ name, tenant }`, confirmada con `GET /auth/me` |
 | Sin tenant | `null` → labels vacías, sin fetch |
 
-JWT se guarda en `localStorage.jwt_reportes`; el tenant en `localStorage.usuario`. El fetch de labels **no** envía tenant en URL: el backend lo lee del JWT.
+El JWT vive en la cookie httpOnly `jwt_reportes` (el frontend no puede leerlo); en `localStorage` solo quedan datos no sensibles del usuario (`features/auth/session.ts`). El fetch de labels **no** envía tenant en URL: el backend lo lee del JWT.
 
 ### 5.2 Inicialización (`useState`)
 
@@ -149,31 +149,15 @@ Misma lógica que el fetch del efecto, pero invocable desde UI (hoy no hay botó
 ## 6. API cliente (`column-labels.api.ts`)
 
 ```typescript
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1";
-
-export const fetchColumnLabels = async (): Promise<ColumnLabelsResponse> => {
-  const token = localStorage.getItem("jwt_reportes");
-  if (!token) throw new Error("No se encontró token de autenticación");
-
-  const respuesta = await fetch(`${API_URL}/tenant/column-labels`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!respuesta.ok) {
-    throw new Error(`Error al cargar etiquetas de columnas (${respuesta.status})`);
-  }
-
-  return respuesta.json();
-};
+export const fetchColumnLabels = (): Promise<ColumnLabelsResponse> =>
+  apiFetch<ColumnLabelsResponse>("/tenant/column-labels");
 ```
+
+`apiFetch` (`src/shared/api/http.ts`) pone la URL base, envía la cookie de sesión con `credentials: "include"` y convierte respuestas no-OK en `ApiError`. Un 401 emite `EVENTO_SESION_EXPIRADA` (aviso de sesión expirada, sin recargar). No hay encabezado `Authorization`.
 
 | Variable | Uso |
 |----------|-----|
-| `VITE_API_URL` | Base del API en build (Vercel / `.env`) |
+| `VITE_API_URL` | Base del API en build (Vercel / `.env`); por defecto `/api/v1` (mismo origen, vía proxy) |
 
 ---
 
@@ -210,7 +194,7 @@ const columnasReportes = useMemo(
 
 `isLoading` y `error` del contexto **no se usan aún** en `ReporteVentas` (la tabla puede mostrarse con `defaultHeader` hasta que termine el fetch). Mejora posible: spinner o skeleton en encabezados mientras `isLoading`.
 
-### 8.2 En `construir-columnas.ag-grid.ts`
+### 8.2 En `construir-columnas.ts`
 
 ```typescript
 export type LabelResolver = (labelSlot: string) => string | undefined;
@@ -328,18 +312,20 @@ Para probar el provider en aislamiento haría falta:
 | Siempre defaultHeader | Sin `labelSlot` en schema | Revisar `ventas.schema.json` |
 | Labels de otro cliente | Storage antiguo | Cerrar pestaña o limpiar `sessionStorage` `repgen:column-labels:*` |
 | Encabezados no actualizan | `useMemo` sin `getLabel` en deps | Incluir `getLabel` como en `ReporteVentas` |
-| 401 en Network | `jwt_reportes` ausente o expirado | Re-login desde FileMaker |
+| 401 en Network | Cookie `jwt_reportes` ausente o expirada (DevTools → Application → Cookies) | Re-login desde FileMaker |
 | Cambió FM, UI igual | Cache backend 10 min + sessionStorage | `refreshLabels()` o nueva sesión |
 
 ### Depuración rápida en consola del navegador
 
 ```javascript
 // Ver cache del tenant actual
-JSON.parse(sessionStorage.getItem("repgen:column-labels:" + JSON.parse(localStorage.usuario).tenant))
+JSON.parse(sessionStorage.getItem("repgen:column-labels:" + JSON.parse(localStorage.getItem("usuario:v1")).tenant))
 
-// Ver tenant y token presentes
-JSON.parse(localStorage.getItem("usuario"))
-localStorage.getItem("jwt_reportes") ? "JWT ok" : "sin JWT"
+// Ver usuario y tenant guardados
+JSON.parse(localStorage.getItem("usuario:v1"))
+
+// ¿Sigue viva la sesión? (la cookie httpOnly no es visible desde JS)
+fetch("/api/v1/auth/me", { credentials: "include" }).then((r) => r.status) // 200 ok, 401 expirada
 ```
 
 ---
@@ -349,7 +335,7 @@ localStorage.getItem("jwt_reportes") ? "JWT ok" : "sin JWT"
 | Tema | DOC-4.4 (backend / E2E) | DOC-7.6 (este doc) |
 |------|-------------------------|---------------------|
 | FileMaker layout | Sí | Referencia |
-| API contrato | Sí | Consumo `fetch` |
+| API contrato | Sí | Consumo vía `apiFetch` |
 | Provider React | Mención | **Detalle completo** |
 | AG Grid | Mención | **Detalle completo** |
 | Tests FE | No | Sí |

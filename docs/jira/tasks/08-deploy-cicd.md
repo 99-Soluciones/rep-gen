@@ -4,9 +4,9 @@
 **Epic:** [DOC] RepGen — Documentación técnica y operativa  
 **Component:** DevOps
 
-**Fuente:** repo **repgen-workflows** → `.github/DEPLOYMENT.md` ([enlace en LINKS.md](../../references/LINKS.md))
+**Fuente:** `docs/deployment/DEPLOYMENT.md` y `.github/workflows/` del monorepo.
 
-**Nota:** Vercel y DigitalOcean siguen configurados en `repgen-frontend` y `repgen-backend` respectivamente; este doc describe también los workflows de referencia para un futuro monorepo.
+**Nota:** desde la migración a monorepo, los deploys (Vercel y DigitalOcean) quedaron en modo manual (`workflow_dispatch`), pendientes de reconexión; el CI sí corre en push/PR a `main`.
 
 ---
 
@@ -14,15 +14,16 @@
 
 **Summary Jira:** `[DOC-8.1] Workflow CI GitHub Actions`
 
-## Archivo
+## Archivos
 
-`.github/workflows/ci.yml`
+- `.github/workflows/ci-backend.yml`
+- `.github/workflows/ci-frontend.yml`
 
 ## Objetivo documentar
 
-- Triggers (push, PR)
-- Jobs: lint, test, build BE/FE
-- Validación DOCR opcional
+- Triggers: push y PR a `main` con filtro de rutas (`repgen-backend/**` o `repgen-frontend/**`, más `packages/**` y archivos raíz de pnpm); también `workflow_dispatch`
+- Backend: typecheck `@repgen/shared-types`, lint, test, e2e (la app arranca), build, `docker build` de comprobación
+- Frontend: typecheck `@repgen/shared-types`, lint, test con coverage, build
 
 ## Criterios de aceptación
 

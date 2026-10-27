@@ -60,9 +60,9 @@
 ## Límites documentados
 
 - Global throttler: 100/min
-- Reportes bancos: 20/min
+- Reportes (`bancos`, `ventas`, `ventas-por-concepto`): 20/min cada uno
 - Login: 5/min
-- Paginación default: 50 registros
+- Sin paginación en servidor: cada búsqueda trae todo el rango de fechas (`FM_FIND_LIMIT` en `BaseReportService`); AG Grid filtra y pagina en el cliente
 
 ## Cache
 

@@ -143,7 +143,7 @@ flowchart LR
 | | |
 |---|---|
 | **Método** | `GET /api/v1/tenant/column-labels` |
-| **Auth** | Bearer JWT (obligatorio) |
+| **Auth** | JWT obligatorio: cookie httpOnly `jwt_reportes` (respaldo: `Authorization: Bearer`) |
 | **Tenant** | Del claim JWT (`req.tenant`), no por query |
 | **Origen datos** | FileMaker: base = `tenantId`, layout = `columnas_prefs`, primer registro |
 

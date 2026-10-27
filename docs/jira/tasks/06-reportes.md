@@ -100,7 +100,7 @@ No contiene reglas de negocio del reporte (cancelaciones, devoluciones → mappe
 
 ## Criterios de aceptación
 
-- [ ] Descripción `meta` (total, página, etc.)
+- [ ] Contrato de respuesta `{ data }` (sin `meta` ni paginación: el cliente filtra y pagina)
 - [ ] Tests: `base-report.service.spec.ts` referenciados
 
 ---
@@ -183,7 +183,7 @@ Documentadas en `EXPLICACION_FLUJO_REPORTES.md` §5:
 
 ## Endpoint
 
-`POST /reports/ventas-item/buscar`
+`POST /reports/ventas-por-concepto/buscar`
 
 ## Criterios de aceptación
 

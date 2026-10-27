@@ -5,7 +5,7 @@ Este patron permite usar nombres limpios en codigo y resolver al campo real de F
 ## Navegacion De Documentacion
 
 - [Indice general de reports](INDEX.md)
-- [Indice de ADRs](ADR/ADR-INDEX.md)
+- [Indice de ADRs](ADR/VENTAS/ADR-INDEX.md)
 - [Explicacion funcional del flujo](workflow/EXPLICACION_FLUJO_REPORTES.md)
 
 ## Archivos por reporte
