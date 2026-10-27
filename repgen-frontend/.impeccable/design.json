@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-26T20:38:34Z",
+  "generatedAt": "2026-10-27T19:24:08Z",
   "title": "Design System: RepGen",
   "extensions": {
     "colorMeta": {
@@ -230,7 +230,12 @@
       {
         "name": "panel-slide",
         "value": "300ms ease-in-out",
-        "purpose": "Drawer del sidebar y panel de resumen (motion-reduce: sin transición)."
+        "purpose": "Drawer del sidebar (motion-reduce: sin transición)."
+      },
+      {
+        "name": "resumen-aparecer",
+        "value": "150ms ease-out (opacity)",
+        "purpose": "Contenido del panel de resumen al abrirse. El ancho cambia de una vez: animarlo rehacía el layout de la grilla en cada cuadro."
       },
       {
         "name": "filtro-espera",
@@ -288,9 +293,9 @@
       "name": "Fechas (enunciado)",
       "kind": "input",
       "refersTo": "input-date",
-      "description": "El rango cargado como enunciado; abre un panel con Periodo, Desde/Hasta y Cancelar/Aplicar.",
-      "html": "<button class=\"ds-fechas\" aria-expanded=\"false\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#6b7280\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M3 10h18\"/></svg><span><b>Mes actual · </b>01/10 – 15/10/2026</span><span class=\"ds-chev\">▾</span></button>",
-      "css": ".ds-fechas { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #374151; font-family: Arial, Helvetica, sans-serif; font-size: 14px; padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 8px; box-shadow: 0 1px 2px 0 rgb(0 0 0 / .05); font-variant-numeric: tabular-nums; cursor: pointer; transition: background-color 150ms, border-color 150ms, color 150ms; } .ds-fechas b { font-weight: 500; } .ds-fechas .ds-chev { color: #9ca3af; } .ds-fechas:hover { background: #f0f5fe; border-color: #9dbff6; color: #1e5cbc; } .ds-fechas:focus-visible { outline: none; box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--color-blue-500, #4886e9); }"
+      "description": "‹ [enunciado] ›: flechas azules que aplican el periodo de al lado; el centro abre Periodo, Desde/Hasta y Cancelar/Aplicar.",
+      "html": "<div class=\"ds-fechas-grupo\"><button class=\"ds-flecha\" aria-label=\"Periodo anterior\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m15 18-6-6 6-6\"/></svg></button><button class=\"ds-fechas ds-fechas-centro\" aria-expanded=\"false\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#6b7280\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M3 10h18\"/></svg><span><b>Mes actual · </b>01/10 – 15/10/2026</span><span class=\"ds-chev\">▾</span></button><button class=\"ds-flecha\" aria-disabled=\"true\" aria-label=\"No hay periodo siguiente\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></button></div>",
+      "css": ".ds-fechas { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #374151; font-family: Arial, Helvetica, sans-serif; font-size: 14px; padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 8px; box-shadow: 0 1px 2px 0 rgb(0 0 0 / .05); font-variant-numeric: tabular-nums; cursor: pointer; transition: background-color 150ms, border-color 150ms, color 150ms; } .ds-fechas b { font-weight: 500; } .ds-fechas .ds-chev { color: #9ca3af; } .ds-fechas:hover { background: #f0f5fe; border-color: #9dbff6; color: #1e5cbc; } .ds-fechas:focus-visible { outline: none; box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--color-blue-500, #4886e9); } .ds-fechas-grupo { display: inline-flex; align-items: stretch; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; background: #fff; box-shadow: 0 1px 2px 0 rgb(0 0 0 / .05); } .ds-fechas-grupo .ds-fechas-centro { border: none; border-radius: 0; box-shadow: none; border-left: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; } .ds-flecha { display: flex; align-items: center; justify-content: center; width: 36px; border: none; background: none; color: var(--color-blue-600, #2670e3); cursor: pointer; transition: background-color 150ms, color 150ms; } .ds-flecha:hover { background: #f0f5fe; color: #1e5cbc; } .ds-flecha[aria-disabled=true] { color: #d1d5db; cursor: not-allowed; background: none; } .ds-flecha:focus-visible { outline: none; box-shadow: inset 0 0 0 2px #4886e9; }"
     },
     {
       "name": "Contador y filtros",
@@ -301,12 +306,12 @@
       "css": ".ds-chip { display: inline-flex; align-items: center; gap: 6px; background: #f0f5fe; border: 1px solid #c1d7fb; color: #1e5cbc; font-family: Arial, Helvetica, sans-serif; font-size: 14px; padding: 6px 12px; border-radius: 8px; white-space: nowrap; } .ds-chip b { color: #164a9a; font-weight: 600; } .ds-chip .ds-mute { color: #6b7280; } .ds-link { background: none; border: none; padding: 0; color: #1e5cbc; font: inherit; font-weight: 500; cursor: pointer; text-underline-offset: 2px; border-radius: 4px; } .ds-link:hover { text-decoration: underline; } .ds-link:focus-visible { outline: none; box-shadow: 0 0 0 2px #4886e9; }"
     },
     {
-      "name": "Filtro de montos",
+      "name": "Filtros flotantes",
       "kind": "input",
-      "refersTo": null,
-      "description": "Input de texto bajo el encabezado: 5000 (sin centavos), >5000, 1000-5000. Lo que no es monto se marca y no filtra.",
-      "html": "<div class=\"ds-ffilter\"><input class=\"ds-ffilter-input\" value=\"1000-5000\" aria-label=\"Filtrar Abono\" inputmode=\"decimal\"><button class=\"ds-ffilter-x\" aria-label=\"Limpiar filtro de Abono\">×</button></div><div class=\"ds-ffilter\"><input class=\"ds-ffilter-input ds-invalid\" value=\"abc\" aria-invalid=\"true\" aria-label=\"Filtrar Cargo\"></div>",
-      "css": ".ds-ffilter { position: relative; display: inline-flex; align-items: center; width: 140px; margin: 4px; } .ds-ffilter-input { width: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 14px; padding: 6px 28px 6px 8px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; color: #111827; } .ds-ffilter-input:focus { outline: none; border-color: #4886e9; box-shadow: 0 0 0 2px #4886e9; } .ds-ffilter-input.ds-invalid { border-color: #dc2626; } .ds-ffilter-x { position: absolute; right: 4px; width: 20px; height: 20px; border: none; background: none; color: #6b7280; border-radius: 4px; cursor: pointer; } .ds-ffilter-x:hover { background: #f3f4f6; color: #374151; }"
+      "refersTo": "floating-filter",
+      "description": "Bajo el encabezado: texto con lupa, monto (5000, >5000, 1000-5000). Con filtro, borde azul y velo; un monto inválido se marca en rojo y no filtra.",
+      "html": "<div class=\"ds-ffilter\"><svg class=\"ds-lupa\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21 21-4.34-4.34\"/><circle cx=\"11\" cy=\"11\" r=\"8\"/></svg><input class=\"ds-ffilter-input ds-con-lupa\" placeholder=\"Cliente…\" aria-label=\"Filtrar Cliente\"></div><div class=\"ds-ffilter\"><svg class=\"ds-lupa\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21 21-4.34-4.34\"/><circle cx=\"11\" cy=\"11\" r=\"8\"/></svg><input class=\"ds-ffilter-input ds-con-lupa ds-activo\" value=\"BBVA\" aria-label=\"Filtrar Banco\"><button class=\"ds-ffilter-x\" aria-label=\"Limpiar filtro de Banco\">×</button></div><div class=\"ds-ffilter\"><input class=\"ds-ffilter-input ds-activo\" value=\"1000-5000\" aria-label=\"Filtrar Abono\" inputmode=\"decimal\"><button class=\"ds-ffilter-x\" aria-label=\"Limpiar filtro de Abono\">×</button></div><div class=\"ds-ffilter\"><input class=\"ds-ffilter-input ds-invalid\" value=\"abc\" aria-invalid=\"true\" aria-label=\"Filtrar Cargo\"></div>",
+      "css": ".ds-ffilter { position: relative; display: inline-flex; align-items: center; width: 140px; margin: 4px; } .ds-ffilter-input { width: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 14px; padding: 6px 28px 6px 8px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; color: #111827; } .ds-ffilter-input:focus { outline: none; border-color: #4886e9; box-shadow: 0 0 0 2px #4886e9; } .ds-ffilter-input.ds-invalid { border-color: #dc2626; } .ds-ffilter-x { position: absolute; right: 4px; width: 20px; height: 20px; border: none; background: none; color: #6b7280; border-radius: 4px; cursor: pointer; } .ds-ffilter-x:hover { background: #f3f4f6; color: #374151; } .ds-ffilter-input::placeholder { color: #6b7280; } .ds-ffilter .ds-lupa { position: absolute; left: 8px; color: #9ca3af; pointer-events: none; } .ds-ffilter-input.ds-con-lupa { padding-left: 28px; } .ds-ffilter-input.ds-activo { border-color: var(--color-blue-600, #2670e3); background: #f0f5fe; } .ds-ffilter-input.ds-invalid { border-color: #dc2626; background: #fff; }"
     },
     {
       "name": "Tabla con fila de totales",
@@ -412,7 +417,7 @@
       "**Do** presentar las cifras como estado de cuenta: renglones alineados a la derecha, un total con regla encima y rojo solo para negativos.",
       "**Do** usar `<dialog>` nativo para todo lo modal y anillos `focus-visible` en cada control.",
       "**Do** nombrar las acciones por su resultado (\"Actualizar vista\", \"Aplicar\") y los errores por lo que pasó y cómo seguir.",
-      "**Do** limitar el movimiento a transiciones de color (y a 300ms para drawers y paneles, al abrir o cerrar; nunca mientras se arrastra un borde).",
+      "**Do** limitar el movimiento a transiciones de color, al drawer del sidebar (300ms, se desliza sobre el contenido) y a la aparición del resumen (150ms, solo opacidad). Nada que cambie el ancho de la tabla se anima: con 40+ columnas, cada paso rehace el layout de la grilla (medido: ~8 cuadros lentos por apertura).",
       "**Do** mostrar la moneda de cada importe cuando no es MXN, y decir qué quedó fuera de un total.",
       "**Do** decir de cuándo son los datos (\"Datos de las 10:42\") y ofrecer volver a leerlos sin recargar la página.",
       "**Do** dejar los errores de un campo junto al campo (`aria-describedby`), no solo en un toast.",
@@ -420,7 +425,9 @@
       "**Do** preguntar antes de reemplazar trabajo sin guardar, con la opción segura enfocada primero.",
       "**Do** confirmar con \"Aplicar\" todo lo que dispara una consulta: un select no consulta al cambiar.",
       "**Do** decir por qué algo no está disponible en un texto accesible (`aria-describedby`) sobre un control que sigue enfocable (`aria-disabled`).",
-      "**Do** devolver el foco a quien abrió un menú, panel o drawer al cerrarlo."
+      "**Do** devolver el foco a quien abrió un menú, panel o drawer al cerrarlo.",
+      "**Do** dibujar todo ícono con `lucide-react` (trazo de 2px): 16px en controles, 20px en el sidebar y en las flechas de fechas, 24px en estados vacíos. Solo el spinner y el check de las casillas son SVG propios, porque son controles dibujados, no íconos.",
+      "**Do** dar a los menús y paneles anclados (vistas, Nueva vista, filtros activos, fechas) 12px de radio y la sombra de hoja de trabajo."
     ],
     "donts": [
       "**Don't** usar degradados decorativos, sombras pesadas sobre fondos de color ni animaciones de entrada (el viejo ComingSoon violeta es el antiejemplo).",
@@ -429,7 +436,8 @@
       "**Don't** usar el morado ERP como relleno, texto o fondo en reposo.",
       "**Don't** usar el verde sólido fuera del botón de exportar.",
       "**Don't** introducir una segunda familia tipográfica ni tamaños por encima de 20px.",
-      "**Don't** usar gris-400 para texto: solo para íconos decorativos.",
+      "**Don't** usar gris-400 para texto, tampoco para placeholders: solo para íconos decorativos.",
+      "**Don't** pegar el path de un ícono a mano: con dos familias, la misma lupa termina con dos dibujos distintos en la misma pantalla.",
       "**Don't** leer `referenciaGrid.current` para decidir qué se pinta: con React Compiler ese valor queda memoizado. El estado del grid entra como estado o prop.",
       "**Don't** contar el ancho de columnas como cambio de una vista: el grid lo recalcula al redimensionar la ventana.",
       "**Don't** escuchar cambios del grid con `api.addEventListener`: en esta integración no llegan. Usar las props `on…` de AgGridReact.",
