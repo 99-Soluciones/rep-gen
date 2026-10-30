@@ -19,6 +19,12 @@ import { LoggerService } from '../common/logger/';
 const FM_NO_RECORDS_MATCH = '401';
 
 /**
+ * Cada sesión de la Data API atiende en fila: una llamada corta espera a que
+ * termine un reporte de la misma sesión. Por eso los reportes usan la suya.
+ */
+export type FmSessionUse = 'erp' | 'reportes';
+
+/**
  * Servicio para interactuar con la API de FileMaker.
  * Proporciona métodos para autenticarse y realizar operaciones sobre registros en FileMaker.
  * Este servicio maneja la autenticación y el almacenamiento del token de sesión,
@@ -33,7 +39,8 @@ export class FileMakerService {
   private readonly requestTimeoutMs: number;
   private readonly authCooldownMs: number;
 
-  private tokens: Map<string, string> = new Map(); // Mapa para almacenar tokens por usuario o sesión
+  // Los tres mapas usan la llave de sessionKey: una sesión por empresa y uso
+  private tokens: Map<string, string> = new Map();
   private authInFlight: Map<string, Promise<string>> = new Map();
   private authNextAttemptTime: Map<string, number> = new Map();
 
@@ -82,12 +89,21 @@ export class FileMakerService {
     return `/layouts/${encodeURIComponent(layout)}${path}`;
   }
 
+  private sessionKey(dbName: string, use: FmSessionUse): string {
+    return `${dbName}:${use}`;
+  }
+
   /**
    * Método para autenticarse con FileMaker y obtener un token de sesión.
+   * @param use La sesión a usar; las llamadas cortas no deben compartir la de reportes.
    * @returns Promise<string> El token de sesión de FileMaker.
    */
-  async authFileMaker(dbName: string): Promise<string> {
-    const dbToken = this.tokens.get(dbName);
+  async authFileMaker(
+    dbName: string,
+    use: FmSessionUse = 'erp',
+  ): Promise<string> {
+    const key = this.sessionKey(dbName, use);
+    const dbToken = this.tokens.get(key);
     if (dbToken) {
       this.logger.debug(
         `Usando token existente para la base de datos ${dbName}`,
@@ -95,7 +111,7 @@ export class FileMakerService {
       return dbToken;
     }
 
-    const nextAttemptTime = this.authNextAttemptTime.get(dbName) || 0;
+    const nextAttemptTime = this.authNextAttemptTime.get(key) || 0;
     if (Date.now() < nextAttemptTime) {
       this.logger.warn(
         `Intento de autenticación bloqueado para la base de datos ${dbName}. Próximo intento permitido en ${new Date(
@@ -107,7 +123,7 @@ export class FileMakerService {
       );
     }
 
-    const inFlight = this.authInFlight.get(dbName);
+    const inFlight = this.authInFlight.get(key);
     if (inFlight) {
       this.logger.debug(
         `Esperando autenticación (Promise) en curso para la base de datos ${dbName}`,
@@ -136,23 +152,23 @@ export class FileMakerService {
       }
       const data = (await response.json()) as GetTokenResponse;
 
-      this.tokens.set(dbName, data.response.token);
+      this.tokens.set(key, data.response.token);
       this.logger.log(`Token obtenido para la base de datos ${dbName}`);
       return data.response.token;
     })();
 
-    this.authInFlight.set(dbName, authPromise);
+    this.authInFlight.set(key, authPromise);
 
     return authPromise
       .catch((err) => {
-        this.authNextAttemptTime.set(dbName, Date.now() + this.authCooldownMs);
+        this.authNextAttemptTime.set(key, Date.now() + this.authCooldownMs);
         this.logger.error(`Error al autenticar con FileMaker`, err as Error, {
           tenant: dbName,
         });
         throw err;
       })
       .finally(() => {
-        this.authInFlight.delete(dbName);
+        this.authInFlight.delete(key);
       });
   }
 
@@ -163,15 +179,17 @@ export class FileMakerService {
    * error de FileMaker en una excepción, en vez de devolverlo como datos.
    * @param noRecordsResult Si se indica, el código FM 401 ("no records match")
    * se devuelve como este resultado vacío en lugar de lanzar.
+   * @param use La sesión de FileMaker que atiende la operación.
    */
   private async request<T>(
     dbName: string,
     path: string,
     init: RequestInit,
     noRecordsResult?: T,
+    use: FmSessionUse = 'erp',
   ): Promise<T> {
     const send = async (): Promise<Response> => {
-      const token = await this.authFileMaker(dbName);
+      const token = await this.authFileMaker(dbName, use);
       return this.fetchWithTimeout(this.databaseUrl(dbName, path), {
         ...init,
         headers: { ...init.headers, Authorization: `Bearer ${token}` },
@@ -182,7 +200,7 @@ export class FileMakerService {
     try {
       response = await send();
       if (response.status === 401) {
-        this.tokens.delete(dbName);
+        this.tokens.delete(this.sessionKey(dbName, use));
         response = await send();
       }
     } catch (error) {
@@ -271,6 +289,7 @@ export class FileMakerService {
    * @param query Un array de objetos que representan los criterios de búsqueda. Cada objeto debe tener la estructura { fieldName: value }.
    * @param offset El número de registro desde el cual comenzar a devolver resultados (paginación). Por defecto es 1.
    * @param limit El número máximo de registros a devolver. Por defecto es 50.
+   * @param use La sesión de FileMaker; una búsqueda pesada debe usar 'reportes'.
    * @returns Promise<FindRecordsResult> El resultado de la búsqueda; vacío si ningún registro coincide.
    */
   async findRecords(
@@ -279,6 +298,7 @@ export class FileMakerService {
     query: FileMakerCondition[],
     offset: number = 1,
     limit: number = 50,
+    use: FmSessionUse = 'erp',
   ): Promise<FindRecordsResult> {
     const result = await this.request<FindRecordsResult>(
       dbName,
@@ -289,6 +309,7 @@ export class FileMakerService {
         body: JSON.stringify({ query, offset, limit }),
       },
       this.emptyFindResult(dbName, layout),
+      use,
     );
     this.logger.log(
       `Búsqueda realizada en la base de datos ${dbName} con layout ${layout}. Registros: ${result?.response?.data?.length ?? 0}`,

@@ -9,6 +9,7 @@ describe('FileMakerService', () => {
   const mockConfig = { get: jest.fn() } as unknown as ConfigService;
   const mockLogger = {
     log: jest.fn(),
+    debug: jest.fn(),
     error: jest.fn(),
     warn: jest.fn(),
   } as unknown as LoggerService;
@@ -242,6 +243,79 @@ describe('FileMakerService', () => {
     expect(findUrl).toBe(
       'https://fm.example.com/fmi/data/vLatest/databases/..%2Fotra%2Fdb/layouts/layout/_find',
     );
+  });
+
+  describe('sessions by use', () => {
+    const tokenResponse = (token: string) => ({
+      ok: true,
+      json: () => ({ response: { token } }),
+    });
+    const findResponse = {
+      ok: true,
+      status: 200,
+      json: () => ({ response: { data: [] } }),
+    };
+    const isLogin = (url: string) => url.endsWith('/sessions');
+    const bearerTokens = (fetchMock: jest.Mock) =>
+      (fetchMock.mock.calls as [string, RequestInit][])
+        .filter(([url]) => !isLogin(url))
+        .map(
+          ([, init]) => (init.headers as Record<string, string>).Authorization,
+        );
+
+    it('opens one session per use for the same tenant', async () => {
+      const fetchMock = jest
+        .fn()
+        .mockResolvedValueOnce(tokenResponse('tErp'))
+        .mockResolvedValueOnce(findResponse)
+        .mockResolvedValueOnce(tokenResponse('tRep'))
+        .mockResolvedValueOnce(findResponse);
+      global.fetch = fetchMock;
+
+      await service.findRecords('dbS', 'l', [{ f: 'v' }]);
+      await service.findRecords('dbS', 'l', [{ f: 'v' }], 1, 10, 'reportes');
+
+      expect(bearerTokens(fetchMock)).toEqual(['Bearer tErp', 'Bearer tRep']);
+    });
+
+    it('a 401 on the reports session keeps the erp token', async () => {
+      const fetchMock = jest
+        .fn()
+        .mockResolvedValueOnce(tokenResponse('tErp'))
+        .mockResolvedValueOnce(findResponse)
+        .mockResolvedValueOnce(tokenResponse('tRep1'))
+        .mockResolvedValueOnce({ ok: false, status: 401, json: () => ({}) })
+        .mockResolvedValueOnce(tokenResponse('tRep2'))
+        .mockResolvedValueOnce(findResponse)
+        .mockResolvedValueOnce(findResponse);
+      global.fetch = fetchMock;
+
+      await service.findRecords('dbT', 'l', [{ f: 'v' }]);
+      await service.findRecords('dbT', 'l', [{ f: 'v' }], 1, 10, 'reportes');
+      await service.findRecords('dbT', 'l', [{ f: 'v' }]);
+
+      expect(bearerTokens(fetchMock)).toEqual([
+        'Bearer tErp',
+        'Bearer tRep1',
+        'Bearer tRep2',
+        'Bearer tErp',
+      ]);
+    });
+
+    it('concurrent calls of the same use share one login', async () => {
+      const fetchMock = jest.fn((url: string) =>
+        Promise.resolve(isLogin(url) ? tokenResponse('tOne') : findResponse),
+      );
+      global.fetch = fetchMock as unknown as typeof fetch;
+
+      await Promise.all([
+        service.findRecords('dbU', 'l', [{ f: 'v' }], 1, 10, 'reportes'),
+        service.findRecords('dbU', 'l', [{ f: 'w' }], 1, 10, 'reportes'),
+      ]);
+
+      const logins = fetchMock.mock.calls.filter(([url]) => isLogin(url));
+      expect(logins).toHaveLength(1);
+    });
   });
 
   it('getRecord should authenticate and return the record data', async () => {
