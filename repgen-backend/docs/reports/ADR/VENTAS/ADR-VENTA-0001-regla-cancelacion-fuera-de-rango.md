@@ -63,5 +63,5 @@ La regla se aplica en el mapper de ventas, dentro de la lógica de cancelaciones
 
 Referencias:
 
-- [sales.mapper.ts](../../../src/reports/infrastructure/sales/sales.mapper.ts)
-- [EXPLICACION_FLUJO_REPORTES.md](../workflow/EXPLICACION_FLUJO_REPORTES.md)
+- [sales.mapper.ts](../../../../src/reports/infrastructure/sales/sales.mapper.ts)
+- [EXPLICACION_FLUJO_REPORTES.md](../../workflow/EXPLICACION_FLUJO_REPORTES.md)

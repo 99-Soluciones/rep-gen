@@ -1,225 +1,106 @@
-# Módulo: Configuraciones de Columnas Guardadas (DOC-8.1)
+# Vistas guardadas (configuraciones de columnas)
 
-Guía completa del módulo que permite a cada usuario **guardar, aplicar y gestionar configuraciones de columnas** (visibilidad, orden, ancho, sort) por reporte. Cubre frontend (React + AG Grid), backend (NestJS) y persistencia (FileMaker).
+Cada usuario puede guardar varias **vistas** por reporte y marcar una como
+predeterminada, que se aplica sola al abrir la pantalla. Cubre frontend,
+backend y FileMaker.
 
----
+## Qué guarda una vista
 
-## 1. Objetivo
+| Parte | Contenido |
+|---|---|
+| Columnas | `api.getColumnState()`: visibilidad, orden, ancho, orden de filas, fijadas |
+| Filtros | `api.getFilterModel()`; `null` si no hay |
+| Periodo | `mes_actual`, `mes_anterior` o `anio_en_curso`; `null` si la vista no toca las fechas. Es relativo: se resuelve a fechas al abrir la vista. |
 
-Cada usuario puede tener varias "vistas" de columnas por reporte y marcar una como **predeterminada**, que se auto-aplica al abrir la pantalla. La gestión vive en la **barra de herramientas** del reporte (no dentro del modal de columnas).
+El contrato es `ReportConfigResponse` en `packages/shared-types/index.d.ts`.
 
-- **Multi-tenant:** cada tenant es una base de datos FileMaker distinta; el aislamiento es automático (el `tenant` viaja en el JWT).
-- **Por usuario:** las configs se filtran por `userId` (también del JWT) + `reportId`.
+- **Por tenant:** cada tenant es una base FileMaker distinta; el tenant sale
+  del JWT.
+- **Por usuario y reporte:** se filtran por `userId` (del JWT) y `reportId`.
+  Los `reportId` actuales son `bancos`, `ventas_facturas`, `ventas_conceptos`
+  y `cuentas_por_cobrar`. Quedan guardados en FileMaker: no se renombran.
 
----
+## FileMaker: layout `api_configReporte`
 
-## 2. Arquitectura general
-
-```mermaid
-flowchart TB
-  subgraph FE["Frontend (React)"]
-    REP["ReporteBancos / ReporteVentas"]
-    HOOK["useReportConfigs (hook)"]
-    FIL["Filtros (barra)"]
-    CFG["ConfiguracionesColumnas"]
-    MODAL["ModalColumnas (solo mostrar/ocultar)"]
-    APISVC["report-configs.api.ts"]
-    GRID["AG Grid API"]
-  end
-  subgraph BE["Backend (NestJS)"]
-    CTRL["ReportConfigsController"]
-    UC["Use Cases (get/create/update/delete)"]
-    FMS["FileMakerService"]
-  end
-  FM[("FileMaker\nlayout api_configReporte")]
-
-  REP --> HOOK
-  HOOK --> APISVC
-  REP --> FIL
-  FIL --> CFG
-  FIL --> MODAL
-  CFG --> APISVC
-  CFG --> GRID
-  APISVC -->|HTTP + JWT| CTRL
-  CTRL --> UC
-  UC --> FMS
-  FMS -->|Data API| FM
-```
-
----
-
-## 3. Estructura de archivos
-
-### Frontend
-```
-src/features/reports/shared/
-├── AccionesTabla.tsx                  # Thread de props reportId/configs/onConfigsChange
-├── ConfiguracionesColumnas/
-│   ├── ConfiguracionesColumnas.tsx    # ★ Selector + menú ⋮ + popover "Guardar como..."
-│   ├── MenuAccionesConfig.tsx, PopoverGuardarConfig.tsx, ConfiguracionesColumnas.reducer.ts
-├── ModalColumnas.tsx                  # Solo mostrar/ocultar columnas
-├── api/
-│   └── report-configs.api.ts          # fetch/create/update/delete (apiFetch, cookie httpOnly)
-├── useReportConfigs.ts                # { configs, defaultConfig, refresh, cargando }
-└── useReporteGrid.ts                  # Aplica la vista predeterminada una vez por reporte
-```
-
-### Backend
-```
-src/
-├── filemaker/
-│   ├── filemaker.service.ts           # findRecords, getRecord, createRecord, editRecord, deleteRecord
-│   └── ifilemaker.ts                  # Tipos de respuesta FM
-└── report-configs/
-    ├── presentation/
-    │   ├── report-configs.controller.ts   # GET / POST / PATCH / DELETE
-    │   └── dto/                            # Create/Update DTOs (class-validator)
-    ├── application/
-    │   ├── get-report-configs.use-case.ts
-    │   ├── create-report-config.use-case.ts
-    │   ├── update-report-config.use-case.ts
-    │   └── delete-report-config.use-case.ts
-    ├── domain/report-config.types.ts       # ReportConfigRecord, ColumnStateEntry
-    ├── infrastructure/
-    │   ├── report-config-field-map.ts      # nombre dominio → campo FM + REPORT_CONFIG_LAYOUT
-    │   └── report-config.mapper.ts          # RawRecord FM → ReportConfigRecord
-    └── report-configs.module.ts
-```
-
----
-
-## 4. Modelo de datos
-
-### FileMaker — layout `api_configReporte`
 | Campo FM | Dominio | Notas |
 |---|---|---|
-| `_id_configRec` | `id` | Serial propio (PK lógica) |
-| `_idu_userRec` | `userId` | Dueño de la config |
-| `configReporte_idReporte` | `reportId` | `bancos`, `ventas_facturas`, `ventas_conceptos` |
-| `configReporte_nombre` | `name` | Nombre visible |
-| `configReporte_columnsJSON` | `columnState` | JSON de `api.getColumnState()` |
+| `_id_configRec` | `id` | Serial propio |
+| `_idu_userRec` | `userId` | Dueño de la vista |
+| `configReporte_idReporte` | `reportId` | |
+| `configReporte_nombre` | `name` | Máximo 60 caracteres |
+| `configReporte_columnsJSON` | columnas, filtros y periodo | Texto JSON (ver abajo) |
 | `configReporte_esDefault` | `isDefault` | 0 / 1 |
 | `configReporte_fechaCreacion` / `_fechaModificacion` | `createdAt` / `updatedAt` | Auto-enter en FM |
 
-### Tipo serializado (`ColumnStateEntry`)
-```ts
-{ colId, hide?, width?, sort?, sortIndex?, pinned?, aggFunc? }
-```
-Es la salida nativa de `api.getColumnState()` — captura visibilidad, ancho, orden y sort en un solo objeto.
+Columnas, filtros y periodo viven en el mismo campo de texto, como
+`{ v: 2, columns, filters, periodo }`. Las vistas antiguas guardaban solo el
+arreglo de columnas y se siguen leyendo (`report-config.mapper.ts`). Los
+filtros tienen un tope de 16 KB.
 
----
+**La función se activa sola por tenant:** `GET /tenant/features` responde
+`{ reportConfigs: true }` si el layout `api_configReporte` existe en esa base
+(caché de 10 minutos). El frontend lo consulta una vez por sesión
+(`useTenantFeatures`) y, si es `false`, no muestra el selector de vistas.
 
-## 5. Flujos clave
+## Endpoints (`/api/v1/report-configs`)
 
-### 5.1 Cargar la página → auto-aplicar la predeterminada
+| Método | Ruta | Notas |
+|---|---|---|
+| GET | `/report-configs?reportId=` | Vistas del usuario para ese reporte |
+| POST | `/report-configs` | Crea |
+| PATCH | `/report-configs/:id` | Renombra, actualiza contenido o predetermina |
+| DELETE | `/report-configs/:id` | Elimina |
 
-```mermaid
-sequenceDiagram
-  participant U as Usuario
-  participant R as ReporteBancos
-  participant H as useReportConfigs
-  participant API as report-configs.api
-  participant BE as Backend
-  participant G as AG Grid
+Reglas que aplica el backend (FileMaker no tiene restricciones declarativas):
 
-  U->>R: Abre /bancos
-  R->>H: useReportConfigs("bancos")
-  H->>API: fetchReportConfigs("bancos")
-  API->>BE: GET /report-configs?reportId=bancos
-  BE-->>API: [configs...]
-  API-->>H: configs
-  R->>G: onGridReady → guarda gridReadyRef
-  Note over R: useEffect espera a que existan<br/>gridReadyRef + defaultConfig (resuelve race condition)
-  R->>G: applyColumnState(default, applyOrder: true)
-  G-->>U: Grid con la vista predeterminada
-```
+- **Dueño:** modificar o eliminar una vista ajena responde 403.
+- **Una sola predeterminada** por usuario y reporte: al marcar una, se
+  desmarca la anterior.
+- **Nombre único** por usuario y reporte, sin distinguir mayúsculas ni
+  espacios de más: repetirlo responde 409. La comprobación es consulta y
+  después escritura, sin bloqueo; un campo único en FileMaker lo cerraría.
+- **Crear devuelve el registro completo:** FileMaker responde un `recordId`
+  interno distinto del serial `_id_configRec`, así que el use case lo vuelve a
+  leer con `getRecord(recordId)`.
 
-**Punto clave (race condition):** el grid puede montar antes o después de que llegue la respuesta del API. `ReporteBancos`/`ReporteVentas` usan dos refs (`gridReadyRef` + `defaultAppliedRef`) y un `useEffect` que aplica el default **solo cuando ambos están listos**, una sola vez.
+## Código
 
-### 5.2 Guardar una configuración nueva
+### Backend (`repgen-backend/src/report-configs/`)
 
-```mermaid
-sequenceDiagram
-  participant U as Usuario
-  participant C as ConfiguracionesColumnas
-  participant G as AG Grid
-  participant API as report-configs.api
-  participant CT as Controller
-  participant UC as CreateUseCase
-  participant FM as FileMakerService
+| Archivo | Rol |
+|---|---|
+| `presentation/report-configs.controller.ts` y `dto/` | Endpoints y validación |
+| `application/*.use-case.ts` | Obtener, crear, actualizar, eliminar |
+| `application/nombre-vista.ts` | Regla de nombre único |
+| `infrastructure/report-config-field-map.ts` | Campos de FileMaker y nombre del layout |
+| `infrastructure/report-config.mapper.ts` | Registro FM ↔ vista; lee los dos formatos del JSON |
 
-  U->>C: "Guardar como..." → nombre → Guardar
-  C->>G: getColumnState()
-  C->>API: createReportConfig(reportId, nombre, state, false)
-  API->>CT: POST /report-configs (JWT)
-  CT->>UC: execute(tenant, userId, ...)
-  UC->>FM: createRecord(...)  → recordId interno
-  UC->>FM: getRecord(recordId) → registro completo
-  UC-->>API: config creada
-  C->>C: onConfigsChange() (refresh) + toast.success
-```
+### Frontend (`repgen-frontend/src/features/reports/shared/`)
 
-**Punto clave (recordId vs serial):** FileMaker devuelve un `recordId` interno al crear, distinto del campo serial `_id_configRec`. El use case recupera el registro recién creado con `getRecord(recordId)` — **no** con un `findRecords` por el serial.
+| Archivo | Rol |
+|---|---|
+| `api/report-configs.api.ts` | Llamadas HTTP |
+| `useReportConfigs.ts` | Carga las vistas de un reporte |
+| `useReporteGrid.ts` | Aplica la predeterminada una vez por reporte y lleva la cuenta de si hay cambios sin guardar |
+| `ConfiguracionesColumnas/vista.ts` | Capturar y aplicar una vista, periodos, comparación "sin cambios", reglas del nombre |
+| `ConfiguracionesColumnas/ConfiguracionesColumnas.tsx` | Selector, menú de acciones y "Guardar como…" |
+| `AccionesTabla.tsx` | Monta el botón Columnas y, si el tenant tiene la función, el selector de vistas |
+| `ModalColumnas.tsx` | Solo mostrar y ocultar columnas |
 
-### 5.3 Aplicar una configuración (selector)
+Cada página de reporte pasa su `reportId` a `useReporteGrid` y a la barra
+(`toolbarReporte` o `AccionesTabla`).
 
-```mermaid
-sequenceDiagram
-  participant U as Usuario
-  participant C as ConfiguracionesColumnas
-  participant G as AG Grid
-  U->>C: Selecciona config en el dropdown
-  C->>G: applyColumnState(state, applyOrder: true)
-  C->>C: setColumnasVisibles(api.getColumns())
-  G-->>U: Grid actualizado al instante
-```
+## Comportamiento que no es obvio
 
-**Punto clave (`applyOrder: true`):** restaura también el **orden** de columnas, no solo la visibilidad. El footer "Guardar" del modal usa `applyOrder: false` porque ahí solo se togglea visibilidad.
-
-### 5.4 Actualizar / Predeterminar / Eliminar (menú ⋮)
-
-```mermaid
-flowchart LR
-  A["⋮ sobre la config activa"] --> B["Actualizar<br/>updateReportConfig(id, {name, columnState})"]
-  A --> C["Predeterminar<br/>updateReportConfig(id, {isDefault:true})"]
-  A --> D["Eliminar (confirmación)<br/>deleteReportConfig(id)"]
-  B --> E["onConfigsChange + toast"]
-  C --> E
-  D --> E
-```
-
-**Punto clave (unicidad del default):** al setear `isDefault: true`, el use case primero busca y desmarca cualquier default previo del mismo usuario+reporte (FileMaker no tiene constraints declarativos). Mismo patrón en create y update.
-
-**Punto clave (ownership):** update y delete verifican que `record.userId === userId` del JWT; si no, lanzan `ForbiddenException`.
-
----
-
-## 6. Endpoints
-
-| Método | Ruta | Use case | Notas |
-|---|---|---|---|
-| GET | `/report-configs?reportId=` | Get | Lista del usuario actual + reporte |
-| POST | `/report-configs` | Create | Crea (y limpia default si `isDefault`) |
-| PATCH | `/report-configs/:id` | Update | Renombra / actualiza estado / predetermina |
-| DELETE | `/report-configs/:id` | Delete | Verifica ownership |
-
-Todos protegidos por el `JwtAuthGuard` global → `req.tenant` (dbName) y `req.id` (userId).
-
----
-
-## 7. Orden sugerido para leer el código
-
-1. **Tipos y modelo:** `report-config.types.ts` + `report-config-field-map.ts` (qué se guarda).
-2. **Backend de afuera hacia adentro:** `report-configs.controller.ts` → un use case (`create`) → `filemaker.service.ts` (`createRecord`/`getRecord`).
-3. **Frontend de datos:** `report-configs.api.ts` → `useReportConfigs.ts`.
-4. **Frontend de UI:** `ConfiguracionesColumnas.tsx` (toda la interacción) y cómo `AccionesTabla.tsx` lo monta.
-5. **Auto-aplicar default:** el `useEffect` con `gridReadyRef`/`defaultAppliedRef` en `ReporteBancos.tsx`.
-
----
-
-## 8. Notas / decisiones de diseño
-
-- **Estado del grid como fuente de verdad:** al vivir en la barra (fuera del modal) no hay "borrador"; se serializa directamente con `api.getColumnState()`.
-- **Inicialización del selector sin `useEffect`:** el selector arranca en la config default mediante *ajuste de estado durante el render* (el lint `react-hooks/set-state-in-effect` prohíbe `setState` en efectos).
-- **Cierre de popovers:** overlay invisible `fixed inset-0` ; no hay librería de popovers.
-- **Feedback:** `react-hot-toast` (el `<Toaster>` ya está montado en `Layout.tsx`).
+- **Aplicar la predeterminada:** el grid puede estar listo antes o después de
+  que llegue la lista de vistas. `useReporteGrid` espera a tener las dos cosas
+  y la aplica una sola vez por reporte.
+- **"Sin cambios" se compara grid contra grid.** Tras abrir o guardar una
+  vista se toma una foto del estado del grid; AG Grid normaliza el JSON
+  guardado, así que comparar contra él daría falsos cambios.
+- **Salir con cambios sin guardar:** cambiar de reporte o cerrar sesión con
+  una vista modificada pregunta antes (`shared/utils/salidaProtegida.ts` y
+  `GuardiaSalida` en `app/router.tsx`). Las dos pestañas de Ventas cuentan
+  como el mismo reporte.
+- **Un reporte a fecha de corte** (Cuentas por cobrar) toma el último día del
+  periodo de la vista como corte.

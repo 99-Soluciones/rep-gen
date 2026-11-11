@@ -27,6 +27,14 @@ Resumen del flujo:
 5. El mapper transforma esos registros en el formato del reporte.
 6. La API responde `{ data }` con todos los registros limpios del rango.
 
+Este es el flujo de un reporte **por rango con un solo layout** (Bancos, Ventas,
+Ventas por concepto). Un reporte **a fecha de corte o con varios layouts**
+(Cuentas por cobrar) no usa `BaseReportService`: su use case recibe `fechaCorte`,
+consulta cada layout con `findAllRecords`, limpia con `cleanOrThrow` y cachea con
+`fetchCached` (los tres en `src/reports/application/shared/`), y responde
+`{ fechaCorte, data }`. Cuál aplica y cómo se construye cada uno está en la
+[guía para agregar un reporte](../../../../docs/guides/COMO-AGREGAR-REPORTE.md).
+
 ## 2) Contratos De Datos
 
 Los dos tipos base que debes tener en mente son:
@@ -48,9 +56,9 @@ Rango inclusivo que llega en el body (`SearchReportDto`).
 
 El servicio base centraliza la parte repetida entre reportes:
 
-- construye la cache key (incluye tenant y usuario, porque los permisos son por usuario);
+- construye la cache key (incluye tenant y usuario, porque los permisos son por usuario); la caché dura 60 s y `refresh: true` en el body la salta ("Actualizar datos");
 - arma la consulta para FileMaker: una condición por cada permiso × cada campo de fecha;
-- pide los datos a `FileMakerService`;
+- pide los datos a `FileMakerService` por la sesión `reportes` (separada de las llamadas cortas);
 - llama al mapper específico del reporte (si un registro no cumple el esquema, responde 500);
 - devuelve una respuesta `{ data }`.
 
@@ -117,8 +125,11 @@ Si existe portal de devolución:
 
 Si la fecha de la devolución cae dentro del rango consultado y la factura original queda fuera, se conserva solo el registro de devolución para no sumar la venta original en ese periodo.
 
-## 6) Donde Mirar El Codigo (Ventas)
+## 6) Donde Mirar El Codigo
 
-- Contratos base: [src/reports/domain/reports.types.ts](../../../src/reports/domain/reports.types.ts)
+- Contratos base: [packages/shared-types/index.d.ts](../../../../packages/shared-types/index.d.ts)
 - Servicio común: [src/reports/application/shared/base-report.service.ts](../../../src/reports/application/shared/base-report.service.ts)
+- Consulta y limpieza compartidas: [src/reports/application/shared/report-query.ts](../../../src/reports/application/shared/report-query.ts)
 - Mapeo de ventas: [src/reports/infrastructure/sales/sales.mapper.ts](../../../src/reports/infrastructure/sales/sales.mapper.ts)
+- Reporte a fecha de corte: [src/reports/application/receivables/get-receivables-report.use-case.ts](../../../src/reports/application/receivables/get-receivables-report.use-case.ts)
+- Reglas de negocio decididas: [ADRs de Ventas](../ADR/VENTAS/ADR-INDEX.md) y las [fichas](../fichas/)

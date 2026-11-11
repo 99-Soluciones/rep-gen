@@ -1,4 +1,4 @@
-# ADR-0002: Regla para devoluciones cuando la factura original queda fuera del rango
+# ADR-Ventas-0002: Regla para devoluciones cuando la factura original queda fuera del rango
 
 ## Estado
 
@@ -20,14 +20,18 @@ Si en ese escenario se devolviera también la factura original, el reporte sumar
 
 Cuando existe una devolución y su fecha cae dentro del rango consultado:
 
-- si la factura original también cae dentro del rango, se devuelve solo el registro original;
+- si la factura original también cae dentro del rango, se devuelven el registro original y el registro de devolución;
 - si la factura original queda fuera del rango, se devuelve solo el registro de devolución.
+
+Si la devolución existe pero su fecha queda fuera del rango, se devuelve solo el registro original (y nada si la factura tampoco está en el rango).
+
+Una factura cancelada dentro del rango sigue la regla de cancelaciones (ADR-VENTA-0001) y no genera registro de devolución.
 
 El registro de devolución se construye como una copia del registro limpio y se ajusta así:
 
 - `facturaEstatus = 'Devolución'`
 - `facturaUsoCfdi = '04 - Devolución de mercancía'`
-- `facturaMetodoPago = 'PUE - Pago en parcialidades o diferido'`
+- `facturaMetodoPago = 'PUE'` (toda nota de crédito se emite en PUE; mismo valor que traen las facturas, para que el filtro muestre un solo "PUE")
 - importes en negativo
 - `facturaSaldoActual = 0`
 - `facturaTasaPagada = 0`
@@ -65,5 +69,5 @@ La regla se aplica en el mapper de ventas, dentro de la lógica de devoluciones.
 
 Referencias:
 
-- [sales.mapper.ts](../../../src/reports/infrastructure/sales/sales.mapper.ts)
-- [EXPLICACION_FLUJO_REPORTES.md](../workflow/EXPLICACION_FLUJO_REPORTES.md)
+- [sales.mapper.ts](../../../../src/reports/infrastructure/sales/sales.mapper.ts)
+- [EXPLICACION_FLUJO_REPORTES.md](../../workflow/EXPLICACION_FLUJO_REPORTES.md)

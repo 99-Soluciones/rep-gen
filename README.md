@@ -6,11 +6,11 @@ Generador de reportes multi-tenant sobre FileMaker Data API. Monorepo pnpm con b
 
 ```text
 RepGen/
-├── repgen-backend/          API NestJS 11 (auth JWT, reportes, FileMaker Data API)
+├── repgen-backend/          API NestJS 12 (auth JWT, reportes, FileMaker Data API)
 ├── repgen-frontend/         React 19 + Vite + Vitest + AG Grid + Tailwind
 ├── packages/
 │   └── shared-types/        Contratos de API compartidos (solo tipos .d.ts)
-├── docs/                    Documentación transversal (Jira, arquitectura, deploy)
+├── docs/                    Documentación transversal (guías, arquitectura, deploy)
 └── .github/workflows/       CI por app + deploys (pendientes de reconexión)
 ```
 
@@ -25,7 +25,7 @@ RepGen/
 pnpm install
 ```
 
-Variables de entorno: cada app lee su `.env` local (no versionado). Copia el preset que corresponda desde `repgen-backend/env-presets/` y `repgen-frontend/env-presets/` a `.env` en cada carpeta.
+Variables de entorno: cada app lee su `.env` local (no versionado). En el backend, copia `repgen-backend/.env.example` a `.env` y complétalo. En el frontend, crea `repgen-frontend/.env` con `VITE_API_URL` y `DEV_API_PROXY_TARGET`.
 
 ```bash
 # Backend en http://localhost:3000 (requiere .env con credenciales FileMaker)

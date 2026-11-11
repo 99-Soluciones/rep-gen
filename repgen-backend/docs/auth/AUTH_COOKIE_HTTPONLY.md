@@ -1,73 +1,88 @@
-# JWT en cookie httpOnly (DOC-9.1-BE)
+# Autenticación: sesión con JWT en cookie httpOnly
 
-Documentación técnica del lado backend de la migración del JWT desde el cuerpo de la respuesta (leído y guardado en `localStorage` por el frontend) hacia una cookie `httpOnly`. Visión completa (frontend + backend + deploy) en `repgen-frontend/docs/AUTENTICACION_COOKIE_HTTPONLY.md`.
+Cómo entra un usuario a RepGen y cómo se mantiene su sesión. Cubre backend y
+frontend.
 
----
+## Flujo
 
-## 1. Motivo
+```mermaid
+sequenceDiagram
+    participant FM as FileMaker
+    participant B as Navegador
+    participant P as Proxy mismo origen (Vercel / Vite)
+    participant API as repgen-backend
 
-Un JWT accesible desde JavaScript (`localStorage`, o expuesto en el body de la respuesta para que el frontend lo guarde donde quiera) puede ser robado por cualquier script inyectado vía XSS. Poner el token en una cookie `httpOnly` elimina esa vía: el navegador la manda automáticamente en cada request, pero ningún script del lado cliente puede leerla ni modificarla.
-
-## 2. Cambios en este módulo
-
-| Archivo | Cambio |
-| --- | --- |
-| `package.json` | Nueva dependencia `cookie-parser` (+ `@types/cookie-parser`) |
-| `src/main.ts` | `app.use(cookieParser())` |
-| `src/auth/auth.constants.ts` | **Nuevo.** `JWT_COOKIE_NAME = 'jwt_reportes'`, constante compartida entre el controller y el guard |
-| `src/auth/auth.controller.ts` | `login-token` ahora setea la cookie (`setAuthCookie`) en vez de devolver `accessToken` en el body. Nuevos endpoints `GET /auth/me` y `POST /auth/logout` |
-| `src/auth/guards/jwt.auth.guard.ts` | `extractTokenFromHeader` ahora lee primero `request.cookies[JWT_COOKIE_NAME]`; si no está, cae al header `Authorization: Bearer <token>` (compatibilidad) |
-
-`auth.service.ts` **no cambió** — `validateTokenFileMaker` sigue devolviendo `{ accessToken, user }` exactamente igual; el controller es el único que decide qué hacer con el `accessToken` (antes: devolverlo en el body; ahora: ponerlo en una cookie).
-
-## 3. Atributos de la cookie
-
-```ts
-response.cookie(JWT_COOKIE_NAME, accessToken, {
-  httpOnly: true,
-  secure: NODE_ENV === 'production',
-  sameSite: 'lax',
-  maxAge: JWT_EXPIRES_IN * 1000, // mismo valor que ya se usaba para firmar el JWT
-  path: '/',
-});
+    FM->>B: Abre la app con ?token=...&tenant=...
+    B->>P: POST /api/v1/auth/login-token
+    P->>API: (reenviado)
+    API->>API: Valida el token de un solo uso contra FileMaker y firma el JWT
+    API-->>B: Set-Cookie jwt_reportes (httpOnly, SameSite=Lax) + { user }
+    B->>P: Cualquier llamada posterior (el navegador envía la cookie)
+    P->>API: (reenviado con la cookie)
 ```
 
-- **`sameSite: 'lax'`** (no `'none'`) porque el frontend nunca le habla a este backend cross-origin directamente — siempre pasa por un proxy same-origin (rewrite de Vercel en producción, proxy de Vite en desarrollo). Ver el doc del frontend para el detalle de por qué esto importa (Safari/ITP bloquea cookies cross-site de forma intermitente).
-- **`secure`** solo en producción porque en desarrollo el proxy de Vite sirve todo por HTTP.
-- **CORS no cambió** — `main.ts` ya tenía `credentials: true` con un origin específico (no wildcard), que es requisito para que cualquier cookie cross-context funcione. No fue necesario tocarlo.
+1. FileMaker abre la app con un token de un solo uso y el tenant (nombre de la
+   base) en la URL.
+2. `POST /auth/login-token` lo valida contra FileMaker, firma un JWT con
+   `id`, `user`, `role` y `tenant`, y lo deja en la cookie `jwt_reportes`. El
+   cuerpo solo devuelve `user` (no sensible).
+3. En cada petición, `JwtAuthGuard` (global) verifica firma y expiración y
+   pone `req.id`, `req.user`, `req.role` y `req.tenant`. El tenant y el
+   usuario **siempre** salen de ahí, nunca del cuerpo ni de la query.
 
-## 4. Endpoints nuevos
+El JWT es stateless: FileMaker solo se consulta al canjear el token.
 
-### `GET /auth/me`
+## Por qué cookie y por qué proxy
 
-No lee nada del `request` — si la cookie falta o el JWT expiró, el `JwtAuthGuard` global ya devuelve `401` antes de que el handler se ejecute (esta ruta no lleva `@Public()`). Si llega a ejecutarse, la sesión es válida:
+- **Cookie httpOnly:** JavaScript no puede leerla, así que un XSS no puede
+  robar el token.
+- **Proxy del mismo origen:** frontend (Vercel) y backend (DigitalOcean) están
+  en dominios distintos. Una cookie entre sitios necesitaría
+  `SameSite=None`, que Safari y varios modos de privacidad bloquean. El
+  navegador siempre habla con su propio origen (`/api/...`) y quien reenvía es
+  el rewrite de `repgen-frontend/vercel.json` en producción o el proxy de
+  `repgen-frontend/vite.config.ts` en desarrollo (`DEV_API_PROXY_TARGET`, por
+  defecto `http://localhost:3000`). Por eso `VITE_API_URL` es la ruta relativa
+  `/api/v1`.
 
-```ts
-@Get('me')
-me(): { ok: true } {
-  return { ok: true };
-}
-```
+## Cookie
 
-Lo usa el frontend para decidir si puede "retomar sesión" al recargar la página sin un token fresco de FileMaker — antes se respondía esa pregunta leyendo `localStorage`, algo que ya no es posible con una cookie httpOnly.
+| Atributo | Valor |
+|---|---|
+| Nombre | `jwt_reportes` (`src/auth/auth.constants.ts`) |
+| `httpOnly` | `true` |
+| `secure` | solo con `NODE_ENV=production` (en desarrollo el proxy sirve por HTTP) |
+| `sameSite` | `lax` |
+| `maxAge` | `JWT_EXPIRES_IN` segundos (por defecto 3600), el mismo valor con que se firma el JWT |
+| `path` | `/` |
 
-### `POST /auth/logout`
+## Endpoints (`src/auth/auth.controller.ts`)
 
-Marcado `@Public()` a propósito — debe poder llamarse aunque la cookie ya haya expirado o no exista. Solo limpia la cookie:
+| Método | Ruta | Público | Qué hace |
+|---|---|---|---|
+| POST | `/auth/login-token` | sí | Canjea `{ token, tenant }` por la cookie. Límite: 5 por minuto. |
+| GET | `/auth/me` | no | `{ ok: true }` si la cookie sigue vigente; si no, el guard responde 401. |
+| POST | `/auth/logout` | sí | Borra la cookie. Público para poder llamarse con la sesión ya expirada. |
 
-```ts
-@Post('logout')
-@Public()
-logout(@Res({ passthrough: true }) response: Response) {
-  response.clearCookie(JWT_COOKIE_NAME, { path: '/' });
-  return { message: 'Sesión cerrada' };
-}
-```
+El guard lee primero la cookie y, si no está, acepta `Authorization: Bearer
+<jwt>`. Ese respaldo sirve para `curl` y scripts.
 
-## 5. Sin cambios en persistencia
+## Frontend
 
-El JWT sigue siendo completamente stateless. FileMaker solo se consulta una vez, dentro de `validateTokenFileMaker`, para validar el token de un solo uso (`api_auth`) y borrarlo. Verificar el JWT en requests posteriores (`JwtAuthGuard`) es pura verificación de firma + expiración vía `jwtService.verifyAsync` — no hay ninguna tabla ni caché de sesiones. Migrar a refresh tokens con revocación (si se decide en el futuro) sí requeriría un almacén de estado — no fue necesario para este cambio.
+| Archivo | Rol |
+|---|---|
+| `src/features/auth/AuthGate.tsx` | Al cargar: si la URL trae `token`, hace login; si no, confirma la sesión con `GET /auth/me`. |
+| `src/features/auth/session.ts` | Guarda en `localStorage["usuario:v1"]` solo `{ name, tenant }`: pista de que puede haber sesión y nombre para el navbar. |
+| `src/shared/api/http.ts` | `apiFetch`: URL base, `credentials: "include"` y errores como `ApiError`. Un 401 emite `EVENTO_SESION_EXPIRADA`. |
+| `src/features/auth/AvisoSesionExpirada.tsx` | Avisa sin recargar: lo que ya está en pantalla se puede seguir filtrando y exportando. |
+| `src/app/layout/Navbar.tsx` | Cerrar sesión llama a `POST /auth/logout` (JavaScript no puede borrar la cookie). |
 
-## 6. Verificación
+## Desarrollo
 
-`pnpm test` (35/35) y `pnpm run build` sin errores. Además, verificación end-to-end real: se levantó el backend en `:3000` junto con el frontend (proxy de Vite hacia este backend) y se probó login → carga de datos autenticados → recarga de sesión vía `/auth/me` → logout vía `/auth/logout` seguido de `/auth/me` devolviendo `401`. Detalle completo en el doc del frontend.
+Con `MASTER_KEY` definida en el `.env` del backend se puede entrar sin
+FileMaker con `?token=<MASTER_KEY>&tenant=<base>`. En producción no funciona.
+
+## Si se quiere una sesión más larga
+
+Hoy la sesión dura lo que el JWT. Extenderla con revocación (refresh tokens)
+requiere persistencia, que este backend no tiene.
