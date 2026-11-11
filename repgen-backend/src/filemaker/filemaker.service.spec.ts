@@ -83,6 +83,29 @@ describe('FileMakerService', () => {
     expect(res.response.data[0].fieldData.sample).toBe('x');
   });
 
+  it('findRecords should send portal limits in the find body', async () => {
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => ({ response: { token: 'tp' } }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => ({ response: { data: [] } }),
+      });
+    global.fetch = fetchMock;
+
+    await service.findRecords('dbP', 'l', [{ f: 'v' }], 1, 10, 'reportes', {
+      PagosVenta: 5000,
+    });
+
+    const body = JSON.parse(
+      (fetchMock.mock.calls as [string, RequestInit][])[1][1].body as string,
+    ) as Record<string, unknown>;
+    expect(body['limit.PagosVenta']).toBe(5000);
+  });
+
   it('findRecords should retry on 401 and succeed after reauth', async () => {
     // sequence: auth1, find->401, auth2, find->ok
     global.fetch = jest

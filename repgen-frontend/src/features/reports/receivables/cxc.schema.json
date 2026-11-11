@@ -1,0 +1,289 @@
+{
+  "columns": {
+    "Fecha Corte": {
+      "field": "fechaCorte",
+      "dataType": "date",
+      "columnClass": "Corte"
+    },
+    "Tipo de Transacción": {
+      "field": "tipoTransaccion",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Corte"
+    },
+    "Cliente ID": {
+      "field": "clienteId",
+      "dataType": "number",
+      "oculta": true,
+      "columnClass": "Cliente"
+    },
+    "Cliente Nombre Comercial": {
+      "field": "cliente",
+      "dataType": "text",
+      "anchoMinimo": 220,
+      "columnClass": "Cliente"
+    },
+    "Cliente Razón Social": {
+      "field": "clienteRazonSocial",
+      "dataType": "text",
+      "columnClass": "Cliente"
+    },
+    "Cliente RFC": {
+      "field": "clienteRfc",
+      "dataType": "text",
+      "columnClass": "Cliente"
+    },
+    "Cliente Clasificación 1": {
+      "field": "clasificacion1",
+      "dataType": "text",
+      "filtro": "lista",
+      "defaultHeader": "Cliente Clasificación 1",
+      "labelSlot": "cliente.clasificacion1",
+      "columnClass": "Cliente"
+    },
+    "Cliente Clasificación 2": {
+      "field": "clasificacion2",
+      "dataType": "text",
+      "filtro": "lista",
+      "defaultHeader": "Cliente Clasificación 2",
+      "labelSlot": "cliente.clasificacion2",
+      "columnClass": "Cliente"
+    },
+    "Cliente Clasificación 3": {
+      "field": "clasificacion3",
+      "dataType": "text",
+      "filtro": "lista",
+      "defaultHeader": "Cliente Clasificación 3",
+      "labelSlot": "cliente.clasificacion3",
+      "columnClass": "Cliente"
+    },
+    "Cliente Clasificación 4": {
+      "field": "clasificacion4",
+      "dataType": "text",
+      "filtro": "lista",
+      "defaultHeader": "Cliente Clasificación 4",
+      "labelSlot": "cliente.clasificacion4",
+      "columnClass": "Cliente"
+    },
+    "Cliente Cuenta Contable": {
+      "field": "clienteCuentaContable",
+      "dataType": "text",
+      "oculta": true,
+      "columnClass": "Cliente"
+    },
+    "Rep Ventas del Cliente": {
+      "field": "clienteRepDeVenta",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Cliente"
+    },
+    "Rep Cobranza del Cliente": {
+      "field": "facturaRepDeCobranza",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Cliente"
+    },
+    "Venta ID": {
+      "field": "ventaId",
+      "dataType": "number",
+      "oculta": true,
+      "columnClass": "Factura"
+    },
+    "Factura Serie y Folio": {
+      "field": "facturaSerieFolio",
+      "dataType": "text",
+      "columnClass": "Factura"
+    },
+    "Factura Gran Total": {
+      "field": "facturaGranTotal",
+      "dataType": "currency",
+      "columnClass": "Factura"
+    },
+    "Factura UUID": {
+      "field": "facturaUuid",
+      "dataType": "text",
+      "oculta": true,
+      "columnClass": "Factura"
+    },
+    "Factura Fecha": {
+      "field": "facturaFecha",
+      "dataType": "date",
+      "columnClass": "Factura"
+    },
+    "Factura Metodo Pago": {
+      "field": "facturaMetodoPago",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Factura"
+    },
+    "Factura Días de Crédito": {
+      "field": "facturaDiasCredito",
+      "dataType": "number",
+      "columnClass": "Factura"
+    },
+    "Factura Fecha de Vencimiento": {
+      "field": "facturaFechaVencimiento",
+      "dataType": "date",
+      "columnClass": "Factura"
+    },
+    "Factura Estatus": {
+      "field": "facturaEstatus",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Factura"
+    },
+    "Factura Días Vencida": {
+      "field": "facturaDiasVencida",
+      "dataType": "number",
+      "columnClass": "Factura",
+      "oculta": true
+    },
+    "Rep Ventas de la Factura": {
+      "field": "facturaRepDeVenta",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Factura"
+    },
+    "Factura Saldo Pendiente": {
+      "field": "facturaSaldoPendiente",
+      "dataType": "currency",
+      "columnClass": "Factura saldo"
+    },
+    "Factura Saldo Vencido": {
+      "field": "facturaSaldoVencido",
+      "dataType": "currency",
+      "columnClass": "Factura saldo"
+    },
+    "Factura Saldo Por Vencer": {
+      "field": "facturaSaldoPorVencer",
+      "dataType": "currency",
+      "columnClass": "Factura saldo"
+    },
+    "No Cobrar Gran Total": {
+      "field": "facturaNoCobrarGranTotal",
+      "dataType": "currency",
+      "columnClass": "Factura no cobrar"
+    },
+    "No Cobrar IVA": {
+      "field": "facturaNoCobrarIva",
+      "dataType": "currency",
+      "columnClass": "Factura no cobrar"
+    },
+    "No Cobrar IEPS": {
+      "field": "facturaNoCobrarIeps",
+      "dataType": "currency",
+      "columnClass": "Factura no cobrar"
+    },
+    "Fecha No Cobrar": {
+      "field": "facturaNoCobrarFecha",
+      "dataType": "date",
+      "columnClass": "Factura no cobrar"
+    },
+    "Banco Folio Transaccion": {
+      "field": "bancoFolioTransaccion",
+      "dataType": "number",
+      "oculta": true,
+      "columnClass": "Banco"
+    },
+    "Banco Nombre": {
+      "field": "bancoNombre",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Banco"
+    },
+    "Banco Cuenta Contable": {
+      "field": "bancoCuentaContable",
+      "dataType": "text",
+      "columnClass": "Banco"
+    },
+    "Banco Fecha": {
+      "field": "bancoFecha",
+      "dataType": "date",
+      "columnClass": "Banco"
+    },
+    "Banco Monto": {
+      "field": "bancoMonto",
+      "dataType": "currency",
+      "columnClass": "Banco"
+    },
+    "Banco Referencia": {
+      "field": "bancoReferencia",
+      "dataType": "text",
+      "anchoMinimo": 240,
+      "columnClass": "Banco"
+    },
+    "Abono Saldo No Aplicado (En Contra)": {
+      "field": "abonoSaldoNoAplicado",
+      "dataType": "currency",
+      "columnClass": "Banco"
+    },
+    "Cargo Saldo No Aplicado (A Favor)": {
+      "field": "cargoSaldoNoAplicado",
+      "dataType": "currency",
+      "columnClass": "Banco"
+    },
+    "Abono Monto Sin Identificar": {
+      "field": "abonoMontoSinIdentificar",
+      "dataType": "currency",
+      "columnClass": "Banco"
+    },
+    "Ingreso ID": {
+      "field": "ingresoId",
+      "dataType": "number",
+      "oculta": true,
+      "columnClass": "Banco"
+    },
+    "Egreso ID": {
+      "field": "egresoId",
+      "dataType": "number",
+      "oculta": true,
+      "columnClass": "Banco"
+    }
+  },
+  "reportTypes": {
+    "default": [
+      "Fecha Corte",
+      "Tipo de Transacción",
+      "Cliente ID",
+      "Cliente Nombre Comercial",
+      "Cliente Razón Social",
+      "Cliente RFC",
+      "Cliente Clasificación 1",
+      "Cliente Clasificación 2",
+      "Cliente Clasificación 3",
+      "Cliente Clasificación 4",
+      "Cliente Cuenta Contable",
+      "Rep Ventas del Cliente",
+      "Rep Cobranza del Cliente",
+      "Venta ID",
+      "Factura Serie y Folio",
+      "Factura Gran Total",
+      "Factura UUID",
+      "Factura Fecha",
+      "Factura Metodo Pago",
+      "Factura Días de Crédito",
+      "Factura Fecha de Vencimiento",
+      "Factura Estatus",
+      "Factura Días Vencida",
+      "Rep Ventas de la Factura",
+      "Factura Saldo Pendiente",
+      "Factura Saldo Vencido",
+      "Factura Saldo Por Vencer",
+      "No Cobrar Gran Total",
+      "No Cobrar IVA",
+      "No Cobrar IEPS",
+      "Fecha No Cobrar",
+      "Banco Folio Transaccion",
+      "Banco Nombre",
+      "Banco Cuenta Contable",
+      "Banco Fecha",
+      "Banco Monto",
+      "Banco Referencia",
+      "Abono Saldo No Aplicado (En Contra)",
+      "Cargo Saldo No Aplicado (A Favor)",
+      "Abono Monto Sin Identificar",
+      "Ingreso ID",
+      "Egreso ID"
+    ]
+  }
+}

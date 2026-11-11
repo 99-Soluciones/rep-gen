@@ -126,6 +126,16 @@ describe('BaseReportService', () => {
     expect(findRecords).toHaveBeenCalledTimes(2);
   });
 
+  it('refresh skips the cache and replaces it', async () => {
+    const { service, findRecords } = makeService();
+
+    await service.fetchReport(OCTOBER, 'db', 1);
+    await service.fetchReport(OCTOBER, 'db', 1, true);
+    await service.fetchReport(OCTOBER, 'db', 1);
+
+    expect(findRecords).toHaveBeenCalledTimes(2);
+  });
+
   it('responds 500 instead of 400 when a FileMaker record does not match the schema', async () => {
     const { service, findRecords } = makeService({
       cleanDataFunction: () => {

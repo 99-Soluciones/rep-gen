@@ -164,3 +164,74 @@ export interface ReportSalesItemRecord extends ReportSalesRecord {
   articuloIVARetenidoMxn?: number;
   articuloISRretenidoMxn?: number;
 }
+
+/** Tipo de renglón de Cuentas por cobrar. */
+export type TipoTransaccionCxC =
+  | 'Factura vencida'
+  | 'Factura por vencer'
+  | 'Factura cerrada: No cobrar'
+  | 'Abono por aplicar'
+  | 'Cargo por aplicar'
+  | 'Abono no identificado';
+
+/**
+ * Fila de Cuentas por cobrar. Todas las filas traen las mismas llaves; un
+ * campo que no aplica al tipo de renglón va en null. Montos en MXN, fechas
+ * YYYY-MM-DD.
+ */
+export interface ReportReceivablesRecord {
+  /** Día de corte (YYYY-MM-DD); el mismo en todas las filas. */
+  fechaCorte: string;
+  tipoTransaccion: TipoTransaccionCxC;
+  clienteId: number | null;
+  cliente: string;
+  clienteRazonSocial: string | null;
+  clienteRfc: string | null;
+  clasificacion1: string | null;
+  clasificacion2: string | null;
+  clasificacion3: string | null;
+  clasificacion4: string | null;
+  clienteCuentaContable: string | null;
+  clienteRepDeVenta: string | null;
+  facturaSerieFolio: string | null;
+  facturaGranTotal: number | null;
+  facturaUuid: string | null;
+  facturaFecha: string | null;
+  facturaMetodoPago: string | null;
+  facturaDiasCredito: number | null;
+  facturaFechaVencimiento: string | null;
+  /** 'No cobrar': al corte ya estaba marcada así; su saldo va en facturaNoCobrarGranTotal. */
+  facturaEstatus: 'Vencida' | 'Por vencer' | 'No cobrar' | null;
+  facturaDiasVencida: number | null;
+  facturaRepDeVenta: string | null;
+  facturaRepDeCobranza: string | null;
+  facturaSaldoPendiente: number | null;
+  facturaSaldoVencido: number | null;
+  facturaSaldoPorVencer: number | null;
+  /** Saldo de una factura "No cobrar" (va aquí y no en pendiente/vencido/por vencer). */
+  facturaNoCobrarGranTotal: number | null;
+  /** IVA / IEPS de una factura "No cobrar" (monto_contraIVA / monto_contraIEPS); si no, 0. */
+  facturaNoCobrarIva: number | null;
+  facturaNoCobrarIeps: number | null;
+  /** Cuándo se marcó "No cobrar" (saldo_fecha_liquidacion_bancoITM_noCobrar); null en las demás. */
+  facturaNoCobrarFecha: string | null;
+  abonoSaldoNoAplicado: number | null;
+  cargoSaldoNoAplicado: number | null;
+  abonoMontoSinIdentificar: number | null;
+  ingresoId: number | null;
+  egresoId: number | null;
+  bancoFolioTransaccion: number | null;
+  bancoNombre: string | null;
+  bancoCuentaContable: string | null;
+  bancoFecha: string | null;
+  bancoMonto: number | null;
+  bancoReferencia: string | null;
+  ventaId: number | null;
+}
+
+/** Respuesta de POST /reports/cuentas-por-cobrar/buscar. */
+export interface ReceivablesResponse {
+  /** Día de corte (YYYY-MM-DD): los saldos son al cierre de ese día. */
+  fechaCorte: string;
+  data: ReportReceivablesRecord[];
+}

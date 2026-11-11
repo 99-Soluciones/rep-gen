@@ -8,6 +8,8 @@ interface SolicitudReporte {
     fechaInicio: string;
     fechaFin: string;
   };
+  /** "Actualizar datos": el backend ignora su caché (60 s) y vuelve a leer FileMaker. */
+  refrescar?: boolean;
 }
 
 /**
@@ -19,12 +21,14 @@ interface SolicitudReporte {
 export const obtenerReporte = async <TReporteData>({
   endpoint,
   rangoFechas,
+  refrescar,
 }: SolicitudReporte): Promise<TReporteData[]> => {
   const cuerpoSolicitud = {
     dateRange: {
       startDate: rangoFechas.fechaInicio,
       endDate: rangoFechas.fechaFin,
     },
+    ...(refrescar && { refresh: true }),
   };
 
   const claveSolicitud = `${endpoint}:${JSON.stringify(cuerpoSolicitud)}`;
@@ -50,4 +54,24 @@ export const obtenerReporte = async <TReporteData>({
   } finally {
     solicitudesPendientes.delete(claveSolicitud);
   }
+};
+
+/**
+ * Reporte a una fecha de corte (Cuentas por cobrar): viaja un solo día y la
+ * respuesta trae el corte con el que se calcularon los saldos.
+ */
+export const obtenerReporteCorte = async <TReporteData>({
+  endpoint,
+  fechaCorte,
+  refrescar,
+}: {
+  endpoint: string;
+  fechaCorte: string;
+  refrescar?: boolean;
+}): Promise<{ fechaCorte: string; data: TReporteData[] }> => {
+  const resultado = await apiFetch<{ fechaCorte: string; data?: TReporteData[] }>(
+    `/reports/${endpoint}`,
+    { method: "POST", body: { fechaCorte, ...(refrescar && { refresh: true }) } },
+  );
+  return { fechaCorte: resultado.fechaCorte, data: resultado.data ?? [] };
 };

@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "fieldData": {
+      "type": "object",
+      "properties": {
+        "venta_|CLIENTE_|_x_clienteID::___id_cliente": {
+          "type": ["number", "string"]
+        },
+        "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": {
+          "type": "string"
+        },
+        "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": {
+          "type": "string"
+        },
+        "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": {
+          "type": "string"
+        },
+        "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": {
+          "type": ["string", "number"]
+        },
+        "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": {
+          "type": "string"
+        },
+        "cfdi_facturaSerieFolio_v0_18_1": {
+          "type": "string"
+        },
+        "cfdi_FacturaFolio": {
+          "type": ["number", "string"]
+        },
+        "monto_GranTotal": {
+          "type": ["number", "string"]
+        },
+        "cfdi_UUID": {
+          "type": "string"
+        },
+        "cfdi_FacturaFechaTimbrar": {
+          "type": "string"
+        },
+        "_idu_cdfi_metoPago": {
+          "type": "string"
+        },
+        "credit_dias": {
+          "type": ["number", "string"]
+        },
+        "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": {
+          "type": "string"
+        },
+        "cfdi_CANCEL_timestamp_v0_23_1r": {
+          "type": "string"
+        },
+        "venta_|USER_|_x_repVent::_idu_user_name": {
+          "type": "string"
+        },
+        "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": {
+          "type": "string"
+        },
+        "__id_venta": {
+          "type": ["number", "string"]
+        },
+        "saldo_Pendiente_GranTotal": {
+          "type": ["number", "string"]
+        },
+        "monto_contraIVA": {
+          "type": ["number", "string"]
+        },
+        "monto_contraIEPS": {
+          "type": ["number", "string"]
+        },
+        "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": {
+          "type": "string"
+        },
+        "saldo.FechaLimitePago": {
+          "type": "string"
+        },
+        "saldo_fecha_liquidacion_bancoITM_noCobrar": {
+          "type": "string"
+        },
+        "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": {
+          "type": "string"
+        },
+        "venta_|cliente.Classify1|_x_clienteID::name": {
+          "type": "string"
+        },
+        "venta_|cliente.Classify2|_x_clienteID::name": {
+          "type": "string"
+        },
+        "venta_|cliente.Classify3|_x_clienteID::name": {
+          "type": "string"
+        },
+        "venta_|cliente.Classify4|_x_clienteID::name": {
+          "type": "string"
+        }
+      },
+      "required": ["__id_venta"],
+      "additionalProperties": true
+    },
+    "portalData": {
+      "type": "object",
+      "properties": {
+        "PagosVenta": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recordId": {
+                "type": ["string", "number"]
+              },
+              "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": {
+                "type": ["number", "string"]
+              },
+              "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": {
+                "type": ["number", "string"]
+              },
+              "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": {
+                "type": "string"
+              },
+              "modId": {
+                "type": ["string", "number"]
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": ["fieldData", "portalData"],
+  "additionalProperties": true
+}

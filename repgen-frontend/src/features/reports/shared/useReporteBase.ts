@@ -107,6 +107,8 @@ export const useReporteBase = <T,>({
   const cargadoRef = useRef<{ endpoint: string; desde: string; hasta: string } | null>(null);
   // Restaurar el rango tras un 401 no debe volver a consultar (daría otro 401).
   const omitirCargaRef = useRef(false);
+  // "Actualizar datos" / Reintentar: la siguiente carga pide datos frescos, sin caché.
+  const refrescarRef = useRef(false);
 
   useEffect(() => {
     onErrorRef.current = onError;
@@ -118,6 +120,8 @@ export const useReporteBase = <T,>({
       return;
     }
     let cancelado = false;
+    const refrescar = refrescarRef.current;
+    refrescarRef.current = false;
 
     const cargarDatos = async () => {
       setEstaCargando(true);
@@ -126,6 +130,7 @@ export const useReporteBase = <T,>({
         const resultado = await obtenerReporte<T>({
           endpoint,
           rangoFechas: { fechaInicio: fechaDesde, fechaFin: fechaHasta },
+          ...(refrescar && { refrescar: true }),
         });
 
         if (!cancelado) {
@@ -170,7 +175,10 @@ export const useReporteBase = <T,>({
     datos,
     estaCargando,
     error,
-    reintentar: () => setIntento((n) => n + 1),
+    reintentar: () => {
+      refrescarRef.current = true;
+      setIntento((n) => n + 1);
+    },
     intento,
     cargadoEn,
     fechaDesde,

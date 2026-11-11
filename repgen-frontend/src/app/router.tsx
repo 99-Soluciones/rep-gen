@@ -17,9 +17,12 @@ import { hayTrabajoSinGuardar, salir } from "../shared/utils/salidaProtegida";
 const cargarBancos = () => import("../features/reports/banks/ReporteBancos");
 const cargarVentas = () => import("../features/reports/sales/ReporteVentas");
 const ReporteBancos = lazy(cargarBancos);
+const cargarCxc = () => import("../features/reports/receivables/ReporteCuentasPorCobrar");
 const ReporteVentas = lazy(cargarVentas);
+const ReporteCuentasPorCobrar = lazy(cargarCxc);
 void cargarBancos().catch(() => {});
 void cargarVentas().catch(() => {});
+void cargarCxc().catch(() => {});
 
 const CargandoReporte = () => (
   <p role="status" className="p-6 text-sm text-gray-600">
@@ -79,7 +82,7 @@ const crearRouter = (reporteInicio: string | null) => {
         { path: "/bancos", element: <ReporteBancos /> },
         { path: "/ventas", element: <Navigate to="/ventas/facturas" replace /> },
         { path: "/ventas/:reportType", element: <ReporteVentas /> },
-        { path: "/cuentas_por_cobrar", element: <ComingSoon /> },
+        { path: "/cuentas_por_cobrar", element: <ReporteCuentasPorCobrar /> },
         { path: "/inventarios", element: <ComingSoon /> },
         {
           path: "*",

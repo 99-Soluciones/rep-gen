@@ -45,3 +45,9 @@ export class DateFormatUtils {
     return Math.floor(timeDiff / (1000 * 3600 * 24));
   }
 }
+
+/** YYYY-MM-DD -> MM/DD/YYYY, el formato de fecha que espera el find de FileMaker. */
+export const toFileMakerDate = (isoDate: string): string => {
+  const [year, month, day] = isoDate.split('-');
+  return `${month}/${day}/${year}`;
+};

@@ -19,7 +19,7 @@ import {
   ValidationModule,
   themeQuartz,
 } from "ag-grid-community";
-import type { ColDef, GridReadyEvent, IOverlayParams } from "ag-grid-community";
+import type { ColDef, ColGroupDef, GridReadyEvent, IOverlayParams } from "ag-grid-community";
 import TablaDinamicaControles from "./TablaDinamicaControles";
 import { calcularFilaTotales, type TotalesTabla } from "./totales";
 import { describirFiltros, type FiltroDescrito } from "./describirFiltros";
@@ -138,7 +138,8 @@ function scheduleGridFit(
 interface TablaDinamicaProps<T> {
   referenciaGrid: React.RefObject<AgGridReact | null>;
   datos: T[];
-  definicionesColumnas: ColDef<T>[];
+  /** Columnas, o secciones con sus columnas (franja sobre los encabezados). */
+  definicionesColumnas: (ColDef<T> | ColGroupDef<T>)[];
   estaCargando: boolean;
   /** Falla de la última carga; se muestra sobre el grid (la toolbar sigue usable). */
   error?: ErrorCarga | null;
