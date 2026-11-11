@@ -10,7 +10,6 @@ Este archivo agrupa la documentacion principal del modulo de reportes para que s
 ## Fichas De Reportes
 
 - [Cuentas por cobrar](fichas/receivables/receivables.md)
-- [Inventarios (borrador)](fichas/inventory.md)
 
 ## ADRs
 
