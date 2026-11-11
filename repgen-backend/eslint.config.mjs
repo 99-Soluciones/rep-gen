@@ -20,7 +20,7 @@ export default tseslint.config(
       sourceType: 'commonjs',
       parserOptions: {
         projectService: {
-          allowDefaultProject: ['scripts/generate-field-map.mjs', 'scripts/testapi.js'],
+          allowDefaultProject: ['scripts/testapi.js'],
         },
         tsconfigRootDir: import.meta.dirname,
       },
