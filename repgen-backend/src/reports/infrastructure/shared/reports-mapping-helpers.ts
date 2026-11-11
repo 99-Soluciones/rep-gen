@@ -255,45 +255,4 @@ export class FieldMapHelper {
 
     return mapped as T;
   }
-
-  /**
-   * Resuelve una ruta limpia (ej. "cliente.rfc") al nombre real del campo.
-   * Devuelve null si la ruta no existe en el mapa.
-   * @param cleanPath Ruta de key limpia separada por punto.
-   * @returns Nombre raw del campo o null.
-   */
-  public getRawFieldName(cleanPath: string): string | null {
-    const pathParts = cleanPath
-      .split('.')
-      .map((part) => part.trim())
-      .filter(Boolean);
-
-    if (pathParts.length === 0) {
-      return null;
-    }
-
-    let currentNode: string | FieldMapNode = this.fieldMap.data;
-
-    for (const part of pathParts) {
-      if (typeof currentNode === 'string') {
-        return null;
-      }
-
-      const nextNodeUnknown = (currentNode as Record<string, unknown>)[part];
-      if (typeof nextNodeUnknown === 'undefined') {
-        return null;
-      }
-
-      if (
-        typeof nextNodeUnknown !== 'string' &&
-        !this.isFieldMapNode(nextNodeUnknown)
-      ) {
-        return null;
-      }
-
-      currentNode = nextNodeUnknown;
-    }
-
-    return typeof currentNode === 'string' ? currentNode : null;
-  }
 }

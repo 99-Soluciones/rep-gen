@@ -27,25 +27,3 @@ export function mapSalesRecordWithCleanKeys(
     SALES_PORTAL_SOURCE_BY_KEY,
   );
 }
-
-/**
- * Convierte multiples registros raw de ventas a llaves limpias.
- * @param records Lista de registros raw.
- * @returns Lista mapeada con keys limpias.
- * @example
- * const list = mapSalesRecordsWithCleanKeys(rawRecords);
- */
-export function mapSalesRecordsWithCleanKeys(
-  records: RawRecord[],
-): SalesMappedRecord[] {
-  return records.map(mapSalesRecordWithCleanKeys);
-}
-
-/**
- * Compatibilidad para helpers existentes: resuelve ruta limpia a campo raw.
- * @param cleanPath Ruta de key limpia (ej. cliente.rfc).
- * @returns Nombre de campo raw o null.
- */
-export function getSalesRawFieldName(cleanPath: string): string | null {
-  return fieldMapHelper.getRawFieldName(cleanPath);
-}

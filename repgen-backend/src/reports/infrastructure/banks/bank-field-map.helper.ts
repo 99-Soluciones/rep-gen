@@ -36,28 +36,3 @@ export function mapBankRecordWithCleanKeys(
     BANK_PORTAL_SOURCE_BY_KEY,
   );
 }
-
-/**
- * Mapea una lista de registros raw de bancos a llaves limpias.
- * @param records Lista de registros raw.
- * @returns Lista mapeada.
- * @example
- * const rows = mapBankRecordsWithCleanKeys(rawRows);
- */
-export function mapBankRecordsWithCleanKeys(
-  records: RawRecord[],
-): BankMappedRecord[] {
-  return records.map(mapBankRecordWithCleanKeys);
-}
-
-/**
- * Resuelve una ruta limpia (ej. banco.nombre) a su campo raw.
- * @param cleanPath Ruta de key limpia.
- * @returns Nombre raw del campo o null.
- * @example
- * getBankRawFieldName('banco.nombre')
- * // 'contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre'
- */
-export function getBankRawFieldName(cleanPath: string): string | null {
-  return fieldMapHelper.getRawFieldName(cleanPath);
-}

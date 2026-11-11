@@ -258,7 +258,9 @@ function buildReturnRecord(
       ),
     ),
     facturaUsoCfdi: '04 - Devolución de mercancía',
-    facturaMetodoPago: 'PUE - Pago en parcialidades o diferido',
+    // Mismo valor que manda FileMaker en las facturas (_idu_cdfi_metoPago): un
+    // solo "PUE" en el filtro. Toda nota de crédito se emite en PUE.
+    facturaMetodoPago: 'PUE',
     facturaFormaDePago: '',
     facturaEstatus: RETURN_STATUS,
     facturaTasaPagada: 0,
