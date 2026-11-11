@@ -178,7 +178,11 @@ describe("useReporteBase", () => {
 
     act(() => result.current.reintentar());
     await waitFor(() => expect(obtenerReporteMock).toHaveBeenCalledTimes(2));
-    expect(obtenerReporteMock).toHaveBeenLastCalledWith(obtenerReporteMock.mock.calls[0][0]);
+    // Mismo rango, pero pidiendo datos frescos (sin la caché del backend).
+    expect(obtenerReporteMock).toHaveBeenLastCalledWith({
+      ...obtenerReporteMock.mock.calls[0][0],
+      refrescar: true,
+    });
     await waitFor(() => expect(result.current.cargadoEn).not.toBe(primera));
   });
 

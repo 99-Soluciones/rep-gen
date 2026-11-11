@@ -8,6 +8,8 @@ interface SolicitudReporte {
     fechaInicio: string;
     fechaFin: string;
   };
+  /** "Actualizar datos": el backend ignora su caché (60 s) y vuelve a leer FileMaker. */
+  refrescar?: boolean;
 }
 
 /**
@@ -19,12 +21,14 @@ interface SolicitudReporte {
 export const obtenerReporte = async <TReporteData>({
   endpoint,
   rangoFechas,
+  refrescar,
 }: SolicitudReporte): Promise<TReporteData[]> => {
   const cuerpoSolicitud = {
     dateRange: {
       startDate: rangoFechas.fechaInicio,
       endDate: rangoFechas.fechaFin,
     },
+    ...(refrescar && { refresh: true }),
   };
 
   const claveSolicitud = `${endpoint}:${JSON.stringify(cuerpoSolicitud)}`;

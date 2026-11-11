@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import type { LoggerService as NestLoggerService } from '@nestjs/common';
 import type { Cache } from '@nestjs/cache-manager';
 import { FileMakerService } from '../../../filemaker/filemaker.service';
@@ -6,6 +6,9 @@ import type {
   FileMakerCondition,
   RawRecord,
 } from '../../../filemaker/ifilemaker';
+import { toFileMakerDate } from '../../../common/utils';
+import { fetchCached } from './report-cache';
+import { cleanOrThrow, findAllRecords } from './report-query';
 
 /** Rango de fechas inclusivo en formato YYYY-MM-DD (validado en el DTO). */
 export type DateRange = { startDate: string; endDate: string };
@@ -22,9 +25,6 @@ export type ReportLogger = Required<
 export interface ReportResponse<TRecord> {
   data: TRecord[];
 }
-
-// Se trae el rango completo de una vez: el filtrado es del lado del cliente.
-const FM_FIND_LIMIT = 999999;
 
 /**
  * Configuración de cada reporte: layout de FileMaker, prefijo de caché, campos
@@ -45,12 +45,6 @@ export interface ReportConfig<TRecord, TPermissions = void> {
     bankFieldName: string,
   ) => Promise<FileMakerCondition[]>;
 }
-
-/** YYYY-MM-DD -> MM/DD/YYYY, el formato de fecha que espera el find de FileMaker. */
-const toFileMakerDate = (isoDate: string): string => {
-  const [year, month, day] = isoDate.split('-');
-  return `${month}/${day}/${year}`;
-};
 
 /**
  * Servicio base para los reportes: arma la consulta a FileMaker (rango de
@@ -84,98 +78,58 @@ export abstract class BaseReportService<TRecord, TPermissions = void> {
 
   /**
    * Obtiene de FileMaker todos los registros del rango de fechas que el usuario
-   * tiene permitido ver, ya limpios. Cachea por tenant + usuario + rango.
+   * tiene permitido ver, ya limpios. Cachea por tenant + usuario + rango;
+   * `refresh` ignora la caché.
    */
   async fetchReport(
     dateRange: DateRange,
     dbName: string,
     user: number,
+    refresh = false,
   ): Promise<ReportResponse<TRecord>> {
+    if (dateRange.startDate > dateRange.endDate) {
+      throw new BadRequestException(
+        'startDate no puede ser posterior a endDate',
+      );
+    }
     // El usuario forma parte de la clave: los permisos (p. ej. bancos) son por usuario.
     const cacheKey = `${this.config.cachePrefix}${this.config.layoutName}_${dateRange.startDate}_${dateRange.endDate}_${dbName}_${user}`;
-    const cacheData =
-      await this.cacheManager.get<ReportResponse<TRecord>>(cacheKey);
 
-    if (cacheData) {
-      return cacheData;
-    }
-    const inFlightRequest = this.inFlightRequests.get(cacheKey);
-    if (inFlightRequest) {
-      return inFlightRequest;
-    }
+    return fetchCached(
+      this.cacheManager,
+      this.inFlightRequests,
+      cacheKey,
+      async () => {
+        const fmQuery = await this.buildQuery(dateRange, dbName, user);
 
-    const requestPromise = (async (): Promise<ReportResponse<TRecord>> => {
-      const fmQuery = await this.buildQuery(dateRange, dbName, user);
-
-      this.logger.debug('Consulta construida para FileMaker', {
-        tenant: dbName,
-        layout: this.config.layoutName,
-        queryConditions: fmQuery.length,
-      });
-      const fmResponse = await this.fileMakerService.findRecords(
-        dbName,
-        this.config.layoutName,
-        fmQuery,
-        1,
-        FM_FIND_LIMIT,
-        'reportes',
-      );
-
-      const rawData = fmResponse.response.data ?? [];
-      const foundCount = fmResponse.response.dataInfo?.foundCount ?? 0;
-      if (foundCount > rawData.length) {
-        this.logger.warn(
-          'Reporte truncado: FileMaker encontró más registros de los devueltos',
-          {
-            tenant: dbName,
-            layout: this.config.layoutName,
-            foundCount,
-            returned: rawData.length,
-          },
+        this.logger.debug('Consulta construida para FileMaker', {
+          tenant: dbName,
+          layout: this.config.layoutName,
+          queryConditions: fmQuery.length,
+        });
+        const rawData = await findAllRecords(
+          this.fileMakerService,
+          this.logger,
+          dbName,
+          this.config.layoutName,
+          fmQuery,
         );
-      }
 
-      const response: ReportResponse<TRecord> = {
-        data: rawData.length ? this.cleanData(rawData, dateRange, dbName) : [],
-      };
-
-      await this.cacheManager.set(cacheKey, response);
-      this.logger.log(
-        `Datos obtenidos de FileMaker y cacheados con la clave ${cacheKey}. Registros encontrados: ${foundCount}`,
-      );
-      return response;
-    })();
-
-    this.inFlightRequests.set(cacheKey, requestPromise);
-
-    try {
-      return await requestPromise;
-    } finally {
-      this.inFlightRequests.delete(cacheKey);
-    }
-  }
-
-  /**
-   * Un registro que no cumple el esquema es un problema de datos del servidor,
-   * no del cliente: se registra y se responde 500 en vez de devolver un reporte
-   * incompleto (faltarían filas en los totales).
-   */
-  private cleanData(
-    rawData: RawRecord[],
-    dateRange: DateRange,
-    dbName: string,
-  ): TRecord[] {
-    try {
-      return this.config.cleanDataFunction(rawData, dateRange);
-    } catch (error) {
-      this.logger.error('Registro de FileMaker con formato inesperado', error, {
-        tenant: dbName,
-        layout: this.config.layoutName,
-      });
-      throw new InternalServerErrorException(
-        'Los datos de FileMaker tienen un formato inesperado',
-      );
-    }
+        this.logger.log(
+          `Datos obtenidos de FileMaker para la clave ${cacheKey}. Registros: ${rawData.length}`,
+        );
+        return {
+          data: rawData.length
+            ? cleanOrThrow(
+                this.logger,
+                { tenant: dbName, layout: this.config.layoutName },
+                () => this.config.cleanDataFunction(rawData, dateRange),
+              )
+            : [],
+        };
+      },
+      refresh,
+    );
   }
 
   /**

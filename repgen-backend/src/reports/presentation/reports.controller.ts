@@ -30,33 +30,44 @@ export class ReportsController {
   @Post('bancos/buscar')
   @HttpCode(200)
   async getBankReports(
-    @Body() { dateRange }: SearchReportDto,
+    @Body() { dateRange, refresh }: SearchReportDto,
     @Request() req: AuthenticatedRequest,
   ): Promise<ReportResponse<ReportBankRecord>> {
-    return this.reportServiceBanks.fetchReport(dateRange, req.tenant, req.id);
+    return this.reportServiceBanks.fetchReport(
+      dateRange,
+      req.tenant,
+      req.id,
+      refresh,
+    );
   }
 
   @Post('ventas/buscar')
   @HttpCode(200)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   async getSalesReports(
-    @Body() { dateRange }: SearchReportDto,
+    @Body() { dateRange, refresh }: SearchReportDto,
     @Request() req: AuthenticatedRequest,
   ): Promise<ReportResponse<ReportSalesRecord>> {
-    return this.reportServiceSales.fetchReport(dateRange, req.tenant, req.id);
+    return this.reportServiceSales.fetchReport(
+      dateRange,
+      req.tenant,
+      req.id,
+      refresh,
+    );
   }
 
   @Post('ventas-por-concepto/buscar')
   @HttpCode(200)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   async getSalesItemReports(
-    @Body() { dateRange }: SearchReportDto,
+    @Body() { dateRange, refresh }: SearchReportDto,
     @Request() req: AuthenticatedRequest,
   ): Promise<ReportResponse<ReportSalesItemRecord>> {
     return this.reportServiceSalesItem.fetchReport(
       dateRange,
       req.tenant,
       req.id,
+      refresh,
     );
   }
 }
