@@ -48,7 +48,7 @@ Una sesión de la Data API atiende en fila. Medido en el servidor real con `scri
 
 ### Antes de desplegar
 
-- [ ] Revisar `FM_REQUEST_TIMEOUT_MS` en DigitalOcean. El default del código es 15 s y el repositorio no lo define para producción; el `.env` local usa 120 s. Si falta, un reporte de 50 s se corta a los 15 s.
+- [ ] Fijar `FM_REQUEST_TIMEOUT_MS` en DigitalOcean. El default del código es 120 s desde 2026-11 (antes 15 s, que cortaba un reporte de 50 s); conviene dejarlo explícito. Ver `repgen-backend/.env.example`.
 - [ ] Confirmar que el servidor y la licencia acepten hasta 24 sesiones de la Data API (antes, hasta 12).
 
 ### Después de actualizar a FileMaker Server 26 (semana del 2026-11-02)
