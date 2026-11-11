@@ -118,6 +118,7 @@ export abstract class BaseReportService<TRecord, TPermissions = void> {
         fmQuery,
         1,
         FM_FIND_LIMIT,
+        'reportes',
       );
 
       const rawData = fmResponse.response.data ?? [];

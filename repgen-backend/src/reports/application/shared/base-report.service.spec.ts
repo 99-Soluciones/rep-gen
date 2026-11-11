@@ -12,7 +12,10 @@ import type {
   FileMakerCondition,
   FindRecordsResult,
 } from '../../../filemaker/ifilemaker';
-import { FileMakerService } from '../../../filemaker/filemaker.service';
+import {
+  FileMakerService,
+  type FmSessionUse,
+} from '../../../filemaker/filemaker.service';
 
 class TestReportService extends BaseReportService<unknown, unknown> {}
 
@@ -38,7 +41,7 @@ describe('BaseReportService', () => {
     const findRecords = jest
       .fn<
         Promise<FindRecordsResult>,
-        [string, string, FileMakerCondition[], number?, number?]
+        [string, string, FileMakerCondition[], number?, number?, FmSessionUse?]
       >()
       .mockResolvedValue(findResult());
     const fileMakerService = { findRecords } as unknown as FileMakerService;
@@ -102,6 +105,14 @@ describe('BaseReportService', () => {
     await service.fetchReport(OCTOBER, 'db', 123);
 
     expect(findRecords.mock.calls[0][2]).toEqual([{ date: FM_OCTOBER }]);
+  });
+
+  it('queries FileMaker on the reports session', async () => {
+    const { service, findRecords } = makeService();
+
+    await service.fetchReport(OCTOBER, 'db', 123);
+
+    expect(findRecords.mock.calls[0][5]).toBe('reportes');
   });
 
   it('does not share cached results between users of the same tenant', async () => {
