@@ -10,6 +10,7 @@ y aquí solo se enlaza.
 |-----------|-----------|
 | Instalar y correr el proyecto | [README raíz](../README.md) |
 | Agregar un reporte nuevo | [guides/COMO-AGREGAR-REPORTE.md](guides/COMO-AGREGAR-REPORTE.md) |
+| Commits, ramas y pull requests | [guides/COMMITS-Y-PR.md](guides/COMMITS-Y-PR.md) |
 | Desplegar (Vercel, DigitalOcean, secrets) | [deployment/DEPLOYMENT.md](deployment/DEPLOYMENT.md) |
 | Decisión Data API vs OData y hoja de ruta | [architecture/EVALUACION_ODATA_Y_ARQUITECTURA.md](architecture/EVALUACION_ODATA_Y_ARQUITECTURA.md) |
 | Trabajo en curso: sesiones de FileMaker por uso (ERP) | [history/HANDOFF-erp-sesiones-por-uso.md](history/HANDOFF-erp-sesiones-por-uso.md) |
