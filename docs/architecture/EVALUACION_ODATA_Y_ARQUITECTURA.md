@@ -70,7 +70,7 @@ Datos de partida, confirmados con el equipo:
   - **Fecha de devolución en ventas:** es un campo relacionado (`DEVO::cfdi_fechaTimbre`). Requiere un campo local almacenado o una segunda query.
 - **Filtros de portal:** los que estén definidos en los layouts `apiExport_*` no se aplican en `$expand`. Hay que revisar cada portal.
 - **Nombres:** las TOs con `|` y `.` y los campos que empiezan con `_` requieren comillas o codificación en `$filter`. La recomendación es crear **TOs dedicadas para OData** con nombres simples (`od_BancoITM`, `od_Banco`, `od_Cliente`…), igual que hoy existen los layouts `apiExport_*`.
-- **Fechas en el frontend:** si el backend pasa a devolver ISO (`2026-10-01`), `formatearFecha` ([format.ag-grid.ts](../../repgen-frontend/src/utils/ag-grid/format.ag-grid.ts)) hace `new Date("2026-10-01")`, que es medianoche UTC. En México eso **se muestra como el día anterior**, así que hay que corregirlo antes de migrar. Lo mismo aplica a `inRangeDate` y `formatDateToYMD` en el backend.
+- **Fechas en el frontend:** si el backend pasa a devolver ISO (`2026-10-01`), `formatearFecha` ([formato.ts](../../repgen-frontend/src/features/reports/shared/ag-grid/formato.ts)) hace `new Date("2026-10-01")`, que es medianoche UTC. En México eso **se muestra como el día anterior**, así que hay que corregirlo antes de migrar. Lo mismo aplica a `inRangeDate` y `formatDateToYMD` en el backend.
 
 ### 1.4 Veredicto
 
@@ -286,7 +286,7 @@ Pendiente con negocio: B13 (`_id_banco: 0`).
   - se quitó el `timestamp` fijo del logger;
   - se borraron los helpers muertos;
   - los 3 `CacheModule` siguen separados (cada uno con su propio límite de entradas) y solo se corrigió el comentario de unidades.
-- Las plantillas de `generate:field-map` y `scripts/testapi.js` usan el contrato nuevo.
+- Las plantillas de `generate:field-map` y `scripts/testapi.js` usan el contrato nuevo. (El scaffold `generate:field-map` se retiró en 2026-11; ver la guía de reportes.)
 
 **Frontend**
 - **F1:** `useReporteBase` expone solo `{datos, estaCargando, fechaDesde/Hasta}`. `EncabezadoReporte` recibe solo `titulo` y `encabezadoExtra`. Se borraron el buscador oculto y `DrawerFiltros`.

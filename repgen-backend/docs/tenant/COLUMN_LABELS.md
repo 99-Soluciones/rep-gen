@@ -1,6 +1,6 @@
 # Etiquetas de columnas por tenant (Column Labels)
 
-Documentación funcional y técnica del flujo **DOC-4.4**: personalización de encabezados de columnas en reportes según la configuración de cada cliente (tenant) en FileMaker.
+Documentación funcional y técnica (backend y frontend) de la personalización de encabezados de columnas en reportes según la configuración de cada cliente (tenant) en FileMaker.
 
 ---
 
@@ -21,7 +21,7 @@ Cada tenant puede usar nombres distintos para sus clasificaciones de **cliente**
 |----------|-------------|
 | **Tenant** | Nombre de la base FileMaker / cliente; viaja en el JWT (`payload.tenant`) y en login (`?tenant=`). |
 | **Slot** | Identificador lógico `grupo.clave`, ej. `cliente.clasificacion1`, `articulo.categoria2`. |
-| **labelSlot** | Propiedad en `ventas.schema.json` que enlaza una columna del reporte con un slot. |
+| **labelSlot** | Propiedad en el `*.schema.json` del reporte que enlaza una columna con un slot. |
 | **defaultHeader** | Texto en español genérico si no hay etiqueta en FM o falla la API. |
 | **Layout FM `columnas_prefs`** | Origen de datos; un registro con los 8 textos de preferencia. |
 
@@ -32,7 +32,7 @@ cliente.clasificacion1 … cliente.clasificacion4
 articulo.categoria1    … articulo.categoria4
 ```
 
-Slots válidos: los `labelSlot` de `features/reports/sales/ventas.schema.json` (`cliente.clasificacion1..4`, `articulo.categoria1..4`), resueltos por `resolverSlot` en `column-labels.context.ts`.
+Los usan Ventas (`features/reports/sales/ventas.schema.json`) y Cuentas por cobrar (`features/reports/receivables/cxc.schema.json`, solo los de cliente). Los resuelve `resolverSlot` en `column-labels.context.ts`.
 
 ---
 
@@ -71,7 +71,7 @@ sequenceDiagram
 2. `POST /auth/login-token` genera JWT con `tenant: dbName` y lo guarda en la cookie httpOnly `jwt_reportes`.
 3. `app/App.tsx` monta `<ColumnLabelsProvider tenant={tenant}>` dentro de `AuthGate`, ya con sesión.
 4. El provider llama `GET /tenant/column-labels` vía `apiFetch`; el navegador envía la cookie.
-5. `ReporteVentas` usa `useColumnLabels().getLabel` al construir columnas.
+5. La página del reporte (`ReporteVentas`, `ReporteCuentasPorCobrar`) usa `useColumnLabels().getLabel` al construir columnas.
 6. `ColumnBuilder` usa `labelSlot` + `labelResolver` → `headerName` final.
 
 ---
@@ -216,12 +216,24 @@ Solo cuando la autenticación fue exitosa:
 
 `tenantActivo` sale de `user.tenant` tras login o de `localStorage["usuario:v1"]` (sesión retomada y confirmada con `GET /auth/me`).
 
+### Contrato del contexto (`useColumnLabels`)
+
+| Propiedad | Descripción |
+|-----------|-------------|
+| `labels` | Objeto completo `cliente` + `articulo` (`ColumnLabelsResponse` de `@repgen/shared-types`) |
+| `getLabel(slot)` | Texto del slot, o `undefined` si está vacío |
+| `isLoading`, `error` | Estado del último fetch; puede haber `error` y etiquetas de caché a la vez |
+| `refreshLabels()` | Vuelve a pedirlas (hoy ningún botón lo usa) |
+
+El hook lanza si se usa fuera de `ColumnLabelsProvider`.
+
 ### Resiliencia
 
 1. Al montar: lee `sessionStorage` (`repgen:column-labels:{tenant}`) para pintar rápido.
 2. Fetch a API; si OK → actualiza estado y storage.
 3. Si fetch falla pero hay cache en session → usa cache y guarda `error`.
-4. `getLabel(slot)` → `undefined` si no hay texto → AG Grid usa `defaultHeader`.
+4. `getLabel(slot)` → `undefined` si no hay texto → AG Grid usa `defaultHeader`; sin `defaultHeader`, la clave de la columna en el schema.
+5. Al cambiar de tenant el provider se remonta (`key={tenant}`): no se mezclan etiquetas de otro cliente.
 
 ### Resolución del encabezado (AG Grid)
 
@@ -247,7 +259,7 @@ return meta.defaultHeader ?? encabezadoFallback;
 }
 ```
 
-**Reporte bancos:** hoy no declara `labelSlot` en su schema; solo **ventas** consume etiquetas dinámicas.
+**Bancos** no declara `labelSlot` en su schema; hoy consumen etiquetas dinámicas **Ventas** y **Cuentas por cobrar**.
 
 ---
 
@@ -274,14 +286,14 @@ Los **valores de las celdas** vienen del reporte de ventas; los **encabezados** 
 
 1. Añadir campos en layout `columnas_prefs` y field map backend.
 2. Extender `ColumnLabelsRecord` / `ColumnLabelsResponse`.
-3. Añadir clave en `DYNAMIC_COLUMN_SLOTS` y `resolverSlot` (grupo nuevo si aplica).
+3. Si es un grupo nuevo (además de `cliente` y `articulo`), ampliar `resolverSlot` y el tipo en `packages/shared-types`.
 4. Poner `labelSlot` en el `*.schema.json` del reporte.
 
-### Nueva columna dinámica en ventas (solo UI)
+### Usar etiquetas en otro reporte (solo UI)
 
-1. En `ventas.schema.json`: `labelSlot` + `defaultHeader` en la columna.
-2. Asegurar que el slot ya existe en la respuesta API.
-3. `ReporteVentas` ya pasa `getLabel` — no requiere cambio si usa `construirColumnasVentas`.
+1. En su `*.schema.json`: `labelSlot` + `defaultHeader` en la columna.
+2. Pasar `getLabel` al `ColumnBuilder` de ese reporte (ver `receivables/columnas.ts`).
+3. No hace falta otro provider: envuelve toda la app autenticada.
 
 ---
 
@@ -319,7 +331,5 @@ curl -s --cookie "jwt_reportes=TOKEN" \
 
 ## 11. Referencias cruzadas
 
-- Login y JWT: `docs/jira/tasks/04-auth-tenant.md` (SUB-4.1, SUB-4.2)
-- **Frontend (provider, AG Grid, tests):** `repgen-frontend/docs/COLUMN_LABELS_PROVIDER.md` (DOC-7.6)
-- Reportes ventas: `docs/reports/workflow/EXPLICACION_FLUJO_REPORTES.md`
-- Jira: `docs/jira/tasks/04-auth-tenant.md` (SUB-4.4)
+- Login y JWT: `repgen-backend/docs/auth/AUTH_COOKIE_HTTPONLY.md`
+- Flujo de reportes: `repgen-backend/docs/reports/workflow/EXPLICACION_FLUJO_REPORTES.md`

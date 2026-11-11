@@ -95,4 +95,5 @@ Notes:
 - `ERROR: Missing required secrets: DO_API_TOKEN` — add `DO_API_TOKEN` to GitHub Secrets.
 - `ERROR: DOCR_REGISTRY_NAME must contain only lowercase...` — fix secret value to match pattern (2–63 chars, lowercase, numbers, hyphen; no leading/trailing hyphen).
 - If App creation fails, download the generated `do-app-spec.yaml` from logs and validate it with `doctl apps spec validate --spec-file do-app-spec.yaml` locally (after adding your `DO_API_TOKEN`).
-- Backend env vars (`FM_SERVER`, `FM_USERNAME`, `FM_PASSWORD`, `JWT_SECRET`, …) are **not** in the generated spec; set them in the DO App settings or add them as secrets.
+- Backend env vars (`FM_SERVER`, `FM_USERNAME`, `FM_PASSWORD`, `JWT_SECRET`, …) are **not** in the generated spec; set them in the DO App settings or add them as secrets. The full list is in `repgen-backend/.env.example`. Keep `FM_REQUEST_TIMEOUT_MS` at 120000 or more: a large report takes close to a minute in FileMaker.
+- Deploy the backend before (or together with) the frontend: the API rejects unknown body fields, so a newer frontend against an older backend gets 400s.

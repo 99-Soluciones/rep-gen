@@ -11,5 +11,5 @@ Este archivo agrupa las decisiones de arquitectura y negocio documentadas para e
 ## Lectura Recomendada
 
 1. Lee primero el ADR que corresponde al escenario que estes revisando.
-2. Luego abre [Explicacion Funcional Del Flujo De Reportes](../workflow/EXPLICACION_FLUJO_REPORTES.md) para ver el contexto completo.
+2. Luego abre [Explicacion Funcional Del Flujo De Reportes](../../workflow/EXPLICACION_FLUJO_REPORTES.md) para ver el contexto completo.
 
