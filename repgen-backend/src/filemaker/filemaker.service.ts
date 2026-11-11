@@ -51,8 +51,9 @@ export class FileMakerService {
     this.fmServer = this.configService.get<string>('FM_SERVER') ?? '';
     this.username = this.configService.get<string>('FM_USERNAME') ?? '';
     this.password = this.configService.get<string>('FM_PASSWORD') ?? '';
+    // Un reporte de un rango grande tarda cerca de un minuto en FileMaker.
     this.requestTimeoutMs =
-      this.configService.get<number>('FM_REQUEST_TIMEOUT_MS') ?? 15000;
+      this.configService.get<number>('FM_REQUEST_TIMEOUT_MS') ?? 120000;
     this.authCooldownMs =
       this.configService.get<number>('FM_AUTH_COOLDOWN_MS') ?? 5000;
   }
@@ -290,6 +291,8 @@ export class FileMakerService {
    * @param offset El número de registro desde el cual comenzar a devolver resultados (paginación). Por defecto es 1.
    * @param limit El número máximo de registros a devolver. Por defecto es 50.
    * @param use La sesión de FileMaker; una búsqueda pesada debe usar 'reportes'.
+   * @param portalLimits Renglones máximos por portal ({ nombrePortal: n }). La
+   * Data API devuelve solo 50 por portal si no se indica.
    * @returns Promise<FindRecordsResult> El resultado de la búsqueda; vacío si ningún registro coincide.
    */
   async findRecords(
@@ -299,14 +302,18 @@ export class FileMakerService {
     offset: number = 1,
     limit: number = 50,
     use: FmSessionUse = 'erp',
+    portalLimits: Record<string, number> = {},
   ): Promise<FindRecordsResult> {
+    const portalBody = Object.fromEntries(
+      Object.entries(portalLimits).map(([portal, n]) => [`limit.${portal}`, n]),
+    );
     const result = await this.request<FindRecordsResult>(
       dbName,
       this.layoutPath(layout, '/_find'),
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, offset, limit }),
+        body: JSON.stringify({ query, offset, limit, ...portalBody }),
       },
       this.emptyFindResult(dbName, layout),
       use,
