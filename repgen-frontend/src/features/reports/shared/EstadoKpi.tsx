@@ -149,7 +149,8 @@ export const ResultadoResumen = ({
 }: {
   etiqueta: string;
   valor: number;
-  comparacion: ComparacionPeriodo;
+  /** Sin comparación (p. ej. un reporte a fecha de corte): solo la cifra. */
+  comparacion?: ComparacionPeriodo;
   filtrado: boolean;
 }) => (
   <section aria-labelledby="titular-resumen" className="col-span-full flex flex-col">
@@ -159,9 +160,11 @@ export const ResultadoResumen = ({
     <p className={`text-xl font-bold tabular-nums ${valor < 0 ? "text-red-600" : "text-gray-900"}`}>
       {moneda.format(valor || 0)}
     </p>
-    <dl className="mt-0.5">
-      <LineaComparacion actual={valor} comparacion={comparacion} filtrado={filtrado} />
-    </dl>
+    {comparacion && (
+      <dl className="mt-0.5">
+        <LineaComparacion actual={valor} comparacion={comparacion} filtrado={filtrado} />
+      </dl>
+    )}
   </section>
 );
 

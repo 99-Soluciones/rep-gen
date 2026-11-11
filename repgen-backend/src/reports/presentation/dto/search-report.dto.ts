@@ -37,3 +37,16 @@ export class SearchReportDto {
   refresh?: boolean;
 }
 
+/**
+ * Body de POST /reports/cuentas-por-cobrar/buscar: un día de corte. Si falta,
+ * el corte es hoy (México).
+ */
+export class SearchCorteDto {
+  @IsOptional()
+  @Matches(ISO_DATE, { message: 'fechaCorte debe tener formato YYYY-MM-DD' })
+  fechaCorte?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  refresh?: boolean;
+}

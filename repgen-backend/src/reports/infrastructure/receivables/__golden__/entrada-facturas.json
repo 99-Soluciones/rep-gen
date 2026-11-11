@@ -1,0 +1,1097 @@
+{
+    "response": {
+      "dataInfo": {
+        "database": "",
+        "layout": "apiExport_CxC_Facturas",
+        "table": "VENTA_|",
+        "totalRecordCount": 3385,
+        "foundCount": 3329,
+        "returnedCount": 20
+      },
+      "data": [
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 43,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 01",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 01 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010101AA1",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+            "cfdi_facturaSerieFolio_v0_18_1": "-65",
+            "cfdi_FacturaFolio": 65,
+            "monto_GranTotal": 3959.68,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000001",
+            "cfdi_FacturaFechaTimbrar": "01/31/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante B",
+            "__id_venta": 56,
+            "saldo_Pendiente_GranTotal": 3959.68,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Pendiente",
+            "saldo.FechaLimitePago": "01/31/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Centro de consumo",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 546.1632,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": []
+          },
+          "recordId": "525081",
+          "modId": "55",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 0,
+              "returnedCount": 0
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 30,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 02",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 02 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010102AA2",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+            "cfdi_facturaSerieFolio_v0_18_1": "F-159",
+            "cfdi_FacturaFolio": 159,
+            "monto_GranTotal": 1113.6,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000002",
+            "cfdi_FacturaFechaTimbrar": "05/22/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 58,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "06/21/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "07/05/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "10/22/2024",
+            "credit_dias": 30,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Distribuidor",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 153.6,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609779",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1113.6,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "10/22/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525083",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 15,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 03",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 03 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010103AA3",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante D",
+            "cfdi_facturaSerieFolio_v0_18_1": "F-160",
+            "cfdi_FacturaFolio": 160,
+            "monto_GranTotal": 2227.2,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000003",
+            "cfdi_FacturaFechaTimbrar": "05/22/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 59,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "06/21/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "05/23/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "06/18/2024",
+            "credit_dias": 30,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Distribuidor",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 307.2,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609603",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 2227.2,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "06/18/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525084",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 57,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 04",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 04 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010104AA4",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+            "cfdi_facturaSerieFolio_v0_18_1": "F-161",
+            "cfdi_FacturaFolio": 161,
+            "monto_GranTotal": 2356.93,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000004",
+            "cfdi_FacturaFechaTimbrar": "05/22/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante B",
+            "__id_venta": 60,
+            "saldo_Pendiente_GranTotal": 2356.93,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Pendiente",
+            "saldo.FechaLimitePago": "05/22/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Centro de consumo",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 325.0944,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": []
+          },
+          "recordId": "525085",
+          "modId": "55",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 0,
+              "returnedCount": 0
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 55,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 05",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 05 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010105AA5",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+            "cfdi_facturaSerieFolio_v0_18_1": "F-162",
+            "cfdi_FacturaFolio": 162,
+            "monto_GranTotal": 1178.47,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000005",
+            "cfdi_FacturaFechaTimbrar": "05/22/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante B",
+            "__id_venta": 61,
+            "saldo_Pendiente_GranTotal": 1178.47,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Pendiente",
+            "saldo.FechaLimitePago": "06/21/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "",
+            "credit_dias": 30,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Centro de consumo",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 162.5472,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": []
+          },
+          "recordId": "525086",
+          "modId": "55",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 0,
+              "returnedCount": 0
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 30,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 02",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 02 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010102AA2",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+            "cfdi_facturaSerieFolio_v0_18_1": "-52",
+            "cfdi_FacturaFolio": 52,
+            "monto_GranTotal": 1113.6,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000006",
+            "cfdi_FacturaFechaTimbrar": "01/24/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 62,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "01/24/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "04/19/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "10/22/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Distribuidor",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 153.6,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609778",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1113.6,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "10/22/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525087",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 30,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 02",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 02 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010102AA2",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+            "cfdi_facturaSerieFolio_v0_18_1": "-51",
+            "cfdi_FacturaFolio": 51,
+            "monto_GranTotal": 3340.8,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000007",
+            "cfdi_FacturaFechaTimbrar": "01/24/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 63,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "01/24/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "08/03/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "09/03/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Distribuidor",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 460.8,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609696",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 3340.8,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "09/03/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525088",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 30,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 02",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 02 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010102AA2",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+            "cfdi_facturaSerieFolio_v0_18_1": "-56",
+            "cfdi_FacturaFolio": 56,
+            "monto_GranTotal": 3340.8,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000008",
+            "cfdi_FacturaFechaTimbrar": "01/31/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 64,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "01/31/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "04/15/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "10/22/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Distribuidor",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 460.8,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609775",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 3340.8,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "10/22/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525089",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 30,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 02",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 02 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010102AA2",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+            "cfdi_facturaSerieFolio_v0_18_1": "-57",
+            "cfdi_FacturaFolio": 57,
+            "monto_GranTotal": 1113.6,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000009",
+            "cfdi_FacturaFechaTimbrar": "01/31/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 65,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "01/31/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "05/31/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "11/14/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Distribuidor",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 153.6,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609844",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1113.6,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "11/14/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525090",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 30,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 02",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 02 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010102AA2",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+            "cfdi_facturaSerieFolio_v0_18_1": "-100",
+            "cfdi_FacturaFolio": 100,
+            "monto_GranTotal": 2227.2,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000010",
+            "cfdi_FacturaFechaTimbrar": "02/27/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 66,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "02/27/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "04/15/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "10/22/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Distribuidor",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 307.2,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609776",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 2227.2,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "10/22/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525091",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 15,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 03",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 03 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010103AA3",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante D",
+            "cfdi_facturaSerieFolio_v0_18_1": "-103",
+            "cfdi_FacturaFolio": 103,
+            "monto_GranTotal": 1670.4,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000011",
+            "cfdi_FacturaFechaTimbrar": "02/27/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 67,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "02/27/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "02/22/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "08/14/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Distribuidor",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 230.4,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609691",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1670.4,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "08/14/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525092",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 15,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 03",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 03 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010103AA3",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante D",
+            "cfdi_facturaSerieFolio_v0_18_1": "-104",
+            "cfdi_FacturaFolio": 104,
+            "monto_GranTotal": 1670.4,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000012",
+            "cfdi_FacturaFechaTimbrar": "02/27/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 68,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "02/27/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "02/22/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "08/14/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Distribuidor",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 230.4,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609692",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1670.4,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "08/14/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525093",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 5,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 06",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 06 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010106AA6",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante E",
+            "cfdi_facturaSerieFolio_v0_18_1": "-102",
+            "cfdi_FacturaFolio": 102,
+            "monto_GranTotal": 1178.47,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000013",
+            "cfdi_FacturaFechaTimbrar": "02/27/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 69,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "02/27/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "10/17/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "11/06/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Centro de consumo",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 162.5472,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609832",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1178.47,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "11/06/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525094",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 5,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 06",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 06 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010106AA6",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante E",
+            "cfdi_facturaSerieFolio_v0_18_1": "-101",
+            "cfdi_FacturaFolio": 101,
+            "monto_GranTotal": 1178.47,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000014",
+            "cfdi_FacturaFechaTimbrar": "02/27/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 70,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "02/27/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "10/17/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "11/06/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Centro de consumo",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 162.5472,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609833",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1178.47,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "11/06/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525095",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 2,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 07",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 07 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010107AA7",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante D",
+            "cfdi_facturaSerieFolio_v0_18_1": "-105",
+            "cfdi_FacturaFolio": 105,
+            "monto_GranTotal": 1178.47,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000015",
+            "cfdi_FacturaFechaTimbrar": "02/27/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 71,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "02/27/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "03/06/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "05/23/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Centro de consumo",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 162.5472,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609552",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1178.47,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "05/23/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525096",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 17,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 08",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 08 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010108AA8",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+            "cfdi_facturaSerieFolio_v0_18_1": "-83",
+            "cfdi_FacturaFolio": 83,
+            "monto_GranTotal": 1178.47,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000016",
+            "cfdi_FacturaFechaTimbrar": "02/22/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante B",
+            "__id_venta": 72,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "02/22/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "02/28/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "05/23/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Centro de consumo",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 162.5472,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609569",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1178.47,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "05/23/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525097",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 51,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 09",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 09 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010109AA9",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante D",
+            "cfdi_facturaSerieFolio_v0_18_1": "-95",
+            "cfdi_FacturaFolio": 95,
+            "monto_GranTotal": 1178.47,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000017",
+            "cfdi_FacturaFechaTimbrar": "02/22/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 73,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "02/22/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "02/29/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "05/23/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Centro de consumo",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 162.5472,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609553",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1178.47,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "05/23/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525098",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 53,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 10",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 10 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010110AA0",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante E",
+            "cfdi_facturaSerieFolio_v0_18_1": "-99",
+            "cfdi_FacturaFolio": 99,
+            "monto_GranTotal": 1178.47,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000018",
+            "cfdi_FacturaFechaTimbrar": "02/22/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 74,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "02/22/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "02/28/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "05/23/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Centro de consumo",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 162.5472,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609560",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1178.47,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "05/23/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525099",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 52,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 11",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 11 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010111AA1",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante F",
+            "cfdi_facturaSerieFolio_v0_18_1": "-96",
+            "cfdi_FacturaFolio": 96,
+            "monto_GranTotal": 1178.47,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000019",
+            "cfdi_FacturaFechaTimbrar": "02/22/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante C",
+            "__id_venta": 75,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "02/22/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "02/28/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "05/23/2024",
+            "credit_dias": 0,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Centro de consumo",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 162.5472,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609565",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1178.47,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "05/23/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525100",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        },
+        {
+          "fieldData": {
+            "venta_|CLIENTE_|_x_clienteID::___id_cliente": 3,
+            "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": "Cliente Ejemplo 12",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 12 SA DE CV",
+            "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010112AA2",
+            "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
+            "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+            "cfdi_facturaSerieFolio_v0_18_1": "-92",
+            "cfdi_FacturaFolio": 92,
+            "monto_GranTotal": 1439.88,
+            "cfdi_UUID": "00000000-0000-4000-8000-000000000020",
+            "cfdi_FacturaFechaTimbrar": "02/22/2024",
+            "_idu_cdfi_metoPago": "PPD",
+            "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
+            "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante A",
+            "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante B",
+            "__id_venta": 76,
+            "saldo_Pendiente_GranTotal": 0,
+            "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "Cobrado",
+            "saldo.FechaLimitePago": "03/22/2024",
+            "saldo_fecha_liquidacion_bancoITM_noCobrar": "02/28/2024",
+            "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": "05/23/2024",
+            "credit_dias": 29,
+            "venta_|cliente.Classify1|_x_clienteID::name": "Centro de consumo",
+            "venta_|cliente.Classify2|_x_clienteID::name": "",
+            "venta_|cliente.Classify3|_x_clienteID::name": "",
+            "venta_|cliente.Classify4|_x_clienteID::name": "",
+            "cfdi_CANCEL_timestamp_v0_23_1r": "",
+            "monto_contraIVA": 198.6048,
+            "monto_contraIEPS": 0
+          },
+          "portalData": {
+            "PagosVenta": [
+              {
+                "recordId": "609559",
+                "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": 1439.88,
+                "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": 1,
+                "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": "05/23/2024",
+                "modId": "0"
+              }
+            ]
+          },
+          "recordId": "525101",
+          "modId": "0",
+          "portalDataInfo": [
+            {
+              "portalObjectName": "PagosVenta",
+              "database": "",
+              "table": "venta_|contIngreso.ITM|_x_ventaID",
+              "foundCount": 1,
+              "returnedCount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "messages": [
+      {
+        "code": "0",
+        "message": "OK"
+      }
+    ]
+  }
+  

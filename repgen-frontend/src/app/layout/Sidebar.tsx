@@ -62,11 +62,7 @@ const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
           }
         >
           <CircleDollarSign aria-hidden="true" className="w-5 h-5 mr-3 shrink-0" />
-          {/* Dos líneas, no una pastilla al lado: en el ancho del menú se pegaban. */}
-          <span className="flex min-w-0 flex-col">
-            <span>Cuentas por cobrar</span>
-            <span className="text-xs font-normal text-gray-500">Próximamente</span>
-          </span>
+          <span>Cuentas por cobrar</span>
         </NavLink>
 
         <NavLink

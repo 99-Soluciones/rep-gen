@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ReportsController } from './presentation';
 import {
   GetBankReportUseCase,
+  GetReceivablesReportUseCase,
   GetSalesitemReportUseCase,
   GetSalesReportUseCase,
 } from './application';
@@ -23,6 +24,7 @@ import { LoggerModule } from '../common/logger/logger.module';
     GetBankReportUseCase,
     GetSalesReportUseCase,
     GetSalesitemReportUseCase,
+    GetReceivablesReportUseCase,
   ],
 })
 export class ReportsModule {}

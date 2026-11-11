@@ -55,3 +55,23 @@ export const obtenerReporte = async <TReporteData>({
     solicitudesPendientes.delete(claveSolicitud);
   }
 };
+
+/**
+ * Reporte a una fecha de corte (Cuentas por cobrar): viaja un solo día y la
+ * respuesta trae el corte con el que se calcularon los saldos.
+ */
+export const obtenerReporteCorte = async <TReporteData>({
+  endpoint,
+  fechaCorte,
+  refrescar,
+}: {
+  endpoint: string;
+  fechaCorte: string;
+  refrescar?: boolean;
+}): Promise<{ fechaCorte: string; data: TReporteData[] }> => {
+  const resultado = await apiFetch<{ fechaCorte: string; data?: TReporteData[] }>(
+    `/reports/${endpoint}`,
+    { method: "POST", body: { fechaCorte, ...(refrescar && { refresh: true }) } },
+  );
+  return { fechaCorte: resultado.fechaCorte, data: resultado.data ?? [] };
+};

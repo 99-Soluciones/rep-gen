@@ -1,0 +1,99 @@
+{
+    "response": {
+        "dataInfo": {
+            "database": "",
+            "layout": "apiExport_CxC_Bancos",
+            "table": "contBanco.ITM",
+            "totalRecordCount": 0,
+            "foundCount": 0,
+            "returnedCount": 0
+        },
+        "data": [
+            {
+                "fieldData": {
+                    "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+                    "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 0,
+                    "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+                    "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+                    "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+                    "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+                    "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+                    "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+                    "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+                    "contBanco.ITM|ingreso.user.repVent|_x_id_userName::_idu_user_name": "",
+                    "saldo_ORIG_porComplementar_v0_22_1": 0,
+                    "monto_ORIG_abono_v0_22_1": 0,
+                    "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 0,
+                    "contBanco.ITM|contEGRESO_|_x_bancoItmID::__id_egreso": "",
+                    "__id_bancoITM": 0,
+                    "_id_banco": 0,
+                    "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "",
+                    "mConceptoDeBancoTexto_v0_20_0": "",
+                    "monto_ORIG_cargo_v0_22_1": "",
+                    "tc_tipoCambioValor_v0_26_1": 0,
+                    "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+                    "_fecha": "",
+                    "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 0,
+                    "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::___id_cliente": "",
+                    "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+                    "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::fiscal_RFC": "",
+                    "contBanco.ITM|prefCliente.egreso|_x_IDUclassify1::name": "",
+                    "contBanco.ITM|prefCliente.egreso|_x_IDUclassify2::name": "",
+                    "contBanco.ITM|prefCliente.egreso|_x_IDUclassify3::name": "",
+                    "contBanco.ITM|prefCliente.egreso|_x_IDUclassify4::name": "",
+                    "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::fiscal_RazonSocial": "",
+                    "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+                    "contBanco.ITM|egreso.user.repVent|_x_id_userName::_idu_user_name": "",
+                    "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 0,
+                    "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 0
+                },
+                "portalData": {
+                    "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": [
+                        {
+                            "recordId": "",
+                            "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::__idu_ingreso_itm": "",
+                            "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::app_MXN_GranTotal": 0,
+                            "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::_id_relacionado_Venta": 0,
+                            "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::fecha_ingresoITM_fechaDelComplemento": "",
+                            "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1": 0,
+                            "modId": "0"
+                        }
+                    ],
+                    "contBanco.ITM|contEgreso.ITM|_x_bancoItmID": [
+                        {
+                            "recordId": "",
+                            "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::__idu_egreso_itm": "",
+                            "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_MXN_GranTotal": 0,
+                            "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_id_relacionado_Ingreso": 0,
+                            "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "",
+                            "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1": 0,
+                            "modId": "0"
+                        }
+                    ]
+                },
+                "recordId": "",
+                "modId": "0",
+                "portalDataInfo": [
+                    {
+                        "database": "",
+                        "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+                        "foundCount": 0,
+                        "returnedCount": 0
+                    },
+                    {
+                        "database": "",
+                        "table": "contBanco.ITM|contEgreso.ITM|_x_bancoItmID",
+                        "foundCount": 0,
+                        "returnedCount": 0
+                    }
+                ]
+            }
+        ]
+    },
+    "messages": [
+        {
+            "code": "0",
+            "message": "OK"
+        }
+    ]
+}
