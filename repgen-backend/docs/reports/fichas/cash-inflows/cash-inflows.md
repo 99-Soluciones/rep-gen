@@ -464,8 +464,14 @@ pagos** (antes 6 de 8 fechas diferían). La venta 3699 (F-3273) ahora sí sale
 en octubre, con sus dos pagos del 16/10 y 30/10 ($11,839.65). Siguen las
 diferencias ya decididas (importe sin descuento, estatus, formatos).
 
-Pendiente de aclarar: el sobrante de $48 del movimiento 7388. El reporte
-anterior lo muestra con cliente en la vista por factura (11/11) y como
-"NO IDENTIFICADO" en la vista por concepto (12/11); el nuevo lo saca como
-`Pago sin aplicar` con el cliente de `CLIENTE.ingreso`. Monto y fecha
-coinciden en los tres.
+**Confirmado (12/11/2026):** el sobrante de $48 del movimiento 7388 está bien
+como `Pago sin aplicar` con el cliente de `CLIENTE.ingreso`. En ese depósito
+se combinaron dos clientes (un movimiento poco común); el reporte anterior lo
+muestra con cliente en una vista y como "NO IDENTIFICADO" en la otra. Se deja
+así.
+
+**Confirmado con FileMaker real:** las columnas de presentación del artículo y
+fecha de captura salen bien en las dos pestañas.
+
+Pendiente: segundo juego de datos dorados (cancelada con pago, nota de
+crédito, anticipo, dólares, IEPS o retenciones); lo captura la persona.
