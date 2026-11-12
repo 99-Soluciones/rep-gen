@@ -64,6 +64,11 @@
       "dataType": "date",
       "columnClass": "Facturas"
     },
+    "Factura Fecha de Captura": {
+      "field": "facturaFechaDeCaptura",
+      "dataType": "date",
+      "columnClass": "Facturas"
+    },
     "Factura Método Pago": {
       "field": "facturaMetodoPago",
       "dataType": "text",
@@ -115,6 +120,12 @@
       "dataType": "text",
       "columnClass": "Artículos",
       "anchoMinimo": 240
+    },
+    "Artículo Presentación": {
+      "field": "articuloPresentacion",
+      "dataType": "text",
+      "columnClass": "Artículos",
+      "filtro": "lista"
     },
     "Artículo Cuenta Contable": {
       "field": "articuloCuentaContable",
@@ -427,6 +438,7 @@
       "Factura Estatus Actual",
       "Factura Saldo Actual",
       "Factura Fecha",
+      "Factura Fecha de Captura",
       "Factura Método Pago",
       "Factura Uso CFDI",
       "Banco Forma Pago",
@@ -481,6 +493,7 @@
       "Factura Estatus Actual",
       "Factura Saldo Actual",
       "Factura Fecha",
+      "Factura Fecha de Captura",
       "Factura Método Pago",
       "Factura Uso CFDI",
       "Banco Forma Pago",
@@ -490,6 +503,7 @@
       "Artículo Marca",
       "Artículo Nombre",
       "Artículo Nombre Completo",
+      "Artículo Presentación",
       "Artículo Cuenta Contable",
       "categoriadeProducto1",
       "categoriadeProducto2",

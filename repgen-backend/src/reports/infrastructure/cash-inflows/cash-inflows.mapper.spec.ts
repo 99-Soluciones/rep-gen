@@ -1,6 +1,6 @@
 import type { RawRecord } from '../../../filemaker/ifilemaker';
 import { cleanData } from './cash-inflows.mapper';
-import { BAN, PAGOS_VENTA, VEN } from './cash-inflows.fields';
+import { BAN, CONCEPTOS, PAGOS_VENTA, VEN } from './cash-inflows.fields';
 import pagos from './__golden__/entrada-pagos.json';
 import bancos from './__golden__/entrada-bancos.json';
 
@@ -100,6 +100,20 @@ describe('cash-inflows cleanData — reglas', () => {
     );
     // La cantidad es la del concepto completo, no se prorratea.
     expect(conceptos.map((c) => c.cantidad)).toEqual([36, 24, 12]);
+  });
+
+  it('fecha de captura en las dos vistas; presentación solo por concepto', () => {
+    const v = venta();
+    v.fieldData[VEN.fechaCaptura] = '09/20/2026 10:15:00';
+    v.portalData.Conceptos[0][CONCEPTOS.presentacion] = ' Botella .355 ml ';
+
+    const [factura] = porFactura([v]);
+    expect(factura.facturaFechaDeCaptura).toBe('2026-09-20');
+    expect(factura.articuloPresentacion).toBeNull();
+
+    const [concepto] = cleanData([v], [], rango, 'concepto');
+    expect(concepto.facturaFechaDeCaptura).toBe('2026-09-20');
+    expect(concepto.articuloPresentacion).toBe('Botella .355 ml');
   });
 
   it('factura con gran total 0: no divide entre cero', () => {

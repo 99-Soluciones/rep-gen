@@ -292,6 +292,12 @@
             "number",
             "string"
           ]
+        },
+        "area_fechaVenta": {
+          "type": [
+            "number",
+            "string"
+          ]
         }
       },
       "required": [
@@ -342,7 +348,8 @@
         "entrega_dest_Colonia",
         "entrega_dest_Delegacion",
         "entrega_dest_Ciudad",
-        "entrega_dest_EDO"
+        "entrega_dest_EDO",
+        "area_fechaVenta"
       ],
       "additionalProperties": true
     },
@@ -413,6 +420,12 @@
                   "number",
                   "string"
                 ]
+              },
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": {
+                "type": [
+                  "number",
+                  "string"
+                ]
               }
             },
             "required": [
@@ -423,7 +436,8 @@
               "venta_|contBANCO.pagoAplicada_|_x_ventaID::datos_nombre",
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM",
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1",
-              "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1"
+              "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1",
+              "venta_|contBanco.ITM|_x_ventaID::_fecha"
             ],
             "additionalProperties": true
           }
@@ -690,6 +704,12 @@
                   "number",
                   "string"
                 ]
+              },
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": {
+                "type": [
+                  "number",
+                  "string"
+                ]
               }
             },
             "required": [
@@ -733,7 +753,8 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_contraIEPS",
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1",
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1",
-              "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal"
+              "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal",
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna"
             ],
             "additionalProperties": true
           }

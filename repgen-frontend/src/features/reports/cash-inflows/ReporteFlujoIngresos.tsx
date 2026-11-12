@@ -176,7 +176,7 @@ const ReporteFlujoIngresos = () => {
             />
             <SeccionEstado
               titulo="Por tipo"
-              nota="Un pago con complemento cuenta en la fecha del complemento; los depósitos sin aplicar, en la fecha del banco."
+              nota="Todo cuenta en la fecha en que entró al banco, aunque el complemento de pago sea posterior."
             >
               <LineaEstado etiqueta="Aplicado a facturas" valor={totales.aplicado} />
               <LineaEstado etiqueta="Sin aplicar (con cliente)" valor={totales.sinAplicar} />

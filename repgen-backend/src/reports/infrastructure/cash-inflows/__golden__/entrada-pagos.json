@@ -58,7 +58,8 @@
           "entrega_dest_Colonia": "ACUEDUCTO TENAYUCA",
           "entrega_dest_Delegacion": "TLALNEPANTLA",
           "entrega_dest_Ciudad": "EDOMEX",
-          "entrega_dest_EDO": "MX"
+          "entrega_dest_EDO": "MX",
+          "area_fechaVenta": "11/25/2025"
         },
         "portalData": {
           "PagosVenta": [
@@ -72,6 +73,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7104,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "08/23/2026",
               "modId": "0"
             },
             {
@@ -84,6 +86,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7212,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "09/05/2026",
               "modId": "0"
             },
             {
@@ -96,6 +99,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7346,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "10/04/2026",
               "modId": "0"
             },
             {
@@ -108,6 +112,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7533,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "11/05/2026",
               "modId": "0"
             }
           ],
@@ -155,6 +160,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 4116.00000038,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Lata .355 L",
               "modId": "0"
             },
             {
@@ -200,6 +206,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 1657.60000021,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -245,6 +252,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 2015.9999999,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -290,6 +298,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 3225.6000004,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -335,6 +344,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 9094.40000114,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             }
           ]
@@ -407,7 +417,8 @@
           "entrega_dest_Colonia": "Polanco V Secc.",
           "entrega_dest_Delegacion": "Miguel Hidalgo",
           "entrega_dest_Ciudad": "Ciudad de México",
-          "entrega_dest_EDO": "CDMX"
+          "entrega_dest_EDO": "CDMX",
+          "area_fechaVenta": "04/27/2026"
         },
         "portalData": {
           "PagosVenta": [
@@ -421,6 +432,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 6328,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "06/19/2026",
               "modId": "0"
             },
             {
@@ -433,6 +445,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7390,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "10/09/2026",
               "modId": "0"
             }
           ],
@@ -480,6 +493,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 5879.9999994,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             }
           ]
@@ -552,7 +566,8 @@
           "entrega_dest_Colonia": "Polanco V Secc.",
           "entrega_dest_Delegacion": "Miguel Hidalgo",
           "entrega_dest_Ciudad": "Ciudad de México",
-          "entrega_dest_EDO": "CDMX"
+          "entrega_dest_EDO": "CDMX",
+          "area_fechaVenta": "07/20/2026"
         },
         "portalData": {
           "PagosVenta": [
@@ -566,6 +581,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7390,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "10/09/2026",
               "modId": "0"
             }
           ],
@@ -613,6 +629,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 6173.99999946,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -658,6 +675,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 16799.99999827,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             }
           ]
@@ -730,7 +748,8 @@
           "entrega_dest_Colonia": "Roma",
           "entrega_dest_Delegacion": "",
           "entrega_dest_Ciudad": "Cuahtemoc",
-          "entrega_dest_EDO": "CDMX"
+          "entrega_dest_EDO": "CDMX",
+          "area_fechaVenta": "09/23/2026"
         },
         "portalData": {
           "PagosVenta": [
@@ -744,6 +763,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7352,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "10/02/2026",
               "modId": "0"
             }
           ],
@@ -791,6 +811,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 959.99999059,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             }
           ]
@@ -821,7 +842,7 @@
           "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 05 SA DE CV",
           "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "EJE010105AA5",
           "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
-          "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante A",
+          "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante F",
           "cfdi_facturaSerieFolio_v0_18_1": "F-3111",
           "cfdi_FacturaFolio": 3111,
           "monto_GranTotal": 3000,
@@ -863,7 +884,8 @@
           "entrega_dest_Colonia": "ROMA NORTE",
           "entrega_dest_Delegacion": "CUAUHTÉMOC",
           "entrega_dest_Ciudad": "CDMX",
-          "entrega_dest_EDO": "CDMX"
+          "entrega_dest_EDO": "CDMX",
+          "area_fechaVenta": "09/23/2026"
         },
         "portalData": {
           "PagosVenta": [
@@ -877,6 +899,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7367,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "10/05/2026",
               "modId": "0"
             }
           ],
@@ -924,6 +947,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 1440.00001584,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "1"
             },
             {
@@ -969,6 +993,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 1055.99998656,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -1014,6 +1039,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 503.99999998,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             }
           ]
@@ -1086,7 +1112,8 @@
           "entrega_dest_Colonia": "Tlalpuente",
           "entrega_dest_Delegacion": "",
           "entrega_dest_Ciudad": "San Andrés Totoltepec",
-          "entrega_dest_EDO": "CDMX"
+          "entrega_dest_EDO": "CDMX",
+          "area_fechaVenta": "10/14/2026"
         },
         "portalData": {
           "PagosVenta": [
@@ -1100,6 +1127,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7408,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "10/14/2026",
               "modId": "0"
             },
             {
@@ -1112,6 +1140,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7407,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "10/14/2026",
               "modId": "0"
             }
           ],
@@ -1159,6 +1188,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 959.99999998,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -1204,6 +1234,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 1368.00000001,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -1249,6 +1280,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 1512.1296,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -1294,6 +1326,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 0.096,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -1339,6 +1372,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 1595.99999981,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -1384,6 +1418,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 1835.99999994,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             }
           ]
@@ -1414,7 +1449,7 @@
           "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "",
           "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "",
           "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
-          "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante F",
+          "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "Representante G",
           "cfdi_facturaSerieFolio_v0_18_1": "NOTA-3590",
           "cfdi_FacturaFolio": 3590,
           "monto_GranTotal": 0.03,
@@ -1422,7 +1457,7 @@
           "cfdi_FacturaFechaTimbrar": "10/16/2026",
           "_idu_cdfi_metoPago": "PUE",
           "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "Repartos",
-          "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante F",
+          "venta_|USER_|_x_repVent::userData_nombre_Completo": "Representante G",
           "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "Representante B",
           "__id_venta": 3590,
           "saldo_Pendiente_GranTotal": 0,
@@ -1456,7 +1491,8 @@
           "entrega_dest_Colonia": "San Miguel",
           "entrega_dest_Delegacion": "Corregidora",
           "entrega_dest_Ciudad": "El Pueblito",
-          "entrega_dest_EDO": "Querétaro"
+          "entrega_dest_EDO": "Querétaro",
+          "area_fechaVenta": "10/16/2026"
         },
         "portalData": {
           "PagosVenta": [
@@ -1470,6 +1506,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7403,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "10/14/2026",
               "modId": "0"
             }
           ],
@@ -1517,6 +1554,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 0.01,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -1562,6 +1600,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 0.01,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -1607,6 +1646,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 0.01,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             }
           ]
@@ -1679,7 +1719,8 @@
           "entrega_dest_Colonia": "Vallarta Universidad",
           "entrega_dest_Delegacion": "",
           "entrega_dest_Ciudad": "Zapopan",
-          "entrega_dest_EDO": "Jal."
+          "entrega_dest_EDO": "Jal.",
+          "area_fechaVenta": "11/03/2026"
         },
         "portalData": {
           "PagosVenta": [
@@ -1693,6 +1734,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7394,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "10/16/2026",
               "modId": "1"
             },
             {
@@ -1705,6 +1747,7 @@
               "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": 7527,
               "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": "03",
               "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": 1,
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": "10/30/2026",
               "modId": "0"
             }
           ],
@@ -1752,6 +1795,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 29422.008,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "1"
             },
             {
@@ -1797,6 +1841,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 17977.8192,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -1842,6 +1887,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 17624.6688,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             },
             {
@@ -1887,6 +1933,7 @@
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": 0,
               "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": 12852.6144,
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": "Botella .355 ml",
               "modId": "0"
             }
           ]

@@ -27,6 +27,7 @@ export const VEN = {
   uuid: 'cfdi_UUID',
   serieFolio: 'cfdi_facturaSerieFolio_v0_18_1',
   timbrado: 'cfdi_FacturaFechaTimbrar',
+  fechaCaptura: 'area_fechaVenta',
   granTotal: 'monto_GranTotal',
   moneda: '_idu_tc_moneda_v0_16_0',
   tipoCambio: 'tc_tipoCambioValor_v0_25_3',
@@ -56,8 +57,12 @@ const BANCO = `${V}contBANCO.pagoAplicada_|_x_ventaID::`;
 export const PAGOS_VENTA = {
   portal: 'PagosVenta',
   montoMxn: `${PAGO}app_MXN_GranTotal`,
-  /** Fecha del complemento; sin complemento trae la del ingreso. Nunca vacía. */
-  fecha: `${PAGO}fecha_ingresoITM_fechaDelComplemento`,
+  /**
+   * Fecha del movimiento de banco: el pago cuenta el día que entró el dinero,
+   * no el del complemento (fecha_ingresoITM_fechaDelComplemento), igual que
+   * el reporte anterior.
+   */
+  fecha: `${BANCO_ITM}_fecha`,
   /** 0 o vacío: movimiento sin banco (nota de crédito). */
   bancoFolio: `${BANCO_ITM}__id_bancoITM`,
   formaPago: `${BANCO_ITM}_idu_formaPago_v0_22_1`,
@@ -77,6 +82,7 @@ export const CONCEPTOS = {
   marca: `${INV}itm_Marca`,
   nombre: `${INV}itm_Name`,
   nombreCompleto: `${INV}itm_Name_Display`,
+  presentacion: `${V}inv_Presentation_|_x_ventaID::nombreInterna`,
   cuentaContable: `${INV}cuentaContable_ingresoOrInventario_v0_27_1`,
   clasificacion: (n: number) =>
     `${V}invITM_classify${n}|_x_ventaID::name_v0_20_0`,

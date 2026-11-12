@@ -253,7 +253,7 @@ export type DetalleIngresos = 'factura' | 'concepto';
  */
 export interface ReportCashInflowRecord {
   tipoRenglon: TipoRenglonIngreso;
-  /** Pago aplicado: fecha del complemento (sin complemento, la del ingreso). Los demás: fecha del banco. */
+  /** Fecha del movimiento de banco: el día que entró el dinero, no el del complemento. */
   pagoFecha: string;
   bancoFolioTransaccion: number | null;
   bancoNombre: string;
@@ -281,6 +281,8 @@ export interface ReportCashInflowRecord {
   facturaUuid: string | null;
   facturaSerieFolio: string | null;
   facturaFecha: string | null;
+  /** Fecha en que se capturó la venta (area_fechaVenta). */
+  facturaFechaDeCaptura: string | null;
   /** Completo, sin prorratear. */
   facturaGranTotalMxn: number | null;
   facturaGranTotalOriginal: number | null;
@@ -303,6 +305,8 @@ export interface ReportCashInflowRecord {
   articuloMarca: string | null;
   articuloNombre: string | null;
   articuloNombreCompleto: string | null;
+  /** Nombre de la presentación (p. ej. "Botella .355 ml"). */
+  articuloPresentacion: string | null;
   articuloCuentaContable: string | null;
   categoriadeProducto1: string | null;
   categoriadeProducto2: string | null;

@@ -18,7 +18,7 @@
   pagos aplicados a facturas no se filtran. Consecuencia: el total del periodo
   puede variar según el usuario.
 
-> **Estado (12/11/2026): implementado.** Los **PENDIENTE** que quedan abajo
+> **Estado (12/11/2026): implementado y validado contra el reporte anterior.** Los **PENDIENTE** que quedan abajo
 > con una recomendación se aprobaron tal como dice la recomendación (borrador
 > y plan aprobados); se conservan para saber de dónde salió cada regla. Código:
 > `repgen-backend/src/reports/*/cash-inflows/` y
@@ -151,7 +151,7 @@ se conoce, es el campo que ya usan Ventas o CxC.
 | #     | Encabezado anterior              | Campo de respuesta            | Tipo   | Aplica | Vista | Origen en FileMaker (por confirmar)                 | Nota |
 | ----- | -------------------------------- | ----------------------------- | ------ | ------ | ----- | --------------------------------------------------- | ---- |
 | nuevo | —                                | `tipoRenglon`                 | text   | P S N  | F C   | calculado                                           | filtro lista |
-| 0     | Fecha del Pago                   | `pagoFecha`                   | date   | P S N  | F C   | P: `fecha_ingresoITM_fechaDelComplemento` · S N: Banco `_fecha` | ver paso 1 |
+| 0     | Fecha del Pago                   | `pagoFecha`                   | date   | P S N  | F C   | Banco `_fecha` (P: por el portal `PagosVenta`)      | fecha del movimiento de banco; ver paso 1 |
 | 1     | Banco Transaccion ID             | `bancoFolioTransaccion`       | number | P S N  | F C   | Banco `__id_bancoITM`                               | mismo nombre que en CxC |
 | 2     | Banco Nombre                     | `bancoNombre`                 | text   | P S N  | F C   | `contBANCO_::datos_nombre`                          | filtro lista |
 | 3     | Banco Forma Pago                 | `bancoFormaPago`              | text   | P S N  | F C   | `_idu_formaPago_v0_22_1`                            | solo la clave (`03`) |
@@ -198,11 +198,11 @@ se conoce, es el campo que ya usan Ventas o CxC.
 | 58    | Ganancia Bruta (MXN)             | `gananciaBrutaMxn`            | number | P      | F C   | calculado: importe con descuento − costo subtotal   | sobre los montos prorrateados |
 | 59    | Costo Tasa                       | `costoTasa`                   | number | P      | F C   | calculado: costo subtotal ÷ importe con descuento   | |
 | 60    | Margen Tasa                      | `margenTasa`                  | number | P      | F C   | calculado: 1 − `costoTasa`                          | |
-| 61    | Artículo Nombre (repetido)       | `articuloPresentacion`        | text   | P      | C     | `_id_presentacion`                                  | trae la presentación ("Botella .355 ml"); se renombra |
+| 61    | Artículo Nombre (repetido)       | `articuloPresentacion`        | text   | P      | C     | `venta_\|inv_Presentation_\|_x_ventaID::nombreInterna` (portal `Conceptos`) | nombre de la presentación ("Botella .355 ml"); se renombra |
 | 62–65 | Cliente Colonia / Delegacion / Ciudad / Estado | `clienteColonia`, `clienteDelegacion`, `clienteCiudad`, `clienteEstado` | text | P S | F C | como Ventas | ocultas por defecto |
 | 66    | Cliente ID                       | `clienteId`                   | number | P S    | F C   | `…::___id_cliente`                                  | |
 | 67    | Cliente Rep de Venta             | `clienteRepDeVenta`           | text   | P S    | F C   | como CxC                                            | el vigente del cliente |
-| 68    | Factura Fecha de Captura         | `facturaFechaDeCaptura`       | date   | P      | F C   | `area_fechaVenta`                                   | vacía en toda la muestra |
+| 68    | Factura Fecha de Captura         | `facturaFechaDeCaptura`       | date   | P      | F C   | `area_fechaVenta`                                   | |
 | 69    | Factura TipoDeCambio             | `facturaTipoDeCambio`         | number | P      | F C   | `tc_tipoCambioValor_v0_25_3`                        | |
 | 70    | Factura Moneda                   | `facturaMoneda`               | text   | P      | F C   | `_idu_tc_moneda_v0_16_0`                            | |
 | 71    | Factura Gran Total (en moneda timbrado) | `facturaGranTotalOriginal` | number | P    | F C   | gran total MXN ÷ TC, como Ventas                    | |
@@ -220,28 +220,24 @@ clasificaciones (ya cubiertas), las últimas están vacías y no se incluyen.
 - **Decidido:** se filtra por **fecha del pago**, no por fecha de liquidación.
   Un abono parcial sale aunque la factura siga con saldo (9 renglones
   "Vigente: Vencida" en la muestra).
-- **Decidido: qué es la "fecha del pago".**
-  - Pago **con** CFDI de complemento de pago: la fecha en que se aplicó el
-    complemento (`fecha_ingresoITM_fechaDelComplemento`).
-  - Pago **sin** complemento: la fecha del movimiento de banco (`_fecha`).
-  - Depósito sin aplicar o no identificado: la fecha del movimiento de banco.
-- Consecuencia (aceptada con la regla): un depósito de octubre complementado
-  en noviembre sale en octubre como "sin aplicar" mientras no se aplique y,
-  una vez complementado, pasa a noviembre como `Pago aplicado`. El total de
-  un mes ya consultado puede cambiar, y Σ del reporte no es igual a los
-  depósitos del mes en Bancos.
-- **Confirmado:** `fecha_ingresoITM_fechaDelComplemento` nunca viene vacía;
-  sin complemento trae la fecha del ingreso. Ese solo campo ya implementa la
-  regla, así que `pagoFecha` de un `Pago aplicado` = ese campo y la búsqueda
-  es una sola petición.
-- **Decidido (12/11/2026): vale la fecha del complemento aunque la versión
-  anterior use la del banco.** F-3273 (venta 3699) tiene dos pagos con fecha
-  de complemento 06/11/2026 (movimientos 7394 y 7527). El reporte anterior,
-  generado el 11/11, los lista en octubre con fecha 16/10 y 30/10, que son
-  las fechas del banco. Con la regla nueva salen en noviembre, y octubre da
-  $11,839.65 menos que el reporte anterior solo por esta factura. En la
-  comparación con el sistema actual estas diferencias son esperadas: el
-  reporte nuevo tiene razón.
+- **Decidido (12/11/2026): la "fecha del pago" es siempre la del movimiento
+  de banco**, también en los pagos con complemento
+  (`venta_|contBanco.ITM|_x_ventaID::_fecha` en el portal `PagosVenta`; `_fecha`
+  en el layout de bancos). Es lo que hace el reporte anterior. Cada depósito
+  cae en un solo mes, y el total del periodo es dinero que entró al banco en
+  ese periodo.
+- Validado contra el reporte anterior con FileMaker real: noviembre 01–12
+  (25 renglones, $83,647.51), octubre por factura (105 renglones,
+  $1,544,913.10) y octubre por concepto (187 renglones). Mismos pagos, mismas
+  fechas e importes al centavo.
+- Este reporte ya no coincide con Cuentas por cobrar en la fecha: CxC cuenta
+  una aplicación en la fecha del complemento. Son preguntas distintas (qué
+  entró al banco / qué se debe).
+- Historia: la primera versión (rama `feat/reporte-flujo-efectivo-ingresos`)
+  usaba la fecha del complemento (`fecha_ingresoITM_fechaDelComplemento`, que
+  nunca viene vacía: sin complemento trae la del ingreso). Se descartó porque
+  noviembre 01–12 daba $187,330.32: incluía $103,682.81 depositados en meses
+  anteriores y complementados en noviembre.
 - El título de la versión anterior dice "Facturas por Fecha del Timbre" en
   una vista y "Conceptos por Fecha del Pago" en la otra; las dos filtran por
   fecha del pago. El reporte nuevo no usa la fecha de timbrado para filtrar.
@@ -352,7 +348,8 @@ clasificaciones (ya cubiertas), las últimas están vacías y no se incluyen.
 - Por depósito: Σ renglones del mismo `bancoFolioTransaccion` ≤ monto del depósito.
 - En cada `Pago aplicado`: importe con descuento + IVA + IEPS − retenciones =
   `pagoGranTotalMxn`.
-- Contra la versión anterior, 01/10/2026–31/10/2026: los totales de "Resumen / KPIs".
+- Contra la versión anterior, mismo rango: mismos pagos, fechas e importes
+  (hecho con octubre 2026 y noviembre 01–12).
 - **PENDIENTE:** ¿Σ del reporte = Σ abonos del reporte de Bancos en el mismo
   rango? Solo si todo abono está aplicado a facturas o tiene saldo por
   complementar; un abono aplicado a otra cosa (préstamo, otros ingresos)
@@ -397,6 +394,9 @@ desglose por tipo y por banco en el panel lateral.
 
 ## Datos dorados: primer borrador (12/11/2026)
 
+> Historia: este borrador usaba la fecha del complemento. Los datos dorados
+> vigentes son los de la sección "borrador con fecha del banco".
+
 En `datos-dorados/`: `entrada-pagos.json` (8 ventas), `entrada-bancos.json`
 (3 movimientos), ambos anonimizados, y `rango.json` = 01/10/2026 a 31/10/2026.
 El borrador sale de un script aparte que aplica esta ficha (no del código del
@@ -425,9 +425,9 @@ IEPS o retenciones, más de 50 conceptos o pagos, cliente sin clasificaciones
 en un pago aplicado.
 
 **Decidido (12/11/2026, borrador aprobado):** lo que salió al armar el
-borrador queda como lo usa el borrador. Los puntos 3 y 4 significan que
-`articuloPresentacion` y `facturaFechaDeCaptura` **no** van en la respuesta
-mientras el layout no traiga esos campos.
+borrador queda como lo usa el borrador. Los puntos 3 y 4 ya no aplican: el
+layout se amplió con `venta_|inv_Presentation_|_x_ventaID::nombreInterna` y
+`area_fechaVenta`, y las dos columnas van en la respuesta.
 
 1. `facturaEstatus`: `Liquidado` · `Vigente` · `No Cobrar` · `Cancelada`, desde
    `saldo_isPendiente_Cobrado_NoCobrar_Cancelado`. El anterior separaba
@@ -452,3 +452,20 @@ mientras el layout no traiga esos campos.
    `claveDeProductoOServicio` = `50202300-Bebidas no alcohólicas`,
    `unidadDeVenta` = `H87`.
 8. Redondeo: montos a 2 decimales, tasas a 6.
+
+## Datos dorados: borrador con fecha del banco (12/11/2026)
+
+Mismas 8 ventas, recapturadas con `_fecha` del banco en `PagosVenta`; mismo
+rango (octubre 2026). `esperado-factura-borrador.json` tiene 13 filas y
+`esperado-concepto-borrador.json` 38; las dos vistas suman $605,327.66.
+
+Contra el reporte anterior de octubre: **fechas y montos coinciden en los 13
+pagos** (antes 6 de 8 fechas diferían). La venta 3699 (F-3273) ahora sí sale
+en octubre, con sus dos pagos del 16/10 y 30/10 ($11,839.65). Siguen las
+diferencias ya decididas (importe sin descuento, estatus, formatos).
+
+Pendiente de aclarar: el sobrante de $48 del movimiento 7388. El reporte
+anterior lo muestra con cliente en la vista por factura (11/11) y como
+"NO IDENTIFICADO" en la vista por concepto (12/11); el nuevo lo saca como
+`Pago sin aplicar` con el cliente de `CLIENTE.ingreso`. Monto y fecha
+coinciden en los tres.
