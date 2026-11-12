@@ -235,3 +235,101 @@ export interface ReceivablesResponse {
   fechaCorte: string;
   data: ReportReceivablesRecord[];
 }
+
+/** Tipo de renglón de Flujo de efectivo - Ingresos. */
+export type TipoRenglonIngreso =
+  | 'Pago aplicado'
+  | 'Pago sin aplicar'
+  | 'Pago no identificado';
+
+/** Vista del reporte: una fila por pago × factura, o por pago × factura × concepto. */
+export type DetalleIngresos = 'factura' | 'concepto';
+
+/**
+ * Fila de Flujo de efectivo - Ingresos. Las dos vistas traen las mismas
+ * llaves; lo que no aplica al tipo de renglón o a la vista va en null.
+ * Importes y costo subtotal prorrateados por lo pagado (pagoTasa). Montos en
+ * MXN, fechas YYYY-MM-DD.
+ */
+export interface ReportCashInflowRecord {
+  tipoRenglon: TipoRenglonIngreso;
+  /** Pago aplicado: fecha del complemento (sin complemento, la del ingreso). Los demás: fecha del banco. */
+  pagoFecha: string;
+  bancoFolioTransaccion: number | null;
+  bancoNombre: string;
+  bancoFormaPago: string;
+  bancoMoneda: string;
+  bancoTipoDeCambio: number;
+  /** 'NO IDENTIFICADO' en un depósito sin cliente. */
+  cliente: string;
+  clienteRazonSocial: string | null;
+  clienteRfc: string | null;
+  clienteCuentaContable: string | null;
+  clasificacion1: string | null;
+  clasificacion2: string | null;
+  clasificacion3: string | null;
+  clasificacion4: string | null;
+  clienteId: number | null;
+  clienteRepDeVenta: string | null;
+  clienteColonia: string | null;
+  clienteDelegacion: string | null;
+  clienteCiudad: string | null;
+  clienteEstado: string | null;
+  /** Crédito autorizado al cliente; no se prorratea. */
+  creditoGranTotalMxn: number | null;
+  ventaId: number | null;
+  facturaUuid: string | null;
+  facturaSerieFolio: string | null;
+  facturaFecha: string | null;
+  /** Completo, sin prorratear. */
+  facturaGranTotalMxn: number | null;
+  facturaGranTotalOriginal: number | null;
+  facturaMoneda: string | null;
+  facturaTipoDeCambio: number | null;
+  facturaUsoCfdi: string | null;
+  facturaMetodoPago: string | null;
+  /** Estatus de hoy, no del periodo: Liquidado · Vigente · No Cobrar · Cancelada. */
+  facturaEstatus: string | null;
+  /** Saldo de hoy, no del periodo. */
+  facturaSaldoActual: number | null;
+  /** Este pago ÷ gran total de la factura (no la tasa acumulada). */
+  pagoTasa: number | null;
+  facturaRepDeVenta: string | null;
+  facturaRepDeCobranza: string | null;
+  observacionesEnCfdi: string | null;
+  bodegaId: number | null;
+  bodegaNombre: string | null;
+  articuloSku: string | null;
+  articuloMarca: string | null;
+  articuloNombre: string | null;
+  articuloNombreCompleto: string | null;
+  articuloCuentaContable: string | null;
+  categoriadeProducto1: string | null;
+  categoriadeProducto2: string | null;
+  categoriadeProducto3: string | null;
+  categoriadeProducto4: string | null;
+  claveDeProductoOServicio: string | null;
+  /** Del concepto completo, sin prorratear (igual que contenido y precios). */
+  cantidad: number | null;
+  unidadDeVenta: string | null;
+  unidadDeContenido: string | null;
+  contenidoUnitario: number | null;
+  contenidoSubTotal: number | null;
+  precioUnitario: number | null;
+  tipoDeConcepto: string | null;
+  metodoDeAdquisicion: string | null;
+  costoDirectoUnitarioMxn: number | null;
+  importeSinDescuentoMxn: number | null;
+  descuentoMontoMxn: number | null;
+  importeConDescuentoMxn: number | null;
+  ivaMxn: number | null;
+  iepsMxn: number | null;
+  ivaRetenidoMxn: number | null;
+  isrRetenidoMxn: number | null;
+  /** Lo que entró: monto aplicado a la factura, o el saldo por aplicar del depósito. */
+  pagoGranTotalMxn: number;
+  costoDirectoSubTotalMxn: number | null;
+  gananciaBrutaMxn: number | null;
+  costoTasa: number | null;
+  margenTasa: number | null;
+}

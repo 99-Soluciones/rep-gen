@@ -18,11 +18,14 @@ const cargarBancos = () => import("../features/reports/banks/ReporteBancos");
 const cargarVentas = () => import("../features/reports/sales/ReporteVentas");
 const ReporteBancos = lazy(cargarBancos);
 const cargarCxc = () => import("../features/reports/receivables/ReporteCuentasPorCobrar");
+const cargarIngresos = () => import("../features/reports/cash-inflows/ReporteFlujoIngresos");
 const ReporteVentas = lazy(cargarVentas);
 const ReporteCuentasPorCobrar = lazy(cargarCxc);
+const ReporteFlujoIngresos = lazy(cargarIngresos);
 void cargarBancos().catch(() => {});
 void cargarVentas().catch(() => {});
 void cargarCxc().catch(() => {});
+void cargarIngresos().catch(() => {});
 
 const CargandoReporte = () => (
   <p role="status" className="p-6 text-sm text-gray-600">
@@ -83,6 +86,11 @@ const crearRouter = (reporteInicio: string | null) => {
         { path: "/ventas", element: <Navigate to="/ventas/facturas" replace /> },
         { path: "/ventas/:reportType", element: <ReporteVentas /> },
         { path: "/cuentas_por_cobrar", element: <ReporteCuentasPorCobrar /> },
+        {
+          path: "/flujo_efectivo_ingresos",
+          element: <Navigate to="/flujo_efectivo_ingresos/facturas" replace />,
+        },
+        { path: "/flujo_efectivo_ingresos/:reportType", element: <ReporteFlujoIngresos /> },
         { path: "/inventarios", element: <ComingSoon /> },
         {
           path: "*",

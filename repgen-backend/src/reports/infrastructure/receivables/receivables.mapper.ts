@@ -5,6 +5,7 @@ import type {
   TipoTransaccionCxC,
 } from '../../domain/receivables';
 import { getPortalRows } from '../../../common/utils';
+import { fecha, id, numero, redondear, texto } from '../shared/fm-parsers';
 import facturasSchema from './cxc-facturas.schema.json';
 import bancosSchema from './cxc-bancos.schema.json';
 import {
@@ -43,35 +44,6 @@ function assertSchema(
 type Campos = Record<string, unknown>;
 /** Fila antes de ponerle la fecha de corte (es la misma en todas). */
 type Fila = Omit<ReportReceivablesRecord, 'fechaCorte'>;
-
-/** MM/DD/YYYY o "MM/DD/YYYY HH:MM:SS" de FileMaker -> YYYY-MM-DD; vacío -> null. */
-function fecha(valor: unknown): string | null {
-  if (typeof valor !== 'string' || !valor.trim()) return null;
-  const [m, d, y] = valor.trim().split(' ')[0].split('/');
-  return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
-}
-
-/** Número de FileMaker; vacío o no numérico -> null. */
-function numero(valor: unknown): number | null {
-  if (valor === '' || valor === null || valor === undefined) return null;
-  const n = Number(valor);
-  return Number.isNaN(n) ? null : n;
-}
-
-/** Id de FileMaker: vacío o 0 significa "sin registro". */
-function id(valor: unknown): number | null {
-  const n = numero(valor);
-  return n ? Math.trunc(n) : null;
-}
-
-/** Texto recortado; FileMaker puede mandar un número en un campo de texto. */
-function texto(valor: unknown): string {
-  if (typeof valor === 'string') return valor.trim();
-  return typeof valor === 'number' ? String(valor) : '';
-}
-
-const redondear = (n: number): number =>
-  Math.round((n + Number.EPSILON) * 100) / 100;
 
 const sumarDias = (iso: string, dias: number): string => {
   const d = new Date(`${iso}T00:00:00Z`);

@@ -30,6 +30,9 @@ const REGLAS = [
   ['::_idu_user_name', 'persona'],
   ['cfdi_UUID', 'uuid'],
   ['::__idu_ingreso_itm', 'uuid'],
+  // Texto libre: suele traer el nombre del cliente o la cuenta de origen.
+  ['cfdi_Observaciones_v0_18_4', 'observacion'],
+  ['mConceptoDeBancoTexto_v0_20_0', 'referencia'],
 ];
 
 const FALSOS = {
@@ -38,6 +41,9 @@ const FALSOS = {
   rfc: (n) => `EJE0101${String(n).padStart(2, '0')}AA${n % 10}`,
   persona: (n) => `Representante ${n <= 26 ? String.fromCharCode(64 + n) : n}`,
   uuid: (n) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`,
+  // Conserva un salto de línea de FileMaker (\r): el mapper debe tratarlo.
+  observacion: (n) => `Nombre Comercial: Ejemplo ${n}\rOC ${n}`,
+  referencia: (n) => `Referencia ejemplo ${n}`,
 };
 
 const YA_FALSO = {
@@ -46,6 +52,8 @@ const YA_FALSO = {
   rfc: /^EJE0101\d{2}AA\d$/,
   persona: /^Representante (?:[A-Z]|\d+)$/,
   uuid: /^00000000-0000-4000-8000-\d{12}$/,
+  observacion: /^Nombre Comercial: Ejemplo \d+\rOC \d+$/,
+  referencia: /^Referencia ejemplo \d+$/,
 };
 
 /** Devuelve una función que anonimiza un objeto de campos (fieldData o renglón de portal). */
