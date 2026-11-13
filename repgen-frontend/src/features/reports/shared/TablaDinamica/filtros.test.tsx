@@ -44,19 +44,19 @@ describe("filtros de columna", () => {
     const { input, aplicar } = await montar();
 
     await aplicar({ cliente: { filterType: "text", type: "contains", filter: "arb" } });
-    await waitFor(() => expect(input("Cliente").value).toBe("arb"));
+    await waitFor(() => expect(input("Cliente Nombre Comercial").value).toBe("arb"));
 
     await aplicar(null);
-    await waitFor(() => expect(input("Cliente").value).toBe(""));
+    await waitFor(() => expect(input("Cliente Nombre Comercial").value).toBe(""));
   });
 
   it("escribir en el filtro flotante filtra las filas", async () => {
     const { api, input } = await montar();
 
-    fireEvent.change(input("Cliente"), { target: { value: "otro" } });
+    fireEvent.change(input("Cliente Nombre Comercial"), { target: { value: "otro" } });
 
     await waitFor(() => expect(api.getDisplayedRowCount()).toBe(1), { timeout: 2000 });
-    expect(input("Cliente").value).toBe("otro");
+    expect(input("Cliente Nombre Comercial").value).toBe("otro");
   });
 
   it("'Igual a' de texto coincide con celdas numéricas e ignora mayúsculas y acentos", async () => {

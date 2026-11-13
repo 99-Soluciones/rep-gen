@@ -14,6 +14,7 @@ Reportes de referencia para copiar:
 | Bancos | `*/banks/` (con filtro de permisos por usuario) | `banks/` |
 | Ventas | `*/sales/` | `sales/` |
 | Cuentas por cobrar | `*/receivables/` (fecha de corte, dos layouts, sin `BaseReportService`) | `receivables/` |
+| Flujo de efectivo - Ingresos | `*/cash-inflows/` (rango, dos layouts, dos vistas de una sola consulta, sin `BaseReportService`) | `cash-inflows/` (dos pestañas) |
 
 Ficha completa de ejemplo (la mejor plantilla para un reporte nuevo):
 [repgen-backend/docs/reports/fichas/receivables/](../../repgen-backend/docs/reports/fichas/receivables/receivables.md).
@@ -118,6 +119,9 @@ Trampas de FileMaker que ya costaron tiempo:
 - **Un campo con dos significados**: `saldo_fecha_liquidacion_bancoITM_noCobrar` trae la fecha de "no cobrar" o la del depósito; distinguir con el estatus.
 - **Cancelar deja el saldo en 0**: para un corte anterior a la cancelación, el saldo se reconstruye (gran total − pagos hasta el corte).
 - **Buscar en un campo de portal** trae el registro si *algún* renglón relacionado cumple: útil para "algún pago después del corte".
+- **Campos de otra tabla dentro de un portal**: salen bien por renglón solo si esa tabla se relaciona *a través de* la tabla del portal. Comprobarlo con un registro de dos renglones distintos (en Ingresos: una venta con dos pagos de depósitos distintos).
+- **Varios registros relacionados, un solo campo**: un depósito puede tener dos ingresos (dos clientes); un campo relacionado en el layout trae solo uno, y dos relaciones distintas pueden apuntar a ingresos distintos.
+- **La fecha del reporte actual puede no ser la que se decidió**: en Ingresos el reporte anterior usaba la fecha del banco y la regla decidida fue la del complemento. Compararlo con una captura antes de programar.
 
 ---
 
@@ -275,6 +279,14 @@ Carpeta plana `repgen-frontend/src/features/reports/<nombre>/` (como `banks/`):
 - [ ] Reporte a fecha de corte: `useReporteCorte` en vez de `useReporteBase`, y el selector de corte con botón "Aplicar" (copiar `receivables/ReporteCuentasPorCobrar.tsx`). Elegir la fecha no consulta; consulta al aplicar.
 - [ ] Cálculos de KPIs en funciones puras `calcular<Nombre>.ts`, nunca dentro del componente.
 - [ ] Ruta en `src/app/router.tsx` (lazy + precarga, como bancos/ventas) y quitar "Próximamente" de su entrada en `src/app/layout/Sidebar.tsx`.
+
+Nombres de columnas (los cuida `shared/nombres-columnas.test.ts`, que revisa todos los `*.schema.json`):
+
+- `<Entidad> <Dato>`: "Cliente Clasificación 1", "Factura Método de Pago", "Banco Nombre". Entidades: Cliente, Cliente/Proveedor, Factura, Artículo, Banco, Pago, Bodega, Venta, Devolución, Ingreso, Egreso. Una entidad nueva se agrega a la lista del test.
+- Sin entidad solo los importes y tasas del renglón (Importe, Descuento, IVA, IEPS, ISR, Costo, Ganancia, Margen) y los datos del renglón mismo ("Tipo de Renglón", "Fecha Corte").
+- Si el `field` ya existe en otro reporte, se copia su encabezado tal cual; el mismo dato se llama igual en todos.
+- Palabras separadas y con acentos ("Tipo de Cambio", no "TipoDeCambio").
+- Renombrar un encabezado no rompe las vistas guardadas (guardan el `field`); renombrar un `field` sí.
 
 Convenciones de UI ya decididas (no reabrir sin preguntar):
 

@@ -20,8 +20,8 @@ describe("columnas de Cuentas por cobrar", () => {
     const grupos = agruparPorSeccion(construirColumnasCxc());
     expect(grupos.map((g) => [g.headerName, g.children.length])).toEqual([
       ["Corte", 2],
-      ["Cliente", 11],
-      ["Factura", 11],
+      ["Clientes", 11],
+      ["Facturas", 11],
       ["Factura saldo", 3],
       ["Factura no cobrar", 4],
       ["Banco", 11],

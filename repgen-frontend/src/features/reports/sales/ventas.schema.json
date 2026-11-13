@@ -42,7 +42,7 @@
       "dataType": "date",
       "columnClass": "Facturas"
     },
-    "Cliente": {
+    "Cliente Nombre Comercial": {
       "field": "cliente",
       "dataType": "text",
       "columnClass": "Clientes"
@@ -112,13 +112,13 @@
       "dataType": "currency",
       "columnClass": "Facturas"
     },
-    "Factura Gran Total (Original)": {
+    "Factura Gran Total (Moneda Original)": {
       "field": "facturaGranTotalOriginal",
       "dataType": "currency",
       "currencyField": "facturaMoneda",
       "columnClass": "Facturas"
     },
-    "Factura TipoDeCambio": {
+    "Factura Tipo de Cambio": {
       "field": "facturaTipoDeCambio",
       "dataType": "number",
       "columnClass": "Facturas"
@@ -135,7 +135,7 @@
       "filtro": "lista",
       "columnClass": "Facturas"
     },
-    "Factura Metodo Pago": {
+    "Factura Método de Pago": {
       "field": "facturaMetodoPago",
       "dataType": "text",
       "filtro": "lista",
@@ -162,12 +162,12 @@
       "dataType": "text",
       "columnClass": "Artículos"
     },
-    "Cantidad": {
+    "Artículo Cantidad": {
       "field": "cantidad",
       "dataType": "number",
       "columnClass": "Artículos"
     },
-    "Precio Unitario": {
+    "Artículo Precio Unitario": {
       "field": "precioUnitario",
       "dataType": "currency",
       "columnClass": "Artículos"
@@ -207,7 +207,7 @@
       "dataType": "currency",
       "columnClass": "Artículos"
     },
-    "Clave de Producto o Servicio": {
+    "Artículo Clave de Producto o Servicio": {
       "field": "claveDeProductoOServicio",
       "dataType": "text",
       "columnClass": "Artículos"
@@ -223,34 +223,34 @@
       "dataType": "text",
       "columnClass": "Artículos"
     },
-    "Unidad de Venta": {
+    "Artículo Unidad de Venta": {
       "field": "unidadDeVenta",
       "dataType": "text",
       "filtro": "lista",
       "columnClass": "Artículos"
     },
-    "Unidad de Contenido": {
+    "Artículo Unidad de Contenido": {
       "field": "unidadDeContenido",
       "dataType": "text",
       "columnClass": "Artículos"
     },
-    "Contenido Unitario": {
+    "Artículo Contenido Unitario": {
       "field": "contenidoUnitario",
       "dataType": "number",
       "columnClass": "Artículos"
     },
-    "Contenido Sub Total": {
+    "Artículo Contenido Sub Total": {
       "field": "contenidoSubTotal",
       "dataType": "number",
       "columnClass": "Artículos"
     },
-    "Tipo de Concepto": {
+    "Artículo Tipo de Concepto": {
       "field": "tipoDeConcepto",
       "dataType": "text",
       "filtro": "lista",
       "columnClass": "Artículos"
     },
-    "Método de Adquisición": {
+    "Artículo Método de Adquisición": {
       "field": "metodoDeAdquisicion",
       "dataType": "text",
       "filtro": "lista",
@@ -293,7 +293,7 @@
       "dataType": "text",
       "filtro": "lista",
       "columnClass": "Artículos",
-      "defaultHeader": "Categoría 1",
+      "defaultHeader": "Artículo Categoría 1",
       "labelSlot": "articulo.categoria1"
     },
     "categoriadeProducto2": {
@@ -301,7 +301,7 @@
       "dataType": "text",
       "filtro": "lista",
       "columnClass": "Artículos",
-      "defaultHeader": "Categoría 2",
+      "defaultHeader": "Artículo Categoría 2",
       "labelSlot": "articulo.categoria2"
     },
     "categoriadeProducto3": {
@@ -309,7 +309,7 @@
       "dataType": "text",
       "filtro": "lista",
       "columnClass": "Artículos",
-      "defaultHeader": "Categoría 3",
+      "defaultHeader": "Artículo Categoría 3",
       "labelSlot": "articulo.categoria3"
     },
     "categoriadeProducto4": {
@@ -317,7 +317,7 @@
       "dataType": "text",
       "filtro": "lista",
       "columnClass": "Artículos",
-      "defaultHeader": "Categoría 4",
+      "defaultHeader": "Artículo Categoría 4",
       "labelSlot": "articulo.categoria4"
     },
     "clasificacion1": {
@@ -325,7 +325,7 @@
       "dataType": "text",
       "filtro": "lista",
       "columnClass": "Clientes",
-      "defaultHeader": "Clasificación 1",
+      "defaultHeader": "Cliente Clasificación 1",
       "labelSlot": "cliente.clasificacion1"
     },
     "clasificacion2": {
@@ -333,7 +333,7 @@
       "dataType": "text",
       "filtro": "lista",
       "columnClass": "Clientes",
-      "defaultHeader": "Clasificación 2",
+      "defaultHeader": "Cliente Clasificación 2",
       "labelSlot": "cliente.clasificacion2"
     },
     "clasificacion3": {
@@ -341,7 +341,7 @@
       "dataType": "text",
       "filtro": "lista",
       "columnClass": "Clientes",
-      "defaultHeader": "Clasificación 3",
+      "defaultHeader": "Cliente Clasificación 3",
       "labelSlot": "cliente.clasificacion3"
     },
     "clasificacion4": {
@@ -349,7 +349,7 @@
       "dataType": "text",
       "filtro": "lista",
       "columnClass": "Clientes",
-      "defaultHeader": "Clasificación 4",
+      "defaultHeader": "Cliente Clasificación 4",
       "labelSlot": "cliente.clasificacion4"
     },
     "Cliente Cuenta Contable": {
@@ -367,7 +367,7 @@
       "dataType": "text",
       "columnClass": "Envío"
     },
-    "Cliente Delegacion": {
+    "Cliente Delegación": {
       "field": "clienteDelegacion",
       "dataType": "text",
       "columnClass": "Envío"
@@ -395,7 +395,7 @@
       "filtro": "lista",
       "columnClass": "Representantes"
     },
-    "Observaciones en CFDI": {
+    "Factura Observaciones en CFDI": {
       "field": "observacionesEnCfdi",
       "dataType": "text",
       "columnClass": "Facturas"
@@ -422,7 +422,7 @@
       "Factura Fecha",
       "Factura Estatus",
       "Factura Fecha de Captura",
-      "Cliente",
+      "Cliente Nombre Comercial",
       "Cliente Razón Social",
       "Cliente RFC",
       "Cliente ID",
@@ -436,11 +436,11 @@
       "IEPS (MXN)",
       "IVA Retenido (MXN)",
       "ISR Retenido (MXN)",
-      "Factura Gran Total (Original)",
-      "Factura TipoDeCambio",
+      "Factura Gran Total (Moneda Original)",
+      "Factura Tipo de Cambio",
       "Factura Moneda",
       "Factura Uso CFDI",
-      "Factura Metodo Pago",
+      "Factura Método de Pago",
       "Factura Forma de Pago",
       "Factura Tasa Pagada",
       "clasificacion1",
@@ -450,12 +450,12 @@
       "Cliente Cuenta Contable",
       "Cliente Calle",
       "Cliente Colonia",
-      "Cliente Delegacion",
+      "Cliente Delegación",
       "Cliente Ciudad",
       "Cliente Estado",
       "Cliente Rep de Venta",
       "Cliente Rep de Cobranza",
-      "Observaciones en CFDI",
+      "Factura Observaciones en CFDI",
       "Bodega ID",
       "Bodega Nombre"
     ],
@@ -468,7 +468,7 @@
       "Factura Fecha",
       "Factura Estatus",
       "Factura Fecha de Captura",
-      "Cliente",
+      "Cliente Nombre Comercial",
       "Cliente Razón Social",
       "Cliente RFC",
       "Cliente ID",
@@ -482,11 +482,11 @@
       "IEPS (MXN)",
       "IVA Retenido (MXN)",
       "ISR Retenido (MXN)",
-      "Factura Gran Total (Original)",
-      "Factura TipoDeCambio",
+      "Factura Gran Total (Moneda Original)",
+      "Factura Tipo de Cambio",
       "Factura Moneda",
       "Factura Uso CFDI",
-      "Factura Metodo Pago",
+      "Factura Método de Pago",
       "Factura Forma de Pago",
       "Factura Tasa Pagada", 
       "clasificacion1",
@@ -495,8 +495,8 @@
       "clasificacion4",
       "Artículo SKU",
       "Artículo Nombre",
-      "Cantidad",
-      "Precio Unitario",
+      "Artículo Cantidad",
+      "Artículo Precio Unitario",
       "Artículo Importe con Descuento (MXN)",
       "Artículo Importe sin Descuento (MXN)",
       "Artículo Descuento Monto (MXN)",
@@ -504,15 +504,15 @@
       "Artículo IEPS (MXN)",
       "Artículo IVA Retenido (MXN)",
       "Artículo ISR Retenido (MXN)",
-      "Clave de Producto o Servicio",
+      "Artículo Clave de Producto o Servicio",
       "Artículo Marca",
       "Artículo Nombre Completo",
-      "Unidad de Venta",
-      "Unidad de Contenido",
-      "Contenido Unitario",
-      "Contenido Sub Total",
-      "Tipo de Concepto",
-      "Método de Adquisición",
+      "Artículo Unidad de Venta",
+      "Artículo Unidad de Contenido",
+      "Artículo Contenido Unitario",
+      "Artículo Contenido Sub Total",
+      "Artículo Tipo de Concepto",
+      "Artículo Método de Adquisición",
       "Costo Directo (Unitario) (MXN)",
       "Costo Directo (SubTotal) (MXN)",
       "Ganancia Bruta (MXN)",
@@ -526,12 +526,12 @@
       "Cliente Cuenta Contable",
       "Cliente Calle",
       "Cliente Colonia",
-      "Cliente Delegacion",
+      "Cliente Delegación",
       "Cliente Ciudad",
       "Cliente Estado",
       "Cliente Rep de Venta",
       "Cliente Rep de Cobranza",
-      "Observaciones en CFDI",
+      "Factura Observaciones en CFDI",
       "Bodega ID",
       "Bodega Nombre"
     ]
