@@ -26,4 +26,15 @@ describe("TabsVentas (menú móvil)", () => {
     fireEvent.click(links[1]);
     expect(disparador).toHaveAttribute("aria-expanded", "false");
   });
+
+  it("con rutaBase las pestañas navegan dentro de otro reporte", () => {
+    render(
+      <MemoryRouter initialEntries={["/flujo_efectivo_ingresos/conceptos"]}>
+        <TabsVentas reportType="conceptos" rutaBase="/flujo_efectivo_ingresos" />
+      </MemoryRouter>,
+    );
+    const links = screen.getAllByRole("link", { name: "Conceptos" });
+    expect(links[0]).toHaveAttribute("href", "/flujo_efectivo_ingresos/conceptos");
+    expect(links[0]).toHaveAttribute("aria-current", "page");
+  });
 });
