@@ -473,5 +473,17 @@ así.
 **Confirmado con FileMaker real:** las columnas de presentación del artículo y
 fecha de captura salen bien en las dos pestañas.
 
-Pendiente: segundo juego de datos dorados (cancelada con pago, nota de
-crédito, anticipo, dólares, IEPS o retenciones); lo captura la persona.
+## Juego de regresión fabricado (13/11/2026)
+
+Carpeta `segundo/`: 100 ventas y 20 depósitos **fabricados** (no son capturas
+de FileMaker), rango octubre 2026, 20 registros por caso: cancelada con pago,
+nota de crédito (folio de banco 0), anticipo, factura en dólares, depósito en
+dólares, IEPS y retenciones. Salen 100 renglones por vista y $397,690.90; las
+20 notas de crédito se descartan.
+
+El esperado lo entregó la persona y coincide con un borrador hecho aparte del
+código. Lo usa `cash-inflows.regresion.spec.ts`. No está en `__golden__/`
+porque no prueba cómo trae FileMaker esos casos, solo que el cálculo no cambie.
+
+Pendiente: validar esos mismos casos con capturas reales (una o dos ventas por
+caso bastan).
