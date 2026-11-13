@@ -280,6 +280,14 @@ Carpeta plana `repgen-frontend/src/features/reports/<nombre>/` (como `banks/`):
 - [ ] Cálculos de KPIs en funciones puras `calcular<Nombre>.ts`, nunca dentro del componente.
 - [ ] Ruta en `src/app/router.tsx` (lazy + precarga, como bancos/ventas) y quitar "Próximamente" de su entrada en `src/app/layout/Sidebar.tsx`.
 
+Nombres de columnas (los cuida `shared/nombres-columnas.test.ts`, que revisa todos los `*.schema.json`):
+
+- `<Entidad> <Dato>`: "Cliente Clasificación 1", "Factura Método de Pago", "Banco Nombre". Entidades: Cliente, Cliente/Proveedor, Factura, Artículo, Banco, Pago, Bodega, Venta, Devolución, Ingreso, Egreso. Una entidad nueva se agrega a la lista del test.
+- Sin entidad solo los importes y tasas del renglón (Importe, Descuento, IVA, IEPS, ISR, Costo, Ganancia, Margen) y los datos del renglón mismo ("Tipo de Renglón", "Fecha Corte").
+- Si el `field` ya existe en otro reporte, se copia su encabezado tal cual; el mismo dato se llama igual en todos.
+- Palabras separadas y con acentos ("Tipo de Cambio", no "TipoDeCambio").
+- Renombrar un encabezado no rompe las vistas guardadas (guardan el `field`); renombrar un `field` sí.
+
 Convenciones de UI ya decididas (no reabrir sin preguntar):
 
 - Fechas = navegar por periodos (`FiltroFechas`), no inputs libres. Excepción: un reporte a fecha de corte usa un solo día con "Aplicar".

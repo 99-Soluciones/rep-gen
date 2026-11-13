@@ -10,7 +10,7 @@ Cada tenant puede usar nombres distintos para sus clasificaciones de **cliente**
 
 | Sin column labels | Con column labels |
 |-------------------|-------------------|
-| Encabezado fijo «Clasificación 1» | Encabezado «CANAL» (valor del tenant) |
+| Encabezado fijo «Cliente Clasificación 1» | Encabezado «CANAL» (valor del tenant) |
 | Mismo texto para todos los clientes | Texto por base de datos FM (`tenant`) |
 
 ---
@@ -254,7 +254,7 @@ return meta.defaultHeader ?? encabezadoFallback;
   "field": "clasificacion1",
   "dataType": "text",
   "columnClass": "Clientes",
-  "defaultHeader": "Clasificación 1",
+  "defaultHeader": "Cliente Clasificación 1",
   "labelSlot": "cliente.clasificacion1"
 }
 ```
@@ -267,14 +267,14 @@ return meta.defaultHeader ?? encabezadoFallback;
 
 | labelSlot | Campo dato (`field`) | defaultHeader |
 |-----------|----------------------|---------------|
-| `cliente.clasificacion1` | `clasificacion1` | Clasificación 1 |
-| `cliente.clasificacion2` | `clasificacion2` | Clasificación 2 |
-| `cliente.clasificacion3` | `clasificacion3` | Clasificación 3 |
-| `cliente.clasificacion4` | `clasificacion4` | Clasificación 4 |
-| `articulo.categoria1` | `categoriadeProducto1` | Categoría 1 |
-| `articulo.categoria2` | `categoriadeProducto2` | Categoría 2 |
-| `articulo.categoria3` | `categoriadeProducto3` | Categoría 3 |
-| `articulo.categoria4` | `categoriadeProducto4` | Categoría 4 |
+| `cliente.clasificacion1` | `clasificacion1` | Cliente Clasificación 1 |
+| `cliente.clasificacion2` | `clasificacion2` | Cliente Clasificación 2 |
+| `cliente.clasificacion3` | `clasificacion3` | Cliente Clasificación 3 |
+| `cliente.clasificacion4` | `clasificacion4` | Cliente Clasificación 4 |
+| `articulo.categoria1` | `categoriadeProducto1` | Artículo Categoría 1 |
+| `articulo.categoria2` | `categoriadeProducto2` | Artículo Categoría 2 |
+| `articulo.categoria3` | `categoriadeProducto3` | Artículo Categoría 3 |
+| `articulo.categoria4` | `categoriadeProducto4` | Artículo Categoría 4 |
 
 Los **valores de las celdas** vienen del reporte de ventas; los **encabezados** vienen de column labels.
 
@@ -301,7 +301,7 @@ Los **valores de las celdas** vienen del reporte de ventas; los **encabezados** 
 
 | Síntoma | Revisar |
 |---------|---------|
-| Siempre «Clasificación 1» genérico | ¿API 200? ¿`labelSlot` en schema? ¿`getLabel` devuelve string no vacío? |
+| Siempre «Cliente Clasificación 1» genérico | ¿API 200? ¿`labelSlot` en schema? ¿`getLabel` devuelve string no vacío? |
 | 404 en API | ¿Existe registro en `columnas_prefs` para esa base? |
 | 401 | Cookie `jwt_reportes` ausente o expirada (DevTools → Application → Cookies); re-login desde FileMaker |
 | Etiquetas de otro tenant | `ColumnLabelsProvider` tiene `key={tenant}`; borrar `sessionStorage` `repgen:column-labels:*` |
