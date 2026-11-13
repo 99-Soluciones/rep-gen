@@ -10,6 +10,7 @@ Este archivo agrupa la documentacion principal del modulo de reportes para que s
 ## Fichas De Reportes
 
 - [Cuentas por cobrar](fichas/receivables/receivables.md)
+- [Flujo de efectivo - Ingresos](fichas/cash-inflows/cash-inflows.md)
 
 ## ADRs
 

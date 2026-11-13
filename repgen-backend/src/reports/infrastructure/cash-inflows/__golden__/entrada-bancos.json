@@ -1,0 +1,168 @@
+{
+  "response": {
+    "dataInfo": {
+      "database": "sans",
+      "layout": "apiExport_Ingresos_Bancos",
+      "table": "contBanco.ITM",
+      "totalRecordCount": 6838,
+      "foundCount": 3,
+      "returnedCount": 3
+    },
+    "data": [
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 5738.54,
+          "monto_ORIG_abono_v0_22_1": 5738.54,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 7357,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Referencia ejemplo 1",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 1,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/02/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": "",
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "MXN"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "965845",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "Cliente Ejemplo 01",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 86,
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 01 SA DE CV",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "EJE010101AA1",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "Centro de consumo",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "Representante A",
+          "saldo_ORIG_porComplementar_v0_22_1": 48,
+          "monto_ORIG_abono_v0_22_1": 3024,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 2957,
+          "__id_bancoITM": 7388,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Referencia ejemplo 2",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 1,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/09/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 619,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 2016,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "MXN"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": [
+            {
+              "recordId": "612202",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::__idu_ingreso_itm": "00000000-0000-4000-8000-000000000001",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::app_MXN_GranTotal": 2016,
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::_id_relacionado_Venta": 3536,
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::fecha_ingresoITM_fechaDelComplemento": "10/16/2026",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1": 1,
+              "modId": "0"
+            },
+            {
+              "recordId": "612203",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::__idu_ingreso_itm": "00000000-0000-4000-8000-000000000002",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::app_MXN_GranTotal": 960,
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::_id_relacionado_Venta": 3335,
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::fecha_ingresoITM_fechaDelComplemento": "10/16/2026",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1": 1,
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "965876",
+        "modId": "42",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 2,
+            "returnedCount": 2
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 550000,
+          "monto_ORIG_abono_v0_22_1": 550000,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 7451,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Referencia ejemplo 3",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 1,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/26/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": "",
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "MXN"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "965939",
+        "modId": "4",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      }
+    ]
+  },
+  "messages": [
+    {
+      "code": "0",
+      "message": "OK"
+    }
+  ]
+}
