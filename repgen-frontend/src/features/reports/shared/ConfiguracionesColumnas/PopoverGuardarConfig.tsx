@@ -78,6 +78,8 @@ const PopoverGuardarConfig = ({
         }
         onKeyDown={(e) => {
           // Escape lo maneja ConfiguracionesColumnas: cierra y devuelve el foco a ⋮.
+          // Enter de un IME confirma el carácter, no la vista. 229: Safari ya limpió isComposing.
+          if (e.nativeEvent.isComposing || e.keyCode === 229) return;
           if (e.key === "Enter") guardar();
         }}
       />

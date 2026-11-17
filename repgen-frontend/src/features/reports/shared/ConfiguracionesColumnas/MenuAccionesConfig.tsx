@@ -155,6 +155,9 @@ const MenuAccionesConfig = ({
                   dispatch({ type: "SET_NOMBRE_INPUT", value: e.target.value })
                 }
                 onKeyDown={(e) => {
+                  // Enter/Escape de un IME (japonés, chino…) confirman o cancelan
+                  // el carácter, no el renombre. 229: Safari ya limpió isComposing.
+                  if (e.nativeEvent.isComposing || e.keyCode === 229) return;
                   if (e.key === "Enter") onRenombrar();
                   if (e.key === "Escape")
                     dispatch({ type: "CANCELAR_RENOMBRAR" });
