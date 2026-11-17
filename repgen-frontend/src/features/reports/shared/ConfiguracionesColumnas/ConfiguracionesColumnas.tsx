@@ -482,7 +482,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
             aria-label="Vista"
             // El selector es angosto: el nombre completo queda a la vista al pasar el cursor.
             title={configActual?.name}
-            className="pr-6 py-2 text-sm font-medium bg-transparent text-gray-700 outline-none cursor-pointer appearance-none min-w-0 max-w-[160px] sm:max-w-[240px] truncate"
+            className="pr-6 py-2 text-sm font-medium bg-transparent text-gray-700 outline-none cursor-pointer appearance-none min-w-0 max-w-40 sm:max-w-96 truncate"
           >
             <option value="">— Ninguna —</option>
             {configs.map((c) => (
@@ -615,7 +615,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
             }
           }}
         >
-          <p id="aviso-cambios-vista" className="text-sm text-gray-700 break-words">
+          <p id="aviso-cambios-vista" className="text-sm text-gray-700 wrap-break-word">
             {configActual ? (
               <>
                 Tienes cambios sin guardar en{" "}
