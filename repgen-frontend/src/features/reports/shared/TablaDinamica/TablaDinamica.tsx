@@ -249,6 +249,11 @@ const TablaDinamica = <T,>({
     resizable: true,
     filter: true,
     floatingFilter: true,
+    // Cada columna ya dice su filtro y su formato (construir-columnas.ts). Con la
+    // inferencia de tipos, AG Grid espera la primera fila para saberlos y mientras
+    // tanto deja en cola setFilterModel: con 0 registros "Limpiar", "Quitar
+    // filtro" y abrir una vista no hacían nada hasta la siguiente carga con datos.
+    cellDataType: false,
   };
 
   const handleGridReady = (event: GridReadyEvent<T>) => {
