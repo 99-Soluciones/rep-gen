@@ -1,0 +1,31 @@
+{
+  "rango": {
+    "startDate": "2026-10-01",
+    "endDate": "2026-10-31"
+  },
+  "registrosDeEntrada": {
+    "facturaCanceladaConPago": 20,
+    "notaDeCreditoFolioBanco0": 20,
+    "anticipo": 20,
+    "facturaEnDolares": 20,
+    "depositoEnDolares": 20,
+    "conceptoConIeps": 10,
+    "conceptoConRetenciones": 10
+  },
+  "salenEnElReporte": {
+    "factura": 100,
+    "concepto": 100,
+    "notaDeCredito": 0,
+    "cancelada": 20,
+    "anticipo": 20,
+    "facturaUsd": 20,
+    "depositoUsd": 20,
+    "conIeps": 10,
+    "conRetenciones": 10
+  },
+  "sumaPagoGranTotalMxn": {
+    "factura": 397690.9,
+    "concepto": 397690.9
+  },
+  "nota": "La nota de crédito trae folio de banco 0: está en entrada-pagos y el reporte la descarta."
+}

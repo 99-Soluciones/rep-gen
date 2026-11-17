@@ -1,6 +1,7 @@
 import { Controller, Request, Post, Body, HttpCode } from '@nestjs/common';
 import {
   GetBankReportUseCase,
+  GetCashInflowsReportUseCase,
   GetReceivablesReportUseCase,
   GetSalesReportUseCase,
   GetSalesitemReportUseCase,
@@ -9,6 +10,7 @@ import type { ReportResponse } from '../application';
 import type {
   ReceivablesResponse,
   ReportBankRecord,
+  ReportCashInflowRecord,
   ReportSalesRecord,
   ReportSalesItemRecord,
 } from '../domain';
@@ -27,6 +29,7 @@ export class ReportsController {
     private readonly reportServiceSales: GetSalesReportUseCase,
     private readonly reportServiceSalesItem: GetSalesitemReportUseCase,
     private readonly reportServiceReceivables: GetReceivablesReportUseCase,
+    private readonly reportServiceCashInflows: GetCashInflowsReportUseCase,
   ) {}
 
   /** Foto al día de corte (no un rango): saldos al cierre de ese día. */
@@ -84,6 +87,40 @@ export class ReportsController {
   ): Promise<ReportResponse<ReportSalesItemRecord>> {
     return this.reportServiceSalesItem.fetchReport(
       dateRange,
+      req.tenant,
+      req.id,
+      refresh,
+    );
+  }
+
+  /** Ingresos por pago × factura. */
+  @Post('flujo-efectivo-ingresos/buscar')
+  @HttpCode(200)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  async getCashInflowsReport(
+    @Body() { dateRange, refresh }: SearchReportDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ReportResponse<ReportCashInflowRecord>> {
+    return this.reportServiceCashInflows.fetchReport(
+      dateRange,
+      'factura',
+      req.tenant,
+      req.id,
+      refresh,
+    );
+  }
+
+  /** Los mismos ingresos por pago × factura × concepto. */
+  @Post('flujo-efectivo-ingresos-por-concepto/buscar')
+  @HttpCode(200)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  async getCashInflowsItemReport(
+    @Body() { dateRange, refresh }: SearchReportDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ReportResponse<ReportCashInflowRecord>> {
+    return this.reportServiceCashInflows.fetchReport(
+      dateRange,
+      'concepto',
       req.tenant,
       req.id,
       refresh,

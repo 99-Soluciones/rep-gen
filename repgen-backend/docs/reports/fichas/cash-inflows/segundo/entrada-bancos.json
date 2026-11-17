@@ -1,0 +1,880 @@
+{
+  "response": {
+    "dataInfo": {
+      "database": "sans",
+      "layout": "apiExport_Ingresos_Bancos",
+      "table": "contBanco.ITM",
+      "totalRecordCount": 20,
+      "foundCount": 20,
+      "returnedCount": 20
+    },
+    "data": [
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "Cliente Segundo Deposito 01",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 9601,
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL CLIENTE SEGUNDO DEPOSITO 01 SA DE CV",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "S2B000001AA1",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "Centro de consumo",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "Representante A",
+          "saldo_ORIG_porComplementar_v0_22_1": 125,
+          "monto_ORIG_abono_v0_22_1": 125,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 2957,
+          "__id_bancoITM": 9501,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD sin aplicar 01",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 18.25,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/01/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 619,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 2281.25,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980001",
+        "modId": "42",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "Cliente Segundo Deposito 02",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 9602,
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL CLIENTE SEGUNDO DEPOSITO 02 SA DE CV",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "S2B000002AA1",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "Centro de consumo",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "Representante A",
+          "saldo_ORIG_porComplementar_v0_22_1": 150,
+          "monto_ORIG_abono_v0_22_1": 150,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 2957,
+          "__id_bancoITM": 9502,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD sin aplicar 02",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 18.5,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/02/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 619,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 2775,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980002",
+        "modId": "42",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "Cliente Segundo Deposito 03",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 9603,
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL CLIENTE SEGUNDO DEPOSITO 03 SA DE CV",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "S2B000003AA1",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "Centro de consumo",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "Representante A",
+          "saldo_ORIG_porComplementar_v0_22_1": 175,
+          "monto_ORIG_abono_v0_22_1": 175,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 2957,
+          "__id_bancoITM": 9503,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD sin aplicar 03",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 18.75,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/03/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 619,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 3281.25,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980003",
+        "modId": "42",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "Cliente Segundo Deposito 04",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 9604,
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL CLIENTE SEGUNDO DEPOSITO 04 SA DE CV",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "S2B000004AA1",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "Centro de consumo",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "Representante A",
+          "saldo_ORIG_porComplementar_v0_22_1": 200,
+          "monto_ORIG_abono_v0_22_1": 200,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 2957,
+          "__id_bancoITM": 9504,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD sin aplicar 04",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 19,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/04/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 619,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 3800,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980004",
+        "modId": "42",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "Cliente Segundo Deposito 05",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 9605,
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL CLIENTE SEGUNDO DEPOSITO 05 SA DE CV",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "S2B000005AA1",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "Centro de consumo",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "Representante A",
+          "saldo_ORIG_porComplementar_v0_22_1": 225,
+          "monto_ORIG_abono_v0_22_1": 225,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 2957,
+          "__id_bancoITM": 9505,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD sin aplicar 05",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 19.25,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/05/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 619,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 4331.25,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980005",
+        "modId": "42",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "Cliente Segundo Deposito 06",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 9606,
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL CLIENTE SEGUNDO DEPOSITO 06 SA DE CV",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "S2B000006AA1",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "Centro de consumo",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "Representante A",
+          "saldo_ORIG_porComplementar_v0_22_1": 250,
+          "monto_ORIG_abono_v0_22_1": 250,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 2957,
+          "__id_bancoITM": 9506,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD sin aplicar 06",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 19.5,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/06/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 619,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 4875,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980006",
+        "modId": "42",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "Cliente Segundo Deposito 07",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 9607,
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL CLIENTE SEGUNDO DEPOSITO 07 SA DE CV",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "S2B000007AA1",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "Centro de consumo",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "Representante A",
+          "saldo_ORIG_porComplementar_v0_22_1": 275,
+          "monto_ORIG_abono_v0_22_1": 275,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 2957,
+          "__id_bancoITM": 9507,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD sin aplicar 07",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 19.75,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/07/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 619,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 5431.25,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980007",
+        "modId": "42",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "Cliente Segundo Deposito 08",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 9608,
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL CLIENTE SEGUNDO DEPOSITO 08 SA DE CV",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "S2B000008AA1",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "Centro de consumo",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "Representante A",
+          "saldo_ORIG_porComplementar_v0_22_1": 300,
+          "monto_ORIG_abono_v0_22_1": 300,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 2957,
+          "__id_bancoITM": 9508,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD sin aplicar 08",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 20,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/08/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 619,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 6000,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980008",
+        "modId": "42",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "Cliente Segundo Deposito 09",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 9609,
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL CLIENTE SEGUNDO DEPOSITO 09 SA DE CV",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "S2B000009AA1",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "Centro de consumo",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "Representante A",
+          "saldo_ORIG_porComplementar_v0_22_1": 325,
+          "monto_ORIG_abono_v0_22_1": 325,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 2957,
+          "__id_bancoITM": 9509,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD sin aplicar 09",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 20.25,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/09/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 619,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 6581.25,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980009",
+        "modId": "42",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "Cliente Segundo Deposito 10",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": 9610,
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL CLIENTE SEGUNDO DEPOSITO 10 SA DE CV",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "S2B000010AA1",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "Centro de consumo",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "Representante A",
+          "saldo_ORIG_porComplementar_v0_22_1": 350,
+          "monto_ORIG_abono_v0_22_1": 350,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 2957,
+          "__id_bancoITM": 9510,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD sin aplicar 10",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 20.5,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/10/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": 619,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 7175,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980010",
+        "modId": "42",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 375,
+          "monto_ORIG_abono_v0_22_1": 375,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 9511,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD no identificado 11",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 20.75,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/11/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 7781.25,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980011",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 400,
+          "monto_ORIG_abono_v0_22_1": 400,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 9512,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD no identificado 12",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 21,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/12/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 8400,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980012",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 425,
+          "monto_ORIG_abono_v0_22_1": 425,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 9513,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD no identificado 13",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 21.25,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/13/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 9031.25,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980013",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 450,
+          "monto_ORIG_abono_v0_22_1": 450,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 9514,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD no identificado 14",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 21.5,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/14/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 9675,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980014",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 475,
+          "monto_ORIG_abono_v0_22_1": 475,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 9515,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD no identificado 15",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 21.75,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/15/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 10331.25,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980015",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 500,
+          "monto_ORIG_abono_v0_22_1": 500,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 9516,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD no identificado 16",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 22,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/16/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 11000,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980016",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 525,
+          "monto_ORIG_abono_v0_22_1": 525,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 9517,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD no identificado 17",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 22.25,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/17/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 11681.25,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980017",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 550,
+          "monto_ORIG_abono_v0_22_1": 550,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 9518,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD no identificado 18",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 22.5,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/18/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 12375,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980018",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 575,
+          "monto_ORIG_abono_v0_22_1": 575,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 9519,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD no identificado 19",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 22.75,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/19/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 13081.25,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980019",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::___id_cliente": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify1::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify2::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
+          "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
+          "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
+          "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 600,
+          "monto_ORIG_abono_v0_22_1": 600,
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "__id_bancoITM": 9520,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Deposito USD no identificado 20",
+          "monto_ORIG_cargo_v0_22_1": "",
+          "tc_tipoCambioValor_v0_26_1": 23,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "_fecha": "10/20/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 13800,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "_idu_formaPago_v0_22_1": "03",
+          "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": "USD"
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": []
+        },
+        "recordId": "980020",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      }
+    ]
+  },
+  "messages": [
+    {
+      "code": "0",
+      "message": "OK"
+    }
+  ]
+}

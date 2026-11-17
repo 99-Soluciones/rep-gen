@@ -4,9 +4,11 @@ import { ChevronDown } from "lucide-react";
 
 interface TabsVentasProps {
   reportType: "facturas" | "conceptos";
+  /** Otro reporte con las mismas dos pestañas (Flujo de efectivo - Ingresos). */
+  rutaBase?: string;
 }
 
-const TabsVentas = ({ reportType }: TabsVentasProps) => {
+const TabsVentas = ({ reportType, rutaBase = "/ventas" }: TabsVentasProps) => {
     
   const [menuAbierto, setMenuAbierto] = useState(false);
 
@@ -69,7 +71,7 @@ const TabsVentas = ({ reportType }: TabsVentasProps) => {
               {(["facturas", "conceptos"] as const).map((tipo) => (
                 <NavLink
                   key={tipo}
-                  to={`/ventas/${tipo}`}
+                  to={`${rutaBase}/${tipo}`}
                   onClick={() => setMenuAbierto(false)}
                   className={({ isActive }) =>
                     `block w-full rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
@@ -86,7 +88,7 @@ const TabsVentas = ({ reportType }: TabsVentasProps) => {
       </div>
       <div className="hidden sm:inline-flex rounded-xl bg-white border border-gray-200 p-1 shadow-sm">
         <NavLink
-          to="/ventas/facturas"
+          to={`${rutaBase}/facturas`}
           className={({ isActive }) =>
             `px-4 py-2 text-sm font-semibold rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 ${
               isActive
@@ -98,7 +100,7 @@ const TabsVentas = ({ reportType }: TabsVentasProps) => {
           Facturas
         </NavLink>
         <NavLink
-          to="/ventas/conceptos"
+          to={`${rutaBase}/conceptos`}
           className={({ isActive }) =>
             `px-4 py-2 text-sm font-semibold rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 ${
               isActive

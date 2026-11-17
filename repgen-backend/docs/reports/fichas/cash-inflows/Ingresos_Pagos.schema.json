@@ -1,0 +1,775 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "fieldData": {
+      "type": "object",
+      "properties": {
+        "venta_|CLIENTE_|_x_clienteID::___id_cliente": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "cfdi_facturaSerieFolio_v0_18_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "cfdi_FacturaFolio": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_GranTotal": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "cfdi_UUID": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "cfdi_FacturaFechaTimbrar": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "_idu_cdfi_metoPago": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|USER_|_x_repVent::userData_nombre_Completo": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "__id_venta": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "saldo_Pendiente_GranTotal": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "saldo.FechaLimitePago": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "saldo_fecha_liquidacion_bancoITM_noCobrar": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "saldo_fecha_liquidacion_ingresoITM_v0_22_1r": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "credit_dias": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|cliente.Classify1|_x_clienteID::name": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|cliente.Classify2|_x_clienteID::name": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|cliente.Classify3|_x_clienteID::name": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|cliente.Classify4|_x_clienteID::name": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "cfdi_CANCEL_timestamp_v0_23_1r": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_contraIVA": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_contraIEPS": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "tc_tipoCambioValor_v0_25_3": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "_idu_tc_moneda_v0_16_0": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "_idu_cdfi_usoCDFI": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "_idu_cdfi_formaPago": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "cfdi_Observaciones_v0_18_4": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "_id_bodega": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|BODEGA_|_x_bodegaID::bodega_nombre": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_Importe_sinDiscount_sinIEPS": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_Importe_DiscountMonto": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_favorIVAretenido_v0_18_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_favorISRretenido_v0_18_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "saldo_Pagado_enANTICIPOS_v0_22_1r": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "saldo_Pagado_enPAGOS": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|CLIENTE_|_x_clienteID::credito.monto.Autorized": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "venta_|CLIENTE_|_x_clienteID::credito.monto.Disponible.sobreAutorized": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "entrega_dest_Colonia": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "entrega_dest_Delegacion": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "entrega_dest_Ciudad": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "entrega_dest_EDO": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "area_fechaVenta": {
+          "type": [
+            "number",
+            "string"
+          ]
+        }
+      },
+      "required": [
+        "venta_|CLIENTE_|_x_clienteID::___id_cliente",
+        "venta_|CLIENTE_|_x_clienteID::destLocal_dirNombreComercial",
+        "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial",
+        "venta_|CLIENTE_|_x_clienteID::fiscal_RFC",
+        "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r",
+        "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo",
+        "cfdi_facturaSerieFolio_v0_18_1",
+        "cfdi_FacturaFolio",
+        "monto_GranTotal",
+        "cfdi_UUID",
+        "cfdi_FacturaFechaTimbrar",
+        "_idu_cdfi_metoPago",
+        "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada",
+        "venta_|USER_|_x_repVent::userData_nombre_Completo",
+        "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo",
+        "__id_venta",
+        "saldo_Pendiente_GranTotal",
+        "saldo_isPendiente_Cobrado_NoCobrar_Cancelado",
+        "saldo.FechaLimitePago",
+        "saldo_fecha_liquidacion_bancoITM_noCobrar",
+        "saldo_fecha_liquidacion_ingresoITM_v0_22_1r",
+        "credit_dias",
+        "venta_|cliente.Classify1|_x_clienteID::name",
+        "venta_|cliente.Classify2|_x_clienteID::name",
+        "venta_|cliente.Classify3|_x_clienteID::name",
+        "venta_|cliente.Classify4|_x_clienteID::name",
+        "cfdi_CANCEL_timestamp_v0_23_1r",
+        "monto_contraIVA",
+        "monto_contraIEPS",
+        "tc_tipoCambioValor_v0_25_3",
+        "_idu_tc_moneda_v0_16_0",
+        "_idu_cdfi_usoCDFI",
+        "_idu_cdfi_formaPago",
+        "cfdi_Observaciones_v0_18_4",
+        "_id_bodega",
+        "venta_|BODEGA_|_x_bodegaID::bodega_nombre",
+        "monto_Importe_sinDiscount_sinIEPS",
+        "monto_Importe_DiscountMonto",
+        "monto_favorIVAretenido_v0_18_1",
+        "monto_favorISRretenido_v0_18_1",
+        "saldo_Pagado_enANTICIPOS_v0_22_1r",
+        "saldo_Pagado_enPAGOS",
+        "venta_|CLIENTE_|_x_clienteID::credito.monto.Autorized",
+        "venta_|CLIENTE_|_x_clienteID::credito.monto.Disponible.sobreAutorized",
+        "entrega_dest_Colonia",
+        "entrega_dest_Delegacion",
+        "entrega_dest_Ciudad",
+        "entrega_dest_EDO",
+        "area_fechaVenta"
+      ],
+      "additionalProperties": true
+    },
+    "portalData": {
+      "type": "object",
+      "properties": {
+        "PagosVenta": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recordId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|contBANCO.pagoAplicada_|_x_ventaID::_idu_moneda": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|contBANCO.pagoAplicada_|_x_ventaID::datos_nombre": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "modId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|contBanco.ITM|_x_ventaID::_fecha": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "venta_|contIngreso.ITM|_x_ventaID::app_MXN_GranTotal",
+              "venta_|contIngreso.ITM|_x_ventaID::app_tc_complemento_v0_28_1",
+              "venta_|contIngreso.ITM|_x_ventaID::fecha_ingresoITM_fechaDelComplemento",
+              "venta_|contBANCO.pagoAplicada_|_x_ventaID::_idu_moneda",
+              "venta_|contBANCO.pagoAplicada_|_x_ventaID::datos_nombre",
+              "venta_|contBanco.ITM|_x_ventaID::__id_bancoITM",
+              "venta_|contBanco.ITM|_x_ventaID::_idu_formaPago_v0_22_1",
+              "venta_|contBanco.ITM|_x_ventaID::tc_tipoCambioValor_v0_26_1",
+              "venta_|contBanco.ITM|_x_ventaID::_fecha"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "Conceptos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recordId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::itm_is_0product_1servicio_2activo": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::_id_presentacion": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::itm_SKU": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::itm_Marca": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::itm_Name": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::itm_Name_Display": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::cuentaContable_ingresoOrInventario_v0_27_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|invITM_classify1|_x_ventaID::name_v0_20_0": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|invITM_classify2|_x_ventaID::name_v0_20_0": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|invITM_classify3|_x_ventaID::name_v0_20_0": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|invITM_classify4|_x_ventaID::name_v0_20_0": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::_id_satClavePS": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::_idu_satUnitUso": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::_idu_satUnitCont": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::contenidoCantidad": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::unit_mont_GranTotal": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|satPS_|_x_ventaID::itm_Nombre": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv.ITM_|_x_ventaID::_id_invITM": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::_idu_poITM": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|poFactura_|_x_ventaID::_id_po": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|poFactura_|_x_ventaID::comprobanteDisplay_Fecha_v0_18_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|LOT_|_x_ventaID::lotTenent_displaySerieMasNumber_v0_20_1r": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::unit_margin_costo": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::sub_margin_costo": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::sub_mont_conDiscount_sinIEPS": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::unit_discount_Monto": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::unit_mont_sinDiscount_sinIEPS": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::unit_tax_contraIEPS": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::unit_tax_contraIVA": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::unit_tax_favorISRret_v0_18_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::unit_tax_favorIVAret_v0_18_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|sat.UNIT.vVenta_|_x_ventaID::unitNombre": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|poFactura_|_x_ventaID::comprobanteDisplay_serieFolio_v0_18_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::qty": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::sub_mont_sinDiscount_sinIEPS": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::sub_discount_Monto": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::sub_tax_contraIVA": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::sub_tax_contraIEPS": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "modId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "venta_|inv.ITM_|_x_ventaID::itm_is_0product_1servicio_2activo",
+              "venta_|inv.ITM_|_x_ventaID::_id_presentacion",
+              "venta_|inv.ITM_|_x_ventaID::itm_SKU",
+              "venta_|inv.ITM_|_x_ventaID::itm_Marca",
+              "venta_|inv.ITM_|_x_ventaID::itm_Name",
+              "venta_|inv.ITM_|_x_ventaID::itm_Name_Display",
+              "venta_|inv.ITM_|_x_ventaID::cuentaContable_ingresoOrInventario_v0_27_1",
+              "venta_|invITM_classify1|_x_ventaID::name_v0_20_0",
+              "venta_|invITM_classify2|_x_ventaID::name_v0_20_0",
+              "venta_|invITM_classify3|_x_ventaID::name_v0_20_0",
+              "venta_|invITM_classify4|_x_ventaID::name_v0_20_0",
+              "venta_|inv.ITM_|_x_ventaID::_id_satClavePS",
+              "venta_|inv.ITM_|_x_ventaID::_idu_satUnitUso",
+              "venta_|inv.ITM_|_x_ventaID::_idu_satUnitCont",
+              "venta_|inv.ITM_|_x_ventaID::contenidoCantidad",
+              "venta_|venta.ITM_|_x_ventaID::unit_mont_GranTotal",
+              "venta_|satPS_|_x_ventaID::itm_Nombre",
+              "venta_|inv.ITM_|_x_ventaID::_id_invITM",
+              "venta_|venta.ITM_|_x_ventaID::_idu_poITM",
+              "venta_|poFactura_|_x_ventaID::_id_po",
+              "venta_|poFactura_|_x_ventaID::comprobanteDisplay_Fecha_v0_18_1",
+              "venta_|LOT_|_x_ventaID::lotTenent_displaySerieMasNumber_v0_20_1r",
+              "venta_|venta.ITM_|_x_ventaID::unit_margin_costo",
+              "venta_|venta.ITM_|_x_ventaID::sub_margin_costo",
+              "venta_|venta.ITM_|_x_ventaID::sub_mont_conDiscount_sinIEPS",
+              "venta_|venta.ITM_|_x_ventaID::unit_discount_Monto",
+              "venta_|venta.ITM_|_x_ventaID::unit_mont_sinDiscount_sinIEPS",
+              "venta_|venta.ITM_|_x_ventaID::unit_tax_contraIEPS",
+              "venta_|venta.ITM_|_x_ventaID::unit_tax_contraIVA",
+              "venta_|venta.ITM_|_x_ventaID::unit_tax_favorISRret_v0_18_1",
+              "venta_|venta.ITM_|_x_ventaID::unit_tax_favorIVAret_v0_18_1",
+              "venta_|sat.UNIT.vVenta_|_x_ventaID::unitNombre",
+              "venta_|poFactura_|_x_ventaID::comprobanteDisplay_serieFolio_v0_18_1",
+              "venta_|venta.ITM_|_x_ventaID::qty",
+              "venta_|venta.ITM_|_x_ventaID::sub_mont_sinDiscount_sinIEPS",
+              "venta_|venta.ITM_|_x_ventaID::sub_discount_Monto",
+              "venta_|venta.ITM_|_x_ventaID::sub_tax_contraIVA",
+              "venta_|venta.ITM_|_x_ventaID::sub_tax_contraIEPS",
+              "venta_|venta.ITM_|_x_ventaID::sub_tax_favorIVAret_v0_18_1",
+              "venta_|venta.ITM_|_x_ventaID::sub_tax_favorISRret_v0_18_1",
+              "venta_|venta.ITM_|_x_ventaID::sub_mont_GranTotal",
+              "venta_|inv_Presentation_|_x_ventaID::nombreInterna"
+            ],
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "PagosVenta",
+        "Conceptos"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "fieldData",
+    "portalData"
+  ],
+  "additionalProperties": true
+}
