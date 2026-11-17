@@ -47,6 +47,6 @@ describe("columnas de Flujo de efectivo - Ingresos", () => {
       slot === "cliente.clasificacion1" ? "Canal" : undefined,
     );
     expect(columnas.find((c) => c.field === "clasificacion1")?.headerName).toBe("Canal");
-    expect(columnas.find((c) => c.field === "clasificacion2")?.headerName).toBe("Clasificación 2");
+    expect(columnas.find((c) => c.field === "clasificacion2")?.headerName).toBe("Cliente Clasificación 2");
   });
 });

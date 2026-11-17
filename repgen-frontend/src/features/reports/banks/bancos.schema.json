@@ -1,118 +1,118 @@
 {
   "columns": {
-    "Fecha": {
+    "Banco Fecha": {
       "field": "fecha",
       "dataType": "date"
     },
-    "Id de Transacción": {
+    "Banco Transacción ID": {
       "field": "idTransaccionBanco",
       "dataType": "text",
       "oculta": true
     },
-    "Banco": {
+    "Banco Nombre": {
       "field": "nombre_banco",
       "dataType": "text",
       "filtro": "lista"
     },
-    "Número de Cuenta": {
+    "Banco Número de Cuenta": {
       "field": "numero_cuenta",
       "dataType": "text",
       "filtro": "lista"
     },
-    "Moneda": {
+    "Banco Moneda": {
       "field": "moneda",
       "dataType": "text",
       "filtro": "lista"
     },
-    "Forma Pago": {
+    "Banco Forma de Pago": {
       "field": "formaPago",
       "dataType": "text",
       "filtro": "lista"
     },
-    "Concepto": {
+    "Banco Concepto": {
       "field": "concepto",
       "dataType": "text",
       "anchoMinimo": 240
     },
-    "Nombre Cliente/Proveedor": {
+    "Cliente/Proveedor Nombre Comercial": {
       "field": "nombre_comercial",
       "dataType": "text"
     },
-    "RFC": {
+    "Cliente/Proveedor RFC": {
       "field": "rfc",
       "dataType": "text",
       "oculta": true
     },
-    "Abono": {
+    "Banco Abono": {
       "field": "abono",
       "dataType": "currency",
       "currencyField": "moneda"
     },
-    "Cargo": {
+    "Banco Cargo": {
       "field": "cargo",
       "dataType": "currency",
       "currencyField": "moneda"
     },
-    "Tipo de Cambio": {
+    "Banco Tipo de Cambio": {
       "field": "tipoDeCambio",
       "dataType": "number"
     },
-    "Saldo Resultante": {
+    "Banco Saldo Resultante": {
       "field": "saldoBanco",
       "dataType": "currency",
       "currencyField": "moneda"
     },
-    "Saldo por Complementar": {
+    "Banco Saldo por Complementar": {
       "field": "saldoPorComplementar",
       "dataType": "currency",
       "currencyField": "moneda"
     },
-    "Saldo por Identificar": {
+    "Banco Saldo por Identificar": {
       "field": "saldoPorIdentificar",
       "dataType": "currency",
       "currencyField": "moneda"
     },
-    "Estado Ingreso": {
+    "Ingreso Estado": {
       "field": "estadoIngreso",
       "dataType": "text",
       "filtro": "lista"
     },
-    "Estado Egreso": {
+    "Egreso Estado": {
       "field": "estadoEgreso",
       "dataType": "text",
       "filtro": "lista"
     },
-    "Cuenta Contable": {
+    "Banco Cuenta Contable": {
       "field": "cuentaContable",
       "dataType": "text",
       "oculta": true
     },
-    "Texto al Complementar": {
+    "Banco Texto al Complementar": {
       "field": "textoComplementario",
       "dataType": "text"
     }
   },
   "reportTypes": {
     "default": [
-      "Fecha",
-      "Banco",
-      "Número de Cuenta",
-      "Concepto",
-      "Abono",
-      "Cargo",
-      "Saldo Resultante",
-      "Moneda",
-      "Nombre Cliente/Proveedor",
-      "Forma Pago",
-      "Estado Ingreso",
-      "Estado Egreso",
-      "Saldo por Complementar",
-      "Saldo por Identificar",
-      "Tipo de Cambio",
-      "Texto al Complementar",
-      "Id de Transacción",
-      "RFC",
-      "Cuenta Contable"
+      "Banco Fecha",
+      "Banco Nombre",
+      "Banco Número de Cuenta",
+      "Banco Concepto",
+      "Banco Abono",
+      "Banco Cargo",
+      "Banco Saldo Resultante",
+      "Banco Moneda",
+      "Cliente/Proveedor Nombre Comercial",
+      "Banco Forma de Pago",
+      "Ingreso Estado",
+      "Egreso Estado",
+      "Banco Saldo por Complementar",
+      "Banco Saldo por Identificar",
+      "Banco Tipo de Cambio",
+      "Banco Texto al Complementar",
+      "Banco Transacción ID",
+      "Cliente/Proveedor RFC",
+      "Banco Cuenta Contable"
     ]
   }
 }
