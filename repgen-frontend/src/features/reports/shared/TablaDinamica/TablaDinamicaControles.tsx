@@ -132,7 +132,7 @@ const TablaDinamicaControles = ({
                   {filtros.map((filtro) => (
                     <li key={filtro.colId} className="flex items-start justify-between gap-2 py-1.5 pl-3 pr-1.5">
                       <div className="min-w-0 pt-1.5">
-                        <p className="text-sm break-words">
+                        <p className="text-sm wrap-break-word">
                           <span className="font-medium">{filtro.columna}</span>{" "}
                           <span className="text-gray-600">{filtro.condicion}</span>
                         </p>

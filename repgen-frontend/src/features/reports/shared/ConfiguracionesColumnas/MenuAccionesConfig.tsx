@@ -64,7 +64,7 @@ const AccionMenu = ({
       aria-hidden="true"
       className={`w-4 h-4 mt-0.5 shrink-0 group-aria-disabled:text-gray-300 ${peligro ? "" : "text-gray-500"}`}
     />
-    <span className="min-w-0 break-words">
+    <span className="min-w-0 wrap-break-word">
       {children}
       {deshabilitada && motivo && <span className="block text-xs text-gray-500">{motivo}</span>}
     </span>
@@ -189,7 +189,7 @@ const MenuAccionesConfig = ({
             </div>
           ) : estado.confirmandoEliminar ? (
             <div className="p-3 flex flex-col gap-2">
-              <p className="text-sm text-gray-700 break-words">
+              <p className="text-sm text-gray-700 wrap-break-word">
                 ¿Eliminar la vista{" "}
                 <span className="font-semibold">{configActual?.name}</span>?
               </p>
