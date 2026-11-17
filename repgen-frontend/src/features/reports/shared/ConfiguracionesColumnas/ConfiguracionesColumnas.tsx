@@ -257,17 +257,8 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       ?.focus();
   };
 
-  // Menú o "Nueva vista" abiertos: un clic fuera los cierra y ese clic sigue su
-  // curso (antes un velo invisible se lo tragaba).
+  // Menú y "Nueva vista" son popover="auto": el clic fuera lo resuelve el navegador.
   const flotanteAbierto = estado.menuAbierto || estado.popoverGuardarAbierto;
-  useEffect(() => {
-    if (!flotanteAbierto) return;
-    const alPresionar = (evento: PointerEvent) => {
-      if (!contenedorRef.current?.contains(evento.target as Node)) dispatch({ type: "CERRAR_TODO" });
-    };
-    document.addEventListener("pointerdown", alPresionar);
-    return () => document.removeEventListener("pointerdown", alPresionar);
-  }, [flotanteAbierto]);
 
   const aplicarConfig = (config: ReportConfigResponse) => {
     if (!api) return;
@@ -590,6 +581,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
         onGuardarComo={(periodo) => void handleGuardarComo(periodo)}
         onCancelar={cerrarTodo}
         errorNombre={errorNombre}
+        ancla={contenedorRef}
       />
 
       {(cambioPendiente || salidaPendiente) && (

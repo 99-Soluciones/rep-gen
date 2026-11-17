@@ -1,4 +1,5 @@
-import { useState, type Dispatch } from "react";
+import { useState, type Dispatch, type RefObject } from "react";
+import { usePopoverAnclado } from "../../../../shared/utils/usePopoverAnclado";
 import type { PeriodoVista } from "@repgen/shared-types";
 import { MAX_NOMBRE_VISTA, PERIODOS } from "./vista";
 import type { MenuColumnasAction, MenuColumnasState } from "./ConfiguracionesColumnas.reducer";
@@ -12,13 +13,15 @@ interface PopoverGuardarConfigProps {
   onCancelar: () => void;
   /** Por qué el nombre escrito no sirve (repetido); null si sirve. */
   errorNombre?: string | null;
+  /** Grupo de controles de vista: el panel se alinea a su borde derecho. */
+  ancla: RefObject<HTMLElement | null>;
 }
 
 /**
  * Panel para crear una vista nueva. No tiene botón disparador propio: se abre
  * desde el botón "Guardar" del grupo (cuando no hay vista seleccionada) o
  * desde la opción "Guardar como vista nueva..." del menú ⋮, y se ancla al
- * contenedor `relative` del grupo en ConfiguracionesColumnas.
+ * grupo de ConfiguracionesColumnas (`ancla`).
  */
 const PopoverGuardarConfig = ({
   guardando,
@@ -27,9 +30,11 @@ const PopoverGuardarConfig = ({
   onGuardarComo,
   onCancelar,
   errorNombre = null,
+  ancla,
 }: PopoverGuardarConfigProps) => {
   // Se desmonta al cerrarse, así cada vista nueva empieza "Sin periodo".
   const [periodo, setPeriodo] = useState<PeriodoVista | "">("");
+  const popover = usePopoverAnclado(ancla, () => dispatch({ type: "CERRAR_TODO" }));
   if (!estado.popoverGuardarAbierto) return null;
 
   const guardar = () => onGuardarComo(periodo || null);
@@ -38,7 +43,9 @@ const PopoverGuardarConfig = ({
     <div
       role="dialog"
       aria-labelledby="titulo-nueva-vista"
-      className="absolute right-0 top-full mt-2 z-50 w-64 bg-white border border-gray-200 rounded-xl shadow-lg p-3 flex flex-col gap-2"
+      // Escape y clic fuera los resuelve el navegador (popover="auto").
+      {...popover}
+      className="popover-anclado popover-anclado-fin w-64 bg-white border border-gray-200 rounded-xl shadow-lg p-3 flex flex-col gap-2"
       onKeyDown={(e) => {
         // Tab y Shift+Tab se quedan en el diálogo hasta guardar o cancelar
         // (Escape lo cierra desde ConfiguracionesColumnas).
@@ -78,6 +85,8 @@ const PopoverGuardarConfig = ({
         }
         onKeyDown={(e) => {
           // Escape lo maneja ConfiguracionesColumnas: cierra y devuelve el foco a ⋮.
+          // Enter de un IME confirma el carácter, no la vista. 229: Safari ya limpió isComposing.
+          if (e.nativeEvent.isComposing || e.keyCode === 229) return;
           if (e.key === "Enter") guardar();
         }}
       />

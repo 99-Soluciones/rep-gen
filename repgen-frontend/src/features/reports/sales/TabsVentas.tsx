@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
+import { usePopoverAnclado } from "../../../shared/utils/usePopoverAnclado";
 
 interface TabsVentasProps {
   reportType: "facturas" | "conceptos";
@@ -14,36 +15,11 @@ const TabsVentas = ({ reportType, rutaBase = "/ventas" }: TabsVentasProps) => {
 
   const menuRef = useRef<HTMLDivElement>(null);
   const botonRef = useRef<HTMLButtonElement>(null);
+  const popover = usePopoverAnclado(botonRef, () => setMenuAbierto(false));
 
   // Al abrir, el foco entra en la pestaña actual (como el menú lateral).
   useEffect(() => {
     if (menuAbierto) menuRef.current?.querySelector<HTMLElement>('[aria-current="page"]')?.focus();
-  }, [menuAbierto]);
-
-  useEffect(() => {
-    if (!menuAbierto) return;
-
-    const handleOutsideClick = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (menuRef.current && !menuRef.current.contains(target)) {
-        setMenuAbierto(false);
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setMenuAbierto(false);
-        botonRef.current?.focus();
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
   }, [menuAbierto]);
 
   return (
@@ -65,7 +41,9 @@ const TabsVentas = ({ reportType, rutaBase = "/ventas" }: TabsVentasProps) => {
           {menuAbierto ? (
             <div
               id="menu-tabs-ventas"
-              className="absolute left-0 mt-2 w-36 rounded-xl border border-gray-200 bg-white p-1 shadow-lg z-20"
+              // Escape y clic fuera los resuelve el navegador (popover="auto").
+              {...popover}
+              className="popover-anclado w-36 rounded-xl border border-gray-200 bg-white p-1 shadow-lg"
             >
               {/* Navegan: son links (aria-current lo pone NavLink), no un listbox. */}
               {(["facturas", "conceptos"] as const).map((tipo) => (

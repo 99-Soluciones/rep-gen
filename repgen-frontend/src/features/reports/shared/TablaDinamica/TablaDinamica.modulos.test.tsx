@@ -83,7 +83,7 @@ describe("TablaDinamica con AG Grid real", () => {
     render(
       <TablaDinamica
         referenciaGrid={referenciaGrid}
-        // ventaId llega como número: AG Grid infiere la columna como numérica.
+        // ventaId llega como número aunque la columna sea de texto.
         datos={[{ ventaId: 7, facturaFolio: "101", articuloImporteConDescuentoMxn: 100 }]}
         definicionesColumnas={construirColumnasVentas("conceptos") as ColDef[]}
         estaCargando={false}
@@ -99,11 +99,35 @@ describe("TablaDinamica con AG Grid real", () => {
     api.setGridOption("pinnedBottomRowData", [{ ventaId: "Total MXN" }]);
 
     const columna = api.getColumn("ventaId")!;
-    expect(columna.getColDef().cellDataType).toBe("number");
+    // Sin inferencia de tipos: no se vuelve numérica por traer números.
+    expect(columna.getColDef().cellDataType).toBe(false);
     const formatear = columna.getColDef().valueFormatter as (p: unknown) => string;
     const nodo = api.getPinnedBottomRow(0)!;
     expect(formatear({ value: "Total MXN", node: nodo, data: nodo.data, colDef: columna.getColDef(), column: columna, api })).toBe("Total MXN");
     // Las filas normales siguen como antes.
     expect(formatear({ value: 7, node: api.getDisplayedRowAtIndex(0), colDef: columna.getColDef(), column: columna, api })).toBe("7");
+  });
+
+  it("con 0 registros los filtros se ponen y se quitan por API («Limpiar», vistas)", async () => {
+    const referenciaGrid = createRef<AgGridReact>();
+    const onGridListo = vi.fn();
+    render(
+      <TablaDinamica
+        referenciaGrid={referenciaGrid}
+        datos={[]}
+        definicionesColumnas={construirColumnasVentas("factura") as ColDef[]}
+        estaCargando={false}
+        onGridListo={onGridListo}
+        filasVisibles={0}
+      />,
+    );
+    await waitFor(() => expect(onGridListo).toHaveBeenCalled(), ESPERA);
+    const api = referenciaGrid.current!.api;
+    const filtro = { facturaFolio: { filterType: "text", type: "contains", filter: "123" } };
+
+    api.setFilterModel(filtro);
+    await waitFor(() => expect(api.getFilterModel()).toEqual(filtro), ESPERA);
+    api.setFilterModel(null);
+    await waitFor(() => expect(api.getFilterModel()).toEqual({}), ESPERA);
   });
 });

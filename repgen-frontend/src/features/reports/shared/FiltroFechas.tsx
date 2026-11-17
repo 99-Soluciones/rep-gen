@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
+import { usePopoverAnclado } from "../../../shared/utils/usePopoverAnclado";
 import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { formatearFecha, obtenerFechaHoyFormateada } from "../../../shared/utils/fechas";
@@ -27,21 +28,12 @@ const FiltroFechas = (props: FiltroFechasProps) => {
   const [abierto, setAbierto] = useState(false);
   const grupoRef = useRef<HTMLDivElement>(null);
   const botonRef = useRef<HTMLButtonElement>(null);
+  const popover = usePopoverAnclado(grupoRef, () => setAbierto(false));
 
   const cerrar = (devolverFoco = true) => {
     setAbierto(false);
     if (devolverFoco) botonRef.current?.focus();
   };
-
-  // Clic fuera cierra sin aplicar, como cualquier panel desplegable.
-  useEffect(() => {
-    if (!abierto) return;
-    const cerrarFuera = (event: PointerEvent) => {
-      if (!grupoRef.current?.contains(event.target as Node)) setAbierto(false);
-    };
-    document.addEventListener("pointerdown", cerrarFuera);
-    return () => document.removeEventListener("pointerdown", cerrarFuera);
-  }, [abierto]);
 
   const periodo = PERIODOS.find(
     ({ valor }) => valor === detectarPeriodo({ desde: fechaDesde, hasta: fechaHasta }),
@@ -118,7 +110,14 @@ const FiltroFechas = (props: FiltroFechasProps) => {
       </button>
       </div>
 
-      {abierto && <FormularioFechas {...props} onCerrar={cerrar} />}
+      {abierto && (
+        <FormularioFechas
+          {...props}
+          onCerrar={cerrar}
+          // Clic fuera cierra sin aplicar: lo resuelve el navegador (popover="auto").
+          popover={popover}
+        />
+      )}
     </div>
   );
 };
@@ -135,7 +134,11 @@ const FormularioFechas = ({
   fechaHasta,
   setFechaHasta,
   onCerrar,
-}: FiltroFechasProps & { onCerrar: (devolverFoco?: boolean) => void }) => {
+  popover,
+}: FiltroFechasProps & {
+  onCerrar: (devolverFoco?: boolean) => void;
+  popover: ReturnType<typeof usePopoverAnclado>;
+}) => {
   const [borradorFechas, setBorradorFechas] = useState({
     fechaDesde,
     fechaHasta,
@@ -212,7 +215,8 @@ const FormularioFechas = ({
         const destino = evento.relatedTarget;
         if (destino && !evento.currentTarget.parentElement?.contains(destino)) onCerrar(false);
       }}
-      className="absolute left-0 top-full z-50 mt-2 flex w-72 max-w-[calc(100vw-2rem)] flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-lg"
+      {...popover}
+      className="popover-anclado flex w-72 max-w-[calc(100vw-2rem)] flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-lg"
     >
       <label className="flex flex-col gap-1">
         <span className={claseEtiqueta}>Periodo</span>

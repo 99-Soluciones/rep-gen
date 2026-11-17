@@ -67,9 +67,7 @@ const esRotuloTotal = ({ node, value }: { node: CellClassParams["node"] | null; 
 const reglasCelda: CellClassRules = { "rotulo-total": esRotuloTotal };
 
 /**
- * El rótulo se escribe tal cual en cualquier columna. Sin esto, una columna de
- * texto con números (Venta ID) la infiere AG Grid como numérica y su
- * formateador por defecto pinta "Invalid Number"; las de cifras lo pasarían
+ * El rótulo se escribe tal cual en cualquier columna: las de cifras lo pasarían
  * por formatearMoneda. Pasa en cuanto una vista deja otra columna primera.
  */
 const conRotuloTotal = <TRowData>(columna: ColDef<TRowData>): ColDef<TRowData> => {
