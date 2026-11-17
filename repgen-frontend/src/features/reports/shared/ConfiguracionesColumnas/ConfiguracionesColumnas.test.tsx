@@ -614,22 +614,17 @@ describe("ConfiguracionesColumnas", () => {
       expect(screen.queryByRole("menu")).not.toBeInTheDocument();
     });
 
-    it("un clic fuera cierra el menú sin tragarse el clic", () => {
-      const fuera = vi.fn();
-      render(
-        <>
-          {componente()}
-          <button type="button" onClick={fuera}>
-            Fuera
-          </button>
-        </>,
-      );
+    it("si el navegador cierra el menú (clic fuera, Escape), el estado lo sigue", () => {
+      // El clic fuera lo resuelve popover="auto" y jsdom no lo implementa: se
+      // simula el evento toggle que dispara el navegador al cerrarlo.
+      render(componente());
       abrirMenu();
-      const boton = screen.getByRole("button", { name: "Fuera" });
-      fireEvent.pointerDown(boton);
-      fireEvent.click(boton);
+      const cierre = Object.assign(new Event("toggle"), { oldState: "open", newState: "closed" });
+      fireEvent(document.getElementById("menu-acciones-vista")!, cierre);
       expect(screen.queryByRole("menu")).not.toBeInTheDocument();
-      expect(fuera).toHaveBeenCalled();
+      expect(
+        screen.getByRole("button", { name: "Acciones de la vista" }),
+      ).toHaveAttribute("aria-expanded", "false");
     });
   });
 

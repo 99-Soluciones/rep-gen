@@ -1,5 +1,6 @@
 import { MoreVertical, Pencil, Plus, Save, Star, Trash2, Undo2, type LucideIcon } from "lucide-react";
-import type { Dispatch, KeyboardEvent, ReactNode } from "react";
+import { useRef, type Dispatch, type KeyboardEvent, type ReactNode } from "react";
+import { usePopoverAnclado } from "../../../../shared/utils/usePopoverAnclado";
 import type { ReportConfigResponse } from "../api/report-configs.api";
 import type { MenuColumnasAction, MenuColumnasState } from "./ConfiguracionesColumnas.reducer";
 import { MAX_NOMBRE_VISTA } from "./vista";
@@ -108,6 +109,8 @@ const MenuAccionesConfig = ({
   onDeshacer,
   errorNombre = null,
 }: MenuAccionesConfigProps) => {
+  const botonRef = useRef<HTMLButtonElement>(null);
+  const popover = usePopoverAnclado(botonRef, () => dispatch({ type: "CERRAR_TODO" }));
   const iniciarRenombrar = () => {
     if (!configActual) return;
     dispatch({ type: "INICIAR_RENOMBRAR", nombre: configActual.name });
@@ -116,6 +119,7 @@ const MenuAccionesConfig = ({
   return (
     <div className="relative flex shrink-0">
       <button
+        ref={botonRef}
         type="button"
         onClick={() => dispatch({ type: "ABRIR_MENU" })}
         disabled={guardando}
@@ -132,7 +136,9 @@ const MenuAccionesConfig = ({
       {estado.menuAbierto && (
         <div
           id="menu-acciones-vista"
-          className="absolute right-0 top-full mt-2 z-50 w-64 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
+          // Escape y clic fuera los resuelve el navegador (popover="auto").
+          {...popover}
+          className="popover-anclado popover-anclado-fin w-64 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
         >
           {estado.modoRenombrar ? (
             <div className="p-3 flex flex-col gap-2">
@@ -159,8 +165,11 @@ const MenuAccionesConfig = ({
                   // el carácter, no el renombre. 229: Safari ya limpió isComposing.
                   if (e.nativeEvent.isComposing || e.keyCode === 229) return;
                   if (e.key === "Enter") onRenombrar();
-                  if (e.key === "Escape")
+                  if (e.key === "Escape") {
+                    // Sin esto el navegador también cerraría el popover entero.
+                    e.preventDefault();
                     dispatch({ type: "CANCELAR_RENOMBRAR" });
+                  }
                 }}
               />
               {errorNombre ? (

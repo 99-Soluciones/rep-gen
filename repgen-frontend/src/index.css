@@ -70,6 +70,32 @@ body,
   text-transform: uppercase;
 }
 
+/*
+ * Paneles flotantes (popover="auto", ver shared/utils/usePopoverAnclado.ts): bajo su
+ * ancla y volteados si no caben. En components para que las utilidades de cada
+ * panel (p-3, bordes, ancho) ganen sobre este reset del estilo del navegador.
+ */
+@layer components {
+  .popover-anclado {
+    inset: auto;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+  }
+
+  @supports (position-area: block-end) {
+    .popover-anclado {
+      margin-block-start: 0.5rem;
+      position-area: block-end span-inline-end;
+      position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+    }
+
+    .popover-anclado-fin {
+      position-area: block-end span-inline-start;
+    }
+  }
+}
+
 /* Placeholders legibles: el de Tailwind (50% del texto) queda en ~3.5:1; el gris 500 da 4.83:1. */
 ::placeholder {
   color: var(--color-gray-500);

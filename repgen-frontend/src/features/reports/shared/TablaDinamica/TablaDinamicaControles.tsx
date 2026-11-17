@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
+import { usePopoverAnclado } from "../../../../shared/utils/usePopoverAnclado";
 import { ChevronDown, ListFilter, X } from "lucide-react";
 import type { FiltroDescrito } from "./describirFiltros";
 
@@ -46,16 +47,7 @@ const TablaDinamicaControles = ({
   const mostrarLista = listaAbierta && filtrosActivos > 0;
   const grupoRef = useRef<HTMLDivElement>(null);
   const botonRef = useRef<HTMLButtonElement>(null);
-
-  // Clic fuera cierra la lista, como cualquier menú desplegable.
-  useEffect(() => {
-    if (!mostrarLista) return;
-    const cerrarFuera = (event: PointerEvent) => {
-      if (!grupoRef.current?.contains(event.target as Node)) setListaAbierta(false);
-    };
-    document.addEventListener("pointerdown", cerrarFuera);
-    return () => document.removeEventListener("pointerdown", cerrarFuera);
-  }, [mostrarLista]);
+  const popover = usePopoverAnclado(grupoRef, () => setListaAbierta(false));
 
   const textoFiltros = `${filtrosActivos} ${filtrosActivos === 1 ? "filtro" : "filtros"}`;
 
@@ -126,7 +118,9 @@ const TablaDinamicaControles = ({
             {mostrarLista && (
               <div
                 id={ID_LISTA_FILTROS}
-                className="absolute left-0 top-full mt-2 z-50 w-80 max-w-[calc(100vw-2rem)] whitespace-normal rounded-xl border border-gray-200 bg-white text-gray-900 shadow-lg"
+                // Clic fuera la cierra: lo resuelve el navegador (popover="auto").
+                {...popover}
+                className="popover-anclado w-80 max-w-[calc(100vw-2rem)] whitespace-normal rounded-xl border border-gray-200 bg-white text-gray-900 shadow-lg"
               >
                 <ul aria-label="Filtros activos" className="py-1">
                   {filtros.map((filtro) => (
