@@ -18,11 +18,17 @@
   `contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre` y `getBankBaseFilters`
   (incluye `_id_banco = 0`, las notas de crédito no bancarizadas).
 
-> **Estado (18/11/2026): implementado; datos dorados aprobados.**
+> **Estado (18/11/2026): implementado, validado contra FileMaker.**
 > Código: `repgen-backend/src/reports/*/bank-complements/` y
 > `repgen-frontend/src/features/reports/bank-complements/`. El mapper produce
 > exactamente `__golden__/esperado.json` (`bank-complements.golden.spec.ts`).
-> Pendiente: la comparación contra FM con la base real.
+> Comparación (paso 6 de la guía), octubre 2026 BBVA, base real: la
+> exportación de RepGen ("REPORTE A1 COMPLEMENTOS", 203 renglones) contra
+> "Relación de pagos" de FM (B2): mismos 189 movimientos y 203 renglones, en
+> el mismo orden; los 33 campos que trae B2 coinciden salvo el folio de 7509,
+> que el CSV de FM recorta (`ZSD2-...1047858`) y RepGen da completo. RFC,
+> forma de pago, estado, método de pago y venta ID no están en B2: no se
+> compararon (salen directo de FileMaker).
 
 ## Qué muestra
 
