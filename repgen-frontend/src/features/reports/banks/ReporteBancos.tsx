@@ -18,6 +18,8 @@ import {
 import { useComparacionPeriodo } from "../shared/useComparacionPeriodo";
 import { flujoNetoMxn, movimientosPorMoneda, saldosAlCierre, type MovimientosMoneda } from "./calcularBancos";
 import { toolbarReporte } from "../shared/toolbarReporte";
+import TabsVentas from "../sales/TabsVentas";
+import { PESTANAS_BANCOS, RUTA_BANCOS } from "./pestanas";
 
 // Solo MXN, igual que los KPIs: sumar monedas distintas daría una cifra falsa.
 // Los saldos no se suman (son acumulados por renglón).
@@ -76,7 +78,10 @@ const ReporteBancos = () => {
     <div className="flex flex-col xl:h-full">
       <EncabezadoReporte
         titulo="Reporte de Bancos"
-        tituloPagina="Bancos"
+        tituloPagina="Bancos · Movimientos"
+        encabezadoExtra={
+          <TabsVentas reportType="movimientos" rutaBase={RUTA_BANCOS} pestanas={PESTANAS_BANCOS} />
+        }
       />
 
       <div className="flex flex-col xl:flex-row xl:flex-1 xl:min-h-0 gap-2">

@@ -4,3 +4,4 @@ export * from './salesitem/get-salesitem-report.use-case';
 export * from './shared/base-report.service';
 export * from './receivables/get-receivables-report.use-case';
 export * from './cash-inflows/get-cash-inflows-report.use-case';
+export * from './bank-complements/get-bank-complements-report.use-case';

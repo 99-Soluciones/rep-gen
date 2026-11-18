@@ -1,0 +1,665 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "fieldData": {
+      "type": "object",
+      "properties": {
+        "_fecha": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "_idu_formaPago_v0_22_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "mConceptoDeBancoTexto_v0_20_0": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_ORIG_abono_v0_22_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_ORIG_cargo_v0_22_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "saldo_ORIG_porComplementar_v0_22_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "tc_tipoCambioValor_v0_26_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "saldo_ORIG_porID_v0_22_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "mConciliacionTexto_parteDelCOMPLEMENTO_v0_22_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "_id_banco": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "__id_bancoITM": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_ORIG_bancoRunningSaldo": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "contBanco.ITM|satCUENTA_|_satCuentaIDU::cuenta_codigoAg_v0_21_2_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        }
+      },
+      "required": [
+        "_fecha",
+        "_idu_formaPago_v0_22_1",
+        "mConceptoDeBancoTexto_v0_20_0",
+        "monto_ORIG_abono_v0_22_1",
+        "monto_ORIG_cargo_v0_22_1",
+        "saldo_ORIG_porComplementar_v0_22_1",
+        "tc_tipoCambioValor_v0_26_1",
+        "saldo_ORIG_porID_v0_22_1",
+        "mConciliacionTexto_parteDelCOMPLEMENTO_v0_22_1",
+        "_id_banco",
+        "__id_bancoITM",
+        "monto_ORIG_bancoRunningSaldo",
+        "contBanco.ITM|satCUENTA_|_satCuentaIDU::cuenta_codigoAg_v0_21_2_1"
+      ],
+      "additionalProperties": true
+    },
+    "portalData": {
+      "type": "object",
+      "properties": {
+        "contEgreso": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recordId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::special.Razon": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::isT_Abierto_Cerrado": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::cfdi_serieFolio_v0_18_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::__id_egreso": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_ingresoIDtransfer|v0.18.1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_prov": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RFC": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_NombreComercial": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RazonSocial": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "modId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::special.Razon",
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::isT_Abierto_Cerrado",
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::cfdi_serieFolio_v0_18_1",
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::__id_egreso",
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal",
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_ingresoIDtransfer|v0.18.1",
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente",
+              "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_prov",
+              "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RFC",
+              "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_NombreComercial",
+              "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RazonSocial"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "Banco": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recordId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contBANCO_|_x_bancoID::datos_cuentaNumero": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "modId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "contBanco.ITM|contBANCO_|_x_bancoID::_idu_moneda",
+              "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre",
+              "contBanco.ITM|contBANCO_|_x_bancoID::datos_cuentaNumero",
+              "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "contIngreso": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recordId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::cfdiNotaCredOrCargo_SerieFolio_v0_20_2r": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::isT_Abierto_Cerrado": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::special.Texto": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_egresoIDtransfer|v0.18.1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_prov": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "modId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::cfdiNotaCredOrCargo_SerieFolio_v0_20_2r",
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::isT_Abierto_Cerrado",
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::special.Texto",
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_cliente",
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_egresoIDtransfer|v0.18.1",
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_prov",
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso",
+              "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal",
+              "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC",
+              "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::destLocal_dirNombreComercial",
+              "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RazonSocial"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "ComplementosIngreso": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recordId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::__idu_ingreso_itm": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::_id_ingreso": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::_id_relacionado_Venta": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::_id_relacionado_Egreso": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::app_MXN_GranTotal": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::cfdiCompPago_Folio": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::cfdiCompPago_Serie": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::cfdiCompPago_uuid": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::fecha_ingresoITM_fechaDelComplemento": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|VENTA|_x_bancoItmID::cfdi_FacturaFolio": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|VENTA|_x_bancoItmID::cfdi_facturaSerieFolio_v0_18_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|VENTA|_x_bancoItmID::cfdi_FacturaSerieValor": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|VENTA|_x_bancoItmID::monto_GranTotal": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|VENTA|_x_bancoItmID::cfdi_UUID": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|VENTA|_x_bancoItmID::cfdi_FacturaFechaTimbrar": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::fecha_fiscalDisplay_v0_21_3_2r": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|VENTA|_x_bancoItmID::_idu_cdfi_metoPago": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "modId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::__idu_ingreso_itm",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::_id_ingreso",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::_id_relacionado_Venta",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::_id_relacionado_Egreso",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::app_MXN_GranTotal",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::cfdiCompPago_Folio",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::cfdiCompPago_Serie",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::cfdiCompPago_uuid",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::fecha_ingresoITM_fechaDelComplemento",
+              "contBanco.ITM|VENTA|_x_bancoItmID::cfdi_FacturaFolio",
+              "contBanco.ITM|VENTA|_x_bancoItmID::cfdi_facturaSerieFolio_v0_18_1",
+              "contBanco.ITM|VENTA|_x_bancoItmID::cfdi_FacturaSerieValor",
+              "contBanco.ITM|VENTA|_x_bancoItmID::monto_GranTotal",
+              "contBanco.ITM|VENTA|_x_bancoItmID::cfdi_UUID",
+              "contBanco.ITM|VENTA|_x_bancoItmID::cfdi_FacturaFechaTimbrar",
+              "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID::fecha_fiscalDisplay_v0_21_3_2r",
+              "contBanco.ITM|VENTA|_x_bancoItmID::_idu_cdfi_metoPago"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "ComplementosEgreso": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recordId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_id_egreso": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_id_relacionado_Ingreso": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_idu_relacionado_PoFactura": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_MXN_GranTotal": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::cPagoCFDI_fecha_v0_15_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::cPagoCFDI_folio_v0_15_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::cPagoCFDI_serie_v0_15_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::cPagoCFDI_UUID_v0_15_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_egresoITM_fechaDelComplemento_v0_20_2r": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_folio": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi.serie|v0.15.1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi.UUID": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_fecha": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_fiscalDisplay_v0_21_3_2": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_isPPDoPUE_v0_15_1": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::monto_MXN_GranTotal": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "modId": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_id_egreso",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_id_relacionado_Ingreso",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_idu_relacionado_PoFactura",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_MXN_GranTotal",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::cPagoCFDI_fecha_v0_15_1",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::cPagoCFDI_folio_v0_15_1",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::cPagoCFDI_serie_v0_15_1",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::cPagoCFDI_UUID_v0_15_1",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_egresoITM_fechaDelComplemento_v0_20_2r",
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_folio",
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi.serie|v0.15.1",
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi.UUID",
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_fecha",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_fiscalDisplay_v0_21_3_2",
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_isPPDoPUE_v0_15_1",
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::monto_MXN_GranTotal"
+            ],
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "contEgreso",
+        "Banco",
+        "contIngreso",
+        "ComplementosIngreso",
+        "ComplementosEgreso"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "fieldData",
+    "portalData"
+  ],
+  "additionalProperties": true
+}

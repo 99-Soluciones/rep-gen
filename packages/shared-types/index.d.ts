@@ -337,3 +337,59 @@ export interface ReportCashInflowRecord {
   costoTasa: number | null;
   margenTasa: number | null;
 }
+
+/** Tipo de renglón de Bancos con complementos (de la conciliación). */
+export type TipoTransaccionBanco =
+  | 'Pago de cliente'
+  | 'Pago de proveedor'
+  | 'Transferencia desde banco'
+  | 'Pago a proveedor'
+  | 'Pago a cliente'
+  | 'Transferencia a banco'
+  | 'Sin identificar';
+
+/**
+ * Fila de Bancos con complementos: una por complemento. El movimiento y la
+ * conciliación se repiten en cada fila; lo que no aplica va en null.
+ * Ficha: repgen-backend/docs/reports/fichas/bank-complements/bank-complements.md
+ */
+export interface ReportBankComplementRecord {
+  bancoFolioTransaccion: number;
+  bancoFecha: string | null;
+  bancoNombre: string;
+  bancoNumeroCuenta: string;
+  bancoCuentaContable: string;
+  bancoMoneda: string;
+  bancoTipoDeCambio: number | null;
+  bancoFormaPago: string;
+  bancoConcepto: string;
+  bancoAbono: number | null;
+  bancoCargo: number | null;
+  bancoSaldoResultante: number | null;
+  bancoSaldoPorIdentificar: number | null;
+  bancoSaldoPorComplementar: number | null;
+  bancoTextoComplemento: string;
+  tipoTransaccion: TipoTransaccionBanco;
+  ingresoId: number | null;
+  egresoId: number | null;
+  conciliacionEstado: string | null;
+  conciliacionMontoTotal: number | null;
+  conciliacionMontoComplementado: number | null;
+  conciliacionSaldoPorComplementar: number | null;
+  clienteProveedorId: number | null;
+  bancoTransferenciaId: number | null;
+  clienteProveedor: string | null;
+  clienteProveedorRazonSocial: string | null;
+  clienteProveedorRfc: string | null;
+  pagoGranTotalMxn: number | null;
+  pagoFecha: string | null;
+  pagoPeriodoFiscal: string | null;
+  pagoFolio: string | null;
+  pagoUuid: string | null;
+  facturaSerieFolio: string | null;
+  facturaFecha: string | null;
+  facturaGranTotal: number | null;
+  facturaUuid: string | null;
+  facturaMetodoPago: string | null;
+  ventaId: number | null;
+}

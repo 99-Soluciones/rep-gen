@@ -12,6 +12,12 @@ export interface TotalesTabla<T> {
    * en ella parece un resumen de ese campo.
    */
   etiqueta?: string;
+  /**
+   * Campos que se repiten en varios renglones del mismo registro (p. ej. el
+   * abono de un movimiento en cada uno de sus complementos): se suman solo en
+   * el primer renglón visible de cada `clave`.
+   */
+  unaVezPor?: { clave: (fila: T) => unknown; campos: string[] };
 }
 
 // Fila de totales sobre las filas visibles (después de los filtros de columna).
@@ -19,14 +25,23 @@ export function calcularFilaTotales<T>(
   api: GridApi,
   totales: TotalesTabla<T>,
 ): Record<string, unknown> {
+  const unaVez = totales.unaVezPor;
   const sumas: Record<string, number> = Object.fromEntries(
-    totales.campos.map((campo) => [campo, 0]),
+    [...totales.campos, ...(unaVez?.campos ?? [])].map((campo) => [campo, 0]),
   );
+  const vistas = new Set<unknown>();
+  const sumar = (fila: T, campos: string[]) => {
+    for (const campo of campos) {
+      sumas[campo] += Number((fila as Record<string, unknown>)[campo]) || 0;
+    }
+  };
   api.forEachNodeAfterFilter((nodo) => {
     const fila = nodo.data as T;
     if (!fila || (totales.incluirFila && !totales.incluirFila(fila))) return;
-    for (const campo of totales.campos) {
-      sumas[campo] += Number((fila as Record<string, unknown>)[campo]) || 0;
+    sumar(fila, totales.campos);
+    if (unaVez && !vistas.has(unaVez.clave(fila))) {
+      vistas.add(unaVez.clave(fila));
+      sumar(fila, unaVez.campos);
     }
   });
 

@@ -19,13 +19,17 @@ const cargarVentas = () => import("../features/reports/sales/ReporteVentas");
 const ReporteBancos = lazy(cargarBancos);
 const cargarCxc = () => import("../features/reports/receivables/ReporteCuentasPorCobrar");
 const cargarIngresos = () => import("../features/reports/cash-inflows/ReporteFlujoIngresos");
+const cargarBancosComplementos = () =>
+  import("../features/reports/bank-complements/ReporteBancosComplementos");
 const ReporteVentas = lazy(cargarVentas);
 const ReporteCuentasPorCobrar = lazy(cargarCxc);
 const ReporteFlujoIngresos = lazy(cargarIngresos);
+const ReporteBancosComplementos = lazy(cargarBancosComplementos);
 void cargarBancos().catch(() => {});
 void cargarVentas().catch(() => {});
 void cargarCxc().catch(() => {});
 void cargarIngresos().catch(() => {});
+void cargarBancosComplementos().catch(() => {});
 
 const CargandoReporte = () => (
   <p role="status" className="p-6 text-sm text-gray-600">
@@ -82,7 +86,9 @@ const crearRouter = (reporteInicio: string | null) => {
       ),
       children: [
         { path: "/", element: <Navigate to={`/${rutaInicio || "bancos"}`} /> },
-        { path: "/bancos", element: <ReporteBancos /> },
+        { path: "/bancos", element: <Navigate to="/bancos/movimientos" replace /> },
+        { path: "/bancos/movimientos", element: <ReporteBancos /> },
+        { path: "/bancos/complementos", element: <ReporteBancosComplementos /> },
         { path: "/ventas", element: <Navigate to="/ventas/facturas" replace /> },
         { path: "/ventas/:reportType", element: <ReporteVentas /> },
         { path: "/cuentas_por_cobrar", element: <ReporteCuentasPorCobrar /> },
