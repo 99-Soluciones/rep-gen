@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ReportsController } from './presentation';
 import {
+  GetBankComplementsReportUseCase,
   GetBankReportUseCase,
   GetCashInflowsReportUseCase,
   GetReceivablesReportUseCase,
@@ -23,6 +24,7 @@ import { LoggerModule } from '../common/logger/logger.module';
   controllers: [ReportsController],
   providers: [
     GetBankReportUseCase,
+    GetBankComplementsReportUseCase,
     GetSalesReportUseCase,
     GetSalesitemReportUseCase,
     GetReceivablesReportUseCase,

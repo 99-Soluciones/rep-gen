@@ -1,5 +1,6 @@
 import { Controller, Request, Post, Body, HttpCode } from '@nestjs/common';
 import {
+  GetBankComplementsReportUseCase,
   GetBankReportUseCase,
   GetCashInflowsReportUseCase,
   GetReceivablesReportUseCase,
@@ -9,6 +10,7 @@ import {
 import type { ReportResponse } from '../application';
 import type {
   ReceivablesResponse,
+  ReportBankComplementRecord,
   ReportBankRecord,
   ReportCashInflowRecord,
   ReportSalesRecord,
@@ -30,7 +32,24 @@ export class ReportsController {
     private readonly reportServiceSalesItem: GetSalesitemReportUseCase,
     private readonly reportServiceReceivables: GetReceivablesReportUseCase,
     private readonly reportServiceCashInflows: GetCashInflowsReportUseCase,
+    private readonly reportServiceBankComplements: GetBankComplementsReportUseCase,
   ) {}
+
+  /** Bancos con un renglón por complemento (movimiento × conciliación × complemento). */
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  @Post('bancos-complementos/buscar')
+  @HttpCode(200)
+  async getBankComplementsReport(
+    @Body() { dateRange, refresh }: SearchReportDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ReportResponse<ReportBankComplementRecord>> {
+    return this.reportServiceBankComplements.fetchReport(
+      dateRange,
+      req.tenant,
+      req.id,
+      refresh,
+    );
+  }
 
   /** Foto al día de corte (no un rango): saldos al cierre de ese día. */
   @Post('cuentas-por-cobrar/buscar')
