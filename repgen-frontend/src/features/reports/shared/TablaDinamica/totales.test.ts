@@ -42,4 +42,18 @@ describe("calcularFilaTotales", () => {
     expect(fila).toEqual({ abono: 1099 });
   });
 
+  it("unaVezPor: un monto repetido en varios renglones de la misma clave se suma una vez", () => {
+    // Movimiento "a" con dos complementos: el abono viene en ambos renglones.
+    const complementos = [
+      { concepto: "a", abono: 3024, cargo: 2016, moneda: "MXN" },
+      { concepto: "a", abono: 3024, cargo: 960, moneda: "MXN" },
+      { concepto: "b", abono: 100, cargo: 0, moneda: "MXN" },
+    ];
+    const fila = calcularFilaTotales(apiCon(complementos, "moneda"), {
+      campos: ["cargo"],
+      unaVezPor: { clave: (f: Fila) => f.concepto, campos: ["abono"] },
+    });
+    expect(fila).toEqual({ cargo: 2976, abono: 3124 });
+  });
+
 });

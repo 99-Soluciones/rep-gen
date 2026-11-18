@@ -1,0 +1,232 @@
+{
+  "columns": {
+    "Banco Fecha": {
+      "field": "bancoFecha",
+      "dataType": "date"
+    },
+    "Banco Transacción ID": {
+      "field": "bancoFolioTransaccion",
+      "dataType": "number",
+      "oculta": true
+    },
+    "Banco Nombre": {
+      "field": "bancoNombre",
+      "dataType": "text",
+      "filtro": "lista"
+    },
+    "Banco Número de Cuenta": {
+      "field": "bancoNumeroCuenta",
+      "dataType": "text",
+      "filtro": "lista",
+      "oculta": true
+    },
+    "Banco Cuenta Contable": {
+      "field": "bancoCuentaContable",
+      "dataType": "text",
+      "oculta": true
+    },
+    "Banco Moneda": {
+      "field": "bancoMoneda",
+      "dataType": "text",
+      "filtro": "lista"
+    },
+    "Banco Tipo de Cambio": {
+      "field": "bancoTipoDeCambio",
+      "dataType": "number",
+      "oculta": true
+    },
+    "Banco Forma de Pago": {
+      "field": "bancoFormaPago",
+      "dataType": "text",
+      "filtro": "lista",
+      "oculta": true
+    },
+    "Banco Concepto": {
+      "field": "bancoConcepto",
+      "dataType": "text",
+      "anchoMinimo": 240
+    },
+    "Banco Abono": {
+      "field": "bancoAbono",
+      "dataType": "currency",
+      "currencyField": "bancoMoneda"
+    },
+    "Banco Cargo": {
+      "field": "bancoCargo",
+      "dataType": "currency",
+      "currencyField": "bancoMoneda"
+    },
+    "Banco Saldo Resultante": {
+      "field": "bancoSaldoResultante",
+      "dataType": "currency",
+      "currencyField": "bancoMoneda",
+      "oculta": true
+    },
+    "Banco Saldo por Identificar": {
+      "field": "bancoSaldoPorIdentificar",
+      "dataType": "currency",
+      "currencyField": "bancoMoneda",
+      "oculta": true
+    },
+    "Banco Saldo por Complementar": {
+      "field": "bancoSaldoPorComplementar",
+      "dataType": "currency",
+      "currencyField": "bancoMoneda",
+      "oculta": true
+    },
+    "Banco Texto al Complementar": {
+      "field": "bancoTextoComplemento",
+      "dataType": "text",
+      "oculta": true
+    },
+    "Tipo de Transacción": {
+      "field": "tipoTransaccion",
+      "dataType": "text",
+      "filtro": "lista"
+    },
+    "Ingreso ID": {
+      "field": "ingresoId",
+      "dataType": "number",
+      "oculta": true
+    },
+    "Egreso ID": {
+      "field": "egresoId",
+      "dataType": "number",
+      "oculta": true
+    },
+    "Conciliación Estado": {
+      "field": "conciliacionEstado",
+      "dataType": "text",
+      "filtro": "lista",
+      "oculta": true
+    },
+    "Conciliación Monto Total": {
+      "field": "conciliacionMontoTotal",
+      "dataType": "currency"
+    },
+    "Conciliación Monto Complementado": {
+      "field": "conciliacionMontoComplementado",
+      "dataType": "currency",
+      "oculta": true
+    },
+    "Conciliación Saldo por Complementar": {
+      "field": "conciliacionSaldoPorComplementar",
+      "dataType": "currency"
+    },
+    "Cliente/Proveedor ID": {
+      "field": "clienteProveedorId",
+      "dataType": "number",
+      "oculta": true
+    },
+    "Banco Transferencia ID": {
+      "field": "bancoTransferenciaId",
+      "dataType": "number",
+      "oculta": true
+    },
+    "Cliente/Proveedor Nombre Comercial": {
+      "field": "clienteProveedor",
+      "dataType": "text"
+    },
+    "Cliente/Proveedor Razón Social": {
+      "field": "clienteProveedorRazonSocial",
+      "dataType": "text",
+      "oculta": true
+    },
+    "Cliente/Proveedor RFC": {
+      "field": "clienteProveedorRfc",
+      "dataType": "text",
+      "oculta": true
+    },
+    "Pago Gran Total (MXN)": {
+      "field": "pagoGranTotalMxn",
+      "dataType": "currency"
+    },
+    "Pago Fecha": {
+      "field": "pagoFecha",
+      "dataType": "date"
+    },
+    "Pago Periodo Fiscal": {
+      "field": "pagoPeriodoFiscal",
+      "dataType": "text",
+      "filtro": "lista"
+    },
+    "Pago Folio": {
+      "field": "pagoFolio",
+      "dataType": "text"
+    },
+    "Pago UUID": {
+      "field": "pagoUuid",
+      "dataType": "text",
+      "oculta": true
+    },
+    "Factura Serie y Folio": {
+      "field": "facturaSerieFolio",
+      "dataType": "text"
+    },
+    "Factura Fecha": {
+      "field": "facturaFecha",
+      "dataType": "date"
+    },
+    "Factura Gran Total": {
+      "field": "facturaGranTotal",
+      "dataType": "currency"
+    },
+    "Factura UUID": {
+      "field": "facturaUuid",
+      "dataType": "text",
+      "oculta": true
+    },
+    "Factura Método de Pago": {
+      "field": "facturaMetodoPago",
+      "dataType": "text",
+      "filtro": "lista"
+    },
+    "Venta ID": {
+      "field": "ventaId",
+      "dataType": "number",
+      "oculta": true
+    }
+  },
+  "reportTypes": {
+    "default": [
+      "Banco Fecha",
+      "Banco Nombre",
+      "Banco Concepto",
+      "Banco Abono",
+      "Banco Cargo",
+      "Banco Moneda",
+      "Tipo de Transacción",
+      "Cliente/Proveedor Nombre Comercial",
+      "Pago Gran Total (MXN)",
+      "Pago Folio",
+      "Pago Fecha",
+      "Pago Periodo Fiscal",
+      "Factura Serie y Folio",
+      "Factura Fecha",
+      "Factura Gran Total",
+      "Factura Método de Pago",
+      "Conciliación Monto Total",
+      "Conciliación Saldo por Complementar",
+      "Banco Transacción ID",
+      "Banco Número de Cuenta",
+      "Banco Cuenta Contable",
+      "Banco Tipo de Cambio",
+      "Banco Forma de Pago",
+      "Banco Saldo Resultante",
+      "Banco Saldo por Identificar",
+      "Banco Saldo por Complementar",
+      "Banco Texto al Complementar",
+      "Ingreso ID",
+      "Egreso ID",
+      "Conciliación Estado",
+      "Conciliación Monto Complementado",
+      "Cliente/Proveedor ID",
+      "Banco Transferencia ID",
+      "Cliente/Proveedor Razón Social",
+      "Cliente/Proveedor RFC",
+      "Pago UUID",
+      "Factura UUID",
+      "Venta ID"
+    ]
+  }
+}
