@@ -12,13 +12,14 @@
 > y [Compra.schema.json](Compra.schema.json) (28 campos; las 51 compras
 > reales lo cumplen).
 
-> **Estado (20/11/2026): implementado, sin probar contra FileMaker real.**
+> **Estado (20/11/2026): implementado y probado contra FileMaker real** (la
+> persona lo revisó y funciona bien).
 > Código: `repgen-backend/src/reports/*/purchases/` y
 > `repgen-frontend/src/features/reports/purchases/`; las reglas compartidas
 > con Conceptos (estatus, folio sin CFDI, moneda original) están en
 > `infrastructure/shared/compras.ts`. El mapper produce exactamente
 > `__golden__/esperado.json` (`purchases.golden.spec.ts`; copiado del
-> borrador aprobado el 20/11/2026). Pendiente: probar con FileMaker.
+> borrador aprobado el 20/11/2026).
 
 - Nombre interno: `purchases` (decidido 20/11/2026)
 - Endpoint: `reports/compras/buscar`
