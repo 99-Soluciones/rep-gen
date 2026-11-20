@@ -30,7 +30,8 @@ const FloatingFiltroLista = (props: CustomFloatingFilterProps<IFilter, unknown, 
               : "border-gray-300 bg-white pr-2 font-normal text-gray-600 hover:border-blue-300"
           }`}
         >
-          <span className="min-w-0 truncate">{texto}</span>
+          {/* w-0 flex-1: el texto no aporta ancho mínimo; si no, ensancha la caja más allá de la columna y esconde la X. */}
+          <span className="w-0 flex-1 truncate">{texto}</span>
           {!activo && <ChevronDown className="h-3.5 w-3.5 shrink-0 text-gray-500" aria-hidden="true" />}
         </button>
         {activo && (
