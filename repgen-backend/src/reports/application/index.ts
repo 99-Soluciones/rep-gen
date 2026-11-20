@@ -6,3 +6,4 @@ export * from './receivables/get-receivables-report.use-case';
 export * from './cash-inflows/get-cash-inflows-report.use-case';
 export * from './bank-complements/get-bank-complements-report.use-case';
 export * from './purchase-items/get-purchase-items-report.use-case';
+export * from './purchases/get-purchases-report.use-case';

@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "fieldData": {
+      "type": "object",
+      "properties": {
+        "area_fechaEnPagos": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "poFactura_|PROV_|_x_provID::local_NombreComercial": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "poFactura_|PROV_|_x_provID::fiscal_RFC": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "poFactura_|PO_|_x_po::__id_po": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "cfdi_UUID": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "cfdi_folio": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "cfdi_serie_v0_15_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "factura_observaciones_v0_18_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "area_is_Cotizacion_noAprobado_Pagos_Cerrado": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "saldo_MXN_pendiente_GranTotal_saldoGeneral": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_MXN_Importe_ConDescuento": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_MXN_tax_favorIVA": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_MXN_tax_favorIEPSenFactura": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_MXN_tax_contraIVAretenido_v0_18_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_MXN_tax_contraISRretenido_v0_18_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "monto_MXN_GranTotal": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "entrega_is_Entregado_Pendiente": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "entrega_fechaETAorig": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "saldo_fecha_pagoLimite": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "_idu_moneda|v0_18_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "tc_tipoCambioValor_v0_18_1": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "cfdi_fecha": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": {
+          "type": [
+            "number",
+            "string"
+          ]
+        }
+      },
+      "required": [
+        "area_fechaEnPagos",
+        "poFactura_|PROV_|_x_provID::local_NombreComercial",
+        "poFactura_|PROV_|_x_provID::fiscal_RazonSocial",
+        "poFactura_|PROV_|_x_provID::fiscal_RFC",
+        "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r",
+        "poFactura_|PO_|_x_po::__id_po",
+        "cfdi_UUID",
+        "cfdi_folio",
+        "cfdi_serie_v0_15_1",
+        "factura_observaciones_v0_18_1",
+        "area_is_Cotizacion_noAprobado_Pagos_Cerrado",
+        "saldo_MXN_pendiente_GranTotal_saldoGeneral",
+        "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo",
+        "monto_MXN_Importe_ConDescuento",
+        "monto_MXN_tax_favorIVA",
+        "monto_MXN_tax_favorIEPSenFactura",
+        "monto_MXN_tax_contraIVAretenido_v0_18_1",
+        "monto_MXN_tax_contraISRretenido_v0_18_1",
+        "monto_MXN_GranTotal",
+        "entrega_is_Entregado_Pendiente",
+        "entrega_fechaETAorig",
+        "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre",
+        "saldo_fecha_pagoLimite",
+        "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre",
+        "_idu_moneda|v0_18_1",
+        "tc_tipoCambioValor_v0_18_1",
+        "cfdi_fecha",
+        "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero"
+      ],
+      "additionalProperties": true
+    },
+    "portalData": {},
+    "additionalProperties": true
+  },
+  "required": [
+    "fieldData",
+    "portalData"
+  ],
+  "additionalProperties": true
+}

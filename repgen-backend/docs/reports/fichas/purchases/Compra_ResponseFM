@@ -1,0 +1,125 @@
+{
+  "response": {
+    "dataInfo": {
+      "database": "sans",
+      "layout": "apiExport_Compra",
+      "table": "poFACTURA_",
+      "totalRecordCount": 1817,
+      "foundCount": 3,
+      "returnedCount": 3
+    },
+    "data": [
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "10/09/2026",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 01",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "",
+          "poFactura_|PO_|_x_po::__id_po": 1703,
+          "cfdi_UUID": "00000000-0000-4000-8000-000000000001",
+          "cfdi_folio": 11403,
+          "cfdi_serie_v0_15_1": "Sin Serie",
+          "factura_observaciones_v0_18_1": "Nombre Comercial: Ejemplo 1\rOC 1",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Cerrado",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": 0,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "Representante A",
+          "monto_MXN_Importe_ConDescuento": 4785,
+          "monto_MXN_tax_favorIVA": 765.6,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 0,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 0,
+          "monto_MXN_GranTotal": 5550.6,
+          "entrega_is_Entregado_Pendiente": "Entregado",
+          "entrega_fechaETAorig": "09/18/2026",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "SANS General",
+          "saldo_fecha_pagoLimite": "10/09/2026",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "BBVA Egresos",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "09/10/2026",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "0000000001"
+        },
+        "portalData": {},
+        "recordId": "398585",
+        "modId": "9"
+      },
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "10/15/2026",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 02",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 01 SA DE CV",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "EJE010101AA1",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "",
+          "poFactura_|PO_|_x_po::__id_po": 1769,
+          "cfdi_UUID": "00000000-0000-4000-8000-000000000002",
+          "cfdi_folio": 97,
+          "cfdi_serie_v0_15_1": "A",
+          "factura_observaciones_v0_18_1": "Nombre Comercial: Ejemplo 2\rOC 2",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Pagos",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": 22500,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "Representante A",
+          "monto_MXN_Importe_ConDescuento": 21617.3,
+          "monto_MXN_tax_favorIVA": 3458.768,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 270.21625,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 2305.852539,
+          "monto_MXN_GranTotal": 22500,
+          "entrega_is_Entregado_Pendiente": "Entregado",
+          "entrega_fechaETAorig": "",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "",
+          "saldo_fecha_pagoLimite": "10/15/2026",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "BBVA Egresos",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "10/13/2026",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "0000000001"
+        },
+        "portalData": {},
+        "recordId": "398677",
+        "modId": "46"
+      },
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "10/16/2026",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 03",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 02 SA DE CV",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "EJE010102AA2",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "",
+          "poFactura_|PO_|_x_po::__id_po": 1587,
+          "cfdi_UUID": "",
+          "cfdi_folio": "",
+          "cfdi_serie_v0_15_1": "",
+          "factura_observaciones_v0_18_1": "",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Pagos",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": 45991.68,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "Representante A",
+          "monto_MXN_Importe_ConDescuento": 39648,
+          "monto_MXN_tax_favorIVA": 6343.68,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 0,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 0,
+          "monto_MXN_GranTotal": 45991.68,
+          "entrega_is_Entregado_Pendiente": "Pendiente",
+          "entrega_fechaETAorig": "10/30/2026",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "SANS General",
+          "saldo_fecha_pagoLimite": "10/16/2026",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "BBVA Egresos",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "0000000001"
+        },
+        "portalData": {},
+        "recordId": "398471",
+        "modId": "46"
+      }
+    ]
+  },
+  "messages": [
+    {
+      "code": "0",
+      "message": "OK"
+    }
+  ]
+}

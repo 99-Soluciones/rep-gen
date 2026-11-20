@@ -12,6 +12,7 @@ Este archivo agrupa la documentacion principal del modulo de reportes para que s
 - [Cuentas por cobrar](fichas/receivables/receivables.md)
 - [Flujo de efectivo - Ingresos](fichas/cash-inflows/cash-inflows.md)
 - [Compras por concepto](fichas/purchase-items/purchase-items.md)
+- [Compras (general)](fichas/purchases/purchases.md)
 
 ## ADRs
 

@@ -1,19 +1,20 @@
 import Ajv2020 from 'ajv/dist/2020';
 import type { RawRecord } from '../../../filemaker/ifilemaker';
-import type {
-  EstatusCompra,
-  ReportPurchaseItemRecord,
-} from '../../domain/purchase-items';
+import type { ReportPurchaseItemRecord } from '../../domain/purchase-items';
 import { hoyEnMexico } from '../../../common/utils';
 import {
   fecha,
   id,
   numero,
-  redondear,
   redondear6,
   texto,
   unaLinea,
 } from '../shared/fm-parsers';
+import {
+  estatusCompra,
+  granTotalOriginal,
+  serieFolioCompra,
+} from '../shared/compras';
 import type { DateRange } from '../shared/sales-utils';
 import schema from './compras-conceptos.schema.json';
 import {
@@ -42,16 +43,6 @@ const TIPOS: Record<string, string> = {
   INCREMENTABLE: 'Incrementable',
   COSTO: 'Costo',
 };
-
-/** Cerrado = liquidada; en Pagos, vencida si la fecha límite ya pasó (decisión 4). */
-function estatus(
-  area: string,
-  limite: string | null,
-  hoy: string,
-): EstatusCompra {
-  if (area === 'Cerrado') return 'Liquidado';
-  return limite && limite < hoy ? 'Vencida' : 'Vigente';
-}
 
 /** Monto del concepto = cantidad × unitario de FileMaker, sin ruido de punto flotante. */
 const porCantidad = (cantidad: number | null, unitario: unknown) => {
@@ -83,22 +74,22 @@ function fila(f: Campos, hoy: string): Fila {
     proveedorRfc: texto(f[PROVEEDOR.rfc]),
     proveedorCuentaContable: unaLinea(f[PROVEEDOR.cuentaContable]),
     facturaUuid: texto(f[COMPRA.uuid]),
-    facturaSerieFolio: conCfdi
-      ? `${texto(f[COMPRA.serie])}-${texto(f[COMPRA.folio])}`
-      : null,
+    facturaSerieFolio: serieFolioCompra(
+      f[COMPRA.uuid],
+      f[COMPRA.serie],
+      f[COMPRA.folio],
+    ),
     facturaFecha: conCfdi ? fecha(f[COMPRA.fechaCfdi]) : null,
     facturaGranTotalMxn: granTotal,
     facturaObservaciones: unaLinea(f[COMPRA.observaciones]),
-    facturaEstatus: estatus(texto(f[COMPRA.area]), limite, hoy),
+    facturaEstatus: estatusCompra(texto(f[COMPRA.area]), limite, hoy),
     facturaSaldoActual: numero(f[COMPRA.saldoMxn]),
     facturaFechaLimiteDePago: limite,
     bancoNombre: texto(f[BANCO.nombre]),
     bancoNumeroCuenta: texto(f[BANCO.cuenta]),
     facturaMoneda: texto(f[COMPRA.moneda]),
     facturaTipoDeCambio: tipoCambio,
-    // Un tipo de cambio vacío o 0 es "sin conversión".
-    facturaGranTotalOriginal:
-      granTotal === null ? null : redondear(granTotal / (tipoCambio || 1)),
+    facturaGranTotalOriginal: granTotalOriginal(granTotal, tipoCambio),
     articuloSku: texto(f[ARTICULO.sku]),
     articuloMarca: texto(f[ARTICULO.marca]),
     articuloNombre: unaLinea(f[ARTICULO.nombre]),

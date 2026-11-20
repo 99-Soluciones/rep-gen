@@ -1,0 +1,171 @@
+{
+  "columns": {
+    "Compra Fecha Aprobado": {
+      "field": "compraFechaAprobado",
+      "dataType": "date"
+    },
+    "Compra ID": {
+      "field": "compraId",
+      "dataType": "number"
+    },
+    "Proveedor Nombre Comercial": {
+      "field": "proveedor",
+      "dataType": "text",
+      "filtro": "lista",
+      "anchoMinimo": 200
+    },
+    "Factura Serie y Folio": {
+      "field": "facturaSerieFolio",
+      "dataType": "text"
+    },
+    "Factura Fecha": {
+      "field": "facturaFecha",
+      "dataType": "date"
+    },
+    "Factura Estatus": {
+      "field": "facturaEstatus",
+      "dataType": "text",
+      "filtro": "lista"
+    },
+    "Importe con Descuento (MXN)": {
+      "field": "importeConDescuentoMxn",
+      "dataType": "currency"
+    },
+    "IVA (MXN)": {
+      "field": "ivaMxn",
+      "dataType": "currency"
+    },
+    "IVA Retenido (MXN)": {
+      "field": "ivaRetenidoMxn",
+      "dataType": "currency"
+    },
+    "ISR Retenido (MXN)": {
+      "field": "isrRetenidoMxn",
+      "dataType": "currency"
+    },
+    "Factura Gran Total (MXN)": {
+      "field": "facturaGranTotalMxn",
+      "dataType": "currency"
+    },
+    "Factura Saldo Actual": {
+      "field": "facturaSaldoActual",
+      "dataType": "currency"
+    },
+    "Factura Fecha Límite de Pago": {
+      "field": "facturaFechaLimiteDePago",
+      "dataType": "date"
+    },
+    "Bodega Entrega Estatus": {
+      "field": "bodegaEntregaEstatus",
+      "dataType": "text",
+      "filtro": "lista"
+    },
+    "Bodega Fecha Estimada de Entrega": {
+      "field": "bodegaFechaEstimadaDeEntrega",
+      "dataType": "date"
+    },
+    "Banco Nombre": {
+      "field": "bancoNombre",
+      "dataType": "text",
+      "filtro": "lista"
+    },
+    "Compra Rep de Compra": {
+      "field": "compraRepDeCompra",
+      "dataType": "text",
+      "filtro": "lista",
+      "oculta": true
+    },
+    "Proveedor Razón Social": {
+      "field": "proveedorRazonSocial",
+      "dataType": "text",
+      "oculta": true
+    },
+    "Proveedor RFC": {
+      "field": "proveedorRfc",
+      "dataType": "text",
+      "oculta": true
+    },
+    "Proveedor Cuenta Contable": {
+      "field": "proveedorCuentaContable",
+      "dataType": "text",
+      "oculta": true
+    },
+    "Factura UUID": {
+      "field": "facturaUuid",
+      "dataType": "text",
+      "oculta": true
+    },
+    "Factura Observaciones": {
+      "field": "facturaObservaciones",
+      "dataType": "text",
+      "oculta": true,
+      "anchoMinimo": 240
+    },
+    "Banco Número de Cuenta": {
+      "field": "bancoNumeroCuenta",
+      "dataType": "text",
+      "filtro": "lista",
+      "oculta": true
+    },
+    "Factura Moneda": {
+      "field": "facturaMoneda",
+      "dataType": "text",
+      "filtro": "lista",
+      "oculta": true
+    },
+    "Factura Tipo de Cambio": {
+      "field": "facturaTipoDeCambio",
+      "dataType": "number",
+      "oculta": true
+    },
+    "Factura Gran Total (Moneda Original)": {
+      "field": "facturaGranTotalOriginal",
+      "dataType": "currency",
+      "currencyField": "facturaMoneda",
+      "oculta": true
+    },
+    "IEPS (MXN)": {
+      "field": "iepsMxn",
+      "dataType": "currency",
+      "oculta": true
+    },
+    "Bodega Nombre": {
+      "field": "bodegaNombre",
+      "dataType": "text",
+      "filtro": "lista",
+      "oculta": true
+    }
+  },
+  "reportTypes": {
+    "default": [
+      "Compra Fecha Aprobado",
+      "Compra ID",
+      "Proveedor Nombre Comercial",
+      "Factura Serie y Folio",
+      "Factura Fecha",
+      "Factura Estatus",
+      "Importe con Descuento (MXN)",
+      "IVA (MXN)",
+      "IVA Retenido (MXN)",
+      "ISR Retenido (MXN)",
+      "Factura Gran Total (MXN)",
+      "Factura Saldo Actual",
+      "Factura Fecha Límite de Pago",
+      "Bodega Entrega Estatus",
+      "Bodega Fecha Estimada de Entrega",
+      "Banco Nombre",
+      "Compra Rep de Compra",
+      "Proveedor Razón Social",
+      "Proveedor RFC",
+      "Proveedor Cuenta Contable",
+      "Factura UUID",
+      "Factura Observaciones",
+      "Banco Número de Cuenta",
+      "Factura Moneda",
+      "Factura Tipo de Cambio",
+      "Factura Gran Total (Moneda Original)",
+      "IEPS (MXN)",
+      "Bodega Nombre"
+    ]
+  }
+}
