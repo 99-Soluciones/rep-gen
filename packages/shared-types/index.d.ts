@@ -452,3 +452,38 @@ export interface ReportPurchaseItemRecord {
   bodegaEntregaEstatus: 'Entregado' | 'Pendiente' | null;
   bodegaEntregaFecha: string | null;
 }
+
+/**
+ * Fila de Compras (general): una por compra aprobada (poFACTURA).
+ * Ficha: repgen-backend/docs/reports/fichas/purchases/purchases.md
+ */
+export interface ReportPurchaseRecord {
+  compraFechaAprobado: string | null;
+  compraId: number;
+  compraRepDeCompra: string;
+  proveedor: string;
+  proveedorRazonSocial: string;
+  proveedorRfc: string;
+  proveedorCuentaContable: string;
+  facturaUuid: string;
+  facturaSerieFolio: string | null;
+  facturaFecha: string | null;
+  facturaObservaciones: string;
+  facturaEstatus: EstatusCompra;
+  facturaSaldoActual: number | null;
+  facturaFechaLimiteDePago: string | null;
+  bancoNombre: string;
+  bancoNumeroCuenta: string;
+  facturaMoneda: string;
+  facturaTipoDeCambio: number | null;
+  facturaGranTotalOriginal: number | null;
+  importeConDescuentoMxn: number | null;
+  ivaMxn: number | null;
+  iepsMxn: number | null;
+  ivaRetenidoMxn: number | null;
+  isrRetenidoMxn: number | null;
+  facturaGranTotalMxn: number | null;
+  bodegaNombre: string;
+  bodegaEntregaEstatus: string;
+  bodegaFechaEstimadaDeEntrega: string | null;
+}

@@ -4,6 +4,7 @@ import {
   GetBankReportUseCase,
   GetCashInflowsReportUseCase,
   GetPurchaseItemsReportUseCase,
+  GetPurchasesReportUseCase,
   GetReceivablesReportUseCase,
   GetSalesReportUseCase,
   GetSalesitemReportUseCase,
@@ -15,6 +16,7 @@ import type {
   ReportBankRecord,
   ReportCashInflowRecord,
   ReportPurchaseItemRecord,
+  ReportPurchaseRecord,
   ReportSalesRecord,
   ReportSalesItemRecord,
 } from '../domain';
@@ -36,7 +38,24 @@ export class ReportsController {
     private readonly reportServiceCashInflows: GetCashInflowsReportUseCase,
     private readonly reportServiceBankComplements: GetBankComplementsReportUseCase,
     private readonly reportServicePurchaseItems: GetPurchaseItemsReportUseCase,
+    private readonly reportServicePurchases: GetPurchasesReportUseCase,
   ) {}
+
+  /** Compras aprobadas en el rango, un renglón por compra. */
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  @Post('compras/buscar')
+  @HttpCode(200)
+  async getPurchasesReport(
+    @Body() { dateRange, refresh }: SearchReportDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ReportResponse<ReportPurchaseRecord>> {
+    return this.reportServicePurchases.fetchReport(
+      dateRange,
+      req.tenant,
+      req.id,
+      refresh,
+    );
+  }
 
   /** Compras aprobadas en el rango, un renglón por concepto. */
   @Throttle({ default: { limit: 20, ttl: 60000 } })

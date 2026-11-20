@@ -17,6 +17,8 @@ import {
   ResultadoResumen,
   SeccionEstado,
 } from "../shared/EstadoKpi";
+import TabsVentas from "../sales/TabsVentas";
+import { PESTANAS_COMPRAS, RUTA_COMPRAS } from "../purchases/pestanas";
 import { construirColumnasComprasConceptos } from "./columnas";
 import {
   granTotalCompras,
@@ -89,7 +91,13 @@ const ReporteComprasConceptos = () => {
 
   return (
     <div className="flex flex-col xl:h-full">
-      <EncabezadoReporte titulo="Reporte de Compras" tituloPagina="Compras · Conceptos" />
+      <EncabezadoReporte
+        titulo="Reporte de Compras"
+        tituloPagina="Compras · Conceptos"
+        encabezadoExtra={
+          <TabsVentas reportType="conceptos" rutaBase={RUTA_COMPRAS} pestanas={PESTANAS_COMPRAS} />
+        }
+      />
 
       <div className="flex flex-col xl:flex-row xl:flex-1 xl:min-h-0 gap-2">
         <div className="flex-none min-w-0 flex flex-col min-h-[100cqh] xl:flex-1 xl:min-h-0">
