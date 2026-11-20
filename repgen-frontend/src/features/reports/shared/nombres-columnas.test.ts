@@ -37,6 +37,8 @@ const ENTIDADES = [
   "Ingreso",
   "Egreso",
   "Conciliación",
+  "Compra",
+  "Proveedor",
 ];
 /** Importes y tasas del renglón: no son de una entidad. */
 const DEL_RENGLON = ["Importe", "Descuento", "IVA", "IEPS", "ISR", "Costo", "Ganancia", "Margen"];

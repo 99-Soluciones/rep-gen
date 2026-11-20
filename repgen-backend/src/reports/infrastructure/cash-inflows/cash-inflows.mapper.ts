@@ -6,7 +6,14 @@ import type {
   TipoRenglonIngreso,
 } from '../../domain/cash-inflows';
 import { getPortalRows } from '../../../common/utils';
-import { fecha, id, numero, redondear, texto } from '../shared/fm-parsers';
+import {
+  fecha,
+  id,
+  numero,
+  redondear,
+  redondear6,
+  texto,
+} from '../shared/fm-parsers';
 import type { DateRange } from '../shared/sales-utils';
 import pagosSchema from './ingresos-pagos.schema.json';
 import bancosSchema from './ingresos-bancos.schema.json';
@@ -40,7 +47,6 @@ function assertSchema(
 type Campos = Record<string, unknown>;
 
 const n = (valor: unknown): number => numero(valor) ?? 0;
-const tasa6 = (valor: number): number => Math.round(valor * 1e6) / 1e6;
 /** Un tipo de cambio vacío o 0 es "sin conversión". */
 const tipoCambio = (valor: unknown): number => n(valor) || 1;
 const enRango = (dia: string | null, { startDate, endDate }: DateRange) =>
@@ -169,8 +175,8 @@ function montos(m: {
     costoDirectoSubTotalMxn: redondear(m.costo),
     gananciaBrutaMxn: redondear(m.con - m.costo),
     // Con importe 0 no hay tasa que calcular.
-    costoTasa: m.con ? tasa6(m.costo / m.con) : null,
-    margenTasa: m.con ? tasa6(1 - m.costo / m.con) : null,
+    costoTasa: m.con ? redondear6(m.costo / m.con) : null,
+    margenTasa: m.con ? redondear6(1 - m.costo / m.con) : null,
   };
 }
 
@@ -241,7 +247,7 @@ function filasDePagos(
             ? 'Cancelada'
             : (ESTATUS[texto(f[VEN.estatusSaldo])] ?? ''),
         facturaSaldoActual: redondear(n(f[VEN.saldo])),
-        pagoTasa: tasa6(tasa),
+        pagoTasa: redondear6(tasa),
         facturaRepDeVenta: texto(f[VEN.repFactura]),
         facturaRepDeCobranza: texto(f[VEN.repCobranza]),
         // FileMaker separa los renglones con \r.
@@ -297,7 +303,7 @@ function filasDePagos(
           unidadDeVenta: texto(c[CONCEPTOS.unidadVenta]),
           unidadDeContenido: texto(c[CONCEPTOS.unidadContenido]),
           contenidoUnitario: contenido,
-          contenidoSubTotal: tasa6(contenido * cantidad),
+          contenidoSubTotal: redondear6(contenido * cantidad),
           precioUnitario: redondear(n(c[CONCEPTOS.precioUnitario])),
           tipoDeConcepto: TIPO_CONCEPTO[texto(c[CONCEPTOS.tipo])] ?? '',
           metodoDeAdquisicion: metodoDeAdquisicion(c),

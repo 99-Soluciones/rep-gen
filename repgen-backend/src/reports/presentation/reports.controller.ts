@@ -3,6 +3,7 @@ import {
   GetBankComplementsReportUseCase,
   GetBankReportUseCase,
   GetCashInflowsReportUseCase,
+  GetPurchaseItemsReportUseCase,
   GetReceivablesReportUseCase,
   GetSalesReportUseCase,
   GetSalesitemReportUseCase,
@@ -13,6 +14,7 @@ import type {
   ReportBankComplementRecord,
   ReportBankRecord,
   ReportCashInflowRecord,
+  ReportPurchaseItemRecord,
   ReportSalesRecord,
   ReportSalesItemRecord,
 } from '../domain';
@@ -33,7 +35,24 @@ export class ReportsController {
     private readonly reportServiceReceivables: GetReceivablesReportUseCase,
     private readonly reportServiceCashInflows: GetCashInflowsReportUseCase,
     private readonly reportServiceBankComplements: GetBankComplementsReportUseCase,
+    private readonly reportServicePurchaseItems: GetPurchaseItemsReportUseCase,
   ) {}
+
+  /** Compras aprobadas en el rango, un renglón por concepto. */
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  @Post('compras-conceptos/buscar')
+  @HttpCode(200)
+  async getPurchaseItemsReport(
+    @Body() { dateRange, refresh }: SearchReportDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ReportResponse<ReportPurchaseItemRecord>> {
+    return this.reportServicePurchaseItems.fetchReport(
+      dateRange,
+      req.tenant,
+      req.id,
+      refresh,
+    );
+  }
 
   /** Bancos con un renglón por complemento (movimiento × conciliación × complemento). */
   @Throttle({ default: { limit: 20, ttl: 60000 } })

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { ChartColumn, CircleDollarSign, CreditCard, Store, Wallet } from "lucide-react";
+import { ChartColumn, CircleDollarSign, CreditCard, ShoppingCart, Store, Wallet } from "lucide-react";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -74,6 +74,17 @@ const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
         >
           <Wallet aria-hidden="true" className="w-5 h-5 mr-3 shrink-0" />
           <span>Flujo de efectivo - Ingresos</span>
+        </NavLink>
+
+        <NavLink
+          onClick={onNavegar}
+          to="/compras"
+          className={({ isActive }) =>
+            `${baseClass} ${isActive ? activeClass : inactiveClass}`
+          }
+        >
+          <ShoppingCart aria-hidden="true" className="w-5 h-5 mr-3 shrink-0" />
+          <span>Compras</span>
         </NavLink>
 
         <NavLink
