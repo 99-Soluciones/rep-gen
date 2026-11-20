@@ -121,6 +121,8 @@ Trampas de FileMaker que ya costaron tiempo:
 - **Buscar en un campo de portal** trae el registro si *algún* renglón relacionado cumple: útil para "algún pago después del corte".
 - **Campos de otra tabla dentro de un portal**: salen bien por renglón solo si esa tabla se relaciona *a través de* la tabla del portal. Comprobarlo con un registro de dos renglones distintos (en Ingresos: una venta con dos pagos de depósitos distintos).
 - **Varios registros relacionados, un solo campo**: un depósito puede tener dos ingresos (dos clientes); un campo relacionado en el layout trae solo uno, y dos relaciones distintas pueden apuntar a ingresos distintos.
+- **Dos unidades por artículo**: el artículo de inventario tiene unidad de contenido (`_idu_satUnitCont`, `sat.UNITcontenido`) y de uso/venta (`_idu_satUnitUso`, `sat.UNITventa`). En Compras el reporte de FM usa la de uso; con la de contenido fallaban 7 de 74 conceptos. Revisar en el script de FM cuál toma.
+- **FileMaker no devuelve los renglones agrupados**: en un layout de conceptos, los de una misma compra/venta pueden salir separados (orden de creación). Ordenar en el mapper con un sort estable por el id del encabezado.
 - **La fecha del reporte actual puede no ser la que se decidió**: en Ingresos el reporte anterior usaba la fecha del banco y la regla decidida fue la del complemento. Compararlo con una captura antes de programar.
 
 ---

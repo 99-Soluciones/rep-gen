@@ -30,6 +30,13 @@ export function texto(valor: unknown): string {
   return typeof valor === 'number' ? String(valor) : '';
 }
 
+/** Texto recortado en una línea: los saltos de FileMaker (\r) pasan a espacio. */
+export const unaLinea = (valor: unknown): string =>
+  texto(valor).replace(/\r/g, ' ').trim();
+
+/** Redondeo a 6 decimales: tasas, y montos calculados sin ruido de punto flotante. */
+export const redondear6 = (n: number): number => Math.round(n * 1e6) / 1e6;
+
 /** Redondeo a 2 decimales (montos). */
 export const redondear = (n: number): number =>
   Math.round((n + Number.EPSILON) * 100) / 100;

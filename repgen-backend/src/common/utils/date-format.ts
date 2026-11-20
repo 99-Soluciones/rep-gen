@@ -46,6 +46,12 @@ export class DateFormatUtils {
   }
 }
 
+/** Hoy en México (YYYY-MM-DD). */
+export const hoyEnMexico = (ahora = new Date()): string =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Mexico_City' }).format(
+    ahora,
+  );
+
 /** YYYY-MM-DD -> MM/DD/YYYY, el formato de fecha que espera el find de FileMaker. */
 export const toFileMakerDate = (isoDate: string): string => {
   const [year, month, day] = isoDate.split('-');

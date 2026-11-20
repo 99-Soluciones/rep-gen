@@ -6,10 +6,8 @@ import type { Cache } from '@nestjs/cache-manager';
 import type { FileMakerService } from '../../../filemaker/filemaker.service';
 import type { GetBankPermissionsUseCase } from '../../../user/application';
 import type { LoggerService } from '../../../common/logger';
-import {
-  GetReceivablesReportUseCase,
-  hoyEnMexico,
-} from './get-receivables-report.use-case';
+import { hoyEnMexico } from '../../../common/utils';
+import { GetReceivablesReportUseCase } from './get-receivables-report.use-case';
 
 const vacio = { response: { data: [], dataInfo: { foundCount: 0 } } };
 

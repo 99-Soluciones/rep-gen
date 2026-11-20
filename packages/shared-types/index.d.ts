@@ -393,3 +393,62 @@ export interface ReportBankComplementRecord {
   facturaMetodoPago: string | null;
   ventaId: number | null;
 }
+
+/** Estatus de pago de la compra: Cerrado → Liquidado; Pagos → según la fecha límite. */
+export type EstatusCompra = 'Liquidado' | 'Vencida' | 'Vigente';
+
+/** Tipo de concepto de compra, normalizado (FileMaker mezcla mayúsculas). */
+export type TipoConceptoCompra = 'Stock' | 'Gasto' | 'Incrementable' | 'Costo';
+
+/**
+ * Fila de Compras por concepto: una por concepto (poITM) de una compra
+ * aprobada. Los datos de la compra se repiten en cada fila; lo que no aplica
+ * va en null.
+ * Ficha: repgen-backend/docs/reports/fichas/purchase-items/purchase-items.md
+ */
+export interface ReportPurchaseItemRecord {
+  compraFechaAprobado: string | null;
+  compraId: number;
+  compraRepDeCompra: string;
+  proveedor: string;
+  proveedorRazonSocial: string;
+  proveedorRfc: string;
+  proveedorCuentaContable: string;
+  facturaUuid: string;
+  facturaSerieFolio: string | null;
+  facturaFecha: string | null;
+  facturaGranTotalMxn: number | null;
+  facturaObservaciones: string;
+  facturaEstatus: EstatusCompra;
+  facturaSaldoActual: number | null;
+  facturaFechaLimiteDePago: string | null;
+  bancoNombre: string;
+  bancoNumeroCuenta: string;
+  facturaMoneda: string;
+  facturaTipoDeCambio: number | null;
+  facturaGranTotalOriginal: number | null;
+  articuloSku: string;
+  articuloMarca: string;
+  articuloNombre: string;
+  articuloNombreCompleto: string;
+  articuloCuentaContable: string;
+  categoriadeProducto1: string;
+  categoriadeProducto2: string;
+  categoriadeProducto3: string;
+  categoriadeProducto4: string;
+  tipoDeConcepto: TipoConceptoCompra | string;
+  cantidad: number | null;
+  unidadDeCompra: string;
+  precioUnitario: number | null;
+  articuloImporteSinDescuentoMxn: number | null;
+  articuloDescuentoMontoMxn: number | null;
+  articuloImporteConDescuentoMxn: number | null;
+  articuloIVAMxn: number | null;
+  articuloIEPSMxn: number | null;
+  articuloIVARetenidoMxn: number | null;
+  articuloISRretenidoMxn: number | null;
+  articuloGranTotalMxn: number | null;
+  bodegaNombre: string | null;
+  bodegaEntregaEstatus: 'Entregado' | 'Pendiente' | null;
+  bodegaEntregaFecha: string | null;
+}

@@ -4,6 +4,7 @@ import {
   GetBankComplementsReportUseCase,
   GetBankReportUseCase,
   GetCashInflowsReportUseCase,
+  GetPurchaseItemsReportUseCase,
   GetReceivablesReportUseCase,
   GetSalesitemReportUseCase,
   GetSalesReportUseCase,
@@ -29,6 +30,7 @@ import { LoggerModule } from '../common/logger/logger.module';
     GetSalesitemReportUseCase,
     GetReceivablesReportUseCase,
     GetCashInflowsReportUseCase,
+    GetPurchaseItemsReportUseCase,
   ],
 })
 export class ReportsModule {}

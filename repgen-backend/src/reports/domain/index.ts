@@ -4,3 +4,4 @@ export * from './salesitem';
 export * from './receivables';
 export * from './cash-inflows';
 export * from './bank-complements';
+export * from './purchase-items';

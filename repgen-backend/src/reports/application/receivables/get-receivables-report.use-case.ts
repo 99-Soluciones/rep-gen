@@ -4,6 +4,7 @@ import type { Cache } from '@nestjs/cache-manager';
 import { FileMakerService } from '../../../filemaker/filemaker.service';
 import { GetBankPermissionsUseCase } from '../../../user/application';
 import { LoggerService } from '../../../common/logger';
+import { hoyEnMexico } from '../../../common/utils';
 import type { ReceivablesResponse } from '../../domain/receivables';
 import {
   APLICACIONES,
@@ -21,12 +22,6 @@ import { cleanOrThrow, findAllRecords } from '../shared/report-query';
 
 // ponytail: tope por portal; una venta o un abono con más aplicaciones se recortaría.
 const PORTAL_LIMIT = 99999;
-
-/** Hoy en México (YYYY-MM-DD): el corte por defecto. */
-export const hoyEnMexico = (ahora = new Date()): string =>
-  new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Mexico_City' }).format(
-    ahora,
-  );
 
 const esFechaValida = (iso: string): boolean => {
   const d = new Date(`${iso}T00:00:00Z`);

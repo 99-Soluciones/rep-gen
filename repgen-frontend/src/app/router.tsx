@@ -24,12 +24,16 @@ const cargarBancosComplementos = () =>
 const ReporteVentas = lazy(cargarVentas);
 const ReporteCuentasPorCobrar = lazy(cargarCxc);
 const ReporteFlujoIngresos = lazy(cargarIngresos);
+const cargarComprasConceptos = () =>
+  import("../features/reports/purchase-items/ReporteComprasConceptos");
 const ReporteBancosComplementos = lazy(cargarBancosComplementos);
+const ReporteComprasConceptos = lazy(cargarComprasConceptos);
 void cargarBancos().catch(() => {});
 void cargarVentas().catch(() => {});
 void cargarCxc().catch(() => {});
 void cargarIngresos().catch(() => {});
 void cargarBancosComplementos().catch(() => {});
+void cargarComprasConceptos().catch(() => {});
 
 const CargandoReporte = () => (
   <p role="status" className="p-6 text-sm text-gray-600">
@@ -97,6 +101,9 @@ const crearRouter = (reporteInicio: string | null) => {
           element: <Navigate to="/flujo_efectivo_ingresos/facturas" replace />,
         },
         { path: "/flujo_efectivo_ingresos/:reportType", element: <ReporteFlujoIngresos /> },
+        // Por ahora solo Conceptos; la pestaña Compras llega con apiExport_Compra.
+        { path: "/compras", element: <Navigate to="/compras/conceptos" replace /> },
+        { path: "/compras/conceptos", element: <ReporteComprasConceptos /> },
         { path: "/inventarios", element: <ComingSoon /> },
         {
           path: "*",

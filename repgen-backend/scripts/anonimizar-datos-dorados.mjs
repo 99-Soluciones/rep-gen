@@ -35,8 +35,11 @@ const REGLAS = [
   ['::cfdiCompPago_uuid', 'uuid'],
   ['::cPagoCFDI_UUID_v0_15_1', 'uuid'],
   ['::datos_cuentaNumero', 'cuenta'],
+  // Compras: la cuenta contable del proveedor trae su razón social.
+  ['::cuentaContable_Temp_v0_20_2r', 'razon'],
   // Texto libre: suele traer el nombre del cliente o la cuenta de origen.
   ['cfdi_Observaciones_v0_18_4', 'observacion'],
+  ['::factura_observaciones_v0_18_1', 'observacion'],
   ['mConceptoDeBancoTexto_v0_20_0', 'referencia'],
 ];
 
