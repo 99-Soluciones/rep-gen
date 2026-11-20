@@ -34,7 +34,6 @@ const REGLAS = [
   ['::local_NombreComercial', 'nombre'],
   ['::cfdiCompPago_uuid', 'uuid'],
   ['::cPagoCFDI_UUID_v0_15_1', 'uuid'],
-  ['::cfdi.UUID', 'uuid'],
   ['::datos_cuentaNumero', 'cuenta'],
   // Texto libre: suele traer el nombre del cliente o la cuenta de origen.
   ['cfdi_Observaciones_v0_18_4', 'observacion'],

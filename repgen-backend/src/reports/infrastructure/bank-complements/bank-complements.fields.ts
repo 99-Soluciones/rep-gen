@@ -94,10 +94,10 @@ export const COMP_EGRESO = {
   repSerie: `${EI}cPagoCFDI_serie_v0_15_1`,
   repFolio: `${EI}cPagoCFDI_folio_v0_15_1`,
   repUuid: `${EI}cPagoCFDI_UUID_v0_15_1`,
-  facturaSerie: `${PF}cfdi.serie|v0.15.1`,
+  facturaSerie: `${PF}cfdi_serie_v0_15_1`,
   facturaFolio: `${PF}cfdi_folio`,
   facturaFecha: `${PF}cfdi_fecha`,
   facturaGranTotal: `${PF}monto_MXN_GranTotal`,
-  facturaUuid: `${PF}cfdi.UUID`,
+  facturaUuid: `${PF}cfdi_UUID`,
   facturaMetodoPago: `${PF}cfdi_isPPDoPUE_v0_15_1`,
 } as const;
