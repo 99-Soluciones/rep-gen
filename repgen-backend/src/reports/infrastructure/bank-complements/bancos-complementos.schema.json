@@ -581,13 +581,13 @@
                   "string"
                 ]
               },
-              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi.serie|v0.15.1": {
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_serie_v0_15_1": {
                 "type": [
                   "number",
                   "string"
                 ]
               },
-              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi.UUID": {
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_UUID": {
                 "type": [
                   "number",
                   "string"
@@ -636,8 +636,8 @@
               "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::cPagoCFDI_UUID_v0_15_1",
               "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_egresoITM_fechaDelComplemento_v0_20_2r",
               "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_folio",
-              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi.serie|v0.15.1",
-              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi.UUID",
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_serie_v0_15_1",
+              "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_UUID",
               "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_fecha",
               "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_fiscalDisplay_v0_21_3_2",
               "contBanco.ITM|poFACTURA|_x_bancoItmID::cfdi_isPPDoPUE_v0_15_1",
