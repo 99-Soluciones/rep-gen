@@ -16,7 +16,7 @@
                     "venta_|CLIENTE_|_x_clienteID::fiscal_RazonSocial": "",
                     "venta_|CLIENTE_|_x_clienteID::fiscal_RFC": "",
                     "venta_|CLIENTE_|_x_clienteID::cuentaContableTemp_v0_20_2r": "",
-                    "venta_|USER.repVent_|_x_clienteID::_idu_user_name": "",
+                    "venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo": "",
                     "cfdi_facturaSerieFolio_v0_18_1": "",
                     "cfdi_FacturaFolio": 0,
                     "monto_GranTotal": 0,
@@ -24,9 +24,8 @@
                     "cfdi_FacturaFechaTimbrar": "",
                     "_idu_cdfi_metoPago": "",
                     "area__is_Cotizacion_Ventas_Facturacion_Almacen_Repartos_Cancelada": "",
-                    "cfdi_CANCEL_timestamp_v0_23_1r": "",
-                    "venta_|USER_|_x_repVent::_idu_user_name": "",
-                    "venta_|USER.repCobranza_|_x_clienteID::_idu_user_name": "",
+                    "venta_|USER_|_x_repVent::userData_nombre_Completo": "",
+                    "venta_|USER.repCobranza_|_x_clienteID::userData_nombre_Completo": "",
                     "__id_venta": 0,
                     "saldo_Pendiente_GranTotal": 0,
                     "saldo_isPendiente_Cobrado_NoCobrar_Cancelado": "",
@@ -37,7 +36,11 @@
                     "venta_|cliente.Classify1|_x_clienteID::name": "",
                     "venta_|cliente.Classify2|_x_clienteID::name": "",
                     "venta_|cliente.Classify3|_x_clienteID::name": "",
-                    "venta_|cliente.Classify4|_x_clienteID::name": ""
+                    "venta_|cliente.Classify4|_x_clienteID::name": "",
+                    "cfdi_CANCEL_timestamp_v0_23_1r": "",
+                    "monto_contraIVA": 0,
+                    "monto_contraIEPS": 0,
+                    "venta_|CLIENTE_|_x_clienteID::credito_monto_Autorized": 0
                 },
                 "portalData": {
                     "PagosVenta": [

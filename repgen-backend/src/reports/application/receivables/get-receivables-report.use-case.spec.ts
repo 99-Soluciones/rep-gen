@@ -56,6 +56,14 @@ describe('GetReceivablesReportUseCase', () => {
     expect(findImpl).toHaveBeenCalledTimes(2);
   });
 
+  it('la vista por cliente usa la misma consulta en caché que el detalle', async () => {
+    const { useCase, findImpl } = make();
+    await useCase.fetchReport('2024-06-10', 'db', 1);
+    const res = await useCase.fetchClientReport('2024-06-10', 'db', 1);
+    expect(res).toEqual({ fechaCorte: '2024-06-10', data: [] });
+    expect(findImpl).toHaveBeenCalledTimes(2);
+  });
+
   it('rechaza una fecha futura o inválida', async () => {
     const { useCase } = make();
     await expect(

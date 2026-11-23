@@ -193,6 +193,8 @@ export interface ReportReceivablesRecord {
   clasificacion4: string | null;
   clienteCuentaContable: string | null;
   clienteRepDeVenta: string | null;
+  /** Crédito autorizado del cliente (monto). */
+  clienteCreditoAutorizado: number | null;
   facturaSerieFolio: string | null;
   facturaGranTotal: number | null;
   facturaUuid: string | null;
@@ -229,11 +231,48 @@ export interface ReportReceivablesRecord {
   ventaId: number | null;
 }
 
-/** Respuesta de POST /reports/cuentas-por-cobrar/buscar. */
-export interface ReceivablesResponse {
+/**
+ * Fila de Cuentas por cobrar por cliente: los saldos del detalle sumados por
+ * cliente. La última fila ("INGRESOS SIN IDENTIFICAR", clienteId null) solo
+ * trae abonoSaldoNoAplicado; las demás cifras van en null.
+ */
+export interface ReportReceivablesClientRecord {
+  fechaCorte: string;
+  clienteId: number | null;
+  cliente: string;
+  clienteRazonSocial: string | null;
+  clienteRfc: string | null;
+  clasificacion1: string | null;
+  clasificacion2: string | null;
+  clasificacion3: string | null;
+  clasificacion4: string | null;
+  clienteCuentaContable: string | null;
+  clienteCreditoAutorizado: number | null;
+  clienteRepDeVenta: string | null;
+  clienteRepDeCobranza: string | null;
+  /** Vigentes + No cobrables − Saldo a favor. */
+  clienteSaldoFiscal: number | null;
+  /** Facturas vigentes: vencido + por vencer. */
+  facturaSaldoPendiente: number | null;
+  facturaSaldoVencido: number | null;
+  facturaSaldoPorVencer: number | null;
+  facturaNoCobrarGranTotal: number | null;
+  /** Pagos + devoluciones no aplicados. */
+  clienteSaldoAFavor: number | null;
+  abonoSaldoNoAplicado: number | null;
+  cargoSaldoNoAplicado: number | null;
+}
+
+/**
+ * Respuesta de POST /reports/cuentas-por-cobrar/buscar (por factura) y de
+ * /reports/cuentas-por-cobrar-por-cliente/buscar (por cliente).
+ */
+export interface ReceivablesResponse<
+  T = ReportReceivablesRecord | ReportReceivablesClientRecord,
+> {
   /** Día de corte (YYYY-MM-DD): los saldos son al cierre de ese día. */
   fechaCorte: string;
-  data: ReportReceivablesRecord[];
+  data: T[];
 }
 
 /** Tipo de renglón de Flujo de efectivo - Ingresos. */

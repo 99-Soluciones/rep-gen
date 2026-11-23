@@ -20,7 +20,7 @@
                     "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify3::name": "",
                     "contBanco.ITM|prefCliente.ingreso|_x_IDUclassify4::name": "",
                     "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
-                    "contBanco.ITM|ingreso.user.repVent|_x_id_userName::_idu_user_name": "",
+                    "contBanco.ITM|ingreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
                     "saldo_ORIG_porComplementar_v0_22_1": 0,
                     "monto_ORIG_abono_v0_22_1": 0,
                     "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": 0,
@@ -37,15 +37,20 @@
                     "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::___id_cliente": "",
                     "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::destLocal_dirNombreComercial": "",
                     "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::fiscal_RFC": "",
+                    "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::fiscal_RazonSocial": "",
                     "contBanco.ITM|prefCliente.egreso|_x_IDUclassify1::name": "",
                     "contBanco.ITM|prefCliente.egreso|_x_IDUclassify2::name": "",
                     "contBanco.ITM|prefCliente.egreso|_x_IDUclassify3::name": "",
                     "contBanco.ITM|prefCliente.egreso|_x_IDUclassify4::name": "",
-                    "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::fiscal_RazonSocial": "",
                     "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::cuentaContableTemp_v0_20_2r": "",
-                    "contBanco.ITM|egreso.user.repVent|_x_id_userName::_idu_user_name": "",
+                    "contBanco.ITM|egreso.user.repVent|_x_id_userName::userData_nombre_Completo": "",
                     "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 0,
-                    "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 0
+                    "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 0,
+                    "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+                    "contBanco.ITM|egreso.user.repCobranza|_x_id_userName::userData_nombre_Completo": "",
+                    "contBanco.ITM|CLIENTE.egreso|_x_bancoItmID::credito_monto_Autorized": "",
+                    "contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::credito_monto_Autorized": 0,
+                    "contBanco.ITM|ingreso.user.repCobranza|_x_id_userName::userData_nombre_Completo": ""
                 },
                 "portalData": {
                     "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": [

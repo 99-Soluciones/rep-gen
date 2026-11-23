@@ -91,6 +91,9 @@
         },
         "venta_|cliente.Classify4|_x_clienteID::name": {
           "type": "string"
+        },
+        "venta_|CLIENTE_|_x_clienteID::credito_monto_Autorized": {
+          "type": ["number", "string"]
         }
       },
       "required": ["__id_venta"],

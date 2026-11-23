@@ -12,6 +12,7 @@ export const FAC = {
   razonSocial: `${CLIENTE}fiscal_RazonSocial`,
   rfc: `${CLIENTE}fiscal_RFC`,
   cuentaContable: `${CLIENTE}cuentaContableTemp_v0_20_2r`,
+  creditoAutorizado: `${CLIENTE}credito_monto_Autorized`,
   repCliente: 'venta_|USER.repVent_|_x_clienteID::userData_nombre_Completo',
   clasificacion: (n: number) =>
     `venta_|cliente.Classify${n}|_x_clienteID::name`,
@@ -75,6 +76,8 @@ export const banCliente = (lado: LadoBanco) => ({
   clasificacion: (n: number) =>
     `${B}prefCliente.${lado}|_x_IDUclassify${n}::name`,
   rep: `${B}${lado}.user.repVent|_x_id_userName::userData_nombre_Completo`,
+  repCobranza: `${B}${lado}.user.repCobranza|_x_id_userName::userData_nombre_Completo`,
+  creditoAutorizado: `${B}CLIENTE.${lado}|_x_bancoItmID::credito_monto_Autorized`,
 });
 
 /** Portal de aplicaciones del abono (ingreso) o del cargo (egreso). */
