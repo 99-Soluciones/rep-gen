@@ -77,6 +77,11 @@
       "filtro": "lista",
       "columnClass": "Clientes"
     },
+    "Cliente Crédito Autorizado": {
+      "field": "clienteCreditoAutorizado",
+      "dataType": "currency",
+      "columnClass": "Clientes"
+    },
     "Cliente Rep de Cobranza": {
       "field": "facturaRepDeCobranza",
       "dataType": "text",
@@ -254,6 +259,7 @@
       "Cliente Clasificación 4",
       "Cliente Cuenta Contable",
       "Cliente Rep de Venta",
+      "Cliente Crédito Autorizado",
       "Cliente Rep de Cobranza",
       "Venta ID",
       "Factura Serie y Folio",
