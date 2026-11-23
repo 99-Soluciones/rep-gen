@@ -1,4 +1,10 @@
-import type { ReportReceivablesRecord } from "@repgen/shared-types";
+import type {
+  ReportReceivablesClientRecord,
+  ReportReceivablesRecord,
+} from "@repgen/shared-types";
+
+/** Última fila de la vista por cliente: los abonos sin cliente, juntos. */
+export const SIN_IDENTIFICAR = "INGRESOS SIN IDENTIFICAR";
 
 export interface TotalesCxc {
   pendiente: number;
@@ -17,8 +23,13 @@ export interface TotalesCxc {
 
 const redondear = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
 
-/** Totales del resumen sobre las filas que dejan los filtros de la tabla. */
-export const calcularTotalesCxc = (filas: ReportReceivablesRecord[]): TotalesCxc => {
+/**
+ * Totales del resumen sobre las filas que dejan los filtros de la tabla, de
+ * la vista por factura o por cliente (esta no trae antigüedad).
+ */
+export const calcularTotalesCxc = (
+  filas: (ReportReceivablesRecord | ReportReceivablesClientRecord)[],
+): TotalesCxc => {
   const t = {
     pendiente: 0,
     vencido: 0,
@@ -34,8 +45,13 @@ export const calcularTotalesCxc = (filas: ReportReceivablesRecord[]): TotalesCxc
     t.vencido += f.facturaSaldoVencido ?? 0;
     t.porVencer += f.facturaSaldoPorVencer ?? 0;
     t.noCobrar += f.facturaNoCobrarGranTotal ?? 0;
-    t.abonosNoAplicados += f.abonoSaldoNoAplicado ?? 0;
     t.cargosNoAplicados += f.cargoSaldoNoAplicado ?? 0;
+    if ("clienteSaldoFiscal" in f) {
+      if (f.cliente === SIN_IDENTIFICAR) t.sinIdentificar += f.abonoSaldoNoAplicado ?? 0;
+      else t.abonosNoAplicados += f.abonoSaldoNoAplicado ?? 0;
+      continue;
+    }
+    t.abonosNoAplicados += f.abonoSaldoNoAplicado ?? 0;
     t.sinIdentificar += f.abonoMontoSinIdentificar ?? 0;
 
     const dias = f.facturaDiasVencida ?? 0;
