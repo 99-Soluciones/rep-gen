@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { ReportReceivablesRecord } from "@repgen/shared-types";
-import { calcularTotalesCxc } from "./calcularCxc";
+import type { ReportReceivablesClientRecord, ReportReceivablesRecord } from "@repgen/shared-types";
+import { SIN_IDENTIFICAR, calcularTotalesCxc } from "./calcularCxc";
 
 const fila = (parcial: Partial<ReportReceivablesRecord>) => parcial as ReportReceivablesRecord;
 
@@ -26,6 +26,27 @@ describe("calcularTotalesCxc", () => {
       sinIdentificar: 9,
       neto: 100.3,
       antiguedad: { d1a30: 100, d31a60: 50, d61a90: 0, mas90: 20.1 },
+    });
+  });
+
+  it("vista por cliente: los no identificados van aparte y sin antigüedad", () => {
+    const cliente = (parcial: Partial<ReportReceivablesClientRecord>) =>
+      ({ clienteSaldoFiscal: 0, ...parcial }) as ReportReceivablesClientRecord;
+    const t = calcularTotalesCxc([
+      cliente({ cliente: "A", facturaSaldoPendiente: 100, facturaSaldoVencido: 80, facturaSaldoPorVencer: 20, abonoSaldoNoAplicado: 30 }),
+      cliente({ cliente: "B", facturaNoCobrarGranTotal: 40, cargoSaldoNoAplicado: 5 }),
+      cliente({ cliente: SIN_IDENTIFICAR, clienteSaldoFiscal: null, abonoSaldoNoAplicado: 900 }),
+    ]);
+    expect(t).toMatchObject({
+      pendiente: 100,
+      vencido: 80,
+      porVencer: 20,
+      noCobrar: 40,
+      abonosNoAplicados: 30,
+      cargosNoAplicados: 5,
+      sinIdentificar: 900,
+      neto: 70,
+      antiguedad: { d1a30: 0, d31a60: 0, d61a90: 0, mas90: 0 },
     });
   });
 

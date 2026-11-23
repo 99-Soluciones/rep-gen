@@ -1,5 +1,10 @@
 import { useState } from "react";
-import type { ReportReceivablesRecord } from "@repgen/shared-types";
+import { useParams } from "react-router-dom";
+import type { ColDef } from "ag-grid-community";
+import type {
+  ReportReceivablesClientRecord,
+  ReportReceivablesRecord,
+} from "@repgen/shared-types";
 
 import EncabezadoReporte from "../shared/EncabezadoReporte";
 import TablaDinamica from "../shared/TablaDinamica/TablaDinamica";
@@ -19,21 +24,50 @@ import {
   SeccionEstado,
 } from "../shared/EstadoKpi";
 import { formatearFecha, obtenerFechaHoyFormateada } from "../../../shared/utils/fechas";
-import { agruparPorSeccion, construirColumnasCxc } from "./columnas";
+import TabsVentas from "../sales/TabsVentas";
+import {
+  agruparPorSeccion,
+  construirColumnasCxc,
+  construirColumnasCxcClientes,
+} from "./columnas";
 import { calcularTotalesCxc, type TotalesCxc } from "./calcularCxc";
 
-const totalesTabla = {
-  campos: [
-    "facturaSaldoPendiente",
-    "facturaSaldoVencido",
-    "facturaSaldoPorVencer",
-    "facturaNoCobrarGranTotal",
-    "abonoSaldoNoAplicado",
-    "cargoSaldoNoAplicado",
-    "abonoMontoSinIdentificar",
-  ],
-  etiqueta: "Total",
-};
+type Fila = ReportReceivablesRecord | ReportReceivablesClientRecord;
+type Pestana = "facturas" | "clientes";
+
+const RUTA_CXC = "/cuentas_por_cobrar";
+const PESTANAS = [
+  { ruta: "facturas", etiqueta: "Facturas" },
+  { ruta: "clientes", etiqueta: "Clientes" },
+];
+
+const SALDOS = [
+  "facturaSaldoPendiente",
+  "facturaSaldoVencido",
+  "facturaSaldoPorVencer",
+  "facturaNoCobrarGranTotal",
+  "abonoSaldoNoAplicado",
+  "cargoSaldoNoAplicado",
+];
+
+// Las dos vistas comparten una sola consulta a FileMaker (caché del backend).
+const VISTAS = {
+  facturas: {
+    endpoint: "cuentas-por-cobrar/buscar",
+    // Mismo id de siempre: las vistas guardadas de CxC siguen aquí.
+    reportId: "cuentas_por_cobrar",
+    archivo: "cuentas_por_cobrar_al",
+    titulo: "Facturas",
+    totales: [...SALDOS, "abonoMontoSinIdentificar"],
+  },
+  clientes: {
+    endpoint: "cuentas-por-cobrar-por-cliente/buscar",
+    reportId: "cuentas_por_cobrar_clientes",
+    archivo: "cuentas_por_cobrar_por_cliente_al",
+    titulo: "Clientes",
+    totales: ["clienteSaldoFiscal", ...SALDOS, "clienteSaldoAFavor"],
+  },
+} as const;
 
 /**
  * Fecha de corte con "Aplicar": elegir la fecha no consulta; se consulta al
@@ -92,9 +126,10 @@ const SelectorCorte = ({
 };
 
 const ReporteCuentasPorCobrar = () => {
-  const base = useReporteCorte<ReportReceivablesRecord>({
-    endpoint: "cuentas-por-cobrar/buscar",
-  });
+  const params = useParams<{ reportType?: string }>();
+  const pestana: Pestana = params.reportType === "clientes" ? "clientes" : "facturas";
+  const vista = VISTAS[pestana];
+  const base = useReporteCorte<Fila>({ endpoint: vista.endpoint });
   const { datos, estaCargando, error, reintentar, fechaCorte, setFechaCorte } = base;
   const hoy = obtenerFechaHoyFormateada();
   // Una vista con periodo fija un rango: su último día es el corte.
@@ -102,8 +137,13 @@ const ReporteCuentasPorCobrar = () => {
     setFechaCorte(hasta > hoy ? hoy : hasta);
 
   const { getLabel } = useColumnLabels();
-  const columnas = agruparPorSeccion(construirColumnasCxc(getLabel));
-  const grid = useReporteGrid("cuentas_por_cobrar", aplicarRango);
+  // Cada vista tiene sus columnas; la tabla las recibe como filas de cualquiera de las dos.
+  const columnas = agruparPorSeccion<Fila>(
+    (pestana === "clientes"
+      ? construirColumnasCxcClientes(getLabel)
+      : construirColumnasCxc(getLabel)) as ColDef<Fila>[],
+  );
+  const grid = useReporteGrid(vista.reportId, aplicarRango);
   const { referenciaGrid, filasVisibles, actualizarFilasVisibles, onGridListo, onCambioVista } =
     grid;
   const [mostrarResumen, setMostrarResumen] = usePreferenciaLocal("kpi-panel-cxc-abierto", true);
@@ -112,9 +152,9 @@ const ReporteCuentasPorCobrar = () => {
   const recalcularTotales = () => {
     const api = referenciaGrid.current?.api;
     if (!api) return;
-    const filas: ReportReceivablesRecord[] = [];
+    const filas: Fila[] = [];
     api.forEachNodeAfterFilter((node) => {
-      if (node.data) filas.push(node.data as ReportReceivablesRecord);
+      if (node.data) filas.push(node.data as Fila);
     });
     setTotales(calcularTotalesCxc(filas));
   };
@@ -124,7 +164,11 @@ const ReporteCuentasPorCobrar = () => {
 
   return (
     <div className="flex flex-col xl:h-full">
-      <EncabezadoReporte titulo="Cuentas por cobrar" tituloPagina="Cuentas por cobrar" />
+      <EncabezadoReporte
+        titulo="Cuentas por cobrar"
+        tituloPagina={`Cuentas por cobrar · ${vista.titulo}`}
+        encabezadoExtra={<TabsVentas reportType={pestana} rutaBase={RUTA_CXC} pestanas={PESTANAS} />}
+      />
 
       <div className="flex flex-col xl:flex-row xl:flex-1 xl:min-h-0 gap-2">
         <div className="flex-none min-w-0 flex flex-col min-h-[100cqh] xl:flex-1 xl:min-h-0">
@@ -135,14 +179,14 @@ const ReporteCuentasPorCobrar = () => {
             estado={estado}
             onAbrirResumen={() => setMostrarResumen(true)}
           />
-          <TablaDinamica<ReportReceivablesRecord>
+          <TablaDinamica<Fila>
             referenciaGrid={referenciaGrid}
             datos={datos}
             definicionesColumnas={columnas}
             estaCargando={estaCargando}
             error={error}
             onReintentar={reintentar}
-            totales={totalesTabla}
+            totales={{ campos: [...vista.totales], etiqueta: "Total" }}
             onGridListo={onGridListo}
             onCambioVista={onCambioVista}
             onActualizacionModulo={() => {
@@ -173,7 +217,7 @@ const ReporteCuentasPorCobrar = () => {
                 referenciaGrid={referenciaGrid}
                 columnasVisibles={grid.columnasVisibles}
                 setColumnasVisibles={grid.setColumnasVisibles}
-                reportId="cuentas_por_cobrar"
+                reportId={vista.reportId}
                 configs={grid.configs}
                 onConfigsChange={grid.refreshConfigs}
                 rango={{ desde: fechaCorte, hasta: fechaCorte }}
@@ -188,7 +232,7 @@ const ReporteCuentasPorCobrar = () => {
             accionesToolbarFin={
               <BotonExportar
                 referenciaGrid={referenciaGrid}
-                nombreArchivo={`cuentas_por_cobrar_al_${fechaCorte}`}
+                nombreArchivo={`${vista.archivo}_${fechaCorte}`}
                 motivoDeshabilitado={
                   estaCargando
                     ? "Espera a que terminen de cargar los registros"
@@ -220,12 +264,15 @@ const ReporteCuentasPorCobrar = () => {
                 <LineaEstado etiqueta="No cobrar (aparte)" valor={totales.noCobrar} />
               )}
             </SeccionEstado>
-            <SeccionEstado titulo="Antigüedad del vencido" nota="Días desde el vencimiento hasta el corte.">
-              <LineaEstado etiqueta="1 a 30 días" valor={totales.antiguedad.d1a30} />
-              <LineaEstado etiqueta="31 a 60 días" valor={totales.antiguedad.d31a60} />
-              <LineaEstado etiqueta="61 a 90 días" valor={totales.antiguedad.d61a90} />
-              <LineaEstado etiqueta="Más de 90 días" valor={totales.antiguedad.mas90} />
-            </SeccionEstado>
+            {/* La antigüedad sale de cada factura: por cliente no se calcula. */}
+            {pestana === "facturas" && (
+              <SeccionEstado titulo="Antigüedad del vencido" nota="Días desde el vencimiento hasta el corte.">
+                <LineaEstado etiqueta="1 a 30 días" valor={totales.antiguedad.d1a30} />
+                <LineaEstado etiqueta="31 a 60 días" valor={totales.antiguedad.d31a60} />
+                <LineaEstado etiqueta="61 a 90 días" valor={totales.antiguedad.d61a90} />
+                <LineaEstado etiqueta="Más de 90 días" valor={totales.antiguedad.mas90} />
+              </SeccionEstado>
+            )}
             <SeccionEstado
               titulo="Bancos"
               nota="Neto = saldo pendiente − abonos no aplicados."
