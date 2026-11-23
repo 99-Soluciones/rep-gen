@@ -5,7 +5,12 @@ import { FileMakerService } from '../../../filemaker/filemaker.service';
 import { GetBankPermissionsUseCase } from '../../../user/application';
 import { LoggerService } from '../../../common/logger';
 import { hoyEnMexico } from '../../../common/utils';
-import type { ReceivablesResponse } from '../../domain/receivables';
+import type { RawRecord } from '../../../filemaker/ifilemaker';
+import type {
+  ReceivablesResponse,
+  ReportReceivablesClientRecord,
+  ReportReceivablesRecord,
+} from '../../domain/receivables';
 import {
   APLICACIONES,
   BAN,
@@ -15,6 +20,7 @@ import {
   buildBancosQuery,
   buildFacturasQuery,
   cleanReceivablesData,
+  resumirPorCliente,
 } from '../../infrastructure/receivables';
 import { getBankBaseFilters } from '../../infrastructure/banks/banks.permissions.filter';
 import { fetchCached } from '../shared/report-cache';
@@ -23,6 +29,8 @@ import { cleanOrThrow, findAllRecords } from '../shared/report-query';
 // ponytail: tope por portal; una venta o un abono con más aplicaciones se recortaría.
 const PORTAL_LIMIT = 99999;
 
+type Crudos = { facturas: RawRecord[]; bancos: RawRecord[] };
+
 const esFechaValida = (iso: string): boolean => {
   const d = new Date(`${iso}T00:00:00Z`);
   return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === iso;
@@ -30,11 +38,12 @@ const esFechaValida = (iso: string): boolean => {
 
 /**
  * Cuentas por cobrar a una fecha de corte: consulta Facturas y Bancos y
- * reconstruye el saldo al cierre de ese día.
+ * reconstruye el saldo al cierre de ese día. La vista por cliente suma el
+ * detalle; las dos comparten la misma consulta en caché.
  */
 @Injectable()
 export class GetReceivablesReportUseCase {
-  private readonly inFlight = new Map<string, Promise<ReceivablesResponse>>();
+  private readonly inFlight = new Map<string, Promise<Crudos>>();
 
   constructor(
     private readonly fileMakerService: FileMakerService,
@@ -43,12 +52,33 @@ export class GetReceivablesReportUseCase {
     private readonly logger: LoggerService,
   ) {}
 
+  /** Detalle por factura y movimiento de banco. */
   async fetchReport(
     fechaCorte: string | undefined,
     dbName: string,
     user: number,
     refresh: boolean = false,
-  ): Promise<ReceivablesResponse> {
+  ): Promise<ReceivablesResponse<ReportReceivablesRecord>> {
+    const corte = this.validarCorte(fechaCorte);
+    return {
+      fechaCorte: corte,
+      data: await this.detalle(corte, dbName, user, refresh),
+    };
+  }
+
+  /** Resumen: una fila por cliente con saldo, más los no identificados. */
+  async fetchClientReport(
+    fechaCorte: string | undefined,
+    dbName: string,
+    user: number,
+    refresh: boolean = false,
+  ): Promise<ReceivablesResponse<ReportReceivablesClientRecord>> {
+    const corte = this.validarCorte(fechaCorte);
+    const filas = await this.detalle(corte, dbName, user, refresh);
+    return { fechaCorte: corte, data: resumirPorCliente(filas, corte) };
+  }
+
+  private validarCorte(fechaCorte: string | undefined): string {
     const hoy = hoyEnMexico();
     const corte = fechaCorte ?? hoy;
     if (!esFechaValida(corte)) {
@@ -57,10 +87,19 @@ export class GetReceivablesReportUseCase {
     if (corte > hoy) {
       throw new BadRequestException('fechaCorte no puede ser futura');
     }
+    return corte;
+  }
 
-    // El usuario va en la clave: los permisos de bancos son por usuario.
+  private async detalle(
+    corte: string,
+    dbName: string,
+    user: number,
+    refresh: boolean,
+  ): Promise<ReportReceivablesRecord[]> {
+    // Se cachea lo crudo: las dos vistas comparten una sola consulta a
+    // FileMaker. El usuario va en la clave: los permisos de bancos son suyos.
     const key = `cxc_${corte}_${dbName}_${user}`;
-    const load = async () => {
+    const load = async (): Promise<Crudos> => {
       const permisos = await getBankBaseFilters(
         this.bankPermissions,
         dbName,
@@ -76,17 +115,20 @@ export class GetReceivablesReportUseCase {
           [APLICACIONES.egreso.portal]: PORTAL_LIMIT,
         }),
       ]);
-
-      return cleanOrThrow(
-        this.logger,
-        { tenant: dbName, report: 'cuentas-por-cobrar' },
-        () => ({
-          fechaCorte: corte,
-          data: cleanReceivablesData(facturas, bancos, corte),
-        }),
-      );
+      return { facturas, bancos };
     };
-    return fetchCached(this.cacheManager, this.inFlight, key, load, refresh);
+    const { facturas, bancos } = await fetchCached(
+      this.cacheManager,
+      this.inFlight,
+      key,
+      load,
+      refresh,
+    );
+    return cleanOrThrow(
+      this.logger,
+      { tenant: dbName, report: 'cuentas-por-cobrar' },
+      () => cleanReceivablesData(facturas, bancos, corte),
+    );
   }
 
   private find(

@@ -17,6 +17,8 @@ import type {
   ReportCashInflowRecord,
   ReportPurchaseItemRecord,
   ReportPurchaseRecord,
+  ReportReceivablesClientRecord,
+  ReportReceivablesRecord,
   ReportSalesRecord,
   ReportSalesItemRecord,
 } from '../domain';
@@ -96,8 +98,24 @@ export class ReportsController {
   async getReceivablesReport(
     @Body() { fechaCorte, refresh }: SearchCorteDto,
     @Request() req: AuthenticatedRequest,
-  ): Promise<ReceivablesResponse> {
+  ): Promise<ReceivablesResponse<ReportReceivablesRecord>> {
     return this.reportServiceReceivables.fetchReport(
+      fechaCorte,
+      req.tenant,
+      req.id,
+      refresh,
+    );
+  }
+
+  /** Cuentas por cobrar por cliente: el detalle sumado por cliente. */
+  @Post('cuentas-por-cobrar-por-cliente/buscar')
+  @HttpCode(200)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  async getReceivablesClientReport(
+    @Body() { fechaCorte, refresh }: SearchCorteDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ReceivablesResponse<ReportReceivablesClientRecord>> {
+    return this.reportServiceReceivables.fetchClientReport(
       fechaCorte,
       req.tenant,
       req.id,

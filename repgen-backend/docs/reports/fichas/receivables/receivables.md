@@ -479,3 +479,77 @@ registros cubran pagos antes y después del corte.
 - [ ] cargo sin cliente (no sale)
 - [ ] `facturaDiasVencida`: una vencida (días > 0) y una que vence el día del corte (0)
 - [ ] nombre con espacios al final (se recorta)
+
+## Resumen por cliente (23/11/2026)
+
+Segunda vista del mismo reporte, como en el ERP ("CxC SANS Resumen", corte
+23/11/2026): mismas condiciones de búsqueda, una fila por cliente con sus
+saldos sumados.
+
+**Decidido:**
+
+- Mismos dos layouts y la misma consulta en caché que la vista por factura; sin
+  layouts de clientes. El saldo a una fecha de corte solo se reconstruye
+  factura por factura, y así el resumen cuadra con el detalle por construcción.
+- Solo salen los clientes con algún saldo distinto de 0 (el ERP lista también
+  los que están en 0: 281 de 721 en el ejemplo).
+- Se ve como pestaña "Clientes" junto a "Facturas" dentro de Cuentas por
+  cobrar, con la misma fecha de corte.
+- Endpoint `reports/cuentas-por-cobrar-por-cliente/buscar`, mismo
+  `{ "fechaCorte" }` de entrada.
+
+Columnas: datos del cliente (nombre comercial, razón social, RFC, cuenta
+contable, clasificaciones 1–4, crédito autorizado, rep de venta, rep de
+cobranza) y ocho saldos, calculados sobre las filas del detalle del cliente:
+
+| Columna del ERP | Cálculo |
+| --- | --- |
+| Facturas Vigentes (Vencidas) | Σ `facturaSaldoVencido` |
+| Facturas Vigentes (Por Vencer) | Σ `facturaSaldoPorVencer` |
+| Facturas Vigentes (Total) | Vencidas + Por Vencer |
+| Facturas No Cobrables | Σ `facturaNoCobrarGranTotal` |
+| Pagos (No Aplicados) | Σ `abonoSaldoNoAplicado` |
+| Devoluciones (No Aplicados) | Σ `cargoSaldoNoAplicado` |
+| Saldo a Favor Total | Pagos + Devoluciones no aplicados |
+| Saldo Fiscal | Vigentes + No Cobrables − Saldo a Favor |
+
+En el ejemplo las tres fórmulas cuadran en los 721 clientes.
+
+- Las filas `Abono no identificado` se juntan en un último renglón
+  "Ingresos sin identificar", solo con "Pagos (No Aplicados)"; no suma al
+  Saldo Fiscal. En el ejemplo: $38,175,841.30.
+- Datos del cliente: de cualquiera de sus filas (son del cliente).
+- Orden: por nombre comercial; "Ingresos sin identificar" al final.
+
+Campos agregados a los layouts (23/11/2026):
+
+- `apiExport_CxC_Facturas`: `CLIENTE_|_x_clienteID::credito_monto_Autorized`.
+- `apiExport_CxC_Bancos`: `CLIENTE.ingreso|…::credito_monto_Autorized`,
+  `CLIENTE.egreso|…::credito_monto_Autorized` y el rep de cobranza por
+  `ingreso.user.repCobranza` / `egreso.user.repCobranza`.
+
+Con eso, el detalle por factura gana la columna `clienteCreditoAutorizado`, y
+en los abonos y cargos por aplicar `facturaRepDeCobranza` trae el rep de
+cobranza del cliente (antes iba vacío). El resumen toma los dos del detalle.
+
+Datos dorados: los campos nuevos se agregaron a mano a las entradas ya
+anonimizadas (sus IDs no existen en FileMaker y no se pueden recapturar).
+
+Comparación con FileMaker real (23/11/2026, los dos reportes a la misma hora):
+
+- Mismos 440 clientes con saldo. Iguales en los dos: No Cobrables, pagos y
+  devoluciones no aplicados (salvo un cliente), "Ingresos sin identificar",
+  crédito, reps, RFC y razón social.
+- 21 clientes con distintas Facturas Vigentes. En los que se revisaron, RepGen
+  cuadra al centavo con el **estado de cuenta** del ERP; el resumen del ERP
+  cuenta el gran total de las facturas con pago parcial en lugar de su saldo
+  (la diferencia es exactamente lo ya pagado de esas facturas). **Decidido:**
+  RepGen usa el saldo, como el estado de cuenta.
+- Quedan sin explicar tres diferencias pequeñas que van al revés (≈ $5,500 en
+  total; dos clientes con saldo solo en RepGen y uno con $1,178.47 menos de
+  pagos no aplicados). **Decidido:** se aceptan así.
+
+**PENDIENTE:**
+
+- Una devolución sin aplicar real, si existe: el ejemplo no tiene ninguna y no
+  se puede confirmar con qué signo entra.

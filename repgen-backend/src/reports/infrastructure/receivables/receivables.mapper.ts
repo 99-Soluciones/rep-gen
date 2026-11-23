@@ -69,6 +69,7 @@ const VACIO: Fila = {
   clasificacion4: null,
   clienteCuentaContable: null,
   clienteRepDeVenta: null,
+  clienteCreditoAutorizado: null,
   facturaSerieFolio: null,
   facturaGranTotal: null,
   facturaUuid: null,
@@ -160,6 +161,7 @@ function mapFactura(record: RawRecord, corte: string): Fila | null {
     clasificacion4: texto(f[FAC.clasificacion(4)]),
     clienteCuentaContable: texto(f[FAC.cuentaContable]),
     clienteRepDeVenta: texto(f[FAC.repCliente]),
+    clienteCreditoAutorizado: numero(f[FAC.creditoAutorizado]),
     facturaSerieFolio: texto(f[FAC.serieFolio]),
     facturaGranTotal: redondear(numero(f[FAC.granTotal]) ?? 0),
     facturaUuid: texto(f[FAC.uuid]),
@@ -273,6 +275,10 @@ function mapBanco(record: RawRecord, corte: string): Fila[] {
     clasificacion4: texto(f[c.clasificacion(4)]),
     clienteCuentaContable: texto(f[c.cuentaContable]),
     clienteRepDeVenta: texto(f[c.rep]),
+    clienteCreditoAutorizado: numero(f[c.creditoAutorizado]),
+    // El rep de cobranza es del cliente; en el detalle va en la misma columna
+    // que el de las facturas.
+    facturaRepDeCobranza: texto(f[c.repCobranza]),
   };
   const filas: Fila[] = [];
   if (Math.abs(delCliente) >= 0.005) {
