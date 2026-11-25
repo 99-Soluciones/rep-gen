@@ -1,0 +1,562 @@
+{
+  "response": {
+    "dataInfo": {
+      "database": "sans",
+      "layout": "apiExport_CxP_Facturas",
+      "table": "poFACTURA_",
+      "totalRecordCount": 1830,
+      "foundCount": 1735,
+      "returnedCount": 9
+    },
+    "data": [
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "06/01/2024",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 06",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "",
+          "poFactura_|PO_|_x_po::__id_po": 39,
+          "cfdi_UUID": "",
+          "cfdi_folio": "",
+          "cfdi_serie_v0_15_1": "",
+          "factura_observaciones_v0_18_1": "Nombre Comercial: Ejemplo 2\rOC 2",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Cerrado",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": 36945.49,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "",
+          "monto_MXN_Importe_ConDescuento": 36945.490235,
+          "monto_MXN_tax_favorIVA": 0,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 0,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 0,
+          "monto_MXN_GranTotal": 36945.49,
+          "entrega_is_Entregado_Pendiente": "Entregado",
+          "entrega_fechaETAorig": "",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "",
+          "saldo_fecha_pagoLimite": "06/01/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "Cliente Ejemplo 07",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "0000000001",
+          "poFactura_|PROV_|_x_provID::__id_prov": 1,
+          "saldo_fechaCerrado_bancoITM_noPagar": "04/17/2025",
+          "entrega_isBtieneStock": "",
+          "entrega_fechaAlta": "",
+          "area_cerradoNoPagar_user_v0_21_3_5r": "Representante A",
+          "area_isB_Aprobado": 1,
+          "saldo_MXN_pagado_enPAGOS": 0,
+          "poFactura_|PROV_|_x_provID::local_informacionAcuerdos_v0_21_1": ""
+        },
+        "portalData": {
+          "PagosVenta": []
+        },
+        "recordId": "396960",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "PagosVenta",
+            "database": "Sistema - Data - SANS",
+            "table": "poFactura_|cont.EGRESO_ITM|_x_facturaIDU",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "06/13/2024",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 08",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 02 SA DE CV",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "EJE010102AA2",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "",
+          "poFactura_|PO_|_x_po::__id_po": 48,
+          "cfdi_UUID": "00000000-0000-4000-8000-000000000006",
+          "cfdi_folio": 24050053,
+          "cfdi_serie_v0_15_1": "FMCH",
+          "factura_observaciones_v0_18_1": "",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Cerrado",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": 0.02,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "Representante B",
+          "monto_MXN_Importe_ConDescuento": 2941.76,
+          "monto_MXN_tax_favorIVA": 470.6816,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 0,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 0,
+          "monto_MXN_GranTotal": 3412.44,
+          "entrega_is_Entregado_Pendiente": "Entregado",
+          "entrega_fechaETAorig": "06/13/2024",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "SANS General",
+          "saldo_fecha_pagoLimite": "06/06/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "Cliente Ejemplo 07",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "05/24/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "0000000001",
+          "poFactura_|PROV_|_x_provID::__id_prov": 30,
+          "saldo_fechaCerrado_bancoITM_noPagar": "06/20/2024",
+          "entrega_isBtieneStock": 1,
+          "entrega_fechaAlta": "06/13/2024",
+          "area_cerradoNoPagar_user_v0_21_3_5r": "Representante C",
+          "area_isB_Aprobado": 1,
+          "saldo_MXN_pagado_enPAGOS": 3412.42,
+          "poFactura_|PROV_|_x_provID::local_informacionAcuerdos_v0_21_1": ""
+        },
+        "portalData": {
+          "PagosVenta": [
+            {
+              "recordId": "491353",
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_MXN_GranTotal": 3412.42,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_tc_complemento_v0_28_1": 1,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "06/20/2024",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "396966",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "PagosVenta",
+            "database": "Sistema - Data - SANS",
+            "table": "poFactura_|cont.EGRESO_ITM|_x_facturaIDU",
+            "foundCount": 1,
+            "returnedCount": 1
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "06/13/2024",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 09",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 03 SA DE CV",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "EJE010103AA3",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "",
+          "poFactura_|PO_|_x_po::__id_po": 53,
+          "cfdi_UUID": "00000000-0000-4000-8000-000000000007",
+          "cfdi_folio": 0,
+          "cfdi_serie_v0_15_1": "Sin Serie",
+          "factura_observaciones_v0_18_1": "",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Cerrado",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": 0.01,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "Representante D",
+          "monto_MXN_Importe_ConDescuento": 14411.53,
+          "monto_MXN_tax_favorIVA": 2305.84,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 1537.23,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 180.14,
+          "monto_MXN_GranTotal": 15000,
+          "entrega_is_Entregado_Pendiente": "Entregado",
+          "entrega_fechaETAorig": "",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "",
+          "saldo_fecha_pagoLimite": "06/13/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "Cliente Ejemplo 07",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "06/13/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "0000000001",
+          "poFactura_|PROV_|_x_provID::__id_prov": 34,
+          "saldo_fechaCerrado_bancoITM_noPagar": "06/14/2024",
+          "entrega_isBtieneStock": 0,
+          "entrega_fechaAlta": "",
+          "area_cerradoNoPagar_user_v0_21_3_5r": "Representante C",
+          "area_isB_Aprobado": 1,
+          "saldo_MXN_pagado_enPAGOS": 14999.99,
+          "poFactura_|PROV_|_x_provID::local_informacionAcuerdos_v0_21_1": ""
+        },
+        "portalData": {
+          "PagosVenta": [
+            {
+              "recordId": "491343",
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_MXN_GranTotal": 14999.99,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_tc_complemento_v0_28_1": 1,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "06/13/2024",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "396972",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "PagosVenta",
+            "database": "Sistema - Data - SANS",
+            "table": "poFactura_|cont.EGRESO_ITM|_x_facturaIDU",
+            "foundCount": 1,
+            "returnedCount": 1
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "07/11/2024",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 10",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 04 SA DE CV",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "EJE010104AA4",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "RAZON SOCIAL EJEMPLO 04 SA DE CV",
+          "poFactura_|PO_|_x_po::__id_po": 107,
+          "cfdi_UUID": "",
+          "cfdi_folio": "",
+          "cfdi_serie_v0_15_1": "",
+          "factura_observaciones_v0_18_1": "Nombre Comercial: Ejemplo 3\rOC 3",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Cerrado",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": -279.56,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "Representante B",
+          "monto_MXN_Importe_ConDescuento": 301.4,
+          "monto_MXN_tax_favorIVA": 48.224,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 0,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 0,
+          "monto_MXN_GranTotal": 349.62,
+          "entrega_is_Entregado_Pendiente": "Entregado",
+          "entrega_fechaETAorig": "",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "SANS General",
+          "saldo_fecha_pagoLimite": "07/11/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "Cliente Ejemplo 07",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "0000000001",
+          "poFactura_|PROV_|_x_provID::__id_prov": 49,
+          "saldo_fechaCerrado_bancoITM_noPagar": "07/11/2024",
+          "entrega_isBtieneStock": 0,
+          "entrega_fechaAlta": "",
+          "area_cerradoNoPagar_user_v0_21_3_5r": "",
+          "area_isB_Aprobado": 1,
+          "saldo_MXN_pagado_enPAGOS": 629.18,
+          "poFactura_|PROV_|_x_provID::local_informacionAcuerdos_v0_21_1": ""
+        },
+        "portalData": {
+          "PagosVenta": [
+            {
+              "recordId": "491484",
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_MXN_GranTotal": 629.18,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_tc_complemento_v0_28_1": 1,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "07/24/2024",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "397045",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "PagosVenta",
+            "database": "Sistema - Data - SANS",
+            "table": "poFactura_|cont.EGRESO_ITM|_x_facturaIDU",
+            "foundCount": 1,
+            "returnedCount": 1
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "07/30/2024",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 11",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "",
+          "poFactura_|PO_|_x_po::__id_po": 158,
+          "cfdi_UUID": "",
+          "cfdi_folio": "",
+          "cfdi_serie_v0_15_1": "",
+          "factura_observaciones_v0_18_1": "",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Cerrado",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": 0,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "Representante E",
+          "monto_MXN_Importe_ConDescuento": 51.672414,
+          "monto_MXN_tax_favorIVA": 8.267586,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 0,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 0,
+          "monto_MXN_GranTotal": 59.94,
+          "entrega_is_Entregado_Pendiente": "Entregado",
+          "entrega_fechaETAorig": "",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "",
+          "saldo_fecha_pagoLimite": "07/30/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "Cliente Ejemplo 12",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "",
+          "poFactura_|PROV_|_x_provID::__id_prov": 50,
+          "saldo_fechaCerrado_bancoITM_noPagar": "07/30/2024",
+          "entrega_isBtieneStock": 0,
+          "entrega_fechaAlta": "",
+          "area_cerradoNoPagar_user_v0_21_3_5r": "",
+          "area_isB_Aprobado": 1,
+          "saldo_MXN_pagado_enPAGOS": 59.94,
+          "poFactura_|PROV_|_x_provID::local_informacionAcuerdos_v0_21_1": ""
+        },
+        "portalData": {
+          "PagosVenta": [
+            {
+              "recordId": "491711",
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_MXN_GranTotal": 59.94,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_tc_complemento_v0_28_1": 1,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "10/30/2024",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "397129",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "PagosVenta",
+            "database": "Sistema - Data - SANS",
+            "table": "poFactura_|cont.EGRESO_ITM|_x_facturaIDU",
+            "foundCount": 1,
+            "returnedCount": 1
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "10/10/2024",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 04",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "EJE010101AA1",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "RAZON SOCIAL EJEMPLO 01 SA DE CV",
+          "poFactura_|PO_|_x_po::__id_po": 335,
+          "cfdi_UUID": "",
+          "cfdi_folio": "",
+          "cfdi_serie_v0_15_1": "",
+          "factura_observaciones_v0_18_1": "Nombre Comercial: Ejemplo 4\rOC 4",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Cerrado",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": 0,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "Representante B",
+          "monto_MXN_Importe_ConDescuento": 12008,
+          "monto_MXN_tax_favorIVA": 1921.28,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 0,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 0,
+          "monto_MXN_GranTotal": 13929.28,
+          "entrega_is_Entregado_Pendiente": "Entregado",
+          "entrega_fechaETAorig": "",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "",
+          "saldo_fecha_pagoLimite": "10/10/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "Cliente Ejemplo 07",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "0000000001",
+          "poFactura_|PROV_|_x_provID::__id_prov": 100,
+          "saldo_fechaCerrado_bancoITM_noPagar": "10/16/2024",
+          "entrega_isBtieneStock": 0,
+          "entrega_fechaAlta": "",
+          "area_cerradoNoPagar_user_v0_21_3_5r": "",
+          "area_isB_Aprobado": 1,
+          "saldo_MXN_pagado_enPAGOS": 13929.28,
+          "poFactura_|PROV_|_x_provID::local_informacionAcuerdos_v0_21_1": "Nombre Comercial: Ejemplo 1\rOC 1"
+        },
+        "portalData": {
+          "PagosVenta": [
+            {
+              "recordId": "491672",
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_MXN_GranTotal": 13929.28,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_tc_complemento_v0_28_1": 1,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "10/18/2024",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "397288",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "PagosVenta",
+            "database": "Sistema - Data - SANS",
+            "table": "poFactura_|cont.EGRESO_ITM|_x_facturaIDU",
+            "foundCount": 1,
+            "returnedCount": 1
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "10/15/2024",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 05",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "",
+          "poFactura_|PO_|_x_po::__id_po": 344,
+          "cfdi_UUID": "00000000-0000-4000-8000-000000000008",
+          "cfdi_folio": 9249,
+          "cfdi_serie_v0_15_1": "Sin Serie",
+          "factura_observaciones_v0_18_1": "Nombre Comercial: Ejemplo 5\rOC 5",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Cerrado",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": 0,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "Representante B",
+          "monto_MXN_Importe_ConDescuento": 2801.724138,
+          "monto_MXN_tax_favorIVA": 448.275862,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 0,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 0,
+          "monto_MXN_GranTotal": 3250,
+          "entrega_is_Entregado_Pendiente": "Entregado",
+          "entrega_fechaETAorig": "10/11/2024",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "SANS General",
+          "saldo_fecha_pagoLimite": "10/11/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "Cliente Ejemplo 07",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "10/09/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "0000000001",
+          "poFactura_|PROV_|_x_provID::__id_prov": 59,
+          "saldo_fechaCerrado_bancoITM_noPagar": "10/16/2024",
+          "entrega_isBtieneStock": 1,
+          "entrega_fechaAlta": "01/10/2025",
+          "area_cerradoNoPagar_user_v0_21_3_5r": "",
+          "area_isB_Aprobado": 1,
+          "saldo_MXN_pagado_enPAGOS": 3250,
+          "poFactura_|PROV_|_x_provID::local_informacionAcuerdos_v0_21_1": ""
+        },
+        "portalData": {
+          "PagosVenta": [
+            {
+              "recordId": "491657",
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_MXN_GranTotal": 3250,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_tc_complemento_v0_28_1": 1,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "10/16/2024",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "397298",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "PagosVenta",
+            "database": "Sistema - Data - SANS",
+            "table": "poFactura_|cont.EGRESO_ITM|_x_facturaIDU",
+            "foundCount": 1,
+            "returnedCount": 1
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "11/05/2024",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 13",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 05 SA DE CV",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "EJE010105AA5",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "",
+          "poFactura_|PO_|_x_po::__id_po": 346,
+          "cfdi_UUID": "",
+          "cfdi_folio": "",
+          "cfdi_serie_v0_15_1": "",
+          "factura_observaciones_v0_18_1": "Nombre Comercial: Ejemplo 6\rOC 6",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Cerrado",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": 34053.4,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "Representante E",
+          "monto_MXN_Importe_ConDescuento": 29356.37931,
+          "monto_MXN_tax_favorIVA": 4697.02069,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 0,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 0,
+          "monto_MXN_GranTotal": 34053.4,
+          "entrega_is_Entregado_Pendiente": "Entregado",
+          "entrega_fechaETAorig": "",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "",
+          "saldo_fecha_pagoLimite": "11/05/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "Cliente Ejemplo 07",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "0000000001",
+          "poFactura_|PROV_|_x_provID::__id_prov": 20,
+          "saldo_fechaCerrado_bancoITM_noPagar": "10/07/2025",
+          "entrega_isBtieneStock": 0,
+          "entrega_fechaAlta": "",
+          "area_cerradoNoPagar_user_v0_21_3_5r": "Representante A",
+          "area_isB_Aprobado": 1,
+          "saldo_MXN_pagado_enPAGOS": 0,
+          "poFactura_|PROV_|_x_provID::local_informacionAcuerdos_v0_21_1": ""
+        },
+        "portalData": {
+          "PagosVenta": []
+        },
+        "recordId": "397300",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "PagosVenta",
+            "database": "Sistema - Data - SANS",
+            "table": "poFactura_|cont.EGRESO_ITM|_x_facturaIDU",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "area_fechaEnPagos": "10/16/2024",
+          "poFactura_|PROV_|_x_provID::local_NombreComercial": "Cliente Ejemplo 14",
+          "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": "",
+          "poFactura_|PROV_|_x_provID::fiscal_RFC": "",
+          "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": "",
+          "poFactura_|PO_|_x_po::__id_po": 359,
+          "cfdi_UUID": "",
+          "cfdi_folio": "",
+          "cfdi_serie_v0_15_1": "",
+          "factura_observaciones_v0_18_1": "Nombre Comercial: Ejemplo 7\rOC 7",
+          "area_is_Cotizacion_noAprobado_Pagos_Cerrado": "Cerrado",
+          "saldo_MXN_pendiente_GranTotal_saldoGeneral": 0,
+          "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": "Representante B",
+          "monto_MXN_Importe_ConDescuento": 13200,
+          "monto_MXN_tax_favorIVA": 2112,
+          "monto_MXN_tax_favorIEPSenFactura": 0,
+          "monto_MXN_tax_contraIVAretenido_v0_18_1": 0,
+          "monto_MXN_tax_contraISRretenido_v0_18_1": 0,
+          "monto_MXN_GranTotal": 15312,
+          "entrega_is_Entregado_Pendiente": "Entregado",
+          "entrega_fechaETAorig": "10/17/2024",
+          "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": "Heroica - SANS",
+          "saldo_fecha_pagoLimite": "10/16/2024",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": "Cliente Ejemplo 07",
+          "_idu_moneda|v0_18_1": "MXN",
+          "tc_tipoCambioValor_v0_18_1": 1,
+          "cfdi_fecha": "",
+          "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": "0000000001",
+          "poFactura_|PROV_|_x_provID::__id_prov": 105,
+          "saldo_fechaCerrado_bancoITM_noPagar": "10/16/2024",
+          "entrega_isBtieneStock": 1,
+          "entrega_fechaAlta": "10/25/2024",
+          "area_cerradoNoPagar_user_v0_21_3_5r": "",
+          "area_isB_Aprobado": 1,
+          "saldo_MXN_pagado_enPAGOS": 15312,
+          "poFactura_|PROV_|_x_provID::local_informacionAcuerdos_v0_21_1": ""
+        },
+        "portalData": {
+          "PagosVenta": [
+            {
+              "recordId": "491664",
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_MXN_GranTotal": 15312,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_tc_complemento_v0_28_1": 1,
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "10/17/2024",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "397308",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "PagosVenta",
+            "database": "Sistema - Data - SANS",
+            "table": "poFactura_|cont.EGRESO_ITM|_x_facturaIDU",
+            "foundCount": 1,
+            "returnedCount": 1
+          }
+        ]
+      }
+    ]
+  },
+  "messages": [
+    {
+      "code": "0",
+      "message": "OK"
+    }
+  ]
+}

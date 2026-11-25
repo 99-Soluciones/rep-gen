@@ -1,10 +1,9 @@
-import type { ColDef, ColGroupDef } from "ag-grid-community";
+import type { ColDef } from "ag-grid-community";
 import type { ReportReceivablesRecord } from "@repgen/shared-types";
 
 import schema from "./cxc.schema.json";
 import {
   ColumnBuilder,
-  type ColumnContext,
   type LabelResolver,
 } from "../shared/ag-grid/construir-columnas";
 import type { AgGridDataType } from "../shared/ag-grid/parametros-filtro";
@@ -40,17 +39,3 @@ export const construirColumnasCxc = (
   constructorColumnas.construirColumnas("default", labelResolver).map((columna) =>
     columna.field === "cliente" ? { ...columna, initialPinned: "left" } : columna,
   );
-
-/**
- * Las columnas agrupadas por sección consecutiva (Cliente, Factura, Banco…)
- * para la franja sobre los encabezados. `marryChildren`: una columna no se
- * puede arrastrar fuera de su sección.
- */
-export const agruparPorSeccion = <T>(columnas: ColDef<T>[]): ColGroupDef<T>[] =>
-  columnas.reduce<ColGroupDef<T>[]>((grupos, columna) => {
-    const seccion = (columna.context as ColumnContext).claseColumna;
-    const ultimo = grupos.at(-1);
-    if (ultimo?.headerName === seccion) ultimo.children.push(columna);
-    else grupos.push({ headerName: seccion, groupId: seccion, marryChildren: true, children: [columna] });
-    return grupos;
-  }, []);

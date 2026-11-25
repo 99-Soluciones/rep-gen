@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { agruparPorSeccion, construirColumnasCxc } from "./columnas";
+import { agruparPorSeccion } from "../shared/ag-grid/agruparPorSeccion";
+import { construirColumnasCxc } from "./columnas";
 import ejemplo from "../../../../../repgen-backend/docs/reports/fichas/receivables/api_response.json";
 
 describe("columnas de Cuentas por cobrar", () => {

@@ -41,6 +41,13 @@ const REGLAS = [
   ['cfdi_Observaciones_v0_18_4', 'observacion'],
   ['factura_observaciones_v0_18_1', 'observacion'],
   ['mConceptoDeBancoTexto_v0_20_0', 'referencia'],
+  // Cuentas por pagar: acuerdos del proveedor (traen cuentas bancarias),
+  // usuario que marcó "No pagar" y aplicaciones de egresos.
+  ['::local_informacionAcuerdos_v0_21_1', 'observacion'],
+  ['area_cerradoNoPagar_user_v0_21_3_5r', 'persona'],
+  ['::__idu_egreso_itm', 'uuid'],
+  // Banco de la compra: cajas y tarjetas llevan el nombre de una persona.
+  ['poFactura_|cont.BANCO_|_x_bancoID::datos_nombre', 'nombre'],
 ];
 
 const FALSOS = {
