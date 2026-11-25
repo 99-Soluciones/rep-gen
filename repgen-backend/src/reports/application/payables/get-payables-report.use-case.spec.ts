@@ -54,6 +54,14 @@ describe('GetPayablesReportUseCase', () => {
     expect(findImpl).toHaveBeenCalledTimes(2);
   });
 
+  it('la vista por proveedor usa la misma consulta en caché que el detalle', async () => {
+    const { useCase, findImpl } = make();
+    await useCase.fetchReport('2026-07-15', 'db', 1);
+    const res = await useCase.fetchSupplierReport('2026-07-15', 'db', 1);
+    expect(res).toEqual({ fechaCorte: '2026-07-15', data: [] });
+    expect(findImpl).toHaveBeenCalledTimes(2);
+  });
+
   it('rechaza una fecha futura o inválida', async () => {
     const { useCase } = make();
     await expect(

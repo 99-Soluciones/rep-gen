@@ -8,7 +8,11 @@ import type {
   FileMakerCondition,
   RawRecord,
 } from '../../../filemaker/ifilemaker';
-import type { PayablesResponse } from '../../domain/payables';
+import type {
+  PayablesResponse,
+  ReportPayablesRecord,
+  ReportPayablesSupplierRecord,
+} from '../../domain/payables';
 import {
   APLICACIONES,
   BAN,
@@ -18,6 +22,7 @@ import {
   buildBancosQuery,
   buildFacturasQuery,
   cleanPayablesData,
+  resumirPorProveedor,
 } from '../../infrastructure/payables';
 import { getBankBaseFilters } from '../../infrastructure/banks/banks.permissions.filter';
 import { fetchCached } from '../shared/report-cache';
@@ -31,7 +36,8 @@ type Crudos = { facturas: RawRecord[]; bancos: RawRecord[] };
 
 /**
  * Cuentas por pagar a una fecha de corte: consulta Facturas (compras) y
- * Bancos y reconstruye el saldo al cierre de ese día.
+ * Bancos y reconstruye el saldo al cierre de ese día. La vista por proveedor
+ * suma el detalle; las dos comparten la misma consulta en caché.
  * Ficha: docs/reports/fichas/payables/payables.md
  */
 @Injectable()
@@ -45,13 +51,39 @@ export class GetPayablesReportUseCase {
     private readonly logger: LoggerService,
   ) {}
 
+  /** Detalle por compra y movimiento de banco. */
   async fetchReport(
     fechaCorte: string | undefined,
     dbName: string,
     user: number,
     refresh: boolean = false,
-  ): Promise<PayablesResponse> {
+  ): Promise<PayablesResponse<ReportPayablesRecord>> {
     const corte = validarCorte(fechaCorte);
+    return {
+      fechaCorte: corte,
+      data: await this.detalle(corte, dbName, user, refresh),
+    };
+  }
+
+  /** Resumen: una fila por proveedor con saldo, más los no identificados. */
+  async fetchSupplierReport(
+    fechaCorte: string | undefined,
+    dbName: string,
+    user: number,
+    refresh: boolean = false,
+  ): Promise<PayablesResponse<ReportPayablesSupplierRecord>> {
+    const corte = validarCorte(fechaCorte);
+    const filas = await this.detalle(corte, dbName, user, refresh);
+    return { fechaCorte: corte, data: resumirPorProveedor(filas, corte) };
+  }
+
+  private async detalle(
+    corte: string,
+    dbName: string,
+    user: number,
+    refresh: boolean,
+  ): Promise<ReportPayablesRecord[]> {
+    // Se cachea lo crudo: las dos vistas comparten una sola consulta a FileMaker.
     // El usuario va en la clave: los permisos de bancos son suyos.
     const key = `cxp_${corte}_${dbName}_${user}`;
     const load = async (): Promise<Crudos> => {
@@ -79,14 +111,11 @@ export class GetPayablesReportUseCase {
       load,
       refresh,
     );
-    return {
-      fechaCorte: corte,
-      data: cleanOrThrow(
-        this.logger,
-        { tenant: dbName, report: 'cuentas-por-pagar' },
-        () => cleanPayablesData(facturas, bancos, corte),
-      ),
-    };
+    return cleanOrThrow(
+      this.logger,
+      { tenant: dbName, report: 'cuentas-por-pagar' },
+      () => cleanPayablesData(facturas, bancos, corte),
+    );
   }
 
   private find(

@@ -13,6 +13,8 @@ import {
 import type { ReportResponse } from '../application';
 import type {
   PayablesResponse,
+  ReportPayablesRecord,
+  ReportPayablesSupplierRecord,
   ReceivablesResponse,
   ReportBankComplementRecord,
   ReportBankRecord,
@@ -117,8 +119,24 @@ export class ReportsController {
   async getPayablesReport(
     @Body() { fechaCorte, refresh }: SearchCorteDto,
     @Request() req: AuthenticatedRequest,
-  ): Promise<PayablesResponse> {
+  ): Promise<PayablesResponse<ReportPayablesRecord>> {
     return this.reportServicePayables.fetchReport(
+      fechaCorte,
+      req.tenant,
+      req.id,
+      refresh,
+    );
+  }
+
+  /** Cuentas por pagar por proveedor: el detalle sumado por proveedor. */
+  @Post('cuentas-por-pagar-por-proveedor/buscar')
+  @HttpCode(200)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  async getPayablesSupplierReport(
+    @Body() { fechaCorte, refresh }: SearchCorteDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<PayablesResponse<ReportPayablesSupplierRecord>> {
+    return this.reportServicePayables.fetchSupplierReport(
       fechaCorte,
       req.tenant,
       req.id,
