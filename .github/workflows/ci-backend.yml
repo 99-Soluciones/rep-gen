@@ -58,6 +58,7 @@ jobs:
         run: pnpm --filter generador-reportes-backend test:e2e
         env:
           JWT_SECRET: ci-only-not-a-real-secret
+          FM_DATABASES: CI-Test
 
       - name: Build
         run: pnpm --filter generador-reportes-backend build

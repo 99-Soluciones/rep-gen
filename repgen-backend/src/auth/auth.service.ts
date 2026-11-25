@@ -34,7 +34,19 @@ export class AuthService {
     dbName: string,
   ): Promise<ValidateTokenResult> {
     try {
-      // La master key es solo para desarrollo: emite un JWT para cualquier tenant.
+      // Solo bases de FM_DATABASES, con su nombre canónico (las cachés por
+      // tenant usan el nombre del JWT). Mismo 401 que un token inválido para
+      // no revelar qué bases existen.
+      const canonicalDb = this.fileMakerService.resolveDatabase(dbName);
+      if (!canonicalDb) {
+        this.logger.warn('Login con una base no permitida', { tenant: dbName });
+        throw new UnauthorizedException(
+          'Token no válido o no encontrado en FileMaker',
+        );
+      }
+      dbName = canonicalDb;
+
+      // La master key es solo para desarrollo: emite un JWT para cualquier tenant permitido.
       if (this.isDevelopment && this.master_key && token === this.master_key) {
         const payload = {
           id: 2,
