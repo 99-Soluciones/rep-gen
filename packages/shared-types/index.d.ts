@@ -275,6 +275,80 @@ export interface ReceivablesResponse<
   data: T[];
 }
 
+/** Tipo de renglón de Cuentas por pagar. */
+export type TipoTransaccionCxP =
+  | 'Factura vencida'
+  | 'Factura por vencer'
+  | 'Factura cerrada: No pagar'
+  | 'Cargo por aplicar'
+  | 'Abono por aplicar'
+  | 'Cargo no identificado';
+
+/**
+ * Fila de Cuentas por pagar (por compras). Todas las filas traen las mismas
+ * llaves; un campo que no aplica al tipo de renglón va en null. Montos en
+ * MXN, fechas YYYY-MM-DD.
+ */
+export interface ReportPayablesRecord {
+  /** Día de corte (YYYY-MM-DD); el mismo en todas las filas. */
+  fechaCorte: string;
+  tipoTransaccion: TipoTransaccionCxP;
+  proveedorId: number | null;
+  proveedor: string;
+  proveedorRazonSocial: string | null;
+  proveedorRfc: string | null;
+  proveedorCuentaContable: string | null;
+  proveedorAcuerdos: string | null;
+  /** Sin CFDI: null (la OC va en compraId). */
+  facturaSerieFolio: string | null;
+  facturaFecha: string | null;
+  facturaUuid: string | null;
+  facturaObservaciones: string | null;
+  facturaMoneda: string | null;
+  /** Gran total en la moneda de la compra (gran total MXN / TC). */
+  facturaGranTotalOriginal: number | null;
+  facturaTipoDeCambio: number | null;
+  facturaGranTotal: number | null;
+  facturaFechaLimiteDePago: string | null;
+  /** 'No pagar': al corte ya estaba marcada así; su saldo va en facturaNoPagarMonto. */
+  facturaEstatus: 'Vencida' | 'Por vencer' | 'No pagar' | null;
+  facturaDiasVencida: number | null;
+  facturaNoPagarFecha: string | null;
+  compraRepDeCompra: string | null;
+  facturaSaldoPendiente: number | null;
+  facturaSaldoVencido: number | null;
+  facturaSaldoPorVencer: number | null;
+  /** Saldo de una factura "No pagar" (va aquí y no en pendiente/vencido/por vencer). */
+  facturaNoPagarMonto: number | null;
+  facturaNoPagarIva: number | null;
+  facturaNoPagarIeps: number | null;
+  facturaNoPagarCerradaPor: string | null;
+  abonoSaldoNoAplicado: number | null;
+  cargoSaldoNoAplicado: number | null;
+  bancoFolioTransaccion: number | null;
+  ingresoId: number | null;
+  egresoId: number | null;
+  bancoNombre: string | null;
+  bancoCuentaContable: string | null;
+  bancoFecha: string | null;
+  bancoMonto: number | null;
+  bancoReferencia: string | null;
+  cargoMontoSinIdentificar: number | null;
+  /** 'SI' / 'NO'; '' si FileMaker no lo trae. */
+  compraTieneProductos: string | null;
+  bodegaEntregaEstatus: string | null;
+  bodegaFechaEstimadaDeEntrega: string | null;
+  bodegaFechaDeEntrega: string | null;
+  compraId: number | null;
+}
+
+/** Respuesta de POST /reports/cuentas-por-pagar/buscar. */
+export interface PayablesResponse {
+  /** Día de corte (YYYY-MM-DD): los saldos son al cierre de ese día. */
+  fechaCorte: string;
+  data: ReportPayablesRecord[];
+}
+
 /** Tipo de renglón de Flujo de efectivo - Ingresos. */
 export type TipoRenglonIngreso =
   | 'Pago aplicado'

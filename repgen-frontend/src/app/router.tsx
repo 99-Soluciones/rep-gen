@@ -30,6 +30,8 @@ const ReporteBancosComplementos = lazy(cargarBancosComplementos);
 const ReporteComprasConceptos = lazy(cargarComprasConceptos);
 const cargarCompras = () => import("../features/reports/purchases/ReporteCompras");
 const ReporteCompras = lazy(cargarCompras);
+const cargarCxp = () => import("../features/reports/payables/ReporteCuentasPorPagar");
+const ReporteCuentasPorPagar = lazy(cargarCxp);
 void cargarBancos().catch(() => {});
 void cargarVentas().catch(() => {});
 void cargarCxc().catch(() => {});
@@ -37,6 +39,7 @@ void cargarIngresos().catch(() => {});
 void cargarBancosComplementos().catch(() => {});
 void cargarComprasConceptos().catch(() => {});
 void cargarCompras().catch(() => {});
+void cargarCxp().catch(() => {});
 
 const CargandoReporte = () => (
   <p role="status" className="p-6 text-sm text-gray-600">
@@ -99,6 +102,7 @@ const crearRouter = (reporteInicio: string | null) => {
         { path: "/ventas", element: <Navigate to="/ventas/facturas" replace /> },
         { path: "/ventas/:reportType", element: <ReporteVentas /> },
         { path: "/cuentas_por_cobrar", element: <ReporteCuentasPorCobrar /> },
+        { path: "/cuentas_por_pagar", element: <ReporteCuentasPorPagar /> },
         {
           path: "/flujo_efectivo_ingresos",
           element: <Navigate to="/flujo_efectivo_ingresos/facturas" replace />,

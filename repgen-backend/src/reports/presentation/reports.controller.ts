@@ -3,6 +3,7 @@ import {
   GetBankComplementsReportUseCase,
   GetBankReportUseCase,
   GetCashInflowsReportUseCase,
+  GetPayablesReportUseCase,
   GetPurchaseItemsReportUseCase,
   GetPurchasesReportUseCase,
   GetReceivablesReportUseCase,
@@ -11,6 +12,7 @@ import {
 } from '../application';
 import type { ReportResponse } from '../application';
 import type {
+  PayablesResponse,
   ReceivablesResponse,
   ReportBankComplementRecord,
   ReportBankRecord,
@@ -41,6 +43,7 @@ export class ReportsController {
     private readonly reportServiceBankComplements: GetBankComplementsReportUseCase,
     private readonly reportServicePurchaseItems: GetPurchaseItemsReportUseCase,
     private readonly reportServicePurchases: GetPurchasesReportUseCase,
+    private readonly reportServicePayables: GetPayablesReportUseCase,
   ) {}
 
   /** Compras aprobadas en el rango, un renglón por compra. */
@@ -100,6 +103,22 @@ export class ReportsController {
     @Request() req: AuthenticatedRequest,
   ): Promise<ReceivablesResponse<ReportReceivablesRecord>> {
     return this.reportServiceReceivables.fetchReport(
+      fechaCorte,
+      req.tenant,
+      req.id,
+      refresh,
+    );
+  }
+
+  /** Cuentas por pagar al día de corte: compras y movimientos de banco con saldo. */
+  @Post('cuentas-por-pagar/buscar')
+  @HttpCode(200)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  async getPayablesReport(
+    @Body() { fechaCorte, refresh }: SearchCorteDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<PayablesResponse> {
+    return this.reportServicePayables.fetchReport(
       fechaCorte,
       req.tenant,
       req.id,

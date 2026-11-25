@@ -1,0 +1,447 @@
+{
+  "response": {
+    "dataInfo": {
+      "database": "sans",
+      "layout": "apiExport_CxP_Bancos",
+      "table": "contBanco.ITM",
+      "totalRecordCount": 6967,
+      "foundCount": 6966,
+      "returnedCount": 7
+    },
+    "data": [
+      {
+        "fieldData": {
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_NombreComercial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::__id_prov": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 720,
+          "monto_ORIG_abono_v0_22_1": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::__id_egreso": "",
+          "__id_bancoITM": 691,
+          "_id_banco": 106,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "PayPal",
+          "mConceptoDeBancoTexto_v0_20_0": "Referencia ejemplo 1",
+          "monto_ORIG_cargo_v0_22_1": 720,
+          "tc_tipoCambioValor_v0_26_1": 1,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_prov": "",
+          "_fecha": "06/19/2024",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_prov": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::__id_prov": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal": "",
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_NombreComercial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|poFACTURA|_x_bancoItmID::_id_po": ""
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": [],
+          "contBanco.ITM|contEgreso.ITM|_x_bancoItmID": []
+        },
+        "recordId": "959809",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          },
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contEgreso.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_NombreComercial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::__id_prov": 75,
+          "saldo_ORIG_porComplementar_v0_22_1": 226,
+          "monto_ORIG_abono_v0_22_1": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::__id_egreso": 508,
+          "__id_bancoITM": 1357,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Referencia ejemplo 2",
+          "monto_ORIG_cargo_v0_22_1": 19090,
+          "tc_tipoCambioValor_v0_26_1": 1,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_prov": 75,
+          "_fecha": "08/19/2024",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_prov": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::__id_prov": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 19090,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_NombreComercial": "Cliente Ejemplo 01",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|poFACTURA|_x_bancoItmID::_id_po": 220
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": [],
+          "contBanco.ITM|contEgreso.ITM|_x_bancoItmID": [
+            {
+              "recordId": "491575",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::__idu_egreso_itm": "00000000-0000-4000-8000-000000000001",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_MXN_GranTotal": 18864,
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_id_relacionado_Ingreso": "",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1": 1,
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "09/03/2024",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "960402",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          },
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contEgreso.ITM|_x_bancoItmID",
+            "foundCount": 1,
+            "returnedCount": 1
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_NombreComercial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::__id_prov": 34,
+          "saldo_ORIG_porComplementar_v0_22_1": 4060,
+          "monto_ORIG_abono_v0_22_1": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::__id_egreso": 788,
+          "__id_bancoITM": 2313,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Referencia ejemplo 3",
+          "monto_ORIG_cargo_v0_22_1": 17827.12,
+          "tc_tipoCambioValor_v0_26_1": 1,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_prov": 34,
+          "_fecha": "12/13/2024",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_prov": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::__id_prov": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 17827.12,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_NombreComercial": "Cliente Ejemplo 02",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 01 SA DE CV",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RFC": "EJE010101AA1",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|poFACTURA|_x_bancoItmID::_id_po": 432
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": [],
+          "contBanco.ITM|contEgreso.ITM|_x_bancoItmID": [
+            {
+              "recordId": "491835",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::__idu_egreso_itm": "00000000-0000-4000-8000-000000000002",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_MXN_GranTotal": 7500,
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_id_relacionado_Ingreso": "",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1": 1,
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "12/17/2024",
+              "modId": "0"
+            },
+            {
+              "recordId": "491836",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::__idu_egreso_itm": "00000000-0000-4000-8000-000000000003",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_MXN_GranTotal": 6267.12,
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_id_relacionado_Ingreso": "",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1": 1,
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "12/17/2024",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "961326",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          },
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contEgreso.ITM|_x_bancoItmID",
+            "foundCount": 2,
+            "returnedCount": 2
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_NombreComercial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::__id_prov": "",
+          "saldo_ORIG_porComplementar_v0_22_1": 5200,
+          "monto_ORIG_abono_v0_22_1": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::__id_egreso": "",
+          "__id_bancoITM": 3642,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Referencia ejemplo 4",
+          "monto_ORIG_cargo_v0_22_1": 5200,
+          "tc_tipoCambioValor_v0_26_1": 1,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_prov": "",
+          "_fecha": "06/13/2025",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_prov": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::__id_prov": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal": "",
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_NombreComercial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|poFACTURA|_x_bancoItmID::_id_po": ""
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": [],
+          "contBanco.ITM|contEgreso.ITM|_x_bancoItmID": []
+        },
+        "recordId": "962416",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          },
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contEgreso.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_NombreComercial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::__id_prov": 34,
+          "saldo_ORIG_porComplementar_v0_22_1": 7500,
+          "monto_ORIG_abono_v0_22_1": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::__id_egreso": 1598,
+          "__id_bancoITM": 5259,
+          "_id_banco": 104,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Ingresos",
+          "mConceptoDeBancoTexto_v0_20_0": "Referencia ejemplo 5",
+          "monto_ORIG_cargo_v0_22_1": 7500,
+          "tc_tipoCambioValor_v0_26_1": 1,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_prov": 34,
+          "_fecha": "02/04/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_prov": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::__id_prov": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 7500,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_NombreComercial": "Cliente Ejemplo 02",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 01 SA DE CV",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RFC": "EJE010101AA1",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|poFACTURA|_x_bancoItmID::_id_po": ""
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": [],
+          "contBanco.ITM|contEgreso.ITM|_x_bancoItmID": []
+        },
+        "recordId": "963901",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          },
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contEgreso.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_NombreComercial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::__id_prov": 173,
+          "saldo_ORIG_porComplementar_v0_22_1": 0,
+          "monto_ORIG_abono_v0_22_1": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::__id_egreso": 2068,
+          "__id_bancoITM": 6732,
+          "_id_banco": 117,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Egresos",
+          "mConceptoDeBancoTexto_v0_20_0": "",
+          "monto_ORIG_cargo_v0_22_1": 13010.39,
+          "tc_tipoCambioValor_v0_26_1": 1,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_prov": 173,
+          "_fecha": "07/15/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_prov": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::__id_prov": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 13010.39,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_NombreComercial": "Cliente Ejemplo 03",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|poFACTURA|_x_bancoItmID::_id_po": 1574
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": [],
+          "contBanco.ITM|contEgreso.ITM|_x_bancoItmID": [
+            {
+              "recordId": "492778",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::__idu_egreso_itm": "00000000-0000-4000-8000-000000000004",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_MXN_GranTotal": 13010.39,
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_id_relacionado_Ingreso": "",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1": 1,
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "07/16/2026",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "965216",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          },
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contEgreso.ITM|_x_bancoItmID",
+            "foundCount": 1,
+            "returnedCount": 1
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_NombreComercial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::__id_prov": 202,
+          "saldo_ORIG_porComplementar_v0_22_1": 0,
+          "monto_ORIG_abono_v0_22_1": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::__id_ingreso": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::__id_egreso": 2069,
+          "__id_bancoITM": 6733,
+          "_id_banco": 117,
+          "contBanco.ITM|contBANCO_|_x_bancoID::datos_nombre": "BBVA Egresos",
+          "mConceptoDeBancoTexto_v0_20_0": "",
+          "monto_ORIG_cargo_v0_22_1": 8580.01,
+          "tc_tipoCambioValor_v0_26_1": 1,
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_prov": 202,
+          "_fecha": "07/17/2026",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::_concil_id_prov": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::__id_prov": "",
+          "contBanco.ITM|contINGRESO_|_x_bancoItmID::monto_MXN_GranTotal": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::monto_MXN_GranTotal": 8580.01,
+          "contBanco.ITM|contBANCO_|_x_bancoID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_NombreComercial": "Cliente Ejemplo 04",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RazonSocial": "RAZON SOCIAL EJEMPLO 02 SA DE CV",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RazonSocial": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::fiscal_RFC": "EJE010102AA2",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::fiscal_RFC": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::cuentaContable_Temp_v0_20_2r": "",
+          "contBanco.ITM|contEGRESO_|_x_bancoItmID::_concil_id_cliente": "",
+          "contBanco.ITM|PROV.ingreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|PROV.egreso|_x_bancoItmID::local_informacionAcuerdos_v0_21_1": "",
+          "contBanco.ITM|poFACTURA|_x_bancoItmID::_id_po": 1580
+        },
+        "portalData": {
+          "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID": [],
+          "contBanco.ITM|contEgreso.ITM|_x_bancoItmID": [
+            {
+              "recordId": "492779",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::__idu_egreso_itm": "00000000-0000-4000-8000-000000000005",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_MXN_GranTotal": 8580.01,
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::_id_relacionado_Ingreso": "",
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::app_tc_complemento_v0_28_1": 1,
+              "contBanco.ITM|contEgreso.ITM|_x_bancoItmID::fecha_egresoITM_fechaDelComplemento_v0_20_2r": "07/17/2026",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "965217",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contINGRESO.ITM|_x_bancoItmID",
+            "foundCount": 0,
+            "returnedCount": 0
+          },
+          {
+            "database": "Sistema - Data - SANS",
+            "table": "contBanco.ITM|contEgreso.ITM|_x_bancoItmID",
+            "foundCount": 1,
+            "returnedCount": 1
+          }
+        ]
+      }
+    ]
+  },
+  "messages": [
+    {
+      "code": "0",
+      "message": "OK"
+    }
+  ]
+}

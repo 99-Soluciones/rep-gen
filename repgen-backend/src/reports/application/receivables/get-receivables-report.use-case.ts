@@ -1,10 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from '@nestjs/cache-manager';
 import { FileMakerService } from '../../../filemaker/filemaker.service';
 import { GetBankPermissionsUseCase } from '../../../user/application';
 import { LoggerService } from '../../../common/logger';
-import { hoyEnMexico } from '../../../common/utils';
 import type { RawRecord } from '../../../filemaker/ifilemaker';
 import type {
   ReceivablesResponse,
@@ -25,16 +24,12 @@ import {
 import { getBankBaseFilters } from '../../infrastructure/banks/banks.permissions.filter';
 import { fetchCached } from '../shared/report-cache';
 import { cleanOrThrow, findAllRecords } from '../shared/report-query';
+import { validarCorte } from '../shared/report-corte';
 
 // ponytail: tope por portal; una venta o un abono con más aplicaciones se recortaría.
 const PORTAL_LIMIT = 99999;
 
 type Crudos = { facturas: RawRecord[]; bancos: RawRecord[] };
-
-const esFechaValida = (iso: string): boolean => {
-  const d = new Date(`${iso}T00:00:00Z`);
-  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === iso;
-};
 
 /**
  * Cuentas por cobrar a una fecha de corte: consulta Facturas y Bancos y
@@ -59,7 +54,7 @@ export class GetReceivablesReportUseCase {
     user: number,
     refresh: boolean = false,
   ): Promise<ReceivablesResponse<ReportReceivablesRecord>> {
-    const corte = this.validarCorte(fechaCorte);
+    const corte = validarCorte(fechaCorte);
     return {
       fechaCorte: corte,
       data: await this.detalle(corte, dbName, user, refresh),
@@ -73,21 +68,9 @@ export class GetReceivablesReportUseCase {
     user: number,
     refresh: boolean = false,
   ): Promise<ReceivablesResponse<ReportReceivablesClientRecord>> {
-    const corte = this.validarCorte(fechaCorte);
+    const corte = validarCorte(fechaCorte);
     const filas = await this.detalle(corte, dbName, user, refresh);
     return { fechaCorte: corte, data: resumirPorCliente(filas, corte) };
-  }
-
-  private validarCorte(fechaCorte: string | undefined): string {
-    const hoy = hoyEnMexico();
-    const corte = fechaCorte ?? hoy;
-    if (!esFechaValida(corte)) {
-      throw new BadRequestException('fechaCorte no es una fecha válida');
-    }
-    if (corte > hoy) {
-      throw new BadRequestException('fechaCorte no puede ser futura');
-    }
-    return corte;
   }
 
   private async detalle(
