@@ -11,9 +11,15 @@ describe('AuthService', () => {
   let service: AuthService;
 
   const mockJwtService = { signAsync: jest.fn() };
+  const allowed: Record<string, string> = {
+    testdb: 'testdb',
+    db: 'db',
+    dbempty: 'dbEmpty',
+  };
   const mockFileMakerService = {
     findRecords: jest.fn(),
     deleteRecord: jest.fn(),
+    resolveDatabase: (name: string) => allowed[name.toLowerCase()],
   };
   const mockLogger = {
     warn: jest.fn(),
@@ -77,6 +83,33 @@ describe('AuthService', () => {
       productionService.validateTokenFileMaker('master-key-test', 'testdb'),
     ).rejects.toBeInstanceOf(UnauthorizedException);
     expect(mockJwtService.signAsync).not.toHaveBeenCalled();
+  });
+
+  it('should reject a database outside FM_DATABASES without asking FileMaker, even with the master key', async () => {
+    const findRecords = jest.fn();
+    mockFileMakerService.findRecords = findRecords;
+
+    await expect(
+      service.validateTokenFileMaker('master-key-test', 'Otra Empresa'),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
+    await expect(
+      service.validateTokenFileMaker(
+        '77777777-7777-7777-7777-777777777777',
+        'Otra Empresa',
+      ),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
+    expect(findRecords).not.toHaveBeenCalled();
+    expect(mockJwtService.signAsync).not.toHaveBeenCalled();
+  });
+
+  it('should sign the JWT with the canonical database name', async () => {
+    mockJwtService.signAsync.mockResolvedValue('signed-token');
+
+    const res = await service.validateTokenFileMaker(
+      'master-key-test',
+      'DBEMPTY',
+    );
+    expect(res.user.tenant).toBe('dbEmpty');
   });
 
   it('should ignore the master key when NODE_ENV is unset', async () => {

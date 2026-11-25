@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   HttpException,
   Injectable,
   InternalServerErrorException,
@@ -38,6 +39,8 @@ export class FileMakerService {
   private readonly password: string;
   private readonly requestTimeoutMs: number;
   private readonly authCooldownMs: number;
+  /** Bases permitidas (FM_DATABASES), por nombre en minúsculas → nombre canónico. */
+  private readonly databases: Map<string, string>;
 
   // Los tres mapas usan la llave de sessionKey: una sesión por empresa y uso
   private tokens: Map<string, string> = new Map();
@@ -56,6 +59,27 @@ export class FileMakerService {
       this.configService.get<number>('FM_REQUEST_TIMEOUT_MS') ?? 120000;
     this.authCooldownMs =
       this.configService.get<number>('FM_AUTH_COOLDOWN_MS') ?? 5000;
+
+    // ponytail: lista en una variable; se vuelve un mapa tenant → credenciales
+    // cuando cada tenant tenga su propia cuenta de servicio.
+    const names = (this.configService.get<string>('FM_DATABASES') ?? '')
+      .split(',')
+      .map((name) => name.trim())
+      .filter(Boolean);
+    if (names.length === 0) {
+      throw new Error(
+        'FM_DATABASES is required: lista de bases de FileMaker permitidas, separadas por coma',
+      );
+    }
+    this.databases = new Map(names.map((name) => [name.toLowerCase(), name]));
+  }
+
+  /**
+   * Nombre canónico de la base si está en FM_DATABASES, o undefined. Compara
+   * sin distinguir mayúsculas para que "empresa" y "Empresa" sean el mismo tenant.
+   */
+  resolveDatabase(dbName: string): string | undefined {
+    return this.databases.get(dbName.toLowerCase());
   }
 
   private async fetchWithTimeout(
@@ -103,6 +127,13 @@ export class FileMakerService {
     dbName: string,
     use: FmSessionUse = 'erp',
   ): Promise<string> {
+    // Toda llamada a la Data API pasa por aquí: una base fuera de la lista
+    // nunca recibe una petición, venga del login o de un JWT ya emitido.
+    if (!this.resolveDatabase(dbName)) {
+      this.logger.warn(`Base de datos no permitida: ${dbName}`);
+      throw new ForbiddenException('Base de datos no permitida');
+    }
+
     const key = this.sessionKey(dbName, use);
     const dbToken = this.tokens.get(key);
     if (dbToken) {

@@ -2,7 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FileMakerService } from './filemaker.service';
 import { ConfigService } from '@nestjs/config';
 import { LoggerService } from '../common/logger';
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+
+/** Todas las bases que usan los tests; con espacios para probar el recorte. */
+const ALLOWED_DATABASES =
+  'db1, db2,dbA,dbB,dbC,dbD,dbE,dbF,dbN,dbP,dbS,dbT,dbU,dbX,../otra/db,Empresa Demo';
 
 describe('FileMakerService', () => {
   let service: FileMakerService;
@@ -20,6 +27,7 @@ describe('FileMakerService', () => {
       if (key === 'FM_USERNAME') return 'user';
       if (key === 'FM_PASSWORD') return 'pass';
       if (key === 'FM_REQUEST_TIMEOUT_MS') return 5000;
+      if (key === 'FM_DATABASES') return ALLOWED_DATABASES;
       return undefined;
     });
 
@@ -44,6 +52,33 @@ describe('FileMakerService', () => {
 
     const token = await service.authFileMaker('db1');
     expect(token).toBe('tkn');
+  });
+
+  describe('allowed databases (FM_DATABASES)', () => {
+    it('refuses to start without FM_DATABASES', () => {
+      const emptyConfig = {
+        get: (key: string) => (key === 'FM_DATABASES' ? ' , ' : undefined),
+      } as unknown as ConfigService;
+      expect(() => new FileMakerService(emptyConfig, mockLogger)).toThrow(
+        'FM_DATABASES is required',
+      );
+    });
+
+    it('resolves names ignoring case and returns the canonical one', () => {
+      expect(service.resolveDatabase('empresa demo')).toBe('Empresa Demo');
+      expect(service.resolveDatabase('db2')).toBe('db2');
+      expect(service.resolveDatabase('otra')).toBeUndefined();
+    });
+
+    it('never calls FileMaker for a database outside the list', async () => {
+      const fetchMock = jest.fn();
+      global.fetch = fetchMock;
+
+      await expect(
+        service.findRecords('Otra Empresa', 'layout', [{ f: 'v' }]),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
   });
 
   it('authFileMaker should throw on non-ok response', async () => {
