@@ -1,0 +1,151 @@
+{
+  "columns": {
+    "Fecha Corte": {
+      "field": "fechaCorte",
+      "dataType": "date",
+      "columnClass": "Corte"
+    },
+    "Cliente Nombre Comercial": {
+      "field": "cliente",
+      "dataType": "text",
+      "anchoMinimo": 220,
+      "columnClass": "Clientes"
+    },
+    "Cliente Razón Social": {
+      "field": "clienteRazonSocial",
+      "dataType": "text",
+      "columnClass": "Clientes"
+    },
+    "Cliente RFC": {
+      "field": "clienteRfc",
+      "dataType": "text",
+      "columnClass": "Clientes"
+    },
+    "Cliente ID": {
+      "field": "clienteId",
+      "dataType": "number",
+      "oculta": true,
+      "columnClass": "Clientes"
+    },
+    "Cliente Cuenta Contable": {
+      "field": "clienteCuentaContable",
+      "dataType": "text",
+      "oculta": true,
+      "columnClass": "Clientes"
+    },
+    "clasificacion1": {
+      "field": "clasificacion1",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Clientes",
+      "defaultHeader": "Cliente Clasificación 1",
+      "labelSlot": "cliente.clasificacion1"
+    },
+    "clasificacion2": {
+      "field": "clasificacion2",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Clientes",
+      "defaultHeader": "Cliente Clasificación 2",
+      "labelSlot": "cliente.clasificacion2"
+    },
+    "clasificacion3": {
+      "field": "clasificacion3",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Clientes",
+      "defaultHeader": "Cliente Clasificación 3",
+      "labelSlot": "cliente.clasificacion3"
+    },
+    "clasificacion4": {
+      "field": "clasificacion4",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Clientes",
+      "defaultHeader": "Cliente Clasificación 4",
+      "labelSlot": "cliente.clasificacion4"
+    },
+    "Cliente Crédito Autorizado": {
+      "field": "clienteCreditoAutorizado",
+      "dataType": "currency",
+      "columnClass": "Clientes"
+    },
+    "Cliente Rep de Venta": {
+      "field": "clienteRepDeVenta",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Clientes"
+    },
+    "Cliente Rep de Cobranza": {
+      "field": "clienteRepDeCobranza",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Clientes"
+    },
+    "Cliente Saldo Fiscal": {
+      "field": "clienteSaldoFiscal",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Factura Saldo Pendiente": {
+      "field": "facturaSaldoPendiente",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Factura Saldo Vencido": {
+      "field": "facturaSaldoVencido",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Factura Saldo Por Vencer": {
+      "field": "facturaSaldoPorVencer",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Factura No Cobrar Gran Total": {
+      "field": "facturaNoCobrarGranTotal",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Cliente Saldo a Favor": {
+      "field": "clienteSaldoAFavor",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Banco Abono Saldo No Aplicado (En Contra)": {
+      "field": "abonoSaldoNoAplicado",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Banco Cargo Saldo No Aplicado (A Favor)": {
+      "field": "cargoSaldoNoAplicado",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    }
+  },
+  "reportTypes": {
+    "default": [
+      "Fecha Corte",
+      "Cliente Nombre Comercial",
+      "Cliente Razón Social",
+      "Cliente RFC",
+      "Cliente ID",
+      "Cliente Cuenta Contable",
+      "clasificacion1",
+      "clasificacion2",
+      "clasificacion3",
+      "clasificacion4",
+      "Cliente Crédito Autorizado",
+      "Cliente Rep de Venta",
+      "Cliente Rep de Cobranza",
+      "Cliente Saldo Fiscal",
+      "Factura Saldo Pendiente",
+      "Factura Saldo Vencido",
+      "Factura Saldo Por Vencer",
+      "Factura No Cobrar Gran Total",
+      "Cliente Saldo a Favor",
+      "Banco Abono Saldo No Aplicado (En Contra)",
+      "Banco Cargo Saldo No Aplicado (A Favor)"
+    ]
+  }
+}

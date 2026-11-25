@@ -1,7 +1,11 @@
 import type { ColDef } from "ag-grid-community";
-import type { ReportReceivablesRecord } from "@repgen/shared-types";
+import type {
+  ReportReceivablesClientRecord,
+  ReportReceivablesRecord,
+} from "@repgen/shared-types";
 
 import schema from "./cxc.schema.json";
+import schemaClientes from "./cxc-clientes.schema.json";
 import {
   ColumnBuilder,
   type LabelResolver,
@@ -39,3 +43,16 @@ export const construirColumnasCxc = (
   constructorColumnas.construirColumnas("default", labelResolver).map((columna) =>
     columna.field === "cliente" ? { ...columna, initialPinned: "left" } : columna,
   );
+
+const constructorClientes = new ColumnBuilder<CxcReportType, ReportReceivablesClientRecord>(
+  schemaClientes as CxcSchema,
+);
+
+/** Vista por cliente: datos del cliente y sus saldos sumados. */
+export const construirColumnasCxcClientes = (
+  labelResolver?: LabelResolver,
+): ColDef<ReportReceivablesClientRecord>[] =>
+  constructorClientes.construirColumnas("default", labelResolver).map((columna) =>
+    columna.field === "cliente" ? { ...columna, initialPinned: "left" } : columna,
+  );
+
