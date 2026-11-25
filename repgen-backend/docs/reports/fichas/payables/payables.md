@@ -457,3 +457,69 @@ Anomalías para revisar en el borrador:
 - OC 1 ("No pagar" de $0.01): sin proveedor y sin moneda en FileMaker. Sale con proveedor `""` y moneda `""`.
 - El abono 2012 tiene una aplicación sin fecha de complemento: el script la toma como aplicada antes de cualquier corte. No está en el borrador.
 - El anonimizador pone "Cliente Ejemplo NN" también a proveedores (es el mismo tipo de reemplazo).
+
+## Resumen por proveedor (25/11/2026)
+
+> **Estado (25/11/2026): implementado**, falta probarlo contra FileMaker real.
+> `resumirPorProveedor` (`payables-por-proveedor.ts`) produce exactamente
+> `__golden__/esperado-proveedor.json` de los dos juegos (aprobados por la
+> persona el 25/11/2026). Pestaña "Proveedores" en
+> `/cuentas_por_pagar/proveedores`, reportId `cuentas_por_pagar_proveedores`.
+
+Segunda vista del mismo reporte, como la pestaña "Clientes" de CxC: una fila
+por proveedor con sus saldos sumados, sin el desglose por factura. En el ERP
+la pestaña existe pero aún no está habilitada, así que **no hay reporte del
+ERP para comparar**: el diseño copia el resumen por cliente de CxC (que sí se
+cuadró contra el ERP en 721 clientes).
+
+**Decidido** (espejo de CxC):
+
+- Mismos dos layouts y la misma consulta en caché que la vista por compras;
+  sin layouts nuevos. El resumen suma las filas del detalle ya calculadas al
+  corte, así que cuadra con él por construcción.
+- Solo salen los proveedores con algún saldo distinto de 0.
+- Pestaña "Proveedores" junto a "Facturas" en Cuentas por pagar, con la misma
+  fecha de corte (`/cuentas_por_pagar/facturas` y `/cuentas_por_pagar/proveedores`;
+  la de facturas conserva el reportId `cuentas_por_pagar`).
+- Endpoint `reports/cuentas-por-pagar-por-proveedor/buscar`, mismo
+  `{ "fechaCorte" }` de entrada.
+- Se agrupa por `proveedorId` (por nombre si no hay id, como la OC 1 sin
+  proveedor). Datos del proveedor: de cualquiera de sus filas.
+- Orden por nombre comercial; los cargos no identificados se juntan en una
+  última fila "EGRESOS SIN IDENTIFICAR", solo con "Pagos (No Aplicados)", que
+  no suma al Saldo Fiscal.
+
+Columnas: datos del proveedor (nombre comercial, razón social, RFC, cuenta
+contable, acuerdos) y estos saldos:
+
+| Columna | Campo | Cálculo |
+| --- | --- | --- |
+| Facturas Vigentes (Vencidas) | `facturaSaldoVencido` | Σ del detalle |
+| Facturas Vigentes (Por Vencer) | `facturaSaldoPorVencer` | Σ del detalle |
+| Facturas Vigentes (Total) | `facturaSaldoPendiente` | Vencidas + Por Vencer |
+| Facturas No Pagar | `facturaNoPagarMonto` | Σ del detalle |
+| Pagos (No Aplicados) | `cargoSaldoNoAplicado` | Σ de cargos por aplicar |
+| Devoluciones (No Aplicadas) | `abonoSaldoNoAplicado` | Σ de abonos por aplicar |
+| Saldo a Favor Total | `proveedorSaldoAFavor` | Pagos + Devoluciones no aplicados |
+| Saldo Fiscal | `proveedorSaldoFiscal` | Vigentes + No Pagar − Saldo a Favor |
+
+Sin columnas de rep: en CxP el rep de compra es de la factura, no del proveedor.
+
+**Decidido (25/11/2026):**
+
+- Las devoluciones no aplicadas restan en el Saldo Fiscal, igual que en CxC.
+- Una compra sin proveedor sale como "SIN PROVEEDOR" en el resumen (en el
+  detalle el nombre sigue vacío, como viene de FileMaker).
+
+Borrador en `datos-dorados/esperado-proveedor-borrador.json` (12 filas) y
+`datos-dorados/segundo/esperado-proveedor-borrador.json` (10 filas), sacados
+con un script aparte a partir de los `esperado.json` aprobados. Casos:
+
+- Proveedor con facturas y pagos no aplicados que se compensan: Saldo Fiscal 0
+  (segundo juego, "Cliente Ejemplo 04": pagó $13,929.28 el 16/10/2024 y lo
+  aplicó después del corte).
+- Proveedor con dos cargos por aplicar (principal, "Cliente Ejemplo 02").
+- Proveedor solo con devolución no aplicada (segundo, "Cliente Ejemplo 03").
+- Proveedor solo con "No pagar", también de centavos.
+- Compra sin proveedor (OC 1): fila "SIN PROVEEDOR".
+- Cargos no identificados juntos al final.
