@@ -1,4 +1,10 @@
-import type { ReportPayablesRecord } from "@repgen/shared-types";
+import type {
+  ReportPayablesRecord,
+  ReportPayablesSupplierRecord,
+} from "@repgen/shared-types";
+
+/** Última fila de la vista por proveedor: los cargos sin proveedor, juntos. */
+export const SIN_IDENTIFICAR = "EGRESOS SIN IDENTIFICAR";
 
 export interface TotalesCxp {
   pendiente: number;
@@ -15,8 +21,13 @@ export interface TotalesCxp {
 
 const redondear = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
 
-/** Totales del resumen sobre las filas que dejan los filtros de la tabla. */
-export const calcularTotalesCxp = (filas: ReportPayablesRecord[]): TotalesCxp => {
+/**
+ * Totales del resumen sobre las filas que dejan los filtros de la tabla, de
+ * la vista por compra o por proveedor (esta no trae antigüedad).
+ */
+export const calcularTotalesCxp = (
+  filas: (ReportPayablesRecord | ReportPayablesSupplierRecord)[],
+): TotalesCxp => {
   const t = {
     pendiente: 0,
     vencido: 0,
@@ -32,8 +43,13 @@ export const calcularTotalesCxp = (filas: ReportPayablesRecord[]): TotalesCxp =>
     t.vencido += f.facturaSaldoVencido ?? 0;
     t.porVencer += f.facturaSaldoPorVencer ?? 0;
     t.noPagar += f.facturaNoPagarMonto ?? 0;
-    t.cargosNoAplicados += f.cargoSaldoNoAplicado ?? 0;
     t.abonosNoAplicados += f.abonoSaldoNoAplicado ?? 0;
+    if ("proveedorSaldoFiscal" in f) {
+      if (f.proveedor === SIN_IDENTIFICAR) t.sinIdentificar += f.cargoSaldoNoAplicado ?? 0;
+      else t.cargosNoAplicados += f.cargoSaldoNoAplicado ?? 0;
+      continue;
+    }
+    t.cargosNoAplicados += f.cargoSaldoNoAplicado ?? 0;
     t.sinIdentificar += f.cargoMontoSinIdentificar ?? 0;
 
     const dias = f.facturaDiasVencida ?? 0;

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { agruparPorSeccion } from "../shared/ag-grid/agruparPorSeccion";
-import { construirColumnasCxp } from "./columnas";
+import { construirColumnasCxp, construirColumnasCxpProveedores } from "./columnas";
+import proveedores from "../../../../../repgen-backend/src/reports/infrastructure/payables/__golden__/esperado-proveedor.json";
 import ejemplo from "../../../../../repgen-backend/docs/reports/fichas/payables/api_response.json";
 
 describe("columnas de Cuentas por pagar", () => {
@@ -29,5 +30,10 @@ describe("columnas de Cuentas por pagar", () => {
       ["Banco", 11],
       ["Entrega", 4],
     ]);
+  });
+
+  it("la vista por proveedor tiene una columna por cada llave de su contrato", () => {
+    const campos = construirColumnasCxpProveedores().map((c) => c.field);
+    expect([...campos].sort()).toEqual(Object.keys(proveedores[0]).sort());
   });
 });

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { ReportPayablesRecord } from "@repgen/shared-types";
+import type {
+  ReportPayablesRecord,
+  ReportPayablesSupplierRecord,
+} from "@repgen/shared-types";
 import { calcularTotalesCxp } from "./calcularCxp";
+import esperadoProveedor from "../../../../../repgen-backend/src/reports/infrastructure/payables/__golden__/esperado-proveedor.json";
 import esperado from "../../../../../repgen-backend/src/reports/infrastructure/payables/__golden__/esperado.json";
 
 describe("calcularTotalesCxp", () => {
@@ -15,6 +19,12 @@ describe("calcularTotalesCxp", () => {
       sinIdentificar: 5920,
       antiguedad: { d1a30: 11681.4, d31a60: 0, d61a90: 0, mas90: 56216.84 },
     });
+  });
+
+  it("la vista por proveedor da los mismos saldos; los no identificados salen de su fila", () => {
+    const porProveedor = calcularTotalesCxp(esperadoProveedor as ReportPayablesSupplierRecord[]);
+    const porCompra = calcularTotalesCxp(esperado as ReportPayablesRecord[]);
+    expect({ ...porProveedor, antiguedad: null }).toEqual({ ...porCompra, antiguedad: null });
   });
 
   it("sin filas todo es cero", () => {

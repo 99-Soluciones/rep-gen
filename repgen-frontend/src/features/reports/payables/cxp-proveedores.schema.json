@@ -1,0 +1,103 @@
+{
+  "columns": {
+    "Fecha Corte": {
+      "field": "fechaCorte",
+      "dataType": "date",
+      "columnClass": "Corte"
+    },
+    "Proveedor Nombre Comercial": {
+      "field": "proveedor",
+      "dataType": "text",
+      "filtro": "lista",
+      "anchoMinimo": 220,
+      "columnClass": "Proveedores"
+    },
+    "Proveedor Razón Social": {
+      "field": "proveedorRazonSocial",
+      "dataType": "text",
+      "columnClass": "Proveedores"
+    },
+    "Proveedor RFC": {
+      "field": "proveedorRfc",
+      "dataType": "text",
+      "columnClass": "Proveedores"
+    },
+    "Proveedor ID": {
+      "field": "proveedorId",
+      "dataType": "number",
+      "oculta": true,
+      "columnClass": "Proveedores"
+    },
+    "Proveedor Cuenta Contable": {
+      "field": "proveedorCuentaContable",
+      "dataType": "text",
+      "oculta": true,
+      "columnClass": "Proveedores"
+    },
+    "Proveedor Acuerdos": {
+      "field": "proveedorAcuerdos",
+      "dataType": "text",
+      "oculta": true,
+      "columnClass": "Proveedores"
+    },
+    "Proveedor Saldo Fiscal": {
+      "field": "proveedorSaldoFiscal",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Factura Saldo Pendiente": {
+      "field": "facturaSaldoPendiente",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Factura Saldo Vencido": {
+      "field": "facturaSaldoVencido",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Factura Saldo Por Vencer": {
+      "field": "facturaSaldoPorVencer",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Factura No Pagar Monto": {
+      "field": "facturaNoPagarMonto",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Proveedor Saldo a Favor": {
+      "field": "proveedorSaldoAFavor",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Banco Cargo Saldo No Aplicado (A Favor)": {
+      "field": "cargoSaldoNoAplicado",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    },
+    "Banco Abono Saldo No Aplicado (En Contra)": {
+      "field": "abonoSaldoNoAplicado",
+      "dataType": "currency",
+      "columnClass": "Saldos"
+    }
+  },
+  "reportTypes": {
+    "default": [
+      "Fecha Corte",
+      "Proveedor Nombre Comercial",
+      "Proveedor Razón Social",
+      "Proveedor RFC",
+      "Proveedor ID",
+      "Proveedor Cuenta Contable",
+      "Proveedor Acuerdos",
+      "Proveedor Saldo Fiscal",
+      "Factura Saldo Pendiente",
+      "Factura Saldo Vencido",
+      "Factura Saldo Por Vencer",
+      "Factura No Pagar Monto",
+      "Proveedor Saldo a Favor",
+      "Banco Cargo Saldo No Aplicado (A Favor)",
+      "Banco Abono Saldo No Aplicado (En Contra)"
+    ]
+  }
+}

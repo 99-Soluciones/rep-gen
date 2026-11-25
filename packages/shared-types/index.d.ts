@@ -342,11 +342,45 @@ export interface ReportPayablesRecord {
   compraId: number | null;
 }
 
-/** Respuesta de POST /reports/cuentas-por-pagar/buscar. */
-export interface PayablesResponse {
+/**
+ * Fila de Cuentas por pagar por proveedor: los saldos del detalle sumados por
+ * proveedor. La última fila ("EGRESOS SIN IDENTIFICAR", proveedorId null) solo
+ * trae cargoSaldoNoAplicado; las demás cifras van en null.
+ */
+export interface ReportPayablesSupplierRecord {
+  fechaCorte: string;
+  proveedorId: number | null;
+  /** "SIN PROVEEDOR" si la compra no tiene proveedor. */
+  proveedor: string;
+  proveedorRazonSocial: string | null;
+  proveedorRfc: string | null;
+  proveedorCuentaContable: string | null;
+  proveedorAcuerdos: string | null;
+  /** Vigentes + No pagar − Saldo a favor. */
+  proveedorSaldoFiscal: number | null;
+  /** Facturas vigentes: vencido + por vencer. */
+  facturaSaldoPendiente: number | null;
+  facturaSaldoVencido: number | null;
+  facturaSaldoPorVencer: number | null;
+  facturaNoPagarMonto: number | null;
+  /** Pagos + devoluciones no aplicados. */
+  proveedorSaldoAFavor: number | null;
+  /** Pagos al proveedor no aplicados. */
+  cargoSaldoNoAplicado: number | null;
+  /** Devoluciones del proveedor no aplicadas. */
+  abonoSaldoNoAplicado: number | null;
+}
+
+/**
+ * Respuesta de POST /reports/cuentas-por-pagar/buscar (por compra) y de
+ * /reports/cuentas-por-pagar-por-proveedor/buscar (por proveedor).
+ */
+export interface PayablesResponse<
+  T = ReportPayablesRecord | ReportPayablesSupplierRecord,
+> {
   /** Día de corte (YYYY-MM-DD): los saldos son al cierre de ese día. */
   fechaCorte: string;
-  data: ReportPayablesRecord[];
+  data: T[];
 }
 
 /** Tipo de renglón de Flujo de efectivo - Ingresos. */
