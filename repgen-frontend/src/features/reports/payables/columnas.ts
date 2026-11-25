@@ -1,7 +1,11 @@
 import type { ColDef } from "ag-grid-community";
-import type { ReportPayablesRecord } from "@repgen/shared-types";
+import type {
+  ReportPayablesRecord,
+  ReportPayablesSupplierRecord,
+} from "@repgen/shared-types";
 
 import schema from "./cxp.schema.json";
+import schemaProveedores from "./cxp-proveedores.schema.json";
 import { ColumnBuilder } from "../shared/ag-grid/construir-columnas";
 import type { AgGridDataType } from "../shared/ag-grid/parametros-filtro";
 
@@ -29,6 +33,18 @@ const constructorColumnas = new ColumnBuilder<CxpReportType, ReportPayablesRecor
 /** Las 44 columnas del contrato, con el proveedor fijo a la izquierda. */
 export const construirColumnasCxp = (): ColDef<ReportPayablesRecord>[] =>
   constructorColumnas
+    .construirColumnas("default")
+    .map((columna) =>
+      columna.field === "proveedor" ? { ...columna, initialPinned: "left" } : columna,
+    );
+
+const constructorProveedores = new ColumnBuilder<CxpReportType, ReportPayablesSupplierRecord>(
+  schemaProveedores as CxpSchema,
+);
+
+/** Vista por proveedor: datos del proveedor y sus saldos sumados. */
+export const construirColumnasCxpProveedores = (): ColDef<ReportPayablesSupplierRecord>[] =>
+  constructorProveedores
     .construirColumnas("default")
     .map((columna) =>
       columna.field === "proveedor" ? { ...columna, initialPinned: "left" } : columna,

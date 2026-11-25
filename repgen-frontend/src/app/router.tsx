@@ -106,7 +106,11 @@ const crearRouter = (reporteInicio: string | null) => {
           element: <Navigate to="/cuentas_por_cobrar/facturas" replace />,
         },
         { path: "/cuentas_por_cobrar/:reportType", element: <ReporteCuentasPorCobrar /> },
-        { path: "/cuentas_por_pagar", element: <ReporteCuentasPorPagar /> },
+        {
+          path: "/cuentas_por_pagar",
+          element: <Navigate to="/cuentas_por_pagar/facturas" replace />,
+        },
+        { path: "/cuentas_por_pagar/:reportType", element: <ReporteCuentasPorPagar /> },
         {
           path: "/flujo_efectivo_ingresos",
           element: <Navigate to="/flujo_efectivo_ingresos/facturas" replace />,
