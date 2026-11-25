@@ -33,6 +33,7 @@ describe('AuthService', () => {
           useValue: {
             get: jest.fn().mockImplementation((key: string) => {
               if (key === 'MASTER_KEY') return 'master-key-test';
+              if (key === 'NODE_ENV') return 'development';
               return null;
             }) as unknown as ConfigService,
           },
@@ -74,6 +75,23 @@ describe('AuthService', () => {
 
     await expect(
       productionService.validateTokenFileMaker('master-key-test', 'testdb'),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
+    expect(mockJwtService.signAsync).not.toHaveBeenCalled();
+  });
+
+  it('should ignore the master key when NODE_ENV is unset', async () => {
+    const unsetConfig = {
+      get: (key: string) => ({ MASTER_KEY: 'master-key-test' })[key],
+    } as unknown as ConfigService;
+    const unsetService = new AuthService(
+      mockJwtService as unknown as JwtService,
+      mockFileMakerService as unknown as FileMakerService,
+      mockLogger as unknown as LoggerService,
+      unsetConfig,
+    );
+
+    await expect(
+      unsetService.validateTokenFileMaker('master-key-test', 'testdb'),
     ).rejects.toBeInstanceOf(UnauthorizedException);
     expect(mockJwtService.signAsync).not.toHaveBeenCalled();
   });
@@ -225,7 +243,7 @@ describe('AuthService', () => {
     ).rejects.toBeInstanceOf(UnauthorizedException);
   });
 
-  it('should return accessToken even if deleteRecord throws after sign', async () => {
+  it('should reject without signing if the token record cannot be deleted (already redeemed)', async () => {
     const token = '55555555-5555-5555-5555-555555555555';
     const dbName = 'testdb';
     const now = new Date(Date.now() + 1000 * 60 * 60).toISOString();
@@ -251,9 +269,10 @@ describe('AuthService', () => {
       .fn()
       .mockRejectedValue(new Error('delete failed'));
 
-    const res = await service.validateTokenFileMaker(token, dbName);
-    expect(res.accessToken).toBe('token-xyz');
+    await expect(
+      service.validateTokenFileMaker(token, dbName),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
     expect(mockFileMakerService.deleteRecord).toHaveBeenCalled();
-    expect(mockLogger.error).toHaveBeenCalled();
+    expect(mockJwtService.signAsync).not.toHaveBeenCalled();
   });
 });

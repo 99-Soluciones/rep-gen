@@ -10,7 +10,7 @@ import { LoggerService } from '../common/logger/logger.service';
 @Injectable()
 export class AuthService {
   private readonly master_key: string;
-  private readonly isProduction: boolean;
+  private readonly isDevelopment: boolean;
   constructor(
     private jwtService: JwtService,
     private fileMakerService: FileMakerService,
@@ -18,8 +18,9 @@ export class AuthService {
     private configService: ConfigService,
   ) {
     this.master_key = this.configService.get<string>('MASTER_KEY') ?? '';
-    this.isProduction =
-      this.configService.get<string>('NODE_ENV') === 'production';
+    // Lista blanca: si NODE_ENV falta o trae un typo, la master key queda apagada.
+    this.isDevelopment =
+      this.configService.get<string>('NODE_ENV') === 'development';
   }
   /**
    * De momento, simula la validación de un token proporcionado por FileMaker. En una implementación real,
@@ -34,7 +35,7 @@ export class AuthService {
   ): Promise<ValidateTokenResult> {
     try {
       // La master key es solo para desarrollo: emite un JWT para cualquier tenant.
-      if (!this.isProduction && this.master_key && token === this.master_key) {
+      if (this.isDevelopment && this.master_key && token === this.master_key) {
         const payload = {
           id: 2,
           name: 'Developer',
@@ -114,6 +115,20 @@ export class AuthService {
         ],
       );
 
+      // Borrar ANTES de firmar es el canje: FileMaker solo deja borrar un
+      // registro una vez, así que de dos peticiones simultáneas con el mismo
+      // token solo una obtiene el JWT. Si no se pudo borrar, no hay sesión.
+      try {
+        await this.fileMakerService.deleteRecord(dbName, 'api_auth', recordID);
+      } catch (delError) {
+        this.logger.error(
+          'No se pudo canjear (borrar) el token en FileMaker',
+          delError as Error,
+          { tenant: dbName, recordId: recordID },
+        );
+        throw new UnauthorizedException('Token ya utilizado o no canjeable');
+      }
+
       const payload = {
         id: userID,
         name: userName,
@@ -122,19 +137,6 @@ export class AuthService {
       };
 
       const accessToken = await this.jwtService.signAsync(payload);
-
-      try {
-        await this.fileMakerService.deleteRecord(dbName, 'api_auth', recordID);
-      } catch (delError) {
-        this.logger.error(
-          'Error al eliminar el token validado en FileMaker',
-          delError as Error,
-          {
-            tenant: dbName,
-            recordId: recordID,
-          },
-        );
-      }
 
       return {
         accessToken,
