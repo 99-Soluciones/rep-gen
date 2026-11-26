@@ -1,0 +1,360 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "fieldData": {
+      "type": "object",
+      "properties": {
+        "area_fechaEnPagos": {
+          "type": ["number", "string"]
+        },
+        "poFactura_|PROV_|_x_provID::local_NombreComercial": {
+          "type": ["number", "string"]
+        },
+        "poFactura_|PROV_|_x_provID::fiscal_RazonSocial": {
+          "type": ["number", "string"]
+        },
+        "poFactura_|PROV_|_x_provID::fiscal_RFC": {
+          "type": ["number", "string"]
+        },
+        "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r": {
+          "type": ["number", "string"]
+        },
+        "poFactura_|PO_|_x_po::__id_po": {
+          "type": ["number", "string"]
+        },
+        "cfdi_UUID": {
+          "type": ["number", "string"]
+        },
+        "cfdi_folio": {
+          "type": ["number", "string"]
+        },
+        "cfdi_serie_v0_15_1": {
+          "type": ["number", "string"]
+        },
+        "factura_observaciones_v0_18_1": {
+          "type": ["number", "string"]
+        },
+        "area_is_Cotizacion_noAprobado_Pagos_Cerrado": {
+          "type": ["number", "string"]
+        },
+        "saldo_MXN_pendiente_GranTotal_saldoGeneral": {
+          "type": ["number", "string"]
+        },
+        "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo": {
+          "type": ["number", "string"]
+        },
+        "monto_MXN_Importe_ConDescuento": {
+          "type": ["number", "string"]
+        },
+        "monto_MXN_tax_favorIVA": {
+          "type": ["number", "string"]
+        },
+        "monto_MXN_tax_favorIEPSenFactura": {
+          "type": ["number", "string"]
+        },
+        "monto_MXN_tax_contraIVAretenido_v0_18_1": {
+          "type": ["number", "string"]
+        },
+        "monto_MXN_tax_contraISRretenido_v0_18_1": {
+          "type": ["number", "string"]
+        },
+        "monto_MXN_GranTotal": {
+          "type": ["number", "string"]
+        },
+        "entrega_is_Entregado_Pendiente": {
+          "type": ["number", "string"]
+        },
+        "entrega_fechaETAorig": {
+          "type": ["number", "string"]
+        },
+        "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre": {
+          "type": ["number", "string"]
+        },
+        "saldo_fecha_pagoLimite": {
+          "type": ["number", "string"]
+        },
+        "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre": {
+          "type": ["number", "string"]
+        },
+        "_idu_moneda|v0_18_1": {
+          "type": ["number", "string"]
+        },
+        "tc_tipoCambioValor_v0_18_1": {
+          "type": ["number", "string"]
+        },
+        "cfdi_fecha": {
+          "type": ["number", "string"]
+        },
+        "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero": {
+          "type": ["number", "string"]
+        },
+        "poFactura_|PROV_|_x_provID::__id_prov": {
+          "type": ["number", "string"]
+        },
+        "saldo_fechaCerrado_bancoITM_noPagar": {
+          "type": ["number", "string"]
+        },
+        "entrega_isBtieneStock": {
+          "type": ["number", "string"]
+        },
+        "entrega_fechaAlta": {
+          "type": ["number", "string"]
+        },
+        "area_cerradoNoPagar_user_v0_21_3_5r": {
+          "type": ["number", "string"]
+        },
+        "area_isB_Aprobado": {
+          "type": ["number", "string"]
+        },
+        "saldo_MXN_pagado_enPAGOS": {
+          "type": ["number", "string"]
+        },
+        "poFactura_|PROV_|_x_provID::local_informacionAcuerdos_v0_21_1": {
+          "type": ["number", "string"]
+        }
+      },
+      "required": [
+        "area_fechaEnPagos",
+        "poFactura_|PROV_|_x_provID::local_NombreComercial",
+        "poFactura_|PROV_|_x_provID::fiscal_RazonSocial",
+        "poFactura_|PROV_|_x_provID::fiscal_RFC",
+        "poFactura_|PROV_|_x_provID::cuentaContable_Temp_v0_20_2r",
+        "poFactura_|PO_|_x_po::__id_po",
+        "cfdi_UUID",
+        "cfdi_folio",
+        "cfdi_serie_v0_15_1",
+        "factura_observaciones_v0_18_1",
+        "area_is_Cotizacion_noAprobado_Pagos_Cerrado",
+        "saldo_MXN_pendiente_GranTotal_saldoGeneral",
+        "poFactura_|USER.repComp_|_x_repCompID::userData_nombre_Completo",
+        "monto_MXN_Importe_ConDescuento",
+        "monto_MXN_tax_favorIVA",
+        "monto_MXN_tax_favorIEPSenFactura",
+        "monto_MXN_tax_contraIVAretenido_v0_18_1",
+        "monto_MXN_tax_contraISRretenido_v0_18_1",
+        "monto_MXN_GranTotal",
+        "entrega_is_Entregado_Pendiente",
+        "entrega_fechaETAorig",
+        "poFactura_|BODEGA_|_x_bodegaReceptorID::bodega_nombre",
+        "saldo_fecha_pagoLimite",
+        "poFactura_|cont.BANCO_|_x_bancoID::datos_nombre",
+        "_idu_moneda|v0_18_1",
+        "tc_tipoCambioValor_v0_18_1",
+        "cfdi_fecha",
+        "poFactura_|cont.BANCO_|_x_bancoID::datos_cuentaNumero",
+        "poFactura_|PROV_|_x_provID::__id_prov",
+        "saldo_fechaCerrado_bancoITM_noPagar",
+        "entrega_isBtieneStock",
+        "entrega_fechaAlta",
+        "area_cerradoNoPagar_user_v0_21_3_5r",
+        "area_isB_Aprobado",
+        "saldo_MXN_pagado_enPAGOS",
+        "poFactura_|PROV_|_x_provID::local_informacionAcuerdos_v0_21_1"
+      ],
+      "additionalProperties": true
+    },
+    "portalData": {
+      "type": "object",
+      "properties": {
+        "PagosCompra": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recordId": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_MXN_GranTotal": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::_idu_relacionado_PoFactura": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::_id_egreso": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::app_tc_complemento_v0_28_1": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::fecha_egresoITM_fechaDelComplemento_v0_20_2r": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|cont.EGRESO_ITM|_x_facturaIDU::fecha_fiscalDisplay_v0_21_3_2": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|contBancoITM__|_x_id_egreso::_fecha": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|contBancoITM__|_x_id_egreso::__id_bancoITM": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|contBancoITM__|_x_id_egreso::tc_tipoCambioValor_v0_26_1": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|contBancoITM__|_x_id_egreso::_idu_formaPago_v0_22_1": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|contBanco__|_x_id_bancoITM::datos_nombre": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|contBanco__|_x_id_bancoITM::_idu_moneda": {
+                "type": ["number", "string"]
+              },
+              "modId": {
+                "type": ["number", "string"]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "Conceptos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recordId": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::__idu_poITM": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::_id_po": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::qty_Ordered": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::recibir_fecha": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::sub.MXN.GranTotal": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::sub.MXN.importe.CONdescuento": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::sub.MXN.importe.Descuento": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::sub.MXN.importe.SINdescuento": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::sub.MXN.impuesto.retenidoISR|v0.18.1": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::sub.MXN.impuesto.retenidoIVA|v0.18.1": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::sub.MXN.impuesto.trasladoIEPS": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::sub.MXN.impuesto.trasladoIVA": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::sub.MXN.impuesto.trasladoLOCAL|v0.26.1r": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::tasa.retenidoISR|v0.18.1": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::tasa.retenidoIVA|v0.18.1": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::tasa.trasladoIEPS": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::tasa.trasladoIVA": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::is_stock_incrementable_gasto_costo": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::_idu_poFactura": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|inv.ITM_|_x_facturaIDU::_idu_satUnitUso": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|inv.ITM_|_x_facturaIDU::contenidoCantidad": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|inv.ITM_|_x_facturaIDU::itm_is_0product_1servicio_2activo": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|inv.ITM_|_x_facturaIDU::itm_Name": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|inv.ITM_|_x_facturaIDU::itm_Name_Display": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|inv.ITM_|_x_facturaIDU::itm_SKU": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|inv.ITM_|_x_facturaIDU::_idu_satUnitCont": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|inv.ITM_|_x_facturaIDU::cuentaContable_ingresoOrInventario_v0_27_1": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|inv.ITM_|_x_facturaIDU::itm_Marca": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|sat.UNIT|_x_facturaIDU::Unidad": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|sat.UNIT|_x_facturaIDU::unitNombre": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::unit_MXN_GranTotal": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::unit_MXN_importe_CONdescuento": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::unit_MXN_importe_Descuento": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::unit_MXN_importe_SINdescuento": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::unit_MXN_impuesto_montoIEPSporContenido_v0_26_1r": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::unit_MXN_impuesto_retenidoISR_v0_18_1": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::unit_MXN_impuesto_retenidoIVA_v0_18_1": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::unit_MXN_impuesto_trasladoIEPS": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|po.ITM|_x_facturaIDU::unit_MXN_impuesto_trasladoIVA": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|invITM_classify1_|_x_idu_classify1::name_v0_20_0": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|invITM_classify2_|_x_idu_classify2::name_v0_20_0": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|invITM_classify3_|_x_idu_classify3::name_v0_20_0": {
+                "type": ["number", "string"]
+              },
+              "poFactura_|invITM_classify4_|_x_idu_classify4::name_v0_20_0": {
+                "type": ["number", "string"]
+              },
+              "modId": {
+                "type": ["number", "string"]
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  },
+  "required": ["fieldData", "portalData"],
+  "additionalProperties": true
+}

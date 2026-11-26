@@ -485,6 +485,82 @@ export interface ReportCashInflowRecord {
   margenTasa: number | null;
 }
 
+/** Tipo de renglón de Flujo de efectivo - Egresos. */
+export type TipoRenglonEgreso =
+  | 'Pago aplicado'
+  | 'Pago sin aplicar'
+  | 'Pago no identificado'
+  | 'Traspaso entre cuentas';
+
+/** Vista del reporte: una fila por pago × factura, o por pago × factura × concepto. */
+export type DetalleEgresos = DetalleIngresos;
+
+/**
+ * Fila de Flujo de efectivo - Egresos (réplica de Ingresos del lado de
+ * compras). Las dos vistas traen las mismas llaves; lo que no aplica al tipo
+ * de renglón o a la vista va en null. Importes prorrateados por lo pagado
+ * (pagoTasa). Montos en MXN, fechas YYYY-MM-DD.
+ */
+export interface ReportCashOutflowRecord {
+  tipoRenglon: TipoRenglonEgreso;
+  /** Fecha del movimiento de banco: el día que salió el dinero. */
+  pagoFecha: string;
+  bancoFolioTransaccion: number;
+  bancoNombre: string;
+  bancoFormaPago: string;
+  bancoMoneda: string;
+  bancoTipoDeCambio: number;
+  /** 'NO IDENTIFICADO' en un cargo sin proveedor. */
+  proveedor: string;
+  proveedorRazonSocial: string | null;
+  proveedorRfc: string | null;
+  proveedorCuentaContable: string | null;
+  compraId: number | null;
+  facturaUuid: string | null;
+  facturaSerieFolio: string | null;
+  facturaFecha: string | null;
+  /** Completo, sin prorratear. */
+  facturaGranTotalMxn: number | null;
+  facturaObservaciones: string | null;
+  /** Estatus de hoy, no del periodo. */
+  facturaEstatus: EstatusCompra | null;
+  /** Saldo de hoy, no del periodo. */
+  facturaSaldoActual: number | null;
+  compraRepDeCompra: string | null;
+  /** Este pago ÷ gran total de la factura. */
+  pagoTasa: number | null;
+  facturaMoneda: string | null;
+  facturaTipoDeCambio: number | null;
+  facturaGranTotalOriginal: number | null;
+  articuloSku: string | null;
+  articuloMarca: string | null;
+  articuloNombre: string | null;
+  articuloNombreCompleto: string | null;
+  articuloCuentaContable: string | null;
+  categoriadeProducto1: string | null;
+  categoriadeProducto2: string | null;
+  categoriadeProducto3: string | null;
+  categoriadeProducto4: string | null;
+  /** Stock · Gasto · Incrementable · Costo. */
+  tipoDeConcepto: string | null;
+  /** Del concepto completo, sin prorratear (igual que el precio). */
+  cantidad: number | null;
+  unidadDeCompra: string | null;
+  precioUnitario: number | null;
+  importeSinDescuentoMxn: number | null;
+  descuentoMontoMxn: number | null;
+  importeConDescuentoMxn: number | null;
+  ivaMxn: number | null;
+  iepsMxn: number | null;
+  ivaRetenidoMxn: number | null;
+  isrRetenidoMxn: number | null;
+  /** Lo que salió: monto aplicado a la factura, o el saldo por aplicar del cargo. */
+  pagoGranTotalMxn: number;
+  bodegaEntregaEstatus: 'Entregado' | 'Pendiente' | null;
+  bodegaEntregaFecha: string | null;
+  bodegaNombre: string | null;
+}
+
 /** Tipo de renglón de Bancos con complementos (de la conciliación). */
 export type TipoTransaccionBanco =
   | 'Pago de cliente'

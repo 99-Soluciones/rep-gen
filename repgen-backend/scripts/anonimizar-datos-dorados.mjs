@@ -62,6 +62,8 @@ const FALSOS = {
   cuenta: (n) => `00000000${String(n).padStart(2, '0')}`,
 };
 
+const TRASPASO = 'TRASPASO ENTRE CUENTAS ';
+
 const YA_FALSO = {
   nombre: /^Cliente Ejemplo \d+$/,
   razon: /^RAZON SOCIAL EJEMPLO \d+ SA DE CV$/,
@@ -69,7 +71,7 @@ const YA_FALSO = {
   persona: /^Representante (?:[A-Z]|\d+)$/,
   uuid: /^00000000-0000-4000-8000-\d{12}$/,
   observacion: /^Nombre Comercial: Ejemplo \d+\rOC \d+$/,
-  referencia: /^Referencia ejemplo \d+$/,
+  referencia: /^(?:TRASPASO ENTRE CUENTAS )?Referencia ejemplo \d+$/,
   cuenta: /^00000000\d{2}$/,
 };
 
@@ -81,7 +83,9 @@ export function crearAnonimizador() {
     const mapa = (mapas[tipo] ??= new Map());
     // Ya anonimizado (se volvió a correr): se queda igual y ocupa su número.
     // ponytail: mezclar datos nuevos con ya anonimizados podría repetir un número; anonimizar todo junto.
-    if (!mapa.has(valor)) mapa.set(valor, YA_FALSO[tipo].test(valor) ? valor : FALSOS[tipo](mapa.size + 1));
+    // Flujo de efectivo distingue los traspasos por este prefijo del texto del banco: se conserva.
+    const prefijo = tipo === 'referencia' && valor.startsWith(TRASPASO) ? TRASPASO : '';
+    if (!mapa.has(valor)) mapa.set(valor, YA_FALSO[tipo].test(valor) ? valor : prefijo + FALSOS[tipo](mapa.size + 1));
     return mapa.get(valor);
   };
   /** @param {Record<string, unknown>} campos */
@@ -119,7 +123,9 @@ function selfTest() {
   const factura = { 'venta_|CLIENTE_|_x_clienteID::fiscal_RFC': 'ABC010101AB1', cfdi_UUID: '', monto: 5 };
   const banco = { 'contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC': ' ABC010101AB1 ' };
   const otro = { 'x::fiscal_RFC': 'ZZZ010101ZZ9' };
-  [factura, banco, otro].forEach(limpiar);
+  const traspaso = { mConceptoDeBancoTexto_v0_20_0: 'TRASPASO ENTRE CUENTAS REFBNTC0088 MOV PAGOS' };
+  [factura, banco, otro, traspaso].forEach(limpiar);
+  assert.equal(traspaso.mConceptoDeBancoTexto_v0_20_0, 'TRASPASO ENTRE CUENTAS Referencia ejemplo 1');
   assert.equal(factura['venta_|CLIENTE_|_x_clienteID::fiscal_RFC'], 'EJE010101AA1');
   assert.equal(banco['contBanco.ITM|CLIENTE.ingreso|_x_bancoItmID::fiscal_RFC'], 'EJE010101AA1');
   assert.equal(otro['x::fiscal_RFC'], 'EJE010102AA2');

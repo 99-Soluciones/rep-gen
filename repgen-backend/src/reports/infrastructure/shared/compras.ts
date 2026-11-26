@@ -28,3 +28,16 @@ export const granTotalOriginal = (
   tipoCambio: number | null,
 ): number | null =>
   granTotalMxn === null ? null : redondear(granTotalMxn / (tipoCambio || 1));
+
+const TIPOS_CONCEPTO: Record<string, string> = {
+  STOCK: 'Stock',
+  GASTO: 'Gasto',
+  INCREMENTABLE: 'Incrementable',
+  COSTO: 'Costo',
+};
+
+/** FileMaker mezcla mayúsculas (STOCK/Stock): se normaliza; un valor desconocido sale tal cual. */
+export function tipoConceptoCompra(valor: unknown): string {
+  const t = texto(valor);
+  return TIPOS_CONCEPTO[t.toUpperCase()] ?? t;
+}

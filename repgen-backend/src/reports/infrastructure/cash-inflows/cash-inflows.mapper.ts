@@ -13,8 +13,9 @@ import {
   redondear,
   redondear6,
   texto,
+  tipoCambio,
 } from '../shared/fm-parsers';
-import type { DateRange } from '../shared/sales-utils';
+import { enRango, type DateRange } from '../shared/sales-utils';
 import pagosSchema from './ingresos-pagos.schema.json';
 import bancosSchema from './ingresos-bancos.schema.json';
 import { BAN, CONCEPTOS, PAGOS_VENTA, VEN } from './cash-inflows.fields';
@@ -47,10 +48,6 @@ function assertSchema(
 type Campos = Record<string, unknown>;
 
 const n = (valor: unknown): number => numero(valor) ?? 0;
-/** Un tipo de cambio vacío o 0 es "sin conversión". */
-const tipoCambio = (valor: unknown): number => n(valor) || 1;
-const enRango = (dia: string | null, { startDate, endDate }: DateRange) =>
-  dia !== null && dia >= startDate && dia <= endDate;
 
 const VACIO: ReportCashInflowRecord = {
   tipoRenglon: 'Pago aplicado',
