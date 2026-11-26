@@ -17,7 +17,6 @@ import { estadoCifras } from "../shared/estadoCifras";
 import { useReporteCorte } from "../shared/useReporteCorte";
 import { useReporteGrid } from "../shared/useReporteGrid";
 import { usePreferenciaLocal } from "../shared/usePreferenciaLocal";
-import { agruparPorSeccion } from "../shared/ag-grid/agruparPorSeccion";
 import {
   LineaEstado,
   ResultadoCompacto,
@@ -56,7 +55,7 @@ const VISTAS = {
     archivo: "cuentas_por_pagar_al",
     titulo: "Facturas",
     totales: [...SALDOS, "cargoMontoSinIdentificar"],
-    columnas: agruparPorSeccion(construirColumnasCxp() as ColDef<Fila>[]),
+    columnas: construirColumnasCxp() as ColDef<Fila>[],
   },
   proveedores: {
     endpoint: "cuentas-por-pagar-por-proveedor/buscar",
@@ -64,7 +63,7 @@ const VISTAS = {
     archivo: "cuentas_por_pagar_por_proveedor_al",
     titulo: "Proveedores",
     totales: ["proveedorSaldoFiscal", ...SALDOS, "proveedorSaldoAFavor"],
-    columnas: agruparPorSeccion(construirColumnasCxpProveedores() as ColDef<Fila>[]),
+    columnas: construirColumnasCxpProveedores() as ColDef<Fila>[],
   },
 };
 
