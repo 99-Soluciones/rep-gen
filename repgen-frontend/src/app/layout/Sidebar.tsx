@@ -86,6 +86,17 @@ const Sidebar = ({ isOpen, onNavegar } : SidebarProps) => {
 
         <NavLink
           onClick={onNavegar}
+          to="/flujo_efectivo_egresos"
+          className={({ isActive }) =>
+            `${baseClass} ${isActive ? activeClass : inactiveClass}`
+          }
+        >
+          <Wallet aria-hidden="true" className="w-5 h-5 mr-3 shrink-0" />
+          <span>Flujo de efectivo - Egresos</span>
+        </NavLink>
+
+        <NavLink
+          onClick={onNavegar}
           to="/compras"
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : inactiveClass}`

@@ -40,3 +40,6 @@ export const redondear6 = (n: number): number => Math.round(n * 1e6) / 1e6;
 /** Redondeo a 2 decimales (montos). */
 export const redondear = (n: number): number =>
   Math.round((n + Number.EPSILON) * 100) / 100;
+
+/** Tipo de cambio de FileMaker; vacío o 0 es "sin conversión". */
+export const tipoCambio = (valor: unknown): number => numero(valor) || 1;

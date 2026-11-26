@@ -1,0 +1,367 @@
+{
+  "columns": {
+    "Tipo de Renglón": {
+      "field": "tipoRenglon",
+      "dataType": "text",
+      "columnClass": "Pago",
+      "filtro": "lista"
+    },
+    "Pago Fecha": {
+      "field": "pagoFecha",
+      "dataType": "date",
+      "columnClass": "Pago"
+    },
+    "Banco Nombre": {
+      "field": "bancoNombre",
+      "dataType": "text",
+      "columnClass": "Banco",
+      "filtro": "lista"
+    },
+    "Banco Transacción ID": {
+      "field": "bancoFolioTransaccion",
+      "dataType": "text",
+      "columnClass": "Banco"
+    },
+    "Proveedor Nombre Comercial": {
+      "field": "proveedor",
+      "dataType": "text",
+      "filtro": "lista",
+      "anchoMinimo": 200,
+      "columnClass": "Proveedores"
+    },
+    "Compra ID": {
+      "field": "compraId",
+      "dataType": "number",
+      "columnClass": "Facturas"
+    },
+    "Factura Serie y Folio": {
+      "field": "facturaSerieFolio",
+      "dataType": "text",
+      "columnClass": "Facturas"
+    },
+    "Pago Gran Total (MXN)": {
+      "field": "pagoGranTotalMxn",
+      "dataType": "currency",
+      "columnClass": "Pago"
+    },
+    "Pago Tasa": {
+      "field": "pagoTasa",
+      "dataType": "percent",
+      "columnClass": "Pago"
+    },
+    "Factura Gran Total (MXN)": {
+      "field": "facturaGranTotalMxn",
+      "dataType": "currency",
+      "columnClass": "Facturas"
+    },
+    "Factura Estatus": {
+      "field": "facturaEstatus",
+      "dataType": "text",
+      "columnClass": "Facturas",
+      "filtro": "lista"
+    },
+    "Factura Saldo Actual": {
+      "field": "facturaSaldoActual",
+      "dataType": "currency",
+      "columnClass": "Facturas"
+    },
+    "Factura Fecha": {
+      "field": "facturaFecha",
+      "dataType": "date",
+      "columnClass": "Facturas"
+    },
+    "Banco Forma de Pago": {
+      "field": "bancoFormaPago",
+      "dataType": "text",
+      "columnClass": "Banco",
+      "filtro": "lista"
+    },
+    "Banco Moneda": {
+      "field": "bancoMoneda",
+      "dataType": "text",
+      "columnClass": "Banco",
+      "filtro": "lista"
+    },
+    "Banco Tipo de Cambio": {
+      "field": "bancoTipoDeCambio",
+      "dataType": "number",
+      "columnClass": "Banco"
+    },
+    "Artículo SKU": {
+      "field": "articuloSku",
+      "dataType": "text",
+      "columnClass": "Artículos"
+    },
+    "Artículo Marca": {
+      "field": "articuloMarca",
+      "dataType": "text",
+      "columnClass": "Artículos",
+      "filtro": "lista"
+    },
+    "Artículo Nombre": {
+      "field": "articuloNombre",
+      "dataType": "text",
+      "columnClass": "Artículos",
+      "filtro": "lista"
+    },
+    "Artículo Nombre Completo": {
+      "field": "articuloNombreCompleto",
+      "dataType": "text",
+      "columnClass": "Artículos",
+      "anchoMinimo": 240
+    },
+    "Artículo Cuenta Contable": {
+      "field": "articuloCuentaContable",
+      "dataType": "text",
+      "columnClass": "Artículos",
+      "oculta": true
+    },
+    "categoriadeProducto1": {
+      "field": "categoriadeProducto1",
+      "dataType": "text",
+      "columnClass": "Artículos",
+      "filtro": "lista",
+      "defaultHeader": "Artículo Categoría 1",
+      "labelSlot": "articulo.categoria1"
+    },
+    "categoriadeProducto2": {
+      "field": "categoriadeProducto2",
+      "dataType": "text",
+      "columnClass": "Artículos",
+      "filtro": "lista",
+      "defaultHeader": "Artículo Categoría 2",
+      "labelSlot": "articulo.categoria2"
+    },
+    "categoriadeProducto3": {
+      "field": "categoriadeProducto3",
+      "dataType": "text",
+      "columnClass": "Artículos",
+      "filtro": "lista",
+      "defaultHeader": "Artículo Categoría 3",
+      "labelSlot": "articulo.categoria3"
+    },
+    "categoriadeProducto4": {
+      "field": "categoriadeProducto4",
+      "dataType": "text",
+      "columnClass": "Artículos",
+      "filtro": "lista",
+      "defaultHeader": "Artículo Categoría 4",
+      "labelSlot": "articulo.categoria4"
+    },
+    "Artículo Tipo de Concepto": {
+      "field": "tipoDeConcepto",
+      "dataType": "text",
+      "columnClass": "Artículos",
+      "filtro": "lista"
+    },
+    "Artículo Cantidad": {
+      "field": "cantidad",
+      "dataType": "number",
+      "columnClass": "Artículos"
+    },
+    "Artículo Unidad de Compra": {
+      "field": "unidadDeCompra",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Artículos"
+    },
+    "Artículo Precio Unitario": {
+      "field": "precioUnitario",
+      "dataType": "currency",
+      "columnClass": "Artículos"
+    },
+    "Importe sin Descuento (MXN)": {
+      "field": "importeSinDescuentoMxn",
+      "dataType": "currency",
+      "columnClass": "Importes"
+    },
+    "Descuento Monto (MXN)": {
+      "field": "descuentoMontoMxn",
+      "dataType": "currency",
+      "columnClass": "Importes"
+    },
+    "Importe con Descuento (MXN)": {
+      "field": "importeConDescuentoMxn",
+      "dataType": "currency",
+      "columnClass": "Importes"
+    },
+    "IVA (MXN)": {
+      "field": "ivaMxn",
+      "dataType": "currency",
+      "columnClass": "Importes"
+    },
+    "IEPS (MXN)": {
+      "field": "iepsMxn",
+      "dataType": "currency",
+      "columnClass": "Importes"
+    },
+    "IVA Retenido (MXN)": {
+      "field": "ivaRetenidoMxn",
+      "dataType": "currency",
+      "columnClass": "Importes"
+    },
+    "ISR Retenido (MXN)": {
+      "field": "isrRetenidoMxn",
+      "dataType": "currency",
+      "columnClass": "Importes"
+    },
+    "Proveedor Razón Social": {
+      "field": "proveedorRazonSocial",
+      "dataType": "text",
+      "columnClass": "Proveedores",
+      "anchoMinimo": 200
+    },
+    "Proveedor RFC": {
+      "field": "proveedorRfc",
+      "dataType": "text",
+      "columnClass": "Proveedores",
+      "oculta": true
+    },
+    "Proveedor Cuenta Contable": {
+      "field": "proveedorCuentaContable",
+      "dataType": "text",
+      "columnClass": "Proveedores",
+      "oculta": true
+    },
+    "Compra Rep de Compra": {
+      "field": "compraRepDeCompra",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Facturas"
+    },
+    "Factura Observaciones": {
+      "field": "facturaObservaciones",
+      "dataType": "text",
+      "anchoMinimo": 240,
+      "columnClass": "Facturas",
+      "oculta": true
+    },
+    "Factura Moneda": {
+      "field": "facturaMoneda",
+      "dataType": "text",
+      "columnClass": "Facturas",
+      "filtro": "lista"
+    },
+    "Factura Tipo de Cambio": {
+      "field": "facturaTipoDeCambio",
+      "dataType": "number",
+      "columnClass": "Facturas"
+    },
+    "Factura Gran Total (Moneda Original)": {
+      "field": "facturaGranTotalOriginal",
+      "dataType": "currency",
+      "columnClass": "Facturas",
+      "currencyField": "facturaMoneda"
+    },
+    "Factura UUID": {
+      "field": "facturaUuid",
+      "dataType": "text",
+      "columnClass": "Facturas",
+      "oculta": true
+    },
+    "Bodega Nombre": {
+      "field": "bodegaNombre",
+      "dataType": "text",
+      "columnClass": "Bodegas",
+      "filtro": "lista"
+    },
+    "Bodega Entrega Estatus": {
+      "field": "bodegaEntregaEstatus",
+      "dataType": "text",
+      "filtro": "lista",
+      "columnClass": "Bodegas"
+    },
+    "Bodega Entrega Fecha": {
+      "field": "bodegaEntregaFecha",
+      "dataType": "date",
+      "columnClass": "Bodegas",
+      "oculta": true
+    }
+  },
+  "reportTypes": {
+    "factura": [
+      "Tipo de Renglón",
+      "Pago Fecha",
+      "Banco Nombre",
+      "Banco Transacción ID",
+      "Proveedor Nombre Comercial",
+      "Compra ID",
+      "Factura Serie y Folio",
+      "Pago Gran Total (MXN)",
+      "Pago Tasa",
+      "Factura Gran Total (MXN)",
+      "Factura Estatus",
+      "Factura Saldo Actual",
+      "Factura Fecha",
+      "Banco Forma de Pago",
+      "Banco Moneda",
+      "Banco Tipo de Cambio",
+      "Importe sin Descuento (MXN)",
+      "Descuento Monto (MXN)",
+      "Importe con Descuento (MXN)",
+      "IVA (MXN)",
+      "IEPS (MXN)",
+      "IVA Retenido (MXN)",
+      "ISR Retenido (MXN)",
+      "Proveedor Razón Social",
+      "Proveedor RFC",
+      "Proveedor Cuenta Contable",
+      "Compra Rep de Compra",
+      "Factura Observaciones",
+      "Factura Moneda",
+      "Factura Tipo de Cambio",
+      "Factura Gran Total (Moneda Original)",
+      "Factura UUID"
+    ],
+    "concepto": [
+      "Tipo de Renglón",
+      "Pago Fecha",
+      "Banco Nombre",
+      "Banco Transacción ID",
+      "Proveedor Nombre Comercial",
+      "Compra ID",
+      "Factura Serie y Folio",
+      "Pago Gran Total (MXN)",
+      "Pago Tasa",
+      "Factura Gran Total (MXN)",
+      "Factura Estatus",
+      "Factura Saldo Actual",
+      "Factura Fecha",
+      "Banco Forma de Pago",
+      "Banco Moneda",
+      "Banco Tipo de Cambio",
+      "Artículo SKU",
+      "Artículo Marca",
+      "Artículo Nombre",
+      "Artículo Nombre Completo",
+      "Artículo Cuenta Contable",
+      "categoriadeProducto1",
+      "categoriadeProducto2",
+      "categoriadeProducto3",
+      "categoriadeProducto4",
+      "Artículo Tipo de Concepto",
+      "Artículo Cantidad",
+      "Artículo Unidad de Compra",
+      "Artículo Precio Unitario",
+      "Importe sin Descuento (MXN)",
+      "Descuento Monto (MXN)",
+      "Importe con Descuento (MXN)",
+      "IVA (MXN)",
+      "IEPS (MXN)",
+      "IVA Retenido (MXN)",
+      "ISR Retenido (MXN)",
+      "Proveedor Razón Social",
+      "Proveedor RFC",
+      "Proveedor Cuenta Contable",
+      "Compra Rep de Compra",
+      "Factura Observaciones",
+      "Factura Moneda",
+      "Factura Tipo de Cambio",
+      "Factura Gran Total (Moneda Original)",
+      "Factura UUID",
+      "Bodega Nombre",
+      "Bodega Entrega Estatus",
+      "Bodega Entrega Fecha"
+    ]
+  }
+}

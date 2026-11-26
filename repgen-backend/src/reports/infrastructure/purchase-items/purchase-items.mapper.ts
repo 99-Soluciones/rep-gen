@@ -14,6 +14,7 @@ import {
   estatusCompra,
   granTotalOriginal,
   serieFolioCompra,
+  tipoConceptoCompra,
 } from '../shared/compras';
 import type { DateRange } from '../shared/sales-utils';
 import schema from './compras-conceptos.schema.json';
@@ -37,13 +38,6 @@ const validar = ajv.compile(schema);
 type Campos = Record<string, unknown>;
 type Fila = ReportPurchaseItemRecord;
 
-const TIPOS: Record<string, string> = {
-  STOCK: 'Stock',
-  GASTO: 'Gasto',
-  INCREMENTABLE: 'Incrementable',
-  COSTO: 'Costo',
-};
-
 /** Monto del concepto = cantidad × unitario de FileMaker, sin ruido de punto flotante. */
 const porCantidad = (cantidad: number | null, unitario: unknown) => {
   const u = numero(unitario);
@@ -51,8 +45,7 @@ const porCantidad = (cantidad: number | null, unitario: unknown) => {
 };
 
 function fila(f: Campos, hoy: string): Fila {
-  const tipoFm = texto(f[CONCEPTO.tipo]);
-  const tipo = TIPOS[tipoFm.toUpperCase()] ?? tipoFm;
+  const tipo = tipoConceptoCompra(f[CONCEPTO.tipo]);
   const gasto = tipo === 'Gasto';
   const conCfdi = texto(f[COMPRA.uuid]) !== '';
   const granTotal = numero(f[COMPRA.granTotalMxn]);

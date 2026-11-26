@@ -82,3 +82,9 @@ export function extractSerieFolio(value: string): {
   const [serie = '', folio = ''] = value.split('-');
   return { serie, folio };
 }
+
+/** Día (YYYY-MM-DD) dentro del rango, ambos extremos inclusive. */
+export const enRango = (
+  dia: string | null,
+  { startDate, endDate }: DateRange,
+): dia is string => dia !== null && dia >= startDate && dia <= endDate;

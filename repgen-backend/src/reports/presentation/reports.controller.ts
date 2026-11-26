@@ -3,6 +3,7 @@ import {
   GetBankComplementsReportUseCase,
   GetBankReportUseCase,
   GetCashInflowsReportUseCase,
+  GetCashOutflowsReportUseCase,
   GetPayablesReportUseCase,
   GetPurchaseItemsReportUseCase,
   GetPurchasesReportUseCase,
@@ -19,6 +20,7 @@ import type {
   ReportBankComplementRecord,
   ReportBankRecord,
   ReportCashInflowRecord,
+  ReportCashOutflowRecord,
   ReportPurchaseItemRecord,
   ReportPurchaseRecord,
   ReportReceivablesClientRecord,
@@ -42,6 +44,7 @@ export class ReportsController {
     private readonly reportServiceSalesItem: GetSalesitemReportUseCase,
     private readonly reportServiceReceivables: GetReceivablesReportUseCase,
     private readonly reportServiceCashInflows: GetCashInflowsReportUseCase,
+    private readonly reportServiceCashOutflows: GetCashOutflowsReportUseCase,
     private readonly reportServiceBankComplements: GetBankComplementsReportUseCase,
     private readonly reportServicePurchaseItems: GetPurchaseItemsReportUseCase,
     private readonly reportServicePurchases: GetPurchasesReportUseCase,
@@ -231,6 +234,40 @@ export class ReportsController {
     @Request() req: AuthenticatedRequest,
   ): Promise<ReportResponse<ReportCashInflowRecord>> {
     return this.reportServiceCashInflows.fetchReport(
+      dateRange,
+      'concepto',
+      req.tenant,
+      req.id,
+      refresh,
+    );
+  }
+
+  /** Egresos por pago × factura de compra. */
+  @Post('flujo-efectivo-egresos/buscar')
+  @HttpCode(200)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  async getCashOutflowsReport(
+    @Body() { dateRange, refresh }: SearchReportDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ReportResponse<ReportCashOutflowRecord>> {
+    return this.reportServiceCashOutflows.fetchReport(
+      dateRange,
+      'factura',
+      req.tenant,
+      req.id,
+      refresh,
+    );
+  }
+
+  /** Los mismos egresos por pago × factura × concepto. */
+  @Post('flujo-efectivo-egresos-por-concepto/buscar')
+  @HttpCode(200)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  async getCashOutflowsItemReport(
+    @Body() { dateRange, refresh }: SearchReportDto,
+    @Request() req: AuthenticatedRequest,
+  ): Promise<ReportResponse<ReportCashOutflowRecord>> {
+    return this.reportServiceCashOutflows.fetchReport(
       dateRange,
       'concepto',
       req.tenant,

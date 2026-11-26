@@ -24,6 +24,8 @@ const cargarBancosComplementos = () =>
 const ReporteVentas = lazy(cargarVentas);
 const ReporteCuentasPorCobrar = lazy(cargarCxc);
 const ReporteFlujoIngresos = lazy(cargarIngresos);
+const cargarEgresos = () => import("../features/reports/cash-outflows/ReporteFlujoEgresos");
+const ReporteFlujoEgresos = lazy(cargarEgresos);
 const cargarComprasConceptos = () =>
   import("../features/reports/purchase-items/ReporteComprasConceptos");
 const ReporteBancosComplementos = lazy(cargarBancosComplementos);
@@ -36,6 +38,7 @@ void cargarBancos().catch(() => {});
 void cargarVentas().catch(() => {});
 void cargarCxc().catch(() => {});
 void cargarIngresos().catch(() => {});
+void cargarEgresos().catch(() => {});
 void cargarBancosComplementos().catch(() => {});
 void cargarComprasConceptos().catch(() => {});
 void cargarCompras().catch(() => {});
@@ -116,6 +119,11 @@ const crearRouter = (reporteInicio: string | null) => {
           element: <Navigate to="/flujo_efectivo_ingresos/facturas" replace />,
         },
         { path: "/flujo_efectivo_ingresos/:reportType", element: <ReporteFlujoIngresos /> },
+        {
+          path: "/flujo_efectivo_egresos",
+          element: <Navigate to="/flujo_efectivo_egresos/facturas" replace />,
+        },
+        { path: "/flujo_efectivo_egresos/:reportType", element: <ReporteFlujoEgresos /> },
         { path: "/compras", element: <Navigate to="/compras/general" replace /> },
         { path: "/compras/general", element: <ReporteCompras /> },
         { path: "/compras/conceptos", element: <ReporteComprasConceptos /> },

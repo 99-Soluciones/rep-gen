@@ -267,6 +267,13 @@ clasificaciones (ya cubiertas), las últimas están vacías y no se incluyen.
 | Bancos | el ingreso tiene cliente (`_concil_id_cliente` distinto de vacío y de 0) | `Pago sin aplicar` |
 | Bancos | sin cliente                                                      | `Pago no identificado` |
 
+**Decidido (26/11/2026), por implementar:** un depósito cuyo texto del banco
+(`mConceptoDeBancoTexto_v0_20_0`) empieza con `TRASPASO ENTRE CUENTAS` sale
+como `Traspaso entre cuentas`, no como `Pago no identificado`. Es el abono
+gemelo de un cargo entre cuentas propias (en noviembre 2026: 400,000 de BBVA
+Ingresos a BBVA Egresos, etc.); no es un ingreso. Igual que en
+[Flujo de efectivo - Egresos](../cash-outflows/cash-outflows.md).
+
 ### 4. Cálculo de cada campo
 
 **Pago aplicado**

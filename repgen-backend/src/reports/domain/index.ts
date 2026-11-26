@@ -3,6 +3,7 @@ export * from './sales';
 export * from './salesitem';
 export * from './receivables';
 export * from './cash-inflows';
+export * from './cash-outflows';
 export * from './bank-complements';
 export * from './purchase-items';
 export * from './purchases';
