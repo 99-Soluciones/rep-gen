@@ -52,7 +52,7 @@ describe("FiltroFechas", () => {
   it("Escape cierra sin aplicar, descarta el borrador y devuelve el foco", () => {
     render(<FiltroFechas {...props} />);
     abrir();
-    fireEvent.change(screen.getByLabelText("Fecha desde"), { target: { value: "2026-01-10" } });
+    fireEvent.change(screen.getByLabelText("Fecha desde"), { target: { value: "10/01/2026" } });
     fireEvent.keyDown(screen.getByLabelText("Fecha desde"), { key: "Escape" });
 
     expect(screen.queryByLabelText("Fecha desde")).not.toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("FiltroFechas", () => {
     expect(props.setFechaDesde).not.toHaveBeenCalled();
 
     abrir();
-    expect(screen.getByLabelText("Fecha desde")).toHaveValue("2026-01-01");
+    expect(screen.getByLabelText("Fecha desde")).toHaveValue("01/01/2026");
   });
 
   it("renderiza los inputs de rango de fechas", () => {
@@ -72,7 +72,7 @@ describe("FiltroFechas", () => {
     expect(
       screen.getByRole("button", { name: /Aplicar/i }),
     ).toBeInTheDocument();
-    const inputs = screen.getAllByDisplayValue(/2026-01-/);
+    const inputs = screen.getAllByDisplayValue(/\/01\/2026$/);
     expect(inputs).toHaveLength(2);
   });
 
@@ -80,9 +80,9 @@ describe("FiltroFechas", () => {
     render(<FiltroFechas {...props} />);
     abrir();
 
-    const inputs = screen.getAllByDisplayValue(/2026-01-/);
-    fireEvent.change(inputs[0], { target: { value: "2026-02-10" } });
-    fireEvent.change(inputs[1], { target: { value: "2026-02-01" } });
+    const inputs = screen.getAllByDisplayValue(/\/01\/2026$/);
+    fireEvent.change(inputs[0], { target: { value: "10/02/2026" } });
+    fireEvent.change(inputs[1], { target: { value: "01/02/2026" } });
     fireEvent.click(screen.getByRole("button", { name: /Aplicar/i }));
 
     // El error queda junto a los campos, se anuncia y se asocia a ambos inputs.
@@ -97,7 +97,7 @@ describe("FiltroFechas", () => {
     expect(props.setFechaDesde).not.toHaveBeenCalled();
 
     // Al corregir una fecha, el error desaparece.
-    fireEvent.change(inputs[0], { target: { value: "2026-01-15" } });
+    fireEvent.change(inputs[0], { target: { value: "15/01/2026" } });
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
@@ -107,9 +107,9 @@ describe("FiltroFechas", () => {
 
     // El botón "Aplicar" arranca deshabilitado hasta que el borrador difiera
     // de las fechas actuales, así que hay que cambiar los inputs primero.
-    const inputs = screen.getAllByDisplayValue(/2026-01-/);
-    fireEvent.change(inputs[0], { target: { value: "2026-01-05" } });
-    fireEvent.change(inputs[1], { target: { value: "2026-01-20" } });
+    const inputs = screen.getAllByDisplayValue(/\/01\/2026$/);
+    fireEvent.change(inputs[0], { target: { value: "05/01/2026" } });
+    fireEvent.change(inputs[1], { target: { value: "20/01/2026" } });
     fireEvent.click(screen.getByRole("button", { name: /Aplicar/i }));
     expect(screen.queryByLabelText("Fecha desde")).not.toBeInTheDocument();
 
@@ -119,12 +119,21 @@ describe("FiltroFechas", () => {
     expect(props.setFechaHasta).toHaveBeenCalledWith("2026-01-20");
   });
 
+  it("una fecha a medio escribir no se aplica: pide completarla", () => {
+    render(<FiltroFechas {...props} />);
+    abrir();
+    fireEvent.change(screen.getByLabelText("Fecha desde"), { target: { value: "05/01/20" } });
+    fireEvent.click(screen.getByRole("button", { name: /Aplicar/i }));
+    expect(screen.getByRole("alert")).toHaveTextContent("Completa las dos fechas.");
+    expect(props.setFechaDesde).not.toHaveBeenCalled();
+  });
+
   it("aplica con Enter desde un input de fecha", () => {
     render(<FiltroFechas {...props} />);
     abrir();
 
-    const inputs = screen.getAllByDisplayValue(/2026-01-/);
-    fireEvent.change(inputs[1], { target: { value: "2026-01-15" } });
+    const inputs = screen.getAllByDisplayValue(/\/01\/2026$/);
+    fireEvent.change(inputs[1], { target: { value: "15/01/2026" } });
     fireEvent.submit(inputs[1]);
 
     expect(props.setFechaHasta).toHaveBeenCalledWith("2026-01-15");
@@ -142,8 +151,8 @@ describe("FiltroFechas", () => {
     fireEvent.change(selector, { target: { value: "mes_actual" } });
     fireEvent.change(selector, { target: { value: "mes_anterior" } });
     expect(props.setFechaDesde).not.toHaveBeenCalled();
-    expect(screen.getByLabelText("Fecha desde")).toHaveValue("2026-09-01");
-    expect(screen.getByLabelText("Fecha hasta")).toHaveValue("2026-09-30");
+    expect(screen.getByLabelText("Fecha desde")).toHaveValue("01/09/2026");
+    expect(screen.getByLabelText("Fecha hasta")).toHaveValue("30/09/2026");
     expect(selector.value).toBe("mes_anterior");
 
     fireEvent.click(screen.getByRole("button", { name: "Aplicar" }));

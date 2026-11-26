@@ -6,6 +6,7 @@ import { formatearFecha, obtenerFechaHoyFormateada } from "../../../shared/utils
 import type { PeriodoVista } from "@repgen/shared-types";
 import { detectarPeriodo, PERIODOS, resolverPeriodo, type Rango } from "./ConfiguracionesColumnas/vista";
 import { desplazarRango } from "./desplazarRango";
+import CampoFecha from "./CampoFecha";
 
 interface FiltroFechasProps {
   fechaDesde: string;
@@ -244,34 +245,32 @@ const FormularioFechas = ({
       <div className="grid grid-cols-2 gap-2">
         <label className="flex min-w-0 flex-col gap-1">
           <span className={claseEtiqueta}>Desde</span>
-          <input
+          <CampoFecha
             ref={desdeRef}
-            type="date"
             aria-label="Fecha desde"
             aria-invalid={conError("desde") || undefined}
             aria-describedby={conError("desde") ? "fechas-error" : undefined}
             max={borradorFechas.fechaHasta || obtenerFechaHoyFormateada()}
             value={borradorFechas.fechaDesde}
-            onChange={(e) => {
+            onChange={(fecha) => {
               setError(null);
-              setBorradorFechas((prev) => ({ ...prev, fechaDesde: e.target.value }));
+              setBorradorFechas((prev) => ({ ...prev, fechaDesde: fecha }));
             }}
             className={claseCampo("desde")}
           />
         </label>
         <label className="flex min-w-0 flex-col gap-1">
           <span className={claseEtiqueta}>Hasta</span>
-          <input
-            type="date"
+          <CampoFecha
             aria-label="Fecha hasta"
             aria-invalid={conError("hasta") || undefined}
             aria-describedby={conError("hasta") ? "fechas-error" : undefined}
             min={borradorFechas.fechaDesde}
             max={obtenerFechaHoyFormateada()}
             value={borradorFechas.fechaHasta}
-            onChange={(e) => {
+            onChange={(fecha) => {
               setError(null);
-              setBorradorFechas((prev) => ({ ...prev, fechaHasta: e.target.value }));
+              setBorradorFechas((prev) => ({ ...prev, fechaHasta: fecha }));
             }}
             className={claseCampo("hasta")}
           />

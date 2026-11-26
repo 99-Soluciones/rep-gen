@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CampoFecha from "./CampoFecha";
 
 /**
  * Fecha de corte con "Aplicar": elegir la fecha no consulta; se consulta al
@@ -27,15 +28,14 @@ const SelectorCorte = ({
       }}
     >
       <label className="flex items-center gap-2">
-        <span className="font-medium">Corte al</span>
-        <input
-          type="date"
+        <span className="whitespace-nowrap font-medium">Corte al</span>
+        <CampoFecha
           aria-label="Fecha de corte"
           value={borrador}
           max={hoy}
           required
-          onChange={(e) => setBorrador(e.target.value)}
-          className="rounded-md border border-gray-300 px-2 py-1 text-sm tabular-nums"
+          onChange={setBorrador}
+          className="w-36 rounded-md border border-gray-300 px-2 py-1 text-sm tabular-nums"
         />
       </label>
       <button

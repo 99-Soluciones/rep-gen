@@ -3,6 +3,7 @@ import type { CellClassParams, CellClassRules, ColDef } from "ag-grid-community"
 import FloatingFilterConLimpiar from "../TablaDinamica/FloatingFilterConLimpiar";
 import FiltroLista from "../TablaDinamica/FiltroLista";
 import FloatingFiltroLista from "../TablaDinamica/FloatingFiltroLista";
+import FechaFiltroGrid from "../TablaDinamica/FechaFiltroGrid";
 import {
   esNegativo,
   formatearMoneda,
@@ -260,6 +261,8 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
         ...columnaBase,
         filter: "agDateColumnFilter",
         filterParams: dateFilterParams(placeholderFiltro),
+        // dd/mm/aaaa también en el menú del filtro (el nativo sigue al idioma del navegador).
+        dateComponent: FechaFiltroGrid,
         // Sin el botón de filtro al lado y con 170px: "dd/mm/aaaa" entra entero.
         suppressFloatingFilterButton: true,
         minWidth: Math.max(170, metadatoResuelto.anchoMinimo ?? 0),
