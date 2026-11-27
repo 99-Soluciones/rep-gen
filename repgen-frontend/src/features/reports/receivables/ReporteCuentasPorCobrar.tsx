@@ -26,7 +26,6 @@ import {
 } from "../shared/EstadoKpi";
 import { formatearFecha, obtenerFechaHoyFormateada } from "../../../shared/utils/fechas";
 import TabsVentas from "../sales/TabsVentas";
-import { agruparPorSeccion } from "../shared/ag-grid/agruparPorSeccion";
 import { construirColumnasCxc, construirColumnasCxcClientes } from "./columnas";
 import { calcularTotalesCxc, type TotalesCxc } from "./calcularCxc";
 
@@ -80,11 +79,11 @@ const ReporteCuentasPorCobrar = () => {
 
   const { getLabel } = useColumnLabels();
   // Cada vista tiene sus columnas; la tabla las recibe como filas de cualquiera de las dos.
-  const columnas = agruparPorSeccion<Fila>(
-    (pestana === "clientes"
+  const columnas = (
+    pestana === "clientes"
       ? construirColumnasCxcClientes(getLabel)
-      : construirColumnasCxc(getLabel)) as ColDef<Fila>[],
-  );
+      : construirColumnasCxc(getLabel)
+  ) as ColDef<Fila>[];
   const grid = useReporteGrid(vista.reportId, aplicarRango);
   const { referenciaGrid, filasVisibles, actualizarFilasVisibles, onGridListo, onCambioVista } =
     grid;

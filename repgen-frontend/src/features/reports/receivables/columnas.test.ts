@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { agruparPorSeccion } from "../shared/ag-grid/agruparPorSeccion";
 import { construirColumnasCxc, construirColumnasCxcClientes } from "./columnas";
 import ejemplo from "../../../../../repgen-backend/docs/reports/fichas/receivables/api_response.json";
 
@@ -17,27 +16,11 @@ describe("columnas de Cuentas por cobrar", () => {
     expect(columnas.find((c) => c.field === "clasificacion1")?.headerName).toBe("Canal");
   });
 
-  it("agrupa en secciones consecutivas, en el orden de la ficha", () => {
-    const grupos = agruparPorSeccion(construirColumnasCxc());
-    expect(grupos.map((g) => [g.headerName, g.children.length])).toEqual([
-      ["Corte", 2],
-      ["Clientes", 12],
-      ["Facturas", 11],
-      ["Factura saldo", 3],
-      ["Factura no cobrar", 4],
-      ["Banco", 11],
-    ]);
-  });
   it("vista por cliente: datos del cliente y sus saldos, sin columnas de factura", () => {
     const columnas = construirColumnasCxcClientes((slot) =>
       slot === "cliente.clasificacion1" ? "Canal" : undefined,
     );
     expect(columnas.find((c) => c.field === "clasificacion1")?.headerName).toBe("Canal");
-    expect(agruparPorSeccion(columnas).map((g) => [g.headerName, g.children.length])).toEqual([
-      ["Corte", 1],
-      ["Clientes", 12],
-      ["Saldos", 8],
-    ]);
     expect(columnas.map((c) => c.field as string)).not.toContain("facturaSerieFolio");
   });
 });
