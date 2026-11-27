@@ -55,7 +55,7 @@
       "dataType": "currency",
       "columnClass": "Saldos"
     },
-    "Factura Saldo Por Vencer": {
+    "Factura Saldo por Vencer": {
       "field": "facturaSaldoPorVencer",
       "dataType": "currency",
       "columnClass": "Saldos"
@@ -93,7 +93,7 @@
       "Proveedor Saldo Fiscal",
       "Factura Saldo Pendiente",
       "Factura Saldo Vencido",
-      "Factura Saldo Por Vencer",
+      "Factura Saldo por Vencer",
       "Factura No Pagar Monto",
       "Proveedor Saldo a Favor",
       "Banco Cargo Saldo No Aplicado (A Favor)",

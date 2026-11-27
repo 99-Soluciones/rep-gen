@@ -77,7 +77,7 @@
       "filtro": "lista",
       "columnClass": "Clientes"
     },
-    "Cliente Crédito Autorizado": {
+    "Cliente Crédito Autorizado (MXN)": {
       "field": "clienteCreditoAutorizado",
       "dataType": "currency",
       "columnClass": "Clientes"
@@ -99,7 +99,7 @@
       "dataType": "text",
       "columnClass": "Facturas"
     },
-    "Factura Gran Total": {
+    "Factura Gran Total (MXN)": {
       "field": "facturaGranTotal",
       "dataType": "currency",
       "columnClass": "Facturas"
@@ -126,7 +126,7 @@
       "dataType": "number",
       "columnClass": "Facturas"
     },
-    "Factura Fecha de Vencimiento": {
+    "Factura Fecha Límite de Pago": {
       "field": "facturaFechaVencimiento",
       "dataType": "date",
       "columnClass": "Facturas"
@@ -159,7 +159,7 @@
       "dataType": "currency",
       "columnClass": "Factura saldo"
     },
-    "Factura Saldo Por Vencer": {
+    "Factura Saldo por Vencer": {
       "field": "facturaSaldoPorVencer",
       "dataType": "currency",
       "columnClass": "Factura saldo"
@@ -211,7 +211,7 @@
       "dataType": "currency",
       "columnClass": "Banco"
     },
-    "Banco Referencia": {
+    "Banco Concepto": {
       "field": "bancoReferencia",
       "dataType": "text",
       "anchoMinimo": 240,
@@ -227,7 +227,7 @@
       "dataType": "currency",
       "columnClass": "Banco"
     },
-    "Banco Abono Monto Sin Identificar": {
+    "Banco Abono Monto sin Identificar": {
       "field": "abonoMontoSinIdentificar",
       "dataType": "currency",
       "columnClass": "Banco"
@@ -259,22 +259,22 @@
       "Cliente Clasificación 4",
       "Cliente Cuenta Contable",
       "Cliente Rep de Venta",
-      "Cliente Crédito Autorizado",
+      "Cliente Crédito Autorizado (MXN)",
       "Cliente Rep de Cobranza",
       "Venta ID",
       "Factura Serie y Folio",
-      "Factura Gran Total",
+      "Factura Gran Total (MXN)",
       "Factura UUID",
       "Factura Fecha",
       "Factura Método de Pago",
       "Factura Días de Crédito",
-      "Factura Fecha de Vencimiento",
+      "Factura Fecha Límite de Pago",
       "Factura Estatus",
       "Factura Días Vencida",
       "Factura Rep de Venta",
       "Factura Saldo Pendiente",
       "Factura Saldo Vencido",
-      "Factura Saldo Por Vencer",
+      "Factura Saldo por Vencer",
       "Factura No Cobrar Gran Total",
       "Factura No Cobrar IVA",
       "Factura No Cobrar IEPS",
@@ -284,10 +284,10 @@
       "Banco Cuenta Contable",
       "Banco Fecha",
       "Banco Monto",
-      "Banco Referencia",
+      "Banco Concepto",
       "Banco Abono Saldo No Aplicado (En Contra)",
       "Banco Cargo Saldo No Aplicado (A Favor)",
-      "Banco Abono Monto Sin Identificar",
+      "Banco Abono Monto sin Identificar",
       "Ingreso ID",
       "Egreso ID"
     ]

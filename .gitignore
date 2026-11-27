@@ -5,6 +5,7 @@ coverage/
 logs/
 *.log
 *.tsbuildinfo
+.vscode/
 
 # Secretos y configuración local — NUNCA commitear
 .env

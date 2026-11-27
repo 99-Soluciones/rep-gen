@@ -224,7 +224,7 @@
       "filtro": "lista",
       "oculta": true
     },
-    "Bodega Entrega Fecha": {
+    "Bodega Fecha de Entrega": {
       "field": "bodegaEntregaFecha",
       "dataType": "date",
       "oculta": true
@@ -275,7 +275,7 @@
       "Artículo Descuento Monto (MXN)",
       "Artículo IEPS (MXN)",
       "Bodega Nombre",
-      "Bodega Entrega Fecha"
+      "Bodega Fecha de Entrega"
     ]
   }
 }

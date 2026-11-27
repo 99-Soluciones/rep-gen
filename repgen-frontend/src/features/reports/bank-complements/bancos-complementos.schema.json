@@ -167,7 +167,7 @@
       "field": "facturaFecha",
       "dataType": "date"
     },
-    "Factura Gran Total": {
+    "Factura Gran Total (MXN)": {
       "field": "facturaGranTotal",
       "dataType": "currency"
     },
@@ -203,7 +203,7 @@
       "Pago Periodo Fiscal",
       "Factura Serie y Folio",
       "Factura Fecha",
-      "Factura Gran Total",
+      "Factura Gran Total (MXN)",
       "Factura Método de Pago",
       "Conciliación Monto Total",
       "Conciliación Saldo por Complementar",

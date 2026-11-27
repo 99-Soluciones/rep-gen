@@ -65,7 +65,7 @@
       "defaultHeader": "Cliente Clasificación 4",
       "labelSlot": "cliente.clasificacion4"
     },
-    "Cliente Crédito Autorizado": {
+    "Cliente Crédito Autorizado (MXN)": {
       "field": "clienteCreditoAutorizado",
       "dataType": "currency",
       "columnClass": "Clientes"
@@ -97,7 +97,7 @@
       "dataType": "currency",
       "columnClass": "Saldos"
     },
-    "Factura Saldo Por Vencer": {
+    "Factura Saldo por Vencer": {
       "field": "facturaSaldoPorVencer",
       "dataType": "currency",
       "columnClass": "Saldos"
@@ -135,13 +135,13 @@
       "clasificacion2",
       "clasificacion3",
       "clasificacion4",
-      "Cliente Crédito Autorizado",
+      "Cliente Crédito Autorizado (MXN)",
       "Cliente Rep de Venta",
       "Cliente Rep de Cobranza",
       "Cliente Saldo Fiscal",
       "Factura Saldo Pendiente",
       "Factura Saldo Vencido",
-      "Factura Saldo Por Vencer",
+      "Factura Saldo por Vencer",
       "Factura No Cobrar Gran Total",
       "Cliente Saldo a Favor",
       "Banco Abono Saldo No Aplicado (En Contra)",

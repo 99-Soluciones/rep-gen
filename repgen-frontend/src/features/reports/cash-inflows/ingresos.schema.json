@@ -192,7 +192,7 @@
       "dataType": "number",
       "columnClass": "Artículos"
     },
-    "Artículo Contenido Sub Total": {
+    "Artículo Contenido Subtotal": {
       "field": "contenidoSubTotal",
       "dataType": "number",
       "columnClass": "Artículos"
@@ -253,7 +253,7 @@
       "dataType": "currency",
       "columnClass": "Importes"
     },
-    "Costo Directo (SubTotal) (MXN)": {
+    "Costo Directo (Subtotal) (MXN)": {
       "field": "costoDirectoSubTotalMxn",
       "dataType": "currency",
       "columnClass": "Importes"
@@ -451,7 +451,7 @@
       "IEPS (MXN)",
       "IVA Retenido (MXN)",
       "ISR Retenido (MXN)",
-      "Costo Directo (SubTotal) (MXN)",
+      "Costo Directo (Subtotal) (MXN)",
       "Ganancia Bruta (MXN)",
       "Costo Tasa",
       "Margen Tasa",
@@ -514,7 +514,7 @@
       "Artículo Unidad de Venta",
       "Artículo Unidad de Contenido",
       "Artículo Contenido Unitario",
-      "Artículo Contenido Sub Total",
+      "Artículo Contenido Subtotal",
       "Artículo Precio Unitario",
       "Artículo Tipo de Concepto",
       "Artículo Método de Adquisición",
@@ -526,7 +526,7 @@
       "IEPS (MXN)",
       "IVA Retenido (MXN)",
       "ISR Retenido (MXN)",
-      "Costo Directo (SubTotal) (MXN)",
+      "Costo Directo (Subtotal) (MXN)",
       "Ganancia Bruta (MXN)",
       "Costo Tasa",
       "Margen Tasa",
