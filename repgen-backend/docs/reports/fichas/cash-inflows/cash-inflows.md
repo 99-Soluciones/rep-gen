@@ -190,7 +190,7 @@ se conoce, es el campo que ya usan Ventas o CxC.
 | 50    | IVA Retenido (MXN)               | `ivaRetenidoMxn`              | number | P      | F C   | factura o concepto                                  | Prorr. |
 | 51    | ISR Retenido (MXN)               | `isrRetenidoMxn`              | number | P      | F C   | factura o concepto                                  | Prorr. |
 | 52    | Pago Gran Total (MXN)            | `pagoGranTotalMxn`            | number | P S N  | F C   | P: `app_MXN_GranTotal` · S N: saldo por complementar × TC | **la cifra principal del reporte** |
-| 53    | Credito Gran Total (MXN)         | `creditoGranTotalMxn`         | number | P      | F C   | `venta_\|CLIENTE_\|_x_clienteID::credito.monto.Autorized` | **decidido**: crédito autorizado al cliente para venderle; es dato del cliente, no se prorratea |
+| 53    | Credito Gran Total (MXN)         | `creditoGranTotalMxn`         | number | P      | F C   | `venta_\|CLIENTE_\|_x_clienteID::credito_monto_Autorized` | **decidido**: crédito autorizado al cliente para venderle; es dato del cliente, no se prorratea |
 | 54    | Tipo de Concepto                 | `tipoDeConcepto`              | text   | P      | C     | como Ventas por concepto                            | |
 | 55    | Método de Adquisición            | `metodoDeAdquisicion`         | text   | P      | C     | como Ventas por concepto                            | compra o lote de producción; si es lote, su número de serie (`P-IPA-005`) |
 | 56    | Costo Directo (Unitario) (MXN)   | `costoDirectoUnitarioMxn`     | number | P      | C     | `unit_margin_costo`                                 | no prorrateado |
@@ -303,7 +303,7 @@ Ingresos a BBVA Egresos, etc.); no es un ingreso. Igual que en
 - `facturaGranTotalMxn` y `facturaGranTotalOriginal`: completos, sin prorratear.
 - **Moneda (decidido):** todo en MXN; `facturaTipoDeCambio`, `bancoMoneda` y
   `bancoTipoDeCambio` muestran con qué se convirtió. Toda la muestra es MXN.
-- `creditoGranTotalMxn` = `credito.monto.Autorized` del cliente, tal cual.
+- `creditoGranTotalMxn` = `credito_monto_Autorized` del cliente, tal cual.
 - Vista por factura: campos de artículo → `null`.
 
 **Pago sin aplicar**

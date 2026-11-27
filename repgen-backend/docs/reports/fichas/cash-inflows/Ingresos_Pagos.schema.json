@@ -257,13 +257,13 @@
             "string"
           ]
         },
-        "venta_|CLIENTE_|_x_clienteID::credito.monto.Autorized": {
+        "venta_|CLIENTE_|_x_clienteID::credito_monto_Autorized": {
           "type": [
             "number",
             "string"
           ]
         },
-        "venta_|CLIENTE_|_x_clienteID::credito.monto.Disponible.sobreAutorized": {
+        "venta_|CLIENTE_|_x_clienteID::credito_monto_Disponible_sobreAutorized": {
           "type": [
             "number",
             "string"
@@ -343,8 +343,8 @@
         "monto_favorISRretenido_v0_18_1",
         "saldo_Pagado_enANTICIPOS_v0_22_1r",
         "saldo_Pagado_enPAGOS",
-        "venta_|CLIENTE_|_x_clienteID::credito.monto.Autorized",
-        "venta_|CLIENTE_|_x_clienteID::credito.monto.Disponible.sobreAutorized",
+        "venta_|CLIENTE_|_x_clienteID::credito_monto_Autorized",
+        "venta_|CLIENTE_|_x_clienteID::credito_monto_Disponible_sobreAutorized",
         "entrega_dest_Colonia",
         "entrega_dest_Delegacion",
         "entrega_dest_Ciudad",
