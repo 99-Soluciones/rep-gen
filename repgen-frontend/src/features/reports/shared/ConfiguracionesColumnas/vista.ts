@@ -99,7 +99,7 @@ export const aplicarVista = (
   api.setFilterModel(Object.keys(filtros).length > 0 ? filtros : null);
 };
 
-/** "— Ninguna —": columnas originales del reporte (orden y visibilidad del esquema), sin filtros. */
+/** "Original": columnas originales del reporte (orden y visibilidad del esquema), sin filtros. */
 export const restaurarOriginal = (api: GridApi) => {
   api.resetColumnState();
   api.setFilterModel(null);

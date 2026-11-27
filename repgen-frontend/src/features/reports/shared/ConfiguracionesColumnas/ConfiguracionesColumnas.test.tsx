@@ -180,7 +180,7 @@ describe("ConfiguracionesColumnas", () => {
     vi.useRealTimers();
   });
 
-  it("'— Ninguna —' restaura las columnas originales y quita los filtros", () => {
+  it("'Original' restaura las columnas originales y quita los filtros", () => {
     renderComponente();
 
     fireEvent.change(screen.getByLabelText("Vista"), {
@@ -307,8 +307,8 @@ describe("ConfiguracionesColumnas", () => {
     );
   });
 
-  it("en «Ninguna», filtros sin guardar también piden confirmación antes de abrir una vista", () => {
-    // Sin predeterminada: el selector queda en "Ninguna".
+  it("en «Original», filtros sin guardar también piden confirmación antes de abrir una vista", () => {
+    // Sin predeterminada: el selector queda en "Original".
     const sinPredeterminada = configs.map((c) => ({ ...c, isDefault: false }));
     renderComponente(sinPredeterminada, vistaGrid({ a: { filterType: "text", filter: "BBVA" } }));
     expect(screen.getByRole("button", { name: "Guardar vista (cambios sin guardar)" })).toBeInTheDocument();
