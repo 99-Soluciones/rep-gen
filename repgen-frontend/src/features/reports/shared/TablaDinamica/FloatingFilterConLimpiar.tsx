@@ -261,7 +261,9 @@ const FloatingFilterConLimpiar = (props: FloatingFilterProps) => {
       setEnfocado(posicionBajo(evento.currentTarget)),
     onBlur: () => setEnfocado(null),
     // Con filtro: borde azul y velo, para ver de un vistazo qué columnas filtran.
-    className: `ag-input-field-input ag-text-field-input w-full pr-7 ${inputType === "text" ? "ps-7!" : ""} ${
+    // Padding con "!": el tema de AG Grid fija el de los inputs y ganaba a pr-7,
+    // así el texto largo pasaba por debajo de la X.
+    className: `ag-input-field-input ag-text-field-input w-full pe-7! ${inputType === "text" ? "ps-7!" : ""} ${
       invalido ? "border-red-600!" : filtroActivo ? "border-blue-600! bg-blue-50!" : ""
     }`,
     readOnly: soloLectura,

@@ -50,7 +50,7 @@ describe("TablaDinamica: aviso de cambios de vista (AG Grid real)", () => {
     await waitFor(() => expect(onCambioVista).toHaveBeenCalled(), ESPERA);
   });
 
-  it("Ventas abre con Factura Folio fijo a la izquierda, y '— Ninguna —' lo devuelve ahí", async () => {
+  it("Ventas abre con Factura Folio fijo a la izquierda, y 'Original' lo devuelve ahí", async () => {
     const { api } = await montar();
     expect(api.getColumn("facturaFolio")?.getPinned()).toBe("left");
     // Sin aviso de módulo faltante: fijar columnas no necesita otro módulo.

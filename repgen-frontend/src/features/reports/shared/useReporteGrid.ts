@@ -164,7 +164,7 @@ export const useReporteGrid = (reportId: string, aplicarRango?: AplicarRango) =>
     setColumnasVisibles(columnas ?? event.api.getColumns() ?? []);
     if (columnas) elegirVista(defaultConfig?.id ?? null);
     // Sin vista predeterminada, el grid recién creado es la referencia de
-    // "— Ninguna —": ocultar columnas o filtrar ya cuenta como cambio.
+    // "Original": ocultar columnas o filtrar ya cuenta como cambio.
     fijarBase(columnas ? (defaultConfig?.id ?? null) : null, event.api);
     setVistaActual(capturarVista(event.api));
   };

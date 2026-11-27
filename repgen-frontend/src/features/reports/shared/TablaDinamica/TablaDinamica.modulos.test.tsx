@@ -51,7 +51,7 @@ describe("TablaDinamica con AG Grid real", () => {
     await waitFor(() => expect(onGridListo).toHaveBeenCalled(), ESPERA);
     // El filtro flotante propio (FloatingFilterConLimpiar) se renderiza en el header.
     await waitFor(() =>
-      expect(container.querySelector(".ag-floating-filter-input input.pr-7")).not.toBeNull(),
+      expect(container.querySelector('.ag-floating-filter-input input[aria-label^="Filtrar "]')).not.toBeNull(),
       ESPERA,
     );
 

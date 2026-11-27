@@ -65,7 +65,7 @@ interface ConfiguracionesColumnasProps {
   vistaActual?: VistaCapturada | null;
   /** Estado del grid al abrir/guardar la vista: la referencia de "sin cambios". */
   vistaBase?: { configId: string | null; huella: string } | null;
-  /** Avisa que se aplicó o guardó una vista (o "Ninguna") para fijar la referencia. */
+  /** Avisa que se aplicó o guardó una vista (o "Original") para fijar la referencia. */
   onVistaAplicada?: (configId: string | null) => void;
   /**
    * Vista que estaba elegida en este reporte (al volver a una pestaña). Sin
@@ -116,7 +116,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   const [versionAnterior, setVersionAnterior] = useState<ReportConfigResponse | null>(null);
   const contenedorRef = useRef<HTMLDivElement>(null);
   // Vista elegida en el selector mientras hay cambios sin guardar: se pregunta
-  // antes de aplicarla ({ id: null } = "Ninguna").
+  // antes de aplicarla ({ id: null } = "Original").
   const [cambioPendiente, setCambioPendiente] = useState<{ id: string | null } | null>(null);
   // En Windows las flechas cambian el valor de un <select> cerrado y disparan
   // "change": recorrer la lista aplicaría cada vista (y su periodo, con una
@@ -165,7 +165,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   const modificada = (() => {
     if (!vistaActual) return false;
     if (!configActual) {
-      // "— Ninguna —": filtros puestos, o columnas cambiadas desde que el grid
+      // "Original": filtros puestos, o columnas cambiadas desde que el grid
       // quedó limpio, son trabajo que se perdería al abrir una vista.
       if (vistaActual.filterModel) return true;
       return (
@@ -269,7 +269,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
   };
 
   // Cambiar de vista reemplaza columnas y filtros: con cambios sin guardar (en
-  // una vista o en "Ninguna") se pregunta primero.
+  // una vista o en "Original") se pregunta primero.
   const elegirVista = (id: string | null) => {
     setVistaEnEspera(null);
     if (id === configSeleccionada) return;
@@ -284,7 +284,7 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
       const config = configs.find((c) => c.id === id);
       if (config) aplicarConfig(config);
     } else if (api) {
-      // "— Ninguna —": columnas originales del reporte y sin filtros; las fechas no se tocan.
+      // "Original": columnas originales del reporte y sin filtros; las fechas no se tocan.
       restaurarOriginal(api);
       setColumnasVisibles(api.getColumns() ?? []);
       onVistaAplicada?.(null);
@@ -472,10 +472,10 @@ const ConfiguracionesColumnas: React.FC<ConfiguracionesColumnasProps> = ({
             // Una vista guarda columnas, filtros y (opcional) un periodo: "Vista", no "de columnas".
             aria-label="Vista"
             // El selector es angosto: el nombre completo queda a la vista al pasar el cursor.
-            title={configActual?.name}
+            title={configActual?.name ?? "Original: columnas del reporte, sin filtros"}
             className="pr-6 py-2 text-sm font-medium bg-transparent text-gray-700 outline-none cursor-pointer appearance-none min-w-0 max-w-40 sm:max-w-96 truncate"
           >
-            <option value="">— Ninguna —</option>
+            <option value="">Original</option>
             {configs.map((c) => (
               <option
                 key={c.id}

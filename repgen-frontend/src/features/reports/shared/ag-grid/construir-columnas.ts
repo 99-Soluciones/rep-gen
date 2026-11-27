@@ -188,7 +188,7 @@ const construirColumnaPorTipo = <TRowData = DefaultRowData>(
     headerName,
     field: campoTipado,
     context: { claseColumna: metadatoResuelto.columnClass || "General" },
-    // "— Ninguna —" (resetColumnState) vuelve a este estado inicial.
+    // "Original" (resetColumnState) vuelve a este estado inicial.
     ...(metadatoResuelto.oculta ? { hide: true } : {}),
     ...(metadatoResuelto.anchoMinimo ? { minWidth: metadatoResuelto.anchoMinimo } : {}),
     cellClassRules: reglasCelda,

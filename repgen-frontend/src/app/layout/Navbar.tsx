@@ -1,6 +1,7 @@
 import { apiFetch } from "../../shared/api/http";
 import { borrarUsuario, leerUsuario } from "../../features/auth/session";
 import { salir } from "../../shared/utils/salidaProtegida";
+import { nombrePropio } from "../../shared/utils/nombrePropio";
 import { Menu } from "lucide-react";
 
 interface NavVarProps {
@@ -28,7 +29,8 @@ const cerrarSesion = async () => {
 
 const Navbar = ({ toggleSidebar, sidebarAbierto, reportSlotRef } : NavVarProps) => {
   const usuario = leerUsuario();
-  const nombreUsuario = usuario?.name ?? "Usuario";
+  const empresa = usuario?.tenant ? nombrePropio(usuario.tenant) : null;
+  const nombreUsuario = nombrePropio(usuario?.name ?? "Usuario");
 
   return (
     <header className="min-h-16 bg-white border-b border-gray-200 flex flex-wrap items-center justify-between gap-y-1 py-1 px-4 sm:px-6 shadow-sm z-10 shrink-0">
@@ -58,18 +60,21 @@ const Navbar = ({ toggleSidebar, sidebarAbierto, reportSlotRef } : NavVarProps) 
       />
 
       {/* Contenedor Derecho: Controles de usuario */}
-      <div className="flex items-center space-x-4">
-        {usuario?.tenant && (
-          <span className="lg:hidden max-w-32 sm:max-w-48 truncate text-xs text-gray-500">
-            {usuario.tenant}
-          </span>
-        )}
-        <span className="hidden lg:inline-block text-sm text-gray-700">
-          <span className="font-medium">{nombreUsuario}</span>
-          {usuario?.tenant && (
-            <span className="text-gray-500"> · {usuario.tenant}</span>
+      {/* Sesión: empresa (la base de FileMaker) arriba y quién la usa abajo.
+          Bajo lg solo cabe la empresa. */}
+      <div className="flex items-center gap-3 lg:border-l lg:border-gray-200 lg:pl-4">
+        <div className="flex min-w-0 flex-col leading-tight">
+          {empresa && (
+            <span className="max-w-32 sm:max-w-48 truncate text-sm font-semibold text-gray-800" title={empresa}>
+              <span className="sr-only">Empresa: </span>
+              {empresa}
+            </span>
           )}
-        </span>
+          <span className="hidden lg:block max-w-48 truncate text-xs text-gray-500" title={nombreUsuario}>
+            <span className="sr-only">Usuario: </span>
+            {nombreUsuario}
+          </span>
+        </div>
         <button
           type="button"
           // Con una vista sin guardar, el selector de vistas pregunta antes.

@@ -69,35 +69,31 @@ describe("ResultadoCompacto: lo que todavía no es una cifra", () => {
 
 describe("LineaComparacion", () => {
   const rango = { desde: "2026-09-01", hasta: "2026-09-15" };
-  const enLista = (ui: React.ReactElement) => render(<dl>{ui}</dl>);
+  it("encabeza con el cambio (en rojo si baja) y dice de dónde sale", () => {
+    render(<LineaComparacion actual={900} comparacion={{ rango, valor: 1000, estado: "lista" }} filtrado={false} />);
+    expect(screen.getByText("-10%")).toHaveClass("text-red-700");
+    expect(screen.getByText(/vs\. periodo anterior/)).toBeInTheDocument();
+    expect(screen.getByText("$1,000.00").parentElement).toHaveTextContent("$1,000.00 · 01/09 – 15/09/2026");
+  });
 
-  it("dice el periodo anterior, su cifra y el cambio (en rojo si baja)", () => {
-    enLista(
-      <LineaComparacion actual={900} comparacion={{ rango, valor: 1000, estado: "lista" }} filtrado={false} />,
-    );
-    expect(screen.getByText("vs. 01/09 – 15/09/2026")).toBeInTheDocument();
-    expect(screen.getByText("$1,000.00")).toBeInTheDocument();
-    expect(screen.getByText("· -10%")).toHaveClass("text-red-600");
+  it("sube sin color: el signo y la flecha dicen la dirección", () => {
+    render(<LineaComparacion actual={1100} comparacion={{ rango, valor: 1000, estado: "lista" }} filtrado={false} />);
+    expect(screen.getByText("+10%")).toHaveClass("text-gray-900");
   });
 
   it("con filtros en la tabla no compara (el periodo anterior se lee completo)", () => {
-    enLista(
-      <LineaComparacion actual={900} comparacion={{ rango, valor: 1000, estado: "lista" }} filtrado />,
-    );
-    expect(screen.getByText("Sin comparar: la tabla tiene filtros")).toBeInTheDocument();
+    render(<LineaComparacion actual={900} comparacion={{ rango, valor: 1000, estado: "lista" }} filtrado />);
+    expect(screen.getByText(/Sin comparar: la tabla tiene filtros/)).toBeInTheDocument();
+    expect(screen.queryByText(/%/)).not.toBeInTheDocument();
   });
 
   it("dice cuando todavía calcula o no se pudo leer", () => {
-    const { rerender } = enLista(
+    const { rerender } = render(
       <LineaComparacion actual={0} comparacion={{ rango, valor: null, estado: "cargando" }} filtrado={false} />,
     );
-    expect(screen.getByText("Calculando…")).toBeInTheDocument();
-    rerender(
-      <dl>
-        <LineaComparacion actual={0} comparacion={{ rango, valor: null, estado: "error" }} filtrado={false} />
-      </dl>,
-    );
-    expect(screen.getByText("No se pudo leer")).toBeInTheDocument();
+    expect(screen.getByText(/Calculando…/)).toBeInTheDocument();
+    rerender(<LineaComparacion actual={0} comparacion={{ rango, valor: null, estado: "error" }} filtrado={false} />);
+    expect(screen.getByText(/No se pudo leer/)).toBeInTheDocument();
   });
 });
 
@@ -132,6 +128,7 @@ describe("ResultadoResumen", () => {
     );
     const titular = screen.getByRole("region", { name: "Flujo neto" });
     expect(titular).toHaveTextContent("-$1,200.00");
-    expect(titular).toHaveTextContent("vs. 01/09 – 15/09/2026");
+    expect(titular).toHaveTextContent("vs. periodo anterior");
+    expect(titular).toHaveTextContent("01/09 – 15/09/2026");
   });
 });
