@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Minus, TrendingDown, TrendingUp } from "lucide-react";
 import { formatearFecha } from "../../../shared/utils/fechas";
 import { ID_RESUMEN } from "./PanelKpiLateral";
 import type { EstadoCifras } from "./estadoCifras";
@@ -91,9 +92,11 @@ const porcentaje = new Intl.NumberFormat("es-MX", {
 });
 
 /**
- * El resultado frente al periodo anterior, debajo del renglón total:
- * "vs. 01/09 – 15/09/2026   $34,800.00 · +12.1%". El periodo anterior se lee
+ * El resultado frente al periodo anterior, en un recuadro gris bajo la cifra:
+ * arriba el cambio con su tendencia ("↗ +12.1% vs. periodo anterior"), abajo
+ * de dónde sale ("$34,800.00 · 01/09 – 15/09/2026"). El periodo anterior se lee
  * completo, así que con filtros en la tabla no se compara (no serían lo mismo).
+ * Sobre el gris-100, el rojo sube a rojo-700: el 600 no llega a 4.5:1.
  */
 export const LineaComparacion = ({
   actual,
@@ -105,33 +108,40 @@ export const LineaComparacion = ({
   filtrado: boolean;
 }) => {
   const rango = `${formatearFecha(comparacion.rango.desde).slice(0, 5)} – ${formatearFecha(comparacion.rango.hasta)}`;
+  const anterior = filtrado || comparacion.estado !== "lista" ? null : comparacion.valor;
+  const cambio = anterior === null || anterior === 0 ? null : (actual - anterior) / Math.abs(anterior);
+  const Tendencia = cambio === null ? null : cambio > 0 ? TrendingUp : cambio < 0 ? TrendingDown : Minus;
   let detalle: ReactNode;
   if (filtrado) {
     detalle = "Sin comparar: la tabla tiene filtros";
   } else if (comparacion.estado === "cargando") {
     detalle = "Calculando…";
-  } else if (comparacion.estado === "error" || comparacion.valor === null) {
+  } else if (anterior === null) {
     detalle = "No se pudo leer";
   } else {
-    const anterior = comparacion.valor;
-    const cambio = anterior === 0 ? null : (actual - anterior) / Math.abs(anterior);
-    detalle = (
-      <>
-        <span className={anterior < 0 ? "text-red-600" : "text-gray-700"}>
-          {moneda.format(anterior || 0)}
-        </span>
-        {cambio !== null && (
-          <span className={cambio < 0 ? "text-red-600" : "text-gray-700"}> · {porcentaje.format(cambio)}</span>
-        )}
-      </>
-    );
+    detalle = <span className={anterior < 0 ? "text-red-700" : undefined}>{moneda.format(anterior || 0)}</span>;
   }
   return (
-    <div className="flex flex-wrap items-baseline justify-between gap-x-4 pt-0.5 text-sm">
-      <dt className="text-gray-600">vs. {rango}</dt>
-      <dd aria-busy={comparacion.estado === "cargando" && !filtrado} className="text-right tabular-nums text-gray-600">
-        {detalle}
-      </dd>
+    <div
+      aria-busy={comparacion.estado === "cargando" && !filtrado}
+      className="mt-2 flex flex-col gap-0.5 rounded-lg bg-gray-100 px-3 py-2"
+    >
+      <p className="flex flex-wrap items-center gap-x-1.5 text-sm text-gray-700">
+        {Tendencia && cambio !== null && (
+          <span
+            className={`inline-flex items-center gap-1 font-semibold tabular-nums ${
+              cambio < 0 ? "text-red-700" : "text-gray-900"
+            }`}
+          >
+            <Tendencia aria-hidden="true" className="h-4 w-4" />
+            {porcentaje.format(cambio)}
+          </span>
+        )}
+        vs. periodo anterior
+      </p>
+      <p className="text-xs tabular-nums text-gray-600">
+        {detalle} · {rango}
+      </p>
     </div>
   );
 };
@@ -160,11 +170,7 @@ export const ResultadoResumen = ({
     <p className={`text-xl font-bold tabular-nums ${valor < 0 ? "text-red-600" : "text-gray-900"}`}>
       {moneda.format(valor || 0)}
     </p>
-    {comparacion && (
-      <dl className="mt-0.5">
-        <LineaComparacion actual={valor} comparacion={comparacion} filtrado={filtrado} />
-      </dl>
-    )}
+    {comparacion && <LineaComparacion actual={valor} comparacion={comparacion} filtrado={filtrado} />}
   </section>
 );
 
