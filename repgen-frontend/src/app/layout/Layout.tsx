@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";
-import Sidebar from "./Sidebar";
+import Sidebar, { RielReportes } from "./Sidebar";
 import Navbar from "./Navbar";
 import { NavbarSlotContext } from "./navbarSlotContext";
 
@@ -59,6 +59,7 @@ const Layout = ({ children } : LayoutProps) => {
 
       <div className="flex-1 flex relative overflow-hidden">
         <Sidebar isOpen={isSidebarOpen} onNavegar={() => setIsSidebarOpen(false)} />
+        <RielReportes inert={isSidebarOpen} />
 
         {/* Contenedor de tamaño: los reportes miden su primera pantalla con
             100cqh (el alto real del área, aunque el navbar ocupe dos filas). */}
