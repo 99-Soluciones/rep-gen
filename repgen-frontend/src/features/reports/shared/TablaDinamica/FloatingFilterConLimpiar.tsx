@@ -4,6 +4,7 @@ import { Search, X } from "lucide-react";
 import type { CustomFloatingFilterProps } from "ag-grid-react";
 import type { IFilter, IFloatingFilterParent } from "ag-grid-community";
 import { interpretarMonto, montoATexto } from "../ag-grid/filtro-monto";
+import CampoFecha from "../CampoFecha";
 
 export interface FloatingFilterConLimpiarParams {
   inputType?: "text" | "number" | "date";
@@ -243,8 +244,7 @@ const FloatingFilterConLimpiar = (props: FloatingFilterProps) => {
     });
   };
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const nuevoValor = event.target.value;
+  const cambiar = (nuevoValor: string) => {
     setValor(nuevoValor);
     notificarCambio(nuevoValor);
   };
@@ -253,6 +253,24 @@ const FloatingFilterConLimpiar = (props: FloatingFilterProps) => {
     setValor("");
     setInvalido(false);
     notificarCambio("");
+  };
+
+  const propsInput = {
+    ref: inputRef,
+    onFocus: (evento: React.FocusEvent<HTMLInputElement>) =>
+      setEnfocado(posicionBajo(evento.currentTarget)),
+    onBlur: () => setEnfocado(null),
+    // Con filtro: borde azul y velo, para ver de un vistazo qué columnas filtran.
+    className: `ag-input-field-input ag-text-field-input w-full pr-7 ${inputType === "text" ? "ps-7!" : ""} ${
+      invalido ? "border-red-600!" : filtroActivo ? "border-blue-600! bg-blue-50!" : ""
+    }`,
+    readOnly: soloLectura,
+    "aria-label": `Filtrar ${nombreColumna}`,
+    "aria-invalid": invalido || undefined,
+    "aria-describedby":
+      [inputType === "number" ? idAyuda : "", soloLectura ? `${idAyuda}-solo-lectura` : ""]
+        .filter(Boolean)
+        .join(" ") || undefined,
   };
 
   return (
@@ -265,29 +283,20 @@ const FloatingFilterConLimpiar = (props: FloatingFilterProps) => {
             aria-hidden="true"
           />
         )}
-        <input
-          ref={inputRef}
-          onFocus={(evento) => setEnfocado(posicionBajo(evento.currentTarget))}
-          onBlur={() => setEnfocado(null)}
-          // Con filtro: borde azul y velo, para ver de un vistazo qué columnas filtran.
-          className={`ag-input-field-input ag-text-field-input w-full pr-7 ${inputType === "text" ? "ps-7!" : ""} ${
-            invalido ? "border-red-600!" : filtroActivo ? "border-blue-600! bg-blue-50!" : ""
-          }`}
-          // Montos como texto: ">", "<" y el guion del rango no caben en type="number".
-          type={inputType === "number" ? "text" : inputType}
-          inputMode={inputType === "number" ? "decimal" : undefined}
-          value={valor}
-          onChange={onChange}
-          readOnly={soloLectura}
-          placeholder={placeholder}
-          aria-label={`Filtrar ${nombreColumna}`}
-          aria-invalid={invalido || undefined}
-          aria-describedby={
-            [inputType === "number" ? idAyuda : "", soloLectura ? `${idAyuda}-solo-lectura` : ""]
-              .filter(Boolean)
-              .join(" ") || undefined
-          }
-        />
+        {/* Fechas en dd/mm/aaaa, como en la tabla (el input nativo sigue al idioma del navegador). */}
+        {inputType === "date" ? (
+          <CampoFecha {...propsInput} value={valor} onChange={cambiar} />
+        ) : (
+          <input
+            {...propsInput}
+            // Montos como texto: ">", "<" y el guion del rango no caben en type="number".
+            type="text"
+            inputMode={inputType === "number" ? "decimal" : undefined}
+            value={valor}
+            onChange={(evento) => cambiar(evento.target.value)}
+            placeholder={placeholder}
+          />
+        )}
         {enfocado && (soloLectura || inputType === "number") && (
           <PistaFiltro
             ancla={inputRef}
