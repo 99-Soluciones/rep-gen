@@ -271,7 +271,7 @@
       "filtro": "lista",
       "columnClass": "Bodegas"
     },
-    "Bodega Entrega Fecha": {
+    "Bodega Fecha de Entrega": {
       "field": "bodegaEntregaFecha",
       "dataType": "date",
       "columnClass": "Bodegas",
@@ -361,7 +361,7 @@
       "Factura UUID",
       "Bodega Nombre",
       "Bodega Entrega Estatus",
-      "Bodega Entrega Fecha"
+      "Bodega Fecha de Entrega"
     ]
   }
 }

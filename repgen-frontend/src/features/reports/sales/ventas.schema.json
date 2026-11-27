@@ -239,7 +239,7 @@
       "dataType": "number",
       "columnClass": "Artículos"
     },
-    "Artículo Contenido Sub Total": {
+    "Artículo Contenido Subtotal": {
       "field": "contenidoSubTotal",
       "dataType": "number",
       "columnClass": "Artículos"
@@ -262,7 +262,7 @@
       "dataType": "currency",
       "columnClass": "Artículos"
     },
-    "Costo Directo (SubTotal) (MXN)": {
+    "Costo Directo (Subtotal) (MXN)": {
       "field": "costoDirectoSubTotalMxn",
       "dataType": "currency",
       "columnClass": "Artículos"
@@ -510,11 +510,11 @@
       "Artículo Unidad de Venta",
       "Artículo Unidad de Contenido",
       "Artículo Contenido Unitario",
-      "Artículo Contenido Sub Total",
+      "Artículo Contenido Subtotal",
       "Artículo Tipo de Concepto",
       "Artículo Método de Adquisición",
       "Costo Directo (Unitario) (MXN)",
-      "Costo Directo (SubTotal) (MXN)",
+      "Costo Directo (Subtotal) (MXN)",
       "Ganancia Bruta (MXN)",
       "Costo Tasa",
       "Margen Tasa",
