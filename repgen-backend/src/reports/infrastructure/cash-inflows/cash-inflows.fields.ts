@@ -16,7 +16,7 @@ export const VEN = {
   razonSocial: `${CLIENTE}fiscal_RazonSocial`,
   rfc: `${CLIENTE}fiscal_RFC`,
   cuentaContable: `${CLIENTE}cuentaContableTemp_v0_20_2r`,
-  creditoAutorizado: `${CLIENTE}credito.monto.Autorized`,
+  creditoAutorizado: `${CLIENTE}credito_monto_Autorized`,
   repCliente: `${V}USER.repVent_|_x_clienteID::userData_nombre_Completo`,
   clasificacion: (n: number) => `${V}cliente.Classify${n}|_x_clienteID::name`,
   colonia: 'entrega_dest_Colonia',
